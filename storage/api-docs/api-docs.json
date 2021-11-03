@@ -375,6 +375,273 @@
                     }
                 }
             }
+        },
+        "/posts": {
+            "post": {
+                "tags": [
+                    "posts"
+                ],
+                "summary": "create new post",
+                "operationId": "create",
+                "parameters": [
+                    {
+                        "name": "content",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "Array"
+                        }
+                    },
+                    {
+                        "name": "layout",
+                        "in": "query",
+                        "description": "there are different types of layout for posts",
+                        "required": false,
+                        "schema": {
+                            "type": "Array"
+                        }
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "description": "the state of the post. Specify one of the following: published, draft, queue, private",
+                        "required": false,
+                        "schema": {
+                            "type": "String"
+                        }
+                    },
+                    {
+                        "name": "publish_on",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "String"
+                        }
+                    },
+                    {
+                        "name": "tags",
+                        "in": "query",
+                        "description": "Comma-separated tags for this post",
+                        "required": false,
+                        "schema": {
+                            "type": "String"
+                        }
+                    },
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "description": "The GMT date and time of the post, as a string",
+                        "required": false,
+                        "schema": {
+                            "type": "String"
+                        }
+                    },
+                    {
+                        "name": "source_url",
+                        "in": "query",
+                        "description": "A source attribution for the post content",
+                        "required": false,
+                        "schema": {
+                            "type": "String"
+                        }
+                    },
+                    {
+                        "name": "slug",
+                        "in": "query",
+                        "description": "Add a short text summary to the end of the post URL",
+                        "required": false,
+                        "schema": {
+                            "type": "String"
+                        }
+                    },
+                    {
+                        "name": "send_to_twitter",
+                        "in": "query",
+                        "description": "Whether or not to share this via any connected Twitter account on post publish",
+                        "required": false,
+                        "schema": {
+                            "type": "Boolean"
+                        }
+                    },
+                    {
+                        "name": "is_private",
+                        "in": "query",
+                        "description": "Whether this should be a private answer, if this is an answer.",
+                        "required": false,
+                        "schema": {
+                            "type": "Boolean"
+                        }
+                    },
+                    {
+                        "name": "send_to_facebook",
+                        "in": "query",
+                        "description": "Whether or not to share this via any connected Facebook account on post publish",
+                        "required": false,
+                        "schema": {
+                            "type": "Boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "201": {
+                        "description": "Successfully Created"
+                    }
+                }
+            }
+        },
+        "/posts/edit": {
+            "put": {
+                "tags": [
+                    "posts"
+                ],
+                "summary": "Edit existing Post",
+                "operationId": "edit",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "the ID of the post to edit",
+                        "required": true,
+                        "schema": {
+                            "type": "Number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "200": {
+                        "description": "Successfully edited"
+                    }
+                }
+            }
+        },
+        "/post/{post-id}": {
+            "post": {
+                "tags": [
+                    "posts"
+                ],
+                "summary": "fetch a post for editing",
+                "operationId": "edit",
+                "parameters": [
+                    {
+                        "name": "post_fromat",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "String"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "200": {
+                        "description": "successful post fetching"
+                    }
+                }
+            }
+        },
+        "/post/delete": {
+            "delete": {
+                "tags": [
+                    "posts"
+                ],
+                "summary": "delete existing post",
+                "operationId": "destroy",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "the ID of the post to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "Number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "200": {
+                        "description": "successfully deleted"
+                    }
+                }
+            }
+        },
+        "/posts/reblog": {
+            "post": {
+                "tags": [
+                    "posts"
+                ],
+                "summary": "Reblog existing Post",
+                "operationId": "reblog",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "the ID of the reblogged post",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "reblog_key",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "comment",
+                        "in": "query",
+                        "description": "comment added to the reblogged post",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "native_inline_images",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "201": {
+                        "description": "Successfully Created"
+                    }
+                }
+            }
         }
     },
     "tags": [
