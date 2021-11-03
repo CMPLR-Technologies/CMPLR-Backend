@@ -1,0 +1,389 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Tumblr Api Documentation",
+        "description": "L5 Swagger OpenApi description",
+        "contact": {
+            "email": "admin@admin.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://my-default-host.com",
+            "description": "Demo API Server"
+        }
+    ],
+    "paths": {
+        "Blog/": {
+            "post": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "Create new Blog",
+                "description": "User create new Blog ",
+                "operationId": "Create",
+                "parameters": [
+                    {
+                        "name": "Title",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "Url",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "Privacy",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "Password",
+                        "in": "query",
+                        "required": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "Title"
+                                ],
+                                "properties": {
+                                    "Title": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "Summer_Blog"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": "example.tumblr.com"
+                                    },
+                                    "Privacy": {
+                                        "type": "boolean",
+                                        "example": "true"
+                                    },
+                                    "Password": {
+                                        "type": "string",
+                                        "format": "Password",
+                                        "example": "pass123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created Successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Invalid Data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Blog url is not available!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "Delete Specific Blog",
+                "description": "User Delete Specific Blog ",
+                "operationId": "Delete",
+                "parameters": [
+                    {
+                        "name": "Email",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "Password",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "Email",
+                                    "Password"
+                                ],
+                                "properties": {
+                                    "Email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "Email@gmail.com"
+                                    },
+                                    "Password": {
+                                        "type": "string",
+                                        "format": "Password",
+                                        "example": "Password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Invalid Data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "msg": {
+                                            "type": "integer",
+                                            "example": 422
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "That password is incorrect. Please try again"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "Blog/{blog-identifier}/followed_by": {
+            "get": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "blog/Followed_by",
+                "description": "This method can be used to check if one of your blogs is followed by another blog",
+                "operationId": "Followed_by",
+                "parameters": [
+                    {
+                        "name": "blog-identifier",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "blog-identifier"
+                                ],
+                                "properties": {
+                                    "blog-identifier": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "summer_blog"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "sucess",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "OK"
+                                        },
+                                        "response": {
+                                            "type": "string",
+                                            "example": "{followed_by : false}"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "blog/{blog-identifier}/followers": {
+            "get": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "blog/follows",
+                "description": "This method can be used to get followers for specific Blog",
+                "operationId": "followers",
+                "parameters": [
+                    {
+                        "name": "blog-identifier",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "The number of results to return: 1–20",
+                        "required": false
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Result to start at",
+                        "required": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "blog-identifier"
+                                ],
+                                "properties": {
+                                    "blog-identifier": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "summer_blog"
+                                    },
+                                    "limit": {
+                                        "type": "integer",
+                                        "format": "integer",
+                                        "example": 10
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "sucess",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "total_users": {
+                                                    "type": "integer",
+                                                    "example": 1235
+                                                },
+                                                "Users": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "david"
+                                                            },
+                                                            "following": {
+                                                                "type": "Boolean",
+                                                                "example": true
+                                                            },
+                                                            "Url": {
+                                                                "type": "string",
+                                                                "example": "https:www.davidslog.com"
+                                                            },
+                                                            "updated": {
+                                                                "type": "integer",
+                                                                "example": 1308781073
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Projects",
+            "description": "API Endpoints of Projects"
+        }
+    ],
+    "security": [
+        []
+    ]
+}
