@@ -130,6 +130,18 @@ class PostsController extends Controller
      *   @OA\Response(
      *          response=201,
      *          description="Successfully Created",
+     *           @OA\JsonContent(
+     *           type="object",
+     *           @OA\Property(property="Meta", type="object",
+     *           @OA\Property(property="Status", type="integer", example=201),
+     *           @OA\Property(property="msg", type="string", example="Created"),
+     *           ),
+     *           @OA\Property(property="response", type="object",
+     *           @OA\Property(property="id", type="integer", example=1234567891234567),
+     *           ),
+     *       ),
+     *         
+     *          
      *       ),
      *)
      **/
@@ -184,6 +196,14 @@ class PostsController extends Controller
      *           type="Number"
      *      )
      *   ),
+     *   @OA\RequestBody(
+     *    required=true,
+     *    description="Pass user credentials",
+     *    @OA\JsonContent(
+     *       required={"id"},
+     *       @OA\Property(property="id", type="number", format="text", example="12546899"),
+     *    ),
+     * ),
      *   @OA\Response(
      *      response=401,
      *       description="Unauthenticated"
@@ -195,6 +215,13 @@ class PostsController extends Controller
      *   @OA\Response(
      *          response=200,
      *          description="Successfully edited",
+     *          @OA\JsonContent(
+    *           type="object",
+    *           @OA\Property(property="Meta", type="object",
+    *           @OA\Property(property="Status", type="integer", example=200),
+    *           @OA\Property(property="msg", type="string", example="OK"),
+    *           ),
+    *       ),
      *       ),
      *)
      **/
@@ -281,7 +308,8 @@ class PostsController extends Controller
      *   @OA\Response(
      *          response=200,
      *          description="successfully deleted",
-     *       ),
+     *      
+     *    ),
      *)
      **/
 
@@ -349,6 +377,13 @@ class PostsController extends Controller
      *   @OA\Response(
      *          response=201,
      *          description="Successfully Created",
+     *           @OA\JsonContent(
+    *           type="object",
+    *           @OA\Property(property="Meta", type="object",
+    *           @OA\Property(property="Status", type="integer", example=201),
+    *           @OA\Property(property="msg", type="string", example="Created"),
+    *           ),
+    *       ),
      *       ),
      *)
      **/
@@ -363,4 +398,108 @@ class PostsController extends Controller
       {
           //
       }
+      
+      /**
+    * @OA\GET(
+    * path="post/notes",
+    * summary="getting notes for specific post",
+    * description="This method can be used to get notes for specific post",
+    * operationId="getNotes",
+    * tags={"posts"},
+    *  @OA\Parameter(
+    *         name="blog-identifier",
+    *         in="query",
+    *         required=true,
+    *      ),
+    *   @OA\Parameter(
+     *      name="before_timestamp",
+     *      in="query",
+     *      description="Fetch notes created before this timestamp",
+     *      required=false,
+     *      @OA\Schema(
+     *          type="Number"
+     *      )
+     *   ),
+     *  @OA\Parameter(
+     *      name="mode",
+     *      in="query",
+     *      description="The response formatting mode {all , likes , conversation , rollup ,reblogs_with_tags }",
+     *      required=false,
+     *      @OA\Schema(
+     *          type="String"
+     *      )
+     *   ),
+     *  @OA\RequestBody(
+    *    required=true,
+    *    description="Pass user credentials",
+    *    @OA\JsonContent(
+    *       required={"id"},
+    *       @OA\Property(property="id", type="Number", format="text", example="1234567890000"),
+    *       @OA\Property(property="before_timestamp", type="Number", format="text", example="1234567890"),
+    *       @OA\Property(property="mode", type="string", format="text", example="all"),
+    *    ),
+    * ),
+    * @OA\Response(
+    *    response=404,
+    *    description="Not Found",
+    * ),
+    *   @OA\Response(
+    *      response=401,
+    *       description="Unauthenticated"
+    *   ),
+    * @OA\Response(
+    *    response=200,
+    *    description="success",
+    *    @OA\JsonContent(
+    *       type="object",
+    *       @OA\Property(property="Meta", type="object",
+    *          @OA\Property(property="Status", type="integer", example=200),
+    *           @OA\Property(property="msg", type="string", example="OK"),
+    *        ),
+    *       @OA\Property(property="response", type="object",
+    *             @OA\Property(property="total_users", type="integer", example=1235),           
+    *             @OA\Property(property="Users", type="array",
+    *                @OA\Items(
+    *                      @OA\Property(
+    *                         property="notes",
+    *                         type="Array",
+    *                      ),
+    *                      @OA\Property(
+    *                         property="rollup_notes",
+    *                         type="Array",
+    *                      ),
+    *                      @OA\Property(
+    *                         property="total_notes",
+    *                         type="Number",
+    *                         example=125
+    *                      ),
+    *                      @OA\Property(
+    *                         property="total_likes",
+    *                         type="Number",
+    *                         example=12
+    *                      ),
+    *                    @OA\Property(
+    *                         property="_links",
+    *                         type="Object",
+    *                         example= "http/...."
+    *                      ),
+    *                ),
+    *       
+    *               ),           
+    *           ),
+    *        ),
+    *     )
+    * )
+    */
+
+      /**
+     * Reblog existing post 
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+     public function getNotes (Request $request)
+    {
+        //
+    }
 }

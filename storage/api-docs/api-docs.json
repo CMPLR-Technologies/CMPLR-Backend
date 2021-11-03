@@ -490,7 +490,38 @@
                         "description": "Bad Request"
                     },
                     "201": {
-                        "description": "Successfully Created"
+                        "description": "Successfully Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 201
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "Created"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1234567891234567
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -513,6 +544,27 @@
                         }
                     }
                 ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "format": "text",
+                                        "example": "12546899"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "401": {
                         "description": "Unauthenticated"
@@ -521,7 +573,29 @@
                         "description": "Bad Request"
                     },
                     "200": {
-                        "description": "Successfully edited"
+                        "description": "Successfully edited",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -638,7 +712,355 @@
                         "description": "Bad Request"
                     },
                     "201": {
-                        "description": "Successfully Created"
+                        "description": "Successfully Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 201
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "Created"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "post/notes": {
+            "get": {
+                "tags": [
+                    "posts"
+                ],
+                "summary": "getting notes for specific post",
+                "description": "This method can be used to get notes for specific post",
+                "operationId": "getNotes",
+                "parameters": [
+                    {
+                        "name": "blog-identifier",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "before_timestamp",
+                        "in": "query",
+                        "description": "Fetch notes created before this timestamp",
+                        "required": false,
+                        "schema": {
+                            "type": "Number"
+                        }
+                    },
+                    {
+                        "name": "mode",
+                        "in": "query",
+                        "description": "The response formatting mode {all , likes , conversation , rollup ,reblogs_with_tags }",
+                        "required": false,
+                        "schema": {
+                            "type": "String"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "Number",
+                                        "format": "text",
+                                        "example": "1234567890000"
+                                    },
+                                    "before_timestamp": {
+                                        "type": "Number",
+                                        "format": "text",
+                                        "example": "1234567890"
+                                    },
+                                    "mode": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "all"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "total_users": {
+                                                    "type": "integer",
+                                                    "example": 1235
+                                                },
+                                                "Users": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "notes": {
+                                                                "type": "Array"
+                                                            },
+                                                            "rollup_notes": {
+                                                                "type": "Array"
+                                                            },
+                                                            "total_notes": {
+                                                                "type": "Number",
+                                                                "example": 125
+                                                            },
+                                                            "total_likes": {
+                                                                "type": "Number",
+                                                                "example": 12
+                                                            },
+                                                            "_links": {
+                                                                "type": "Object",
+                                                                "example": "http/...."
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "user/info": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": " retrieving the user’s account information ",
+                "description": "This method can be used to  retrieve the user’s account information that matches the OAuth credentials submitted with the request",
+                "operationId": "index",
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "following": {
+                                                    "type": "Number",
+                                                    "example": 263
+                                                },
+                                                "default_post_format": {
+                                                    "description": "html, markdown, or raw",
+                                                    "type": "String",
+                                                    "example": "html"
+                                                },
+                                                "name": {
+                                                    "description": "The user's tumblr short name",
+                                                    "type": "String",
+                                                    "example": "derekg"
+                                                },
+                                                "likes": {
+                                                    "description": "The total count of the user's likes",
+                                                    "type": "Number",
+                                                    "example": 606
+                                                },
+                                                "blogs": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "name": {
+                                                                "description": "the short name of the blog",
+                                                                "type": "String",
+                                                                "example": "derekg"
+                                                            },
+                                                            "url": {
+                                                                "description": "the URL of the blog",
+                                                                "type": "String",
+                                                                "example": "https://derekg.org/"
+                                                            },
+                                                            "title": {
+                                                                "description": "the title of the blog",
+                                                                "type": "String",
+                                                                "example": "Derek Gottfrid"
+                                                            },
+                                                            "primary": {
+                                                                "description": "indicates if this is the user's primary blog",
+                                                                "type": "Boolean",
+                                                                "example": true
+                                                            },
+                                                            "followers": {
+                                                                "description": "total count of followers for this blog",
+                                                                "type": "Number",
+                                                                "example": 33004929
+                                                            },
+                                                            "tweet": {
+                                                                "description": "indicate if posts are tweeted auto, Y, N",
+                                                                "type": "String",
+                                                                "example": "Y"
+                                                            },
+                                                            "facebook": {
+                                                                "description": "indicate if posts are sent to facebook Y, N",
+                                                                "type": "String",
+                                                                "example": "auto"
+                                                            },
+                                                            "type": {
+                                                                "description": "indicates whether a blog is public or private",
+                                                                "type": "String",
+                                                                "example": "public"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "user/dashboard": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": " retrieving the user’s dashboard",
+                "description": "This method can be used to  retrieve the user’s dashboard that matches the OAuth credentials submitted with the request",
+                "operationId": "index",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "The number of results to return: 1–20, inclusive",
+                        "required": false,
+                        "schema": {
+                            "type": "Number"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Post number to start at",
+                        "required": false,
+                        "schema": {
+                            "type": "Number"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "The type of post to return. Specify one of the following: text, photo, quote, link, chat, audio, video, answer",
+                        "required": false,
+                        "schema": {
+                            "type": "String"
+                        }
+                    },
+                    {
+                        "name": "since_id",
+                        "in": "query",
+                        "description": "Return posts that have appeared after this ID; Use this parameter to page through the results: first get a set of posts, and then get posts since the last ID of the previous set.",
+                        "required": false,
+                        "schema": {
+                            "type": "Number"
+                        }
+                    },
+                    {
+                        "name": "reblog_info",
+                        "in": "query",
+                        "description": "Indicates whether to return reblog information (specify true or false). Returns the various reblogged_ fields.",
+                        "required": false,
+                        "schema": {
+                            "type": "Boolean"
+                        }
+                    },
+                    {
+                        "name": "notes_info",
+                        "in": "query",
+                        "description": "Indicates whether to return notes information (specify true or false). Returns note count and note metadata.",
+                        "required": false,
+                        "schema": {
+                            "type": "Boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
                     }
                 }
             }
