@@ -377,6 +377,192 @@
             }
         },
         "/posts": {
+            "get": {
+                "tags": [
+                    "posts"
+                ],
+                "summary": "blog/blog_url/posts/?",
+                "description": "user can get the posts published by certain blog",
+                "operationId": "published_posts",
+                "parameters": [
+                    {
+                        "name": "blog-identifier",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "api_key",
+                        "in": "query",
+                        "description": "Your OAuth Consumer Key",
+                        "required": true
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "The type of post to return one of the following: text, quote, link, answer, video, audio, photo, chat",
+                        "required": false
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "A specific post ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "tag[]",
+                        "in": "query",
+                        "description": "Limits the response to posts with all these specified tag(s),",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "The number of posts to return",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "reblog_info",
+                        "in": "query",
+                        "description": "Indicates whether to return reblog information",
+                        "required": false,
+                        "schema": {
+                            "type": "Boolean"
+                        }
+                    },
+                    {
+                        "name": "notes_info",
+                        "in": "query",
+                        "description": "Indicates whether to return notes information",
+                        "required": false,
+                        "schema": {
+                            "type": "Boolean"
+                        }
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Indicates whether to return notes information default none",
+                        "required": false,
+                        "schema": {
+                            "type": "String"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "blog-identifier",
+                                    "api_key"
+                                ],
+                                "properties": {
+                                    "blog-identifier": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "summer_blog"
+                                    },
+                                    "api_key": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "??!"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "text"
+                                    },
+                                    "tag": {
+                                        "type": "string",
+                                        "example": "summer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "sucess",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "total_users": {
+                                                    "type": "integer",
+                                                    "example": 1235
+                                                },
+                                                "Users": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "david"
+                                                            },
+                                                            "following": {
+                                                                "type": "Boolean",
+                                                                "example": true
+                                                            },
+                                                            "Url": {
+                                                                "type": "string",
+                                                                "example": "https:www.davidslog.com"
+                                                            },
+                                                            "updated": {
+                                                                "type": "integer",
+                                                                "example": 1308781073
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "posts"
@@ -626,6 +812,342 @@
                     },
                     "200": {
                         "description": "successful post fetching"
+                    }
+                }
+            }
+        },
+        "/posts/queue": {
+            "get": {
+                "tags": [
+                    "posts"
+                ],
+                "summary": "{blog-identifier}/Retrieve Queued Posts",
+                "description": "user can get the posts that had been queued",
+                "operationId": "Queued_posts",
+                "parameters": [
+                    {
+                        "name": "Limit",
+                        "in": "query",
+                        "description": "The number of results to return",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Specifies the post format to return(Html,MarkDown,Rich)",
+                        "required": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "Limit": {
+                                        "type": "integer",
+                                        "example": 10
+                                    },
+                                    "filter": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Html"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "sucess",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "total_users": {
+                                                    "type": "integer",
+                                                    "example": 1235
+                                                },
+                                                "Users": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "david"
+                                                            },
+                                                            "following": {
+                                                                "type": "Boolean",
+                                                                "example": true
+                                                            },
+                                                            "Url": {
+                                                                "type": "string",
+                                                                "example": "https:www.davidslog.com"
+                                                            },
+                                                            "updated": {
+                                                                "type": "integer",
+                                                                "example": 1308781073
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/posts/queue/reorder": {
+            "post": {
+                "tags": [
+                    "posts"
+                ],
+                "summary": "reorder a post within the queue",
+                "operationId": "reorder queued posts",
+                "parameters": [
+                    {
+                        "name": "post_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string/integer"
+                        }
+                    },
+                    {
+                        "name": "insert_after",
+                        "in": "query",
+                        "description": "Which post ID to move it after, or 0 to make it the first post",
+                        "required": false,
+                        "schema": {
+                            "type": "string/integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/posts/queue/shuffle": {
+            "post": {
+                "tags": [
+                    "posts"
+                ],
+                "summary": "shuffle posts within the queue",
+                "operationId": "shuffle queued posts",
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/posts/draft": {
+            "get": {
+                "tags": [
+                    "posts"
+                ],
+                "summary": "{blog-identifier}/posts/draft",
+                "description": "user can get the draft posts",
+                "operationId": "Drafted_posts",
+                "parameters": [
+                    {
+                        "name": "before_id",
+                        "in": "query",
+                        "description": "Return posts that have appeared before this ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Specifies the post format to return(Html,MarkDown,Rich)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "Limit": {
+                                        "type": "integer",
+                                        "example": 10
+                                    },
+                                    "filter": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Markdown"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "sucess",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "total_users": {
+                                                    "type": "integer",
+                                                    "example": 1235
+                                                },
+                                                "Users": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "david"
+                                                            },
+                                                            "following": {
+                                                                "type": "Boolean",
+                                                                "example": true
+                                                            },
+                                                            "Url": {
+                                                                "type": "string",
+                                                                "example": "https:www.davidslog.com"
+                                                            },
+                                                            "updated": {
+                                                                "type": "integer",
+                                                                "example": 1308781073
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
