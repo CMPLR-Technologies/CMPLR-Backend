@@ -1,28 +1,21 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Tumblr Api Documentation",
-        "description": "L5 Swagger OpenApi description",
-        "contact": {
-            "email": "admin@admin.com"
-        },
-        "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-        },
+        "title": "CMPLR API Documentation",
+        "description": "Welcome to the CMPLR API Documentation!",
         "version": "1.0.0"
     },
     "servers": [
         {
-            "url": "http://my-default-host.com",
-            "description": "Demo API Server"
+            "url": "http://localhost:8000/api/v1",
+            "description": "CMPLR API Server"
         }
     ],
     "paths": {
         "Blog/": {
             "post": {
                 "tags": [
-                    "Blog"
+                    "Blogs"
                 ],
                 "summary": "Create new Blog",
                 "description": "User create new Blog ",
@@ -111,7 +104,7 @@
             },
             "delete": {
                 "tags": [
-                    "Blog"
+                    "Blogs"
                 ],
                 "summary": "Delete Specific Blog",
                 "description": "User Delete Specific Blog ",
@@ -188,7 +181,7 @@
         "Blog/{blog-identifier}/followed_by": {
             "get": {
                 "tags": [
-                    "Blog"
+                    "Blogs"
                 ],
                 "summary": "blog/Followed_by",
                 "description": "This method can be used to check if one of your blogs is followed by another blog",
@@ -258,7 +251,7 @@
         "blog/{blog-identifier}/followers": {
             "get": {
                 "tags": [
-                    "Blog"
+                    "Blogs"
                 ],
                 "summary": "blog/follows",
                 "description": "This method can be used to get followers for specific Blog",
@@ -375,14 +368,124 @@
                     }
                 }
             }
+        },
+        "/blog/{blog-identifier}/info": {
+            "get": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Retrieve Blog Info",
+                "description": "This method returns general information about the blog, such as the title, number of posts, and other high-level data.",
+                "operationId": "getBlogInfo",
+                "parameters": [
+                    {
+                        "name": "blog-identifier",
+                        "in": "query",
+                        "description": "Any blog identifier",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "John Doe"
+                                        },
+                                        "posts": {
+                                            "type": "number",
+                                            "example": 69
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "john-doe"
+                                        },
+                                        "updated": {
+                                            "type": "number",
+                                            "example": 1308953007
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "<p><strong>Mr. Karp</strong> is tall and skinny, with unflinching blue eyes a mop of brown hair.\\r\\nHe speaks incredibly fast and in complete paragraphs.</p>"
+                                        },
+                                        "likes": {
+                                            "type": "number",
+                                            "example": 420
+                                        },
+                                        "is_blocked_from_primary": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "theme": {
+                                            "properties": {
+                                                "avatar_shape": {
+                                                    "type": "string",
+                                                    "example": "circle"
+                                                },
+                                                "background_color": {
+                                                    "type": "string",
+                                                    "example": "#00f980"
+                                                },
+                                                "body_font": {
+                                                    "type": "string",
+                                                    "example": "Arial"
+                                                },
+                                                "header_image": {
+                                                    "type": "string",
+                                                    "example": "example.com/image/header.png"
+                                                },
+                                                "link_color": {
+                                                    "type": "string",
+                                                    "example": "#eefeef"
+                                                },
+                                                "show_avatar": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "show_description": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "show_header_image": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "show_title": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "title_color": {
+                                                    "type": "string",
+                                                    "example": "#f0f0f0"
+                                                },
+                                                "title_font": {
+                                                    "type": "string",
+                                                    "example": "Arial"
+                                                },
+                                                "title_font_weight": {
+                                                    "type": "string",
+                                                    "example": "bold"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
-    "tags": [
-        {
-            "name": "Projects",
-            "description": "API Endpoints of Projects"
-        }
-    ],
     "security": [
         []
     ]

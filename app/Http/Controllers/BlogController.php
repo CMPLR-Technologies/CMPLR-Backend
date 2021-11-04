@@ -25,7 +25,7 @@ class BlogController extends Controller
      * summary="Create new Blog",
      * description="User create new Blog ",
      * operationId="Create",
-     * tags={"Blog"},
+     * tags={"Blogs"},
      *  @OA\Parameter(
      *         name="Title",
      *         in="query",
@@ -74,7 +74,7 @@ class BlogController extends Controller
      *     )
      * )
      */
-     /**
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -128,7 +128,7 @@ class BlogController extends Controller
      * @param  \App\Models\Blog  $blog
      * @return \Illuminate\Http\Response
      */
-    
+
     public function update(Request $request, Blog $blog)
     {
         //
@@ -137,156 +137,156 @@ class BlogController extends Controller
 
 
     /**
-    * @OA\GET(
-    * path="Blog/{blog-identifier}/followed_by",
-    * summary="blog/Followed_by",
-    * description="This method can be used to check if one of your blogs is followed by another blog",
-    * operationId="Followed_by",
-    * tags={"Blog"},
-    *  @OA\Parameter(
-    *         name="blog-identifier",
-    *         in="query",
-    *         required=true,
-    *      ),
-    * @OA\RequestBody(
-    *    required=true,
-    *    description="Pass user credentials",
-    *    @OA\JsonContent(
-    *       required={"blog-identifier"},
-    *       @OA\Property(property="blog-identifier", type="string", format="text", example="summer_blog"),
-    *    ),
-    * ),
-    * @OA\Response(
-    *    response=404,
-    *    description="Not Found",
-    * ),
-    *   @OA\Response(
-    *      response=401,
-    *       description="Unauthenticated"
-    *   ),
-    * @OA\Response(
-    *    response=200,
-    *    description="sucess",
-    *    @OA\JsonContent(
-    *       @OA\Property(property="Status", type="integer", example=200),
-    *       @OA\Property(property="msg", type="string", example="OK"),
-    *       @OA\Property(property="response", type="string", example="{followed_by : false}")
-    *        )
-    *     )
-    * )
-    */
-    public function Followed_by(Request $request, Blog $blog){
-
+     * @OA\GET(
+     * path="Blog/{blog-identifier}/followed_by",
+     * summary="blog/Followed_by",
+     * description="This method can be used to check if one of your blogs is followed by another blog",
+     * operationId="Followed_by",
+     * tags={"Blogs"},
+     *  @OA\Parameter(
+     *         name="blog-identifier",
+     *         in="query",
+     *         required=true,
+     *      ),
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass user credentials",
+     *    @OA\JsonContent(
+     *       required={"blog-identifier"},
+     *       @OA\Property(property="blog-identifier", type="string", format="text", example="summer_blog"),
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=404,
+     *    description="Not Found",
+     * ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     * @OA\Response(
+     *    response=200,
+     *    description="sucess",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="Status", type="integer", example=200),
+     *       @OA\Property(property="msg", type="string", example="OK"),
+     *       @OA\Property(property="response", type="string", example="{followed_by : false}")
+     *        )
+     *     )
+     * )
+     */
+    public function Followed_by(Request $request, Blog $blog)
+    {
     }
 
 
 
 
     /**
-    * @OA\GET(
-    * path="blog/{blog-identifier}/followers",
-    * summary="blog/follows",
-    * description="This method can be used to get followers for specific Blog",
-    * operationId="followers",
-    * tags={"Blog"},
-    *  @OA\Parameter(
-    *         name="blog-identifier",
-    *         in="query",
-    *         required=true,
-    *      ),
-    *  @OA\Parameter(
-    *         name="limit",
-    *         in="query",
-    *         required=false,
-    *         description="The number of results to return: 1–20",
-    *      ),
-    *  @OA\Parameter(
-    *         name="offset",
-    *         in="query",
-    *         required=false,
-    *         description="Result to start at",
-    *      ),
-    * @OA\RequestBody(
-    *    required=true,
-    *    description="Pass user credentials",
-    *    @OA\JsonContent(
-    *       required={"blog-identifier"},
-    *       @OA\Property(property="blog-identifier", type="string", format="text", example="summer_blog"),
-    *       @OA\Property(property="limit", type="integer", format="integer", example= 10),
-    *    ),
-    * ),
-    * @OA\Response(
-    *    response=404,
-    *    description="Not Found",
-    * ),
-    *   @OA\Response(
-    *      response=401,
-    *       description="Unauthenticated"
-    *   ),
-    * @OA\Response(
-    *    response=200,
-    *    description="sucess",
-    *    @OA\JsonContent(
-    *       type="object",
-    *       @OA\Property(property="Meta", type="object",
-    *          @OA\Property(property="Status", type="integer", example=200),
-    *           @OA\Property(property="msg", type="string", example="OK"),
-    *        ),
-    *       @OA\Property(property="response", type="object",
-    *             @OA\Property(property="total_users", type="integer", example=1235),           
-    *             @OA\Property(property="Users", type="array",
-    *                @OA\Items(
-    *                      @OA\Property(
-    *                         property="name",
-    *                         type="string",
-    *                         example="david"
-    *                      ),
-    *                      @OA\Property(
-    *                         property="following",
-    *                         type="Boolean",
-    *                         example=true
-    *                      ),
-    *                      @OA\Property(
-    *                         property="Url",
-    *                         type="string",
-    *                         example="https:www.davidslog.com"
-    *                      ),
-    *                      @OA\Property(
-    *                         property="updated",
-    *                         type="integer",
-    *                         example=1308781073
-    *                      ),
-    *                ),
-    *               @OA\Items(
-    *                      @OA\Property(
-    *                         property="namea",
-    *                         type="string",
-    *                         example="ahmed"
-    *                      ),
-    *                      @OA\Property(
-    *                         property="followinga",
-    *                         type="Boolean",
-    *                         example=true
-    *                      ),
-    *                      @OA\Property(
-    *                         property="Urla",
-    *                         type="string",
-    *                         example="https:www.ahmed_a1.com"
-    *                      ),
-    *                      @OA\Property(
-    *                         property="updateda",
-    *                         type="integer",
-    *                         example=1308781073
-    *                      ),
-    *                  ),
-    *               ),           
-    *           ),
-    *        ),
-    *     )
-    * )
-    */
-    public function GetFollower(Request $request, Blog $blog){
-
+     * @OA\GET(
+     * path="blog/{blog-identifier}/followers",
+     * summary="blog/follows",
+     * description="This method can be used to get followers for specific Blog",
+     * operationId="followers",
+     * tags={"Blogs"},
+     *  @OA\Parameter(
+     *         name="blog-identifier",
+     *         in="query",
+     *         required=true,
+     *      ),
+     *  @OA\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         required=false,
+     *         description="The number of results to return: 1–20",
+     *      ),
+     *  @OA\Parameter(
+     *         name="offset",
+     *         in="query",
+     *         required=false,
+     *         description="Result to start at",
+     *      ),
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass user credentials",
+     *    @OA\JsonContent(
+     *       required={"blog-identifier"},
+     *       @OA\Property(property="blog-identifier", type="string", format="text", example="summer_blog"),
+     *       @OA\Property(property="limit", type="integer", format="integer", example= 10),
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=404,
+     *    description="Not Found",
+     * ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     * @OA\Response(
+     *    response=200,
+     *    description="sucess",
+     *    @OA\JsonContent(
+     *       type="object",
+     *       @OA\Property(property="Meta", type="object",
+     *          @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="OK"),
+     *        ),
+     *       @OA\Property(property="response", type="object",
+     *             @OA\Property(property="total_users", type="integer", example=1235),           
+     *             @OA\Property(property="Users", type="array",
+     *                @OA\Items(
+     *                      @OA\Property(
+     *                         property="name",
+     *                         type="string",
+     *                         example="david"
+     *                      ),
+     *                      @OA\Property(
+     *                         property="following",
+     *                         type="Boolean",
+     *                         example=true
+     *                      ),
+     *                      @OA\Property(
+     *                         property="Url",
+     *                         type="string",
+     *                         example="https:www.davidslog.com"
+     *                      ),
+     *                      @OA\Property(
+     *                         property="updated",
+     *                         type="integer",
+     *                         example=1308781073
+     *                      ),
+     *                ),
+     *               @OA\Items(
+     *                      @OA\Property(
+     *                         property="namea",
+     *                         type="string",
+     *                         example="ahmed"
+     *                      ),
+     *                      @OA\Property(
+     *                         property="followinga",
+     *                         type="Boolean",
+     *                         example=true
+     *                      ),
+     *                      @OA\Property(
+     *                         property="Urla",
+     *                         type="string",
+     *                         example="https:www.ahmed_a1.com"
+     *                      ),
+     *                      @OA\Property(
+     *                         property="updateda",
+     *                         type="integer",
+     *                         example=1308781073
+     *                      ),
+     *                  ),
+     *               ),           
+     *           ),
+     *        ),
+     *     )
+     * )
+     */
+    public function GetFollower(Request $request, Blog $blog)
+    {
     }
 
 
@@ -307,7 +307,7 @@ class BlogController extends Controller
      * summary="Delete Specific Blog",
      * description="User Delete Specific Blog ",
      * operationId="Delete",
-     * tags={"Blog"},
+     * tags={"Blogs"},
      *  @OA\Parameter(
      *         name="Email",
      *         in="query",
