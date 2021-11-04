@@ -21,5 +21,7 @@ class Controller extends BaseController
      *      description="CMPLR API Server"
      * )
      */
+    
+     
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 }

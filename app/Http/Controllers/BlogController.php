@@ -20,7 +20,7 @@ class BlogController extends Controller
 
 
     /**
-     * @OA\POST(
+     * @OA\Post(
      * path="Blog/",
      * summary="Create new Blog",
      * description="User create new Blog ",
@@ -137,7 +137,7 @@ class BlogController extends Controller
 
 
     /**
-     * @OA\GET(
+     * @OA\Get(
      * path="Blog/{blog-identifier}/followed_by",
      * summary="blog/Followed_by",
      * description="This method can be used to check if one of your blogs is followed by another blog",
@@ -179,11 +179,8 @@ class BlogController extends Controller
     {
     }
 
-
-
-
     /**
-     * @OA\GET(
+     * @OA\Get(
      * path="blog/{blog-identifier}/followers",
      * summary="blog/follows",
      * description="This method can be used to get followers for specific Blog",
@@ -292,9 +289,6 @@ class BlogController extends Controller
 
 
 
-
-
-
     /**
      * Remove the specified resource from storage.
      *
@@ -302,7 +296,7 @@ class BlogController extends Controller
      * @return \Illuminate\Http\Response
      */
     /**
-     * @OA\DELETE(
+     * @OA\Delete(
      * path="Blog/",
      * summary="Delete Specific Blog",
      * description="User Delete Specific Blog ",
