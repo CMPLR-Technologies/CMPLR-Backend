@@ -121,6 +121,42 @@ class PostsController extends Controller
      *           type="Boolean"
      *      )
      *   ),
+     *   @OA\Parameter(
+     *      name="parent_tumnlrlog_uuid ",
+     *      description="the unique public identifier of the tumblelog that’s being reblogged from",
+     *      in="query",
+     *      required=false,
+     *      @OA\Schema(
+     *           type="String"
+     *      )
+     *   ),  
+     *  @OA\Parameter(
+     *      name="parent_post_id",
+     *      description=" the unique public post Id bing reblogged",
+     *      in="query",
+     *      required=false,
+     *      @OA\Schema(
+     *           type="Integer"
+     *      )
+     *   ),  
+     * @OA\Parameter(
+     *      name="hide_trail",
+     *      description="whether or not to hide the reblog trail with this new post",
+     *      in="query",
+     *      required=false,
+     *      @OA\Schema(
+     *           type="boolean"
+     *      )
+     *   ),  
+     * @OA\Parameter(
+     *      name="exclide_tral_items",
+     *      description="reblog trail items",
+     *      in="query",
+     *      required=false,
+     *      @OA\Schema(
+     *           type="Array"
+     *      )
+     *   ),  
      *   @OA\Response(
      *      response=401,
      *       description="Unauthenticated"
@@ -227,7 +263,14 @@ class PostsController extends Controller
      **/
 
     /**
-     * @OA\Post(
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Posts  $posts
+     * @return \Illuminate\Http\Response
+     */
+    
+    /**
+     * @OA\GET(
      ** path="/post/{post-id}",
      *   tags={"posts"},
      *   summary="fetch a post for editing",
@@ -252,22 +295,73 @@ class PostsController extends Controller
      *   @OA\Response(
      *          response=200,
      *          description="successful post fetching",
+     *           @OA\JsonContent(
+    *           type="object",
+    *           @OA\Property(property="Meta", type="object",
+    *           @OA\Property(property="Status", type="integer", example=200),
+    *           @OA\Property(property="msg", type="string", example="OK"),
+    *           ),
+    *           @OA\Property(property="reponse", type="object",
+    *           @OA\Property(property="object_type", type="String", example="post"),
+    *           @OA\Property(property="type", type="string", example="text"),
+    *           @OA\Property(property="id", type="string", example="2312145464"),
+    *           @OA\Property(property="tumbllelog_uuid", type="string", example="yousiflasheen"),
+    *           @OA\Property(property="parent_tumnlelog_uuid", type="string", example="john-abdelhamid"),
+    *           @OA\Property(property="reblog_key", type="string", example="2312145464"),
+    *           @OA\Property(property="trail", type="string", example="[, , ]"),
+    *           @OA\Property(property="content", type="string", example="[hello everyboady]"),
+    *           @OA\Property(property="layout", type="string", example="[1 ,3]"),
+    *           
+    *           ),
+    *       ),
      *       ),
      *)
      **/
 
-
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Posts  $posts
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Posts $posts)
     {
         //
     }
+    /**
+     * @OA\PUT(
+     ** path="/post/{post-id}",
+     *   tags={"posts"},
+     *   summary="edit posts with specific id",
+     *   operationId="edit",
+     *
+     *   @OA\Parameter(
+     *      name="all request parameters from post creation route are expected",
+     *      in="query",
+     *      required=true,
+     *      @OA\Schema(
+     *           type="object"
+     *      )
+     *   ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     *   @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     *   @OA\Response(
+     *          response=200,
+     *          description="successful post fetching",
+     *           @OA\JsonContent(
+    *           type="object",
+    *           @OA\Property(property="Meta", type="object",
+    *           @OA\Property(property="Status", type="integer", example=200),
+    *           @OA\Property(property="msg", type="string", example="OK"),
+    *           ),
+    *           @OA\Property(property="reponse", type="object",
+    *           @OA\Property(property="post_id", type="String", example="1211464646"),
+    *           
+    *           ),
+    *       ),
+     *       ),
+     *)
+     **/
 
 
 

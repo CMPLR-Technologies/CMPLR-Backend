@@ -176,6 +176,38 @@ class UserController extends Controller
      * @OA\Response(
      *    response=200,
      *    description="success",
+     *         @OA\JsonContent(
+   *          type="object",
+    *               @OA\Property(property="Meta", type="object",
+    *               @OA\Property(property="Status", type="integer", example=200),
+    *                @OA\Property(property="msg", type="string", example="OK"),
+    *               ),
+    *             @OA\Property(property="response", type="object",
+    *          @OA\Property(property="posts", type="array", 
+    *                   @OA\Items(
+    *                         @OA\Property(
+    *                         property="blog_name",
+    *                         type="string",
+    *                         example="laughingsquid"
+    *                      ),    
+    *                        @OA\Property(
+    *                         property="id",
+    *                         type="Number",
+    *                         example=6828225215
+    *                      ), 
+    *                        @OA\Property(
+    *                         property="post_url",
+    *                         type="string",
+    *                         example="https:\/\/links.laughingsquid.com\/post\/6828225215"
+    *                      ),    
+
+    *                
+    *               
+    *                   ),    
+    *           ),
+    *        ),
+     *         ),
+
      *     ),
      * 
         * )
