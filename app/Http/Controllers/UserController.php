@@ -191,4 +191,358 @@ class UserController extends Controller
     {
         //
     }
+
+       /**
+    * @OA\GET(
+    * path="user/likes",
+    * summary="Retrieve a User's Likes",
+    * description="retrieve the posts liked by the user",
+    * operationId="getUserLikes",
+    * tags={"users"},
+    *
+    *   @OA\Parameter(
+    *      name="limit",
+    *      description="the number of posts to return",
+    *      in="query",
+    *      required=false,
+    *      @OA\Schema(
+    *           type="Number"
+    *      )
+    *   ),
+    *    @OA\Parameter(
+    *      name="offset",
+    *      description="The number of the liked post to start from",
+    *      in="query",
+    *      required=false,
+    *      @OA\Schema(
+    *           type="Number"
+    *      )
+    *   ),
+    *    @OA\Parameter(
+    *      name="before",
+    *      description="Retrieve posts liked before the specified timestamp",
+    *      in="query",
+    *      required=false,
+    *      @OA\Schema(
+    *           type="Number"
+    *      )
+    *   ),
+    *    @OA\Parameter(
+    *      name="after",
+    *      description="Retrieve posts liked after the specified timestamp",
+    *      in="query",
+    *      required=false,
+    *      @OA\Schema(
+    *           type="Number"
+    *      )
+    *   ),
+    *    
+    *    @OA\RequestBody(
+    *      required=true,
+    *      description="Pass user credentials",
+    *      @OA\JsonContent(
+    *      @OA\Property(property="limit", type="integer", format="integer", example=1),
+    *      @OA\Property(property="offset", type="integer", format="integer", example=1),
+    *      @OA\Property(property="before", type="integer", format="integer", example=1),
+    *      @OA\Property(property="after", type="integer", format="integer", example=1),
+    *      ),
+    *    ),
+    *
+    * @OA\Response(
+    *    response=404,
+    *    description="Not Found",
+    * ),
+    *   @OA\Response(
+    *      response=401,
+    *       description="Unauthenticated"
+    *   ),
+    * @OA\Response(
+    *    response=200,
+    *    description="success",
+    *     ),
+    * 
+    * )
+    */
+
+    public function getLikes()
+    {
+        //
+    }
+
+
+       /**
+    * @OA\GET(
+    * path="user/following",
+    * summary="Retrieve the Blogs a User Is Following",
+    * description="Used to return the blogs followed by the user, and info about those blogs.",
+    * operationId="getUserFollowing",
+    * tags={"users"},
+    *
+    *   @OA\Parameter(
+    *      name="limit",
+    *      description="the number of blogs to return",
+    *      in="query",
+    *      required=false,
+    *      @OA\Schema(
+    *           type="Number"
+    *      )
+    *   ),
+    *    @OA\Parameter(
+    *      name="offset",
+    *      description="The number of the post to start from",
+    *      in="query",
+    *      required=false,
+    *      @OA\Schema(
+    *           type="Number"
+    *      )
+    *   ),
+    *    
+    *    @OA\RequestBody(
+    *      required=true,
+    *      description="Pass user credentials",
+    *      @OA\JsonContent(
+    *      @OA\Property(property="limit", type="integer", format="integer", example=1),
+    *      @OA\Property(property="offset", type="integer", format="integer", example=1),
+    *      ),
+    *    ),
+    *
+    * @OA\Response(
+    *    response=404,
+    *    description="Not Found",
+    * ),
+    *   @OA\Response(
+    *      response=401,
+    *       description="Unauthenticated"
+    *   ),
+    * @OA\Response(
+    *    response=200,
+    *    description="success",
+    *     ),
+    * 
+    * )
+    */
+    public function getFollowing()
+    {
+        //
+    }
+
+
+    /**
+    * @OA\POST(
+    * path="user/follow",
+    * summary="Follow a blog",
+    * description="enable the user to follow a blog using the blog Email or URL",
+    * operationId="UserFollow",
+    * tags={"users"},
+    *
+    *   @OA\Parameter(
+    *      name="url",
+    *      description="the url of the blog to follow",
+    *      in="query",
+    *      required=true,
+    *      @OA\Schema(
+    *           type="string"
+    *      )
+    *   ),
+    *    @OA\Parameter(
+    *      name="email",
+    *      description="The email of the blog to follow",
+    *      in="query",
+    *      required=true,
+    *      @OA\Schema(
+    *           type="string"
+    *      )
+    *   ),
+    *    
+    *    @OA\RequestBody(
+    *      required=true,
+    *      description="Pass user credentials",
+    *      @OA\JsonContent(
+    *      required={"url","email"},
+    *      @OA\Property(property="url", type="string", format="url", example="http://wwww.something.com"),
+    *      @OA\Property(property="email", type="string", format="email", example="name@something.com"),
+    *      ),
+    *    ),
+    *
+    * @OA\Response(
+    *    response=404,
+    *    description="Not Found",
+    * ),
+    *   @OA\Response(
+    *      response=401,
+    *       description="Unauthenticated"
+    *   ),
+    * @OA\Response(
+    *    response=200,
+    *    description="success",
+    *     ),
+    * 
+    * )
+    */
+    public function follow()
+    {
+        //
+    }
+
+    /**
+    * @OA\POST(
+    * path="user/unfollow",
+    * summary="Unfollow a blog",
+    * description="enable the user to Unfollow a blog using the blog URL",
+    * operationId="UserUnfollow",
+    * tags={"users"},
+    *
+    *   @OA\Parameter(
+    *      name="url",
+    *      description="the url of the blog to unfollow",
+    *      in="query",
+    *      required=true,
+    *      @OA\Schema(
+    *           type="string"
+    *      )
+    *   ),
+    *    
+    *    @OA\RequestBody(
+    *      required=true,
+    *      description="Pass user credentials",
+    *      @OA\JsonContent(
+    *      required={"url"},
+    *      @OA\Property(property="url", type="string", format="url", example="http://wwww.something.com"),
+    *      ),
+    *    ),
+    *
+    * @OA\Response(
+    *    response=404,
+    *    description="Not Found",
+    * ),
+    *   @OA\Response(
+    *      response=401,
+    *       description="Unauthenticated"
+    *   ),
+    * @OA\Response(
+    *    response=200,
+    *    description="success",
+    *     ),
+    * 
+    * )
+    */
+    public function unfollow()
+    {
+        //
+    }
+
+    /**
+    * @OA\POST(
+    * path="user/like",
+    * summary="Like a Post",
+    * description="enables the user to like a post through the post id",
+    * operationId="UserLike",
+    * tags={"users"},
+    *
+    *   @OA\Parameter(
+    *      name="id",
+    *      description="The ID of the post to like",
+    *      in="query",
+    *      required=true,
+    *      @OA\Schema(
+    *           type="Number"
+    *      )
+    *   ),
+    *   @OA\Parameter(
+    *      name="reblog_key",
+    *      description="The reblog key for the post id",
+    *      in="query",
+    *      required=true,
+    *      @OA\Schema(
+    *           type="string"
+    *      )
+    *   ),
+    *    
+    *    @OA\RequestBody(
+    *      required=true,
+    *      description="Pass user credentials",
+    *      @OA\JsonContent(
+    *      required={"id","reblog_key"},
+    *      @OA\Property(property="id", type="integer", format="integer", example=1),
+    *      @OA\Property(property="reblog_key", type="string", format="text", example="hello123"),
+    *      ),
+    *    ),
+    *
+    * @OA\Response(
+    *    response=404,
+    *    description="Not Found",
+    * ),
+    *   @OA\Response(
+    *      response=401,
+    *       description="Unauthenticated"
+    *   ),
+    * @OA\Response(
+    *    response=200,
+    *    description="success",
+    *     ),
+    * 
+    * )
+    */
+    public function like()
+    {
+        //
+    }
+
+        /**
+    * @OA\POST(
+    * path="user/unlike",
+    * summary="Unlike a Post",
+    * description="enables the user to unlike a post through the post id",
+    * operationId="UserUnlike",
+    * tags={"users"},
+    *
+    *   @OA\Parameter(
+    *      name="id",
+    *      description="The ID of the post to unlike",
+    *      in="query",
+    *      required=true,
+    *      @OA\Schema(
+    *           type="Number"
+    *      )
+    *   ),
+    *   @OA\Parameter(
+    *      name="reblog_key",
+    *      description="The reblog key for the post id",
+    *      in="query",
+    *      required=true,
+    *      @OA\Schema(
+    *           type="string"
+    *      )
+    *   ),
+    *    
+    *    @OA\RequestBody(
+    *      required=true,
+    *      description="Pass user credentials",
+    *      @OA\JsonContent(
+    *      required={"id","reblog_key"},
+    *      @OA\Property(property="id", type="integer", format="integer", example=1),
+    *      @OA\Property(property="reblog_key", type="string", format="text", example="hello123"),
+    *      ),
+    *    ),
+    *
+    * @OA\Response(
+    *    response=404,
+    *    description="Not Found",
+    * ),
+    *   @OA\Response(
+    *      response=401,
+    *       description="Unauthenticated"
+    *   ),
+    * @OA\Response(
+    *    response=200,
+    *    description="success",
+    *     ),
+    * 
+    * )
+    */
+    public function unlike()
+    {
+        //
+    }
+
 }

@@ -1608,6 +1608,419 @@
                     }
                 }
             }
+        },
+        "user/likes": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Retrieve a User's Likes",
+                "description": "retrieve the posts liked by the user",
+                "operationId": "getUserLikes",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "the number of posts to return",
+                        "required": false,
+                        "schema": {
+                            "type": "Number"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "The number of the liked post to start from",
+                        "required": false,
+                        "schema": {
+                            "type": "Number"
+                        }
+                    },
+                    {
+                        "name": "before",
+                        "in": "query",
+                        "description": "Retrieve posts liked before the specified timestamp",
+                        "required": false,
+                        "schema": {
+                            "type": "Number"
+                        }
+                    },
+                    {
+                        "name": "after",
+                        "in": "query",
+                        "description": "Retrieve posts liked after the specified timestamp",
+                        "required": false,
+                        "schema": {
+                            "type": "Number"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "limit": {
+                                        "type": "integer",
+                                        "format": "integer",
+                                        "example": 1
+                                    },
+                                    "offset": {
+                                        "type": "integer",
+                                        "format": "integer",
+                                        "example": 1
+                                    },
+                                    "before": {
+                                        "type": "integer",
+                                        "format": "integer",
+                                        "example": 1
+                                    },
+                                    "after": {
+                                        "type": "integer",
+                                        "format": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
+        },
+        "user/following": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Retrieve the Blogs a User Is Following",
+                "description": "Used to return the blogs followed by the user, and info about those blogs.",
+                "operationId": "getUserFollowing",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "the number of blogs to return",
+                        "required": false,
+                        "schema": {
+                            "type": "Number"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "The number of the post to start from",
+                        "required": false,
+                        "schema": {
+                            "type": "Number"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "limit": {
+                                        "type": "integer",
+                                        "format": "integer",
+                                        "example": 1
+                                    },
+                                    "offset": {
+                                        "type": "integer",
+                                        "format": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
+        },
+        "user/follow": {
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Follow a blog",
+                "description": "enable the user to follow a blog using the blog Email or URL",
+                "operationId": "UserFollow",
+                "parameters": [
+                    {
+                        "name": "url",
+                        "in": "query",
+                        "description": "the url of the blog to follow",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "The email of the blog to follow",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "url",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "url": {
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": "http://wwww.something.com"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "name@something.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
+        },
+        "user/unfollow": {
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Unfollow a blog",
+                "description": "enable the user to Unfollow a blog using the blog URL",
+                "operationId": "UserUnfollow",
+                "parameters": [
+                    {
+                        "name": "url",
+                        "in": "query",
+                        "description": "the url of the blog to unfollow",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "url"
+                                ],
+                                "properties": {
+                                    "url": {
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": "http://wwww.something.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
+        },
+        "user/like": {
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Like a Post",
+                "description": "enables the user to like a post through the post id",
+                "operationId": "UserLike",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "The ID of the post to like",
+                        "required": true,
+                        "schema": {
+                            "type": "Number"
+                        }
+                    },
+                    {
+                        "name": "reblog_key",
+                        "in": "query",
+                        "description": "The reblog key for the post id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id",
+                                    "reblog_key"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "format": "integer",
+                                        "example": 1
+                                    },
+                                    "reblog_key": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "hello123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
+        },
+        "user/unlike": {
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Unlike a Post",
+                "description": "enables the user to unlike a post through the post id",
+                "operationId": "UserUnlike",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "The ID of the post to unlike",
+                        "required": true,
+                        "schema": {
+                            "type": "Number"
+                        }
+                    },
+                    {
+                        "name": "reblog_key",
+                        "in": "query",
+                        "description": "The reblog key for the post id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id",
+                                    "reblog_key"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "format": "integer",
+                                        "example": 1
+                                    },
+                                    "reblog_key": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "hello123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
         }
     },
     "tags": [
