@@ -162,15 +162,15 @@
                     "401": {
                         "description": "Unauthenticated"
                     },
-                    "422": {
-                        "description": "Invalid Data",
+                    "403": {
+                        "description": "Forbidden",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "msg": {
                                             "type": "integer",
-                                            "example": 422
+                                            "example": 403
                                         },
                                         "status": {
                                             "type": "string",
@@ -2594,6 +2594,830 @@
                         "description": "success"
                     }
                 }
+            }
+        },
+        "/user/tags/add": {
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "follow new tag",
+                "operationId": "follow tag",
+                "parameters": [
+                    {
+                        "name": "tag_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "ok"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/tags/remove": {
+            "delete": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "unfollow tag",
+                "operationId": "unfollow tag",
+                "parameters": [
+                    {
+                        "name": "tag_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "ok"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "user/post/reply": {
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "add new reply to Specific Post",
+                "operationId": "add reply",
+                "parameters": [
+                    {
+                        "name": "post_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "reblog_key",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "reply_text",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "text"
+                        }
+                    },
+                    {
+                        "name": "tumblelog",
+                        "in": "query",
+                        "description": "the name of blog containing post to get if he is the original poster",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "201": {
+                        "description": "created Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "ok"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/{blog-identifier}/notes/delete": {
+            "delete": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "unfollow tag",
+                "operationId": "unfollow tag",
+                "parameters": [
+                    {
+                        "name": "post_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "note_tumblelog",
+                        "in": "query",
+                        "description": "the name of blog containing post",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "ok"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "blog/{blog-identifier}/subscription": {
+            "post": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "subscription a blog",
+                "operationId": "subscription",
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "ok"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "subscription a blog",
+                "operationId": "Unsubscription",
+                "parameters": [
+                    {
+                        "name": "post_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "ok"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{blog-identifier}/add_tags_to_posts": {
+            "post": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "add new tag(s) to existing post(s)",
+                "operationId": "Add Tags to Posts",
+                "parameters": [
+                    {
+                        "name": "posts_id[]",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    {
+                        "name": "tag[]",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "ok"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{blog-identifier}/delete_posts": {
+            "delete": {
+                "tags": [
+                    "posts"
+                ],
+                "summary": "user can delete one or more posts",
+                "operationId": "DeletePosts",
+                "parameters": [
+                    {
+                        "name": "posts_id[]",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer/string"
+                            }
+                        }
+                    },
+                    {
+                        "name": "tags[]",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "posts_id[]",
+                                    "tags[]"
+                                ],
+                                "properties": {
+                                    "posts_id[]": {
+                                        "type": "string",
+                                        "example": "[1123153153,153151312]"
+                                    },
+                                    "tags[]": {
+                                        "type": "string",
+                                        "example": "['winter','153151312']"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "ok"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{blog-identifier}/get_tags_for_posts": {
+            "post": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "get all tag(s) existing in post(s)",
+                "operationId": "get_tags_for_posts",
+                "parameters": [
+                    {
+                        "name": "posts_id[]",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string/integer"
+                            }
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "posts_id[]"
+                                ],
+                                "properties": {
+                                    "posts_id[]": {
+                                        "type": "string",
+                                        "example": "[1123153153,153151312]"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "ok"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "number of tags": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                },
+                                                "posts_id[]": {
+                                                    "type": "string",
+                                                    "example": "['summer','sunny','beach'd]"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "{blog-identifier}/remove_tags_from_posts": {
+            "delete": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "remove tag(s) existing in post(s)",
+                "operationId": "remove_tags_from_posts",
+                "parameters": [
+                    {
+                        "name": "posts_id[]",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string/integer"
+                            }
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "posts_id[]"
+                                ],
+                                "properties": {
+                                    "posts_id[]": {
+                                        "type": "string",
+                                        "example": "[1123153153,153151312]"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/posts/submission": {
+            "get": {
+                "tags": [
+                    "posts"
+                ],
+                "summary": "{blog-identifier}/posts/submission",
+                "description": "retrieve submission posts",
+                "operationId": "Submission_Posts",
+                "parameters": [
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Post number to start at",
+                        "required": false,
+                        "schema": {
+                            "type": "String"
+                        }
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Specifies the post format to return(Html,MarkDown,Rich)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Url Example: api.tumblr.com/v2/blog/{blog-identifier}/posts/submission",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "filter": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Markdown"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 404
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "not found"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "sucess",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "id": {
+                                                    "description": "The ID of the submitted post",
+                                                    "type": "string/integer",
+                                                    "example": 12351312
+                                                },
+                                                "post_url": {
+                                                    "description": "The location of the post",
+                                                    "type": "string",
+                                                    "example": "https://ahmed-abdelhamed.tumblr.com/post/66686750959666/hajsdfhks"
+                                                },
+                                                "slug": {
+                                                    "description": "Short text summary to the end of the post URL",
+                                                    "type": "string",
+                                                    "example": "hajsdfhks"
+                                                },
+                                                "type": {
+                                                    "description": "The type of post. One of the following: text, photo, quote, link, video",
+                                                    "type": "string",
+                                                    "example": "text"
+                                                },
+                                                "date": {
+                                                    "description": "The GMT date and time of the post",
+                                                    "type": "string",
+                                                    "example": "YYYY-DD-MM HH:MM:SS"
+                                                },
+                                                "timestamp": {
+                                                    "description": "The time of the post, in seconds since the epoch",
+                                                    "type": "integer",
+                                                    "example": "1635865720"
+                                                },
+                                                "state": {
+                                                    "description": "Indicates the current state of the post (submission)",
+                                                    "type": "string",
+                                                    "example": "submission"
+                                                },
+                                                "format": {
+                                                    "description": "Format type of post.",
+                                                    "type": "String",
+                                                    "example": "Html"
+                                                },
+                                                "reblog_key": {
+                                                    "description": "The reblog key for the post",
+                                                    "type": "string",
+                                                    "example": "HNvqLd5G"
+                                                },
+                                                "tags": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "example": [
+                                                            "winter",
+                                                            "summer"
+                                                        ]
+                                                    }
+                                                },
+                                                "post_author": {
+                                                    "description": "Author of post, only available when submission is not anonymous",
+                                                    "type": "string",
+                                                    "example": "ahmed-abdelhamed"
+                                                },
+                                                "is_submission": {
+                                                    "description": "Indicates post is a submission (true)",
+                                                    "type": "Boolean",
+                                                    "example": true
+                                                },
+                                                "is_anonymous": {
+                                                    "description": "Indicates if the  post is a anonymous",
+                                                    "type": "Boolean",
+                                                    "example": false
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         }
     },

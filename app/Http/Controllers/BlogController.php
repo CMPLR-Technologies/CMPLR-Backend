@@ -334,10 +334,10 @@ class BlogController extends Controller
      *       description="Unauthenticated"
      *   ),
      * @OA\Response(
-     *    response=422,
-     *    description="Invalid Data",
+     *    response=403,
+     *    description="Forbidden",
      *    @OA\JsonContent(
-     *       @OA\Property(property="msg", type="integer", example=422),
+     *       @OA\Property(property="msg", type="integer", example=403),
      *       @OA\Property(property="status", type="string", example="That password is incorrect. Please try again")
      *        )
      *     )

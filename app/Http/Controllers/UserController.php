@@ -918,4 +918,607 @@ class UserController extends Controller
 
     }
 
+    
+    /*
+    3b hameeed
+    */
+
+    /**
+     * @OA\Post(
+     ** path="/user/tags/add",
+     *   tags={"users"},
+     *   summary="follow new tag",
+     *   operationId="follow tag",
+     *  @OA\Parameter(
+     *      name="tag_name",
+     *      in="query",
+     *      required=true,
+     *      @OA\Schema(
+     *           type="string"
+     *      )
+     *   ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     *   @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     *   @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *           @OA\JsonContent(
+     *           type="object",
+     *           @OA\Property(property="Meta", type="object",
+     *           @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="ok"),
+     *           ),
+     *       ),
+     *         
+     *          
+     *       ),
+     *)
+     **/
+    public function FollowTag(){
+
+    }
+
+
+    /**
+     * @OA\Delete(
+     ** path="/user/tags/remove",
+     *   tags={"users"},
+     *   summary="unfollow tag",
+     *   operationId="unfollow tag",
+     *  @OA\Parameter(
+     *      name="tag_name",
+     *      in="query",
+     *      required=true,
+     *      @OA\Schema(
+     *           type="string"
+     *      )
+     *   ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     *   @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     *   @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *           @OA\JsonContent(
+     *           type="object",
+     *           @OA\Property(property="Meta", type="object",
+     *           @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="ok"),
+     *           ),
+     *       ),
+     *         
+     *          
+     *       ),
+     *)
+     **/
+    public function UnFollowTag(){
+
+    }
+
+
+    
+        /**
+     * @OA\Post(
+     ** path="user/post/reply",
+     *   tags={"users"},
+     *   summary="add new reply to Specific Post",
+     *   operationId="add reply",
+     *  @OA\Parameter(
+     *      name="post_id",
+     *      in="query",
+     *      required=true,
+     *      @OA\Schema(
+     *           type="string"
+     *      )
+     *   ),
+     *  @OA\Parameter(
+     *      name="reblog_key",
+     *      in="query",
+     *      required=true,
+     *      @OA\Schema(
+     *           type="string"
+     *      )
+     *   ),
+     *  @OA\Parameter(
+     *      name="reply_text",
+     *      in="query",
+     *      required=true,
+     *      @OA\Schema(
+     *           type="text"
+     *      )
+     *   ),
+     *  @OA\Parameter(
+     *      name="tumblelog",
+     *      in="query",
+     *      required=true,
+     *      @OA\Schema(
+     *           type="string"
+     *      ),
+     *      description="the name of blog containing post to get if he is the original poster",
+     *   ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     *   @OA\Response(
+     *      response=404,
+     *      description="Not Found"
+     *   ),
+     *   @OA\Response(
+     *          response=201,
+     *          description="created Successfully",
+     *           @OA\JsonContent(
+     *           type="object",
+     *           @OA\Property(property="Meta", type="object",
+     *           @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="ok"),
+     *           ),
+     *       ),
+     *         
+     *          
+     *       ),
+     *)
+     **/
+    public function UserReply()
+    {
+
+    }
+
+    /**
+    * @OA\Delete(
+    ** path="/{blog-identifier}/notes/delete",
+    *   tags={"users"},
+    *   summary="unfollow tag",
+    *   operationId="unfollow tag",
+    *  @OA\Parameter(
+    *      name="post_id",
+    *      in="query",
+    *      required=true,
+    *      @OA\Schema(
+    *           type="string"
+    *      )
+    *   ),
+    *  @OA\Parameter(
+    *      name="note_tumblelog",
+    *      in="query",
+    *      required=true,
+    *      @OA\Schema(
+    *           type="string"
+    *      ),
+    *   description="the name of blog containing post",
+    *   ),
+    *   @OA\Response(
+    *      response=401,
+    *       description="Unauthenticated"
+    *   ),
+    *   @OA\Response(
+    *      response=404,
+    *      description="Not Found"
+    *   ),
+    *   @OA\Response(
+    *          response=200,
+    *          description="Success",
+    *           @OA\JsonContent(
+    *           type="object",
+    *           @OA\Property(property="Meta", type="object",
+    *           @OA\Property(property="Status", type="integer", example=200),
+    *           @OA\Property(property="msg", type="string", example="ok"),
+    *           ),
+    *       ),
+    *         
+    *          
+    *       ),
+    *)
+    **/
+    public function UserDeleteNote()
+    {
+
+    }
+
+    // 7ta fy blogs b3d check
+
+    /**
+    * @OA\Post(
+    ** path="blog/{blog-identifier}/subscription",
+    *   tags={"Blog"},
+    *   summary="subscription a blog",
+    *   operationId="subscription",
+    *   @OA\Response(
+    *      response=401,
+    *       description="Unauthenticated"
+    *   ),
+    *   @OA\Response(
+    *      response=404,
+    *      description="Not Found"
+    *   ),
+    *   @OA\Response(
+    *          response=200,
+    *          description="Success",
+    *           @OA\JsonContent(
+    *           type="object",
+    *           @OA\Property(property="Meta", type="object",
+    *           @OA\Property(property="Status", type="integer", example=200),
+    *           @OA\Property(property="msg", type="string", example="ok"),
+    *           ),
+    *       ),
+    *            
+    *    ),
+    *)
+    **/
+    public function BlogSubscription()
+    {
+
+    }
+
+    /**
+    * @OA\Delete(
+    ** path="blog/{blog-identifier}/subscription",
+    *   tags={"Blog"},
+    *   summary="subscription a blog",
+    *   operationId="Unsubscription",
+    *   @OA\Response(
+    *      response=401,
+    *       description="Unauthenticated"
+    *   ),
+    *  @OA\Parameter(
+    *      name="post_id",
+    *      in="query",
+    *      required=true,
+    *      @OA\Schema(
+    *           type="string"
+    *      )
+    *   ),
+    *   @OA\Response(
+    *      response=404,
+    *      description="Not Found"
+    *   ),
+    *   @OA\Response(
+    *          response=200,
+    *          description="Success",
+    *           @OA\JsonContent(
+    *           type="object",
+    *           @OA\Property(property="Meta", type="object",
+    *           @OA\Property(property="Status", type="integer", example=200),
+    *           @OA\Property(property="msg", type="string", example="ok"),
+    *           ),
+    *       ),
+    *            
+    *    ),
+    *)
+    **/
+    public function BlogUnSubscription()
+    {
+
+    }
+
+
+    //https://www.tumblr.com/mega-editor/published/ahmed-abdelhamed
+
+    /**
+    * @OA\Post(
+    ** path="{blog-identifier}/add_tags_to_posts",
+    *   tags={"Blog"},
+    *   summary="add new tag(s) to existing post(s)",
+    *   operationId="Add Tags to Posts",
+    *  @OA\Parameter(
+    *         name="posts_id[]",
+    *         in="query",
+    *         required=true,
+    *         @OA\Schema(
+    *         type="array",
+    *              @OA\Items(type="string")
+    *          )
+    *      ),
+    *  @OA\Parameter(
+    *         name="tag[]",
+    *         in="query",
+    *         required=true,
+    *         @OA\Schema(
+    *         type="array",
+    *              @OA\Items(type="string")
+    *          )
+    *      ),
+    *   @OA\Response(
+    *      response=401,
+    *       description="Unauthenticated"
+    *   ),
+    *   @OA\Response(
+    *      response=404,
+    *      description="Not Found"
+    *   ),
+    *   @OA\Response(
+    *          response=200,
+    *          description="Success",
+    *           @OA\JsonContent(
+    *           type="object",
+    *           @OA\Property(property="Meta", type="object",
+    *           @OA\Property(property="Status", type="integer", example=200),
+    *           @OA\Property(property="msg", type="string", example="ok"),
+    *           ),
+    *       ),
+    *            
+    *    ),
+    *)
+    **/
+    public function AddTagsToPosts()
+    {
+
+    }
+
+    /**
+    * @OA\Delete(
+    ** path="{blog-identifier}/delete_posts",
+    *   tags={"posts"},
+    *   summary="user can delete one or more posts",
+    *   operationId="DeletePosts",
+    *  @OA\Parameter(
+    *      name="posts_id[]",
+    *      in="query",
+    *      required=true,
+    *      @OA\Schema(
+    *      type="array",
+    *            @OA\Items(type="integer/string")
+    *          )
+    *      ),
+    *  @OA\Parameter(
+    *      name="tags[]",
+    *      in="query",
+    *      required=true,
+    *      @OA\Schema(
+    *      type="array",
+    *            @OA\Items(type="string")
+    *          ),
+    *      ),
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Pass user credentials",
+    *    @OA\JsonContent(
+    *       required={"posts_id[]","tags[]"},
+    *       @OA\Property(property="posts_id[]", type="string", 
+    *                   example="[1123153153,153151312]"               
+    *                   ),
+    *       @OA\Property(property="tags[]", type="string", 
+    *                   example="['winter','153151312']"               
+    *                   ),
+    *    ),
+    * ),
+    *   @OA\Response(
+    *      response=401,
+    *       description="Unauthenticated"
+    *   ),
+    *   @OA\Response(
+    *      response=404,
+    *      description="Not Found"
+    *   ),
+    *   @OA\Response(
+    *          response=200,
+    *          description="Success",
+    *           @OA\JsonContent(
+    *           type="object",
+    *           @OA\Property(property="Meta", type="object",
+    *           @OA\Property(property="Status", type="integer", example=200),
+    *           @OA\Property(property="msg", type="string", example="ok"),
+    *           ),
+    *       ),
+    *            
+    *    ),
+    *)
+    **/
+    public function DeletePosts(Request $request)
+    {
+
+    }
+
+
+    /**
+    * @OA\Post(
+    ** path="{blog-identifier}/get_tags_for_posts",
+    *   tags={"Blog"},
+    *   summary="get all tag(s) existing in post(s)",
+    *   operationId="get_tags_for_posts",
+    *  @OA\Parameter(
+    *         name="posts_id[]",
+    *         in="query",
+    *         required=true,
+    *         @OA\Schema(
+    *         type="array",
+    *              @OA\Items(type="string/integer")
+    *          )
+    *      ),
+    *   @OA\RequestBody(
+    *    required=true,
+    *    description="Pass user credentials",
+    *    @OA\JsonContent(
+    *       required={"posts_id[]"},
+    *       @OA\Property(property="posts_id[]", type="string", 
+    *                   example="[1123153153,153151312]"               
+    *                   ),
+    *       ),
+    *   ),
+    *   @OA\Response(
+    *      response=401,
+    *       description="Unauthenticated"
+    *   ),
+    *   @OA\Response(
+    *      response=404,
+    *      description="Not Found"
+    *   ),
+    *   @OA\Response(
+    *          response=200,
+    *          description="Success",
+    *           @OA\JsonContent(
+    *           type="object",
+    *           @OA\Property(property="Meta", type="object",
+    *              @OA\Property(property="Status", type="integer", example=200),
+    *              @OA\Property(property="msg", type="string", example="ok"),
+    *           ),
+    *           @OA\Property(property="response", type="object",
+    *              @OA\Property(property="number of tags", type="integer", example=3),
+    *              @OA\Property(property="posts_id[]", type="string", 
+    *                   example="['summer','sunny','beach'd]"               
+    *                  ),
+    *           ),
+    *       ),
+    *            
+    *    ),
+    *    security ={{"bearer":{}}}
+    *)
+    **/
+    // check if post or get 
+    public function get_tags_for_posts()
+    {
+
+    }
+
+
+    /**
+    * @OA\Delete(
+    ** path="{blog-identifier}/remove_tags_from_posts",
+    *   tags={"Blog"},
+    *   summary="remove tag(s) existing in post(s)",
+    *   operationId="remove_tags_from_posts",
+    *  @OA\Parameter(
+    *         name="posts_id[]",
+    *         in="query",
+    *         required=true,
+    *         @OA\Schema(
+    *         type="array",
+    *              @OA\Items(type="string/integer")
+    *          )
+    *      ),
+    *   @OA\RequestBody(
+    *    required=true,
+    *    description="Pass user credentials",
+    *    @OA\JsonContent(
+    *       required={"posts_id[]"},
+    *       @OA\Property(property="posts_id[]", type="string", 
+    *                   example="[1123153153,153151312]"               
+    *                   ),
+    *       ),
+    *   ),
+    *   @OA\Response(
+    *      response=401,
+    *       description="Unauthenticated"
+    *   ),
+    *   @OA\Response(
+    *      response=404,
+    *      description="Not Found"
+    *   ),
+    *   @OA\Response(
+    *          response=200,
+    *          description="Success",
+    *       ),
+    *            
+    *  security ={{"bearer":{}}},
+    *)
+    **/
+    public function remove_tags_from_posts()
+    {
+
+    }
+
+
+    /**
+    * @OA\GET(
+    * path="/posts/submission",
+    * summary="{blog-identifier}/posts/submission",
+    * description="retrieve submission posts",
+    * operationId="Submission_Posts",
+    * tags={"posts"},
+    *  @OA\Parameter(
+    *         name="offset",
+    *         in="query",
+    *         required=false,
+    *         description="Post number to start at",
+    *         @OA\Schema(
+    *              type="String"
+    *         )
+    *      ),
+    *  @OA\Parameter(
+    *         name="filter",
+    *         in="query",
+    *         required=false,
+    *         description="Specifies the post format to return(Html,MarkDown,Rich)",
+    *         @OA\Schema(
+    *              type="string"
+    *         )
+    *      ),
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Url Example: api.tumblr.com/v1/blog/{blog-identifier}/posts/submission",
+    *    @OA\JsonContent(
+    *       @OA\Property(property="filter", type="string", format="string", example="Markdown"),
+    *    ),
+    * ),
+    * @OA\Response(
+    *    response=404,
+    *    description="Not Found",
+    *    @OA\JsonContent(
+    *       type="object",
+    *       @OA\Property(property="Meta", type="object",
+    *          @OA\Property(property="Status", type="integer", example=404),
+    *           @OA\Property(property="msg", type="string", example="not found"),
+    *        ),
+    *   ),
+    * ),
+    *   @OA\Response(
+    *      response=401,
+    *       description="Unauthenticated"
+    *   ),
+    * @OA\Response(
+    *    response=200,
+    *    description="sucess",
+    *    @OA\JsonContent(
+    *       type="object",
+    *       @OA\Property(property="Meta", type="object",
+    *          @OA\Property(property="Status", type="integer", example=200),
+    *           @OA\Property(property="msg", type="string", example="OK"),
+    *        ),
+    *       @OA\Property(property="response", type="object",
+    *             @OA\Property(property="id", type="string/integer",description="The ID of the submitted post",example=12351312),           
+    *             @OA\Property(property="post_url", type="string",description="The location of the post",example="https://ahmed-abdelhamed.tumblr.com/post/66686750959666/hajsdfhks"),           
+    *             @OA\Property(property="slug", type="string",description="Short text summary to the end of the post URL",example="hajsdfhks"),           
+    *             @OA\Property(property="type", type="string",description="The type of post. One of the following: text, photo, quote, link, video",example="text"),           
+    *             @OA\Property(property="date", type="string",description="The GMT date and time of the post",example="YYYY-DD-MM HH:MM:SS"),           
+    *             @OA\Property(property="timestamp", type="integer",description="The time of the post, in seconds since the epoch",example="1635865720"),           
+    *             @OA\Property(property="state", type="string",description="Indicates the current state of the post (submission)",example="submission"),           
+    *             @OA\Property(property="format", type="String",description="Format type of post.",example="Html"),           
+    *             @OA\Property(property="reblog_key", type="string",description="The reblog key for the post",example="HNvqLd5G"),           
+    *             @OA\Property(property="tags", type="array",
+    *                @OA\Items(
+    *                       example={"winter","summer"}
+    *                      ),
+
+    *                   ),
+    *            @OA\Property(property="post_author", type="string",description="Author of post, only available when submission is not anonymous",example="ahmed-abdelhamed"),             
+    *            @OA\Property(property="is_submission", type="Boolean",description="Indicates post is a submission (true)",example=true),             
+    *            @OA\Property(property="is_anonymous", type="Boolean",description="Indicates if the  post is a anonymous",example=false),             
+    *            ),
+    *        ),
+    *     ),
+    *  security ={{"bearer":{}}}
+    * )
+    */
+    public function RetrieveSubmissionPosts()
+    {
+
+    }
+
+    
+    public function Notifications()
+    {
+
+    } 
+
 }
