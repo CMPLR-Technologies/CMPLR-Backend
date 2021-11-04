@@ -1310,6 +1310,188 @@
                 }
             }
         },
+        "/posts/submission": {
+            "get": {
+                "tags": [
+                    "posts"
+                ],
+                "summary": "{blog-identifier}/posts/submission",
+                "description": "retrieve submission posts",
+                "operationId": "Submission_Posts",
+                "parameters": [
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Post number to start at",
+                        "required": false,
+                        "schema": {
+                            "type": "String"
+                        }
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Specifies the post format to return(Html,MarkDown,Rich)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Url Example: api.tumblr.com/v1/blog/{blog-identifier}/posts/submission",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "filter": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Markdown"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 404
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "not found"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "sucess",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "id": {
+                                                    "description": "The ID of the submitted post",
+                                                    "type": "string/integer",
+                                                    "example": 12351312
+                                                },
+                                                "post_url": {
+                                                    "description": "The location of the post",
+                                                    "type": "string",
+                                                    "example": "https://ahmed-abdelhamed.tumblr.com/post/66686750959666/hajsdfhks"
+                                                },
+                                                "slug": {
+                                                    "description": "Short text summary to the end of the post URL",
+                                                    "type": "string",
+                                                    "example": "hajsdfhks"
+                                                },
+                                                "type": {
+                                                    "description": "The type of post. One of the following: text, photo, quote, link, video",
+                                                    "type": "string",
+                                                    "example": "text"
+                                                },
+                                                "date": {
+                                                    "description": "The GMT date and time of the post",
+                                                    "type": "string",
+                                                    "example": "YYYY-DD-MM HH:MM:SS"
+                                                },
+                                                "timestamp": {
+                                                    "description": "The time of the post, in seconds since the epoch",
+                                                    "type": "integer",
+                                                    "example": "1635865720"
+                                                },
+                                                "state": {
+                                                    "description": "Indicates the current state of the post (submission)",
+                                                    "type": "string",
+                                                    "example": "submission"
+                                                },
+                                                "format": {
+                                                    "description": "Format type of post.",
+                                                    "type": "String",
+                                                    "example": "Html"
+                                                },
+                                                "reblog_key": {
+                                                    "description": "The reblog key for the post",
+                                                    "type": "string",
+                                                    "example": "HNvqLd5G"
+                                                },
+                                                "tags": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "example": [
+                                                            "winter",
+                                                            "summer"
+                                                        ]
+                                                    }
+                                                },
+                                                "post_author": {
+                                                    "description": "Author of post, only available when submission is not anonymous",
+                                                    "type": "string",
+                                                    "example": "ahmed-abdelhamed"
+                                                },
+                                                "is_submission": {
+                                                    "description": "Indicates post is a submission (true)",
+                                                    "type": "Boolean",
+                                                    "example": true
+                                                },
+                                                "is_anonymous": {
+                                                    "description": "Indicates if the  post is a anonymous",
+                                                    "type": "Boolean",
+                                                    "example": false
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
         "/post/delete": {
             "delete": {
                 "tags": [
@@ -3229,188 +3411,6 @@
                     },
                     "200": {
                         "description": "Success"
-                    }
-                },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
-            }
-        },
-        "/posts/submission": {
-            "get": {
-                "tags": [
-                    "posts"
-                ],
-                "summary": "{blog-identifier}/posts/submission",
-                "description": "retrieve submission posts",
-                "operationId": "Submission_Posts",
-                "parameters": [
-                    {
-                        "name": "offset",
-                        "in": "query",
-                        "description": "Post number to start at",
-                        "required": false,
-                        "schema": {
-                            "type": "String"
-                        }
-                    },
-                    {
-                        "name": "filter",
-                        "in": "query",
-                        "description": "Specifies the post format to return(Html,MarkDown,Rich)",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "Url Example: api.tumblr.com/v2/blog/{blog-identifier}/posts/submission",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "filter": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "Markdown"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "Meta": {
-                                            "properties": {
-                                                "Status": {
-                                                    "type": "integer",
-                                                    "example": 404
-                                                },
-                                                "msg": {
-                                                    "type": "string",
-                                                    "example": "not found"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "200": {
-                        "description": "sucess",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "Meta": {
-                                            "properties": {
-                                                "Status": {
-                                                    "type": "integer",
-                                                    "example": 200
-                                                },
-                                                "msg": {
-                                                    "type": "string",
-                                                    "example": "OK"
-                                                }
-                                            },
-                                            "type": "object"
-                                        },
-                                        "response": {
-                                            "properties": {
-                                                "id": {
-                                                    "description": "The ID of the submitted post",
-                                                    "type": "string/integer",
-                                                    "example": 12351312
-                                                },
-                                                "post_url": {
-                                                    "description": "The location of the post",
-                                                    "type": "string",
-                                                    "example": "https://ahmed-abdelhamed.tumblr.com/post/66686750959666/hajsdfhks"
-                                                },
-                                                "slug": {
-                                                    "description": "Short text summary to the end of the post URL",
-                                                    "type": "string",
-                                                    "example": "hajsdfhks"
-                                                },
-                                                "type": {
-                                                    "description": "The type of post. One of the following: text, photo, quote, link, video",
-                                                    "type": "string",
-                                                    "example": "text"
-                                                },
-                                                "date": {
-                                                    "description": "The GMT date and time of the post",
-                                                    "type": "string",
-                                                    "example": "YYYY-DD-MM HH:MM:SS"
-                                                },
-                                                "timestamp": {
-                                                    "description": "The time of the post, in seconds since the epoch",
-                                                    "type": "integer",
-                                                    "example": "1635865720"
-                                                },
-                                                "state": {
-                                                    "description": "Indicates the current state of the post (submission)",
-                                                    "type": "string",
-                                                    "example": "submission"
-                                                },
-                                                "format": {
-                                                    "description": "Format type of post.",
-                                                    "type": "String",
-                                                    "example": "Html"
-                                                },
-                                                "reblog_key": {
-                                                    "description": "The reblog key for the post",
-                                                    "type": "string",
-                                                    "example": "HNvqLd5G"
-                                                },
-                                                "tags": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "example": [
-                                                            "winter",
-                                                            "summer"
-                                                        ]
-                                                    }
-                                                },
-                                                "post_author": {
-                                                    "description": "Author of post, only available when submission is not anonymous",
-                                                    "type": "string",
-                                                    "example": "ahmed-abdelhamed"
-                                                },
-                                                "is_submission": {
-                                                    "description": "Indicates post is a submission (true)",
-                                                    "type": "Boolean",
-                                                    "example": true
-                                                },
-                                                "is_anonymous": {
-                                                    "description": "Indicates if the  post is a anonymous",
-                                                    "type": "Boolean",
-                                                    "example": false
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
                     }
                 },
                 "security": [
