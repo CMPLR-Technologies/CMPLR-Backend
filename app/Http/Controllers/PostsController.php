@@ -782,6 +782,13 @@ class PostsController extends Controller
      *   @OA\Response(
      *          response=200,
      *          description="successfully deleted",
+     *      @OA\JsonContent(
+    *            type="object",
+    *            @OA\Property(property="Meta", type="object",
+    *            @OA\Property(property="Status", type="integer", example=200),
+    *            @OA\Property(property="msg", type="string", example="OK"),
+    *        ),
+    *      ),
      *      
      *    ),
      *)

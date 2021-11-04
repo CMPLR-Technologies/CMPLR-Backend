@@ -1178,7 +1178,29 @@
                         "description": "Bad Request"
                     },
                     "200": {
-                        "description": "successfully deleted"
+                        "description": "successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
