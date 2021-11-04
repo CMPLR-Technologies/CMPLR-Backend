@@ -520,7 +520,7 @@ class UserController extends Controller
         //
     }
 
-        /**
+    /**
     * @OA\POST(
     * path="user/unlike",
     * summary="Unlike a Post",
@@ -575,6 +575,347 @@ class UserController extends Controller
     public function unlike()
     {
         //
+    }
+
+
+    /**
+    * @OA\Get(
+    * path="user/filtered_tags",
+    * summary="Retrieve Tag Filtering",
+    * description="Retrieve a list of currently-filtered tag strings.",
+    * operationId="UserGetFilteredTags",
+    * tags={"users"},
+    *
+    *    @OA\RequestBody(
+    *      required=true,
+    *      description="Pass user credentials",
+    *    ),
+    *
+    * @OA\Response(
+    *    response=404,
+    *    description="Not Found",
+    * ),
+    * @OA\Response(
+    *      response=401,
+    *       description="Unauthenticated"
+    *   ),
+    * @OA\Response(
+    *    response=200,
+    *    description="success",
+    *    @OA\JsonContent(
+    *       type="object",
+    *       @OA\Property(property="Meta", type="object",
+    *          @OA\Property(property="Status", type="integer", example=200),
+    *           @OA\Property(property="msg", type="string", example="OK"),
+    *        ),
+    *
+    *    @OA\Property(property="filtered_tags", type="array",
+    *           @OA\Items(
+    *               @OA\Property(property="tag1", type="string", example="techonolgy"),
+    *               @OA\Property(property="tag2", type="string", example="something"),
+    *               @OA\Property(property="tag3", type="string", example="something else"),
+    *               )
+    *           ),
+    *        ),
+    *     )
+    * )
+    */
+    public function getFilteredTags()
+    {
+        //
+    }
+
+
+    /**
+    * @OA\Post(
+    * path="user/filtered_tags",
+    * summary="Add Tag Filtering",
+    * description="Add one or more tags to filter.",
+    * operationId="UserPostFilterTag",
+    * tags={"users"},
+    *
+    *   @OA\Parameter(
+    *      name="filtered_tags",
+    *      description="One or more than one tag string to add to your list of filters",
+    *      in="query",
+    *      required=true,
+    *      @OA\Schema(
+    *           type="array of strings"
+    *      )
+    *   ),
+    *    
+    *    @OA\RequestBody(
+    *      required=true,
+    *      description="Pass user credentials",
+    *      @OA\JsonContent(
+    *      required={"filtered_tags"},
+    *      @OA\Property(property="filtered_tags", type="array",
+    *           @OA\Items(
+    *               @OA\Property(property="tag1", type="string", example="techonolgy"),
+    *               @OA\Property(property="tag2", type="string", example="something"),
+    *               @OA\Property(property="tag3", type="string", example="something else"),
+    *               )
+    *           ),    
+    *    ),
+    *   ),
+    *
+    * @OA\Response(
+    *    response=404,
+    *    description="Not Found",
+    * ),
+    *   @OA\Response(
+    *      response=401,
+    *       description="Unauthenticated"
+    *   ),
+    * @OA\Response(
+    *    response=200,
+    *    description="success",
+    *        )
+    * )
+    */
+    public function createFilteredTags()
+    {
+        //
+    }
+
+
+
+    /**
+    *	@OA\Delete
+    *	(
+    * 		path="user/filtered_tags/{tag}",
+    * 		summary="Remove Tag Filtering",
+    * 		description="Remove a tag filter.",
+    * 		operationId="UserDeleteFilteringTag",
+    * 		tags={"users"},
+    *
+    *   	@OA\Parameter
+    *		(
+    *      		name="tag",
+    *      		description="Tag to stop filtering",
+    *      		in="path",
+    *      		required=true,
+    *      		@OA\Schema
+    *			(
+    *           		type="string"
+    *      		)
+    *   	),
+    *    
+    *    	@OA\RequestBody
+    *		(
+    *      		required=true,
+    *      		description="Pass user credentials",
+    *      		@OA\JsonContent
+    *			(
+    *	    			required={"tag"},
+    *      			@OA\Property(property="tag", type="string", format="text", example="football"),
+    *      		),
+    *    	),
+    *
+    * 		@OA\Response
+    *		(
+    *    		response=404,
+    *    		description="Not Found",
+    * 		),
+    *
+    *	   	@OA\Response
+    *		(
+    *		      response=401,
+    *		      description="Unauthenticated"
+    *	   	),
+    *
+    *		@OA\Response
+    *		(
+    *	    	response=200,
+    *    		description="success",
+    *     	)
+    * )
+    */
+    public function removeFilteredTags()
+    {
+        //
+    }
+
+    /**
+    *	@OA\Get
+    *	(
+    * 		path="user/filtered_content",
+    * 		summary="Retrieve Content Filtering",
+    * 		description="Retrieve a list of currently-filtered content strings.",
+    * 		operationId="UserGetFilteredContent",
+    * 		tags={"users"},
+    *
+    *    	@OA\RequestBody
+    *		(
+    *      		required=true,
+    *      		description="Pass user credentials",
+    *    	),
+    *
+    * 		@OA\Response
+    *		(
+    *    		response=404,
+    *    		description="Not Found",
+    * 		),
+    *
+    *	   	@OA\Response
+    *		(
+    *		      response=401,
+    *		      description="Unauthenticated"
+    *	   	),
+    *
+    *		@OA\Response
+    *		(
+    *	    	response=200,
+    *    		description="success",
+    *    		@OA\JsonContent
+    *			(
+    *       		type="object",
+    *       		@OA\Property
+    *				(
+    *					property="Meta", type="object",
+    *					@OA\Property(property="Status", type="integer", example=200),
+    *					@OA\Property(property="msg", type="string", example="OK"),
+    *        		),
+    *
+    *       			@OA\Property
+    *				    (
+    *             			@OA\Property
+    *					    (
+    *						        property="filtered_content", type="array",
+    *                				@OA\Items
+    *						        (
+    *			        	              @OA\Property(property="tag1_content",example="technology"),
+    *			        	              @OA\Property(property="tag2_content",example="something"),
+    *			        	        ),
+    *       
+    *               		),           
+    *           		),
+    *        	),
+    *     	)
+    * )
+    */
+    public function getFilteredContent()
+    {
+
+    }
+
+    /**
+    *	@OA\Post
+    *	(
+    * 		path="user/filtered_content",
+    * 		summary="Add Content Filtering",
+    * 		description="Add one or more content strings to filter.",
+    * 		operationId="UserPostFilteringContent",
+    * 		tags={"users"},
+    *
+    *   	@OA\Parameter
+    *		(
+    *      		name="filtered_content",
+    *      		description="One or more than one string to add to your list of filters",
+    *      		in="query",
+    *      		required=true,
+    *      		@OA\Schema
+    *			(
+    *           		type="array of strings"
+    *      		)
+    *   	),
+    *    
+    *    	@OA\RequestBody
+    *		(
+    *      		required=true,
+    *      		description="Pass user credentials",
+    *      		@OA\JsonContent
+    *			(
+    *	    		required={"filtered_content"},
+    *               @OA\Property(property="filtered_tags", type="array",
+    *                   @OA\Items
+    *                   (
+    *                       @OA\Property(property="tag1", type="string", example="techonolgy"),
+    *                       @OA\Property(property="tag2", type="string", example="something"),
+    *                       @OA\Property(property="tag3", type="string", example="something else"),
+    *                   )
+    *               )
+    *           ),      
+    *    	),
+    *
+    * 		@OA\Response
+    *		(
+    *    		response=404,
+    *    		description="Not Found",
+    * 		),
+    *
+    *	   	@OA\Response
+    *		(
+    *		      response=401,
+    *		      description="Unauthenticated"
+    *	   	),
+    *
+    *		@OA\Response
+    *		(
+    *	    	response=200,
+    *    		description="success",
+    *     	)
+    * )
+    */    
+    public function createFilteredContent()
+    {
+
+    }
+
+    /**
+    *	@OA\Delete
+    *	(
+    * 		path="user/filtered_content",
+    * 		summary="Remove filtered_content",
+    * 		description="rRemove a content filter string.",
+    * 		operationId="UserDeleteFilteringContent",
+    * 		tags={"users"},
+    *
+    *   	@OA\Parameter
+    *		(
+    *      		name="filtered_content",
+    *      		description="Content filter string to remove.",
+    *      		in="path",
+    *      		required=true,
+    *      		@OA\Schema
+    *			(
+    *           		type="string"
+    *      		)
+    *   	),
+    *    
+    *    	@OA\RequestBody
+    *		(
+    *      		required=true,
+    *      		description="Pass user credentials",
+    *      		@OA\JsonContent
+    *			(
+    *	    		required={"filtered_content"},
+    *      			@OA\Property(property="filtered_content", type="string", format="text", example="hello_filter"),
+    *      		),
+    *    	),
+    *
+    * 		@OA\Response
+    *		(
+    *    		response=404,
+    *    		description="Not Found",
+    * 		),
+    *
+    *	   	@OA\Response
+    *		(
+    *		      response=401,
+    *		      description="Unauthenticated"
+    *	   	),
+    *
+    *		@OA\Response
+    *		(
+    *	    	response=200,
+    *    		description="success",
+    *     	)
+    * )
+    */
+    public function removeFilteredContent()
+    {
+
     }
 
 }

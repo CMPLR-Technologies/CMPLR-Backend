@@ -2226,6 +2226,375 @@
                     }
                 }
             }
+        },
+        "user/filtered_tags": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Retrieve Tag Filtering",
+                "description": "Retrieve a list of currently-filtered tag strings.",
+                "operationId": "UserGetFilteredTags",
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "filtered_tags": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "tag1": {
+                                                        "type": "string",
+                                                        "example": "techonolgy"
+                                                    },
+                                                    "tag2": {
+                                                        "type": "string",
+                                                        "example": "something"
+                                                    },
+                                                    "tag3": {
+                                                        "type": "string",
+                                                        "example": "something else"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Add Tag Filtering",
+                "description": "Add one or more tags to filter.",
+                "operationId": "UserPostFilterTag",
+                "parameters": [
+                    {
+                        "name": "filtered_tags",
+                        "in": "query",
+                        "description": "One or more than one tag string to add to your list of filters",
+                        "required": true,
+                        "schema": {
+                            "type": "array of strings"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "filtered_tags"
+                                ],
+                                "properties": {
+                                    "filtered_tags": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "tag1": {
+                                                    "type": "string",
+                                                    "example": "techonolgy"
+                                                },
+                                                "tag2": {
+                                                    "type": "string",
+                                                    "example": "something"
+                                                },
+                                                "tag3": {
+                                                    "type": "string",
+                                                    "example": "something else"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
+        },
+        "user/filtered_tags/{tag}": {
+            "delete": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Remove Tag Filtering",
+                "description": "Remove a tag filter.",
+                "operationId": "UserDeleteFilteringTag",
+                "parameters": [
+                    {
+                        "name": "tag",
+                        "in": "path",
+                        "description": "Tag to stop filtering",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "tag"
+                                ],
+                                "properties": {
+                                    "tag": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "football"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
+        },
+        "user/filtered_content": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Retrieve Content Filtering",
+                "description": "Retrieve a list of currently-filtered content strings.",
+                "operationId": "UserGetFilteredContent",
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "": {
+                                            "properties": {
+                                                "filtered_content": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "tag1_content": {
+                                                                "example": "technology"
+                                                            },
+                                                            "tag2_content": {
+                                                                "example": "something"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Add Content Filtering",
+                "description": "Add one or more content strings to filter.",
+                "operationId": "UserPostFilteringContent",
+                "parameters": [
+                    {
+                        "name": "filtered_content",
+                        "in": "query",
+                        "description": "One or more than one string to add to your list of filters",
+                        "required": true,
+                        "schema": {
+                            "type": "array of strings"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "filtered_content"
+                                ],
+                                "properties": {
+                                    "filtered_tags": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "tag1": {
+                                                    "type": "string",
+                                                    "example": "techonolgy"
+                                                },
+                                                "tag2": {
+                                                    "type": "string",
+                                                    "example": "something"
+                                                },
+                                                "tag3": {
+                                                    "type": "string",
+                                                    "example": "something else"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Remove filtered_content",
+                "description": "rRemove a content filter string.",
+                "operationId": "UserDeleteFilteringContent",
+                "parameters": [
+                    {
+                        "name": "filtered_content",
+                        "in": "path",
+                        "description": "Content filter string to remove.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "filtered_content"
+                                ],
+                                "properties": {
+                                    "filtered_content": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "hello_filter"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
         }
     },
     "tags": [
