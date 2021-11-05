@@ -53,6 +53,34 @@
                 }
             }
         },
+        "user/resend_verification_email": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "resend verification email for the user",
+                "description": "User can get verification for existing email",
+                "operationId": "resendVerificationEmail",
+                "responses": {
+                    "200": {
+                        "description": "Successfully sent email to reset password",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email sent to yousef.elftah00@eng-st.cu.edu.eg!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/Login": {
             "post": {
                 "tags": [
@@ -123,6 +151,72 @@
                     },
                     "401": {
                         "description": "Unauthenticated"
+                    }
+                }
+            }
+        },
+        "/Signup": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register to tumblr",
+                "description": "User register to the website",
+                "operationId": "Signup",
+                "parameters": [
+                    {
+                        "name": "Email",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "Password",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "Blogname",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "Blogname"
+                                ],
+                                "properties": {
+                                    "Email": {
+                                        "type": "email",
+                                        "format": "email",
+                                        "example": "tumblr.email@gmail.com"
+                                    },
+                                    "Password": {
+                                        "type": "string",
+                                        "format": "Password",
+                                        "example": "pass123"
+                                    },
+                                    "Blogname": {
+                                        "type": "string",
+                                        "format": "Password",
+                                        "example": "Winter-is-comming"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Registered Successfully"
+                    },
+                    "422": {
+                        "description": "Invalid Data"
                     }
                 }
             }
@@ -4566,6 +4660,13 @@
                         }
                     }
                 }
+            }
+        }
+    },
+    "components": {
+        "responses": {
+            "401": {
+                "description": "Unauthenticated"
             }
         }
     },
