@@ -53,7 +53,7 @@
                 }
             }
         },
-        "user/resend_verification_email": {
+        "/user/resend_verification_email": {
             "post": {
                 "tags": [
                     "Auth"
@@ -81,7 +81,7 @@
                 }
             }
         },
-        "/Login": {
+        "/login": {
             "post": {
                 "tags": [
                     "Auth"
@@ -137,7 +137,7 @@
                 }
             }
         },
-        "/Logout": {
+        "/logout": {
             "post": {
                 "tags": [
                     "Auth"
@@ -155,7 +155,7 @@
                 }
             }
         },
-        "/Signup": {
+        "/signup": {
             "post": {
                 "tags": [
                     "Auth"
@@ -4555,21 +4555,21 @@
         "/settings/account": {
             "get": {
                 "tags": [
-                    "User"
+                    "Settings"
                 ],
                 "summary": "User setting",
                 "description": "Retrieve Account Setting for User.",
-                "operationId": "GEtAccountSetting",
+                "operationId": "accountSettings",
                 "responses": {
                     "200": {
-                        "description": "sucess",
+                        "description": "Success",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "Meta": {
+                                        "meta": {
                                             "properties": {
-                                                "Status": {
+                                                "status": {
                                                     "type": "integer",
                                                     "example": 200
                                                 },
@@ -4582,15 +4582,15 @@
                                         },
                                         "response": {
                                             "properties": {
-                                                "Email": {
+                                                "email": {
                                                     "type": "string",
                                                     "example": "example@gmail.com"
                                                 },
-                                                "Password": {
+                                                "password": {
                                                     "type": "string",
                                                     "example": "password123"
                                                 },
-                                                "GoogleLogin": {
+                                                "google_login": {
                                                     "type": "Boolean",
                                                     "example": false
                                                 },
@@ -4598,13 +4598,53 @@
                                                     "type": "Boolean",
                                                     "example": true
                                                 },
-                                                "Two-factor_authentication": {
+                                                "two-factor_authentication": {
                                                     "type": "Boolean",
                                                     "example": false
                                                 },
-                                                "filtteringTags": {
+                                                "filtering_tags": {
                                                     "type": "string",
                                                     "example": "summer,winter,sunny"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/settings/account/delete": {
+            "delete": {
+                "tags": [
+                    "Settings"
+                ],
+                "summary": "Delete User Account",
+                "description": "This method is used to delete the account of the authenticated user.",
+                "operationId": "deleteAccount",
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
                                                 }
                                             },
                                             "type": "object"
