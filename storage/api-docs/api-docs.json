@@ -12,6 +12,384 @@
         }
     ],
     "paths": {
+        "blog/{blog-identifier}/ask": {
+            "post": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Ask A Blog",
+                "description": "used to send a question to a blog",
+                "operationId": "CreateAsk",
+                "parameters": [
+                    {
+                        "name": "anonymously",
+                        "in": "path",
+                        "description": "whether to ask the question anonymously or to use the user info",
+                        "required": false,
+                        "schema": {
+                            "type": "Boolean"
+                        }
+                    },
+                    {
+                        "name": "question",
+                        "in": "query",
+                        "description": "the content of the question",
+                        "required": true,
+                        "schema": {
+                            "type": "String"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "description": "Pass user credentials",
+                                "required": [
+                                    "question"
+                                ],
+                                "properties": {
+                                    "anonymously": {
+                                        "type": "Boolean",
+                                        "format": "Boolean",
+                                        "example": "true"
+                                    },
+                                    "question": {
+                                        "type": "String",
+                                        "format": "text",
+                                        "example": "how are you?"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
+        },
+        "user/inbox": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "the user's inbox",
+                "description": "Retrieve the all asks and  submissions",
+                "operationId": "GetUserInbox",
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "total_asks": {
+                                                    "type": "Number",
+                                                    "example": 263
+                                                },
+                                                "total_submissions": {
+                                                    "type": "Number",
+                                                    "example": 214
+                                                },
+                                                "asks": {
+                                                    "description": "asks in user's inbox",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "ask_1": {
+                                                                "description": "the first ask",
+                                                                "type": "object"
+                                                            },
+                                                            "ask_2": {
+                                                                "description": "the second ask",
+                                                                "type": "object"
+                                                            },
+                                                            "ask_3": {
+                                                                "description": "the third ask",
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "submissions": {
+                                                    "description": "submissions in user's inbox",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "sub_1": {
+                                                                "description": "the first submission",
+                                                                "type": "object"
+                                                            },
+                                                            "sub_2": {
+                                                                "description": "the second submission",
+                                                                "type": "object"
+                                                            },
+                                                            "sub_3": {
+                                                                "description": "the third submission",
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/forgot_password": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "forget password for existing user",
+                "description": "User can reset password for existing email",
+                "operationId": "forgetPassword",
+                "responses": {
+                    "200": {
+                        "description": "Successfully redirect"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "reset password for existing user",
+                "description": "User can reset password for existing email",
+                "operationId": "resetPassword",
+                "parameters": [
+                    {
+                        "name": "Email",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully sent email to reset password"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/user/resend_verification_email": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "resend verification email for the user",
+                "description": "User can get verification for existing email",
+                "operationId": "resendVerificationEmail",
+                "responses": {
+                    "200": {
+                        "description": "Successfully sent email to reset password",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email sent to yousef.elftah00@eng-st.cu.edu.eg!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login for existing Email",
+                "description": "User Login to his email ",
+                "operationId": "Login",
+                "parameters": [
+                    {
+                        "name": "Email",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "Password",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "Password"
+                                ],
+                                "properties": {
+                                    "Email": {
+                                        "type": "email",
+                                        "format": "email",
+                                        "example": "tumblr.email@gmail.com"
+                                    },
+                                    "Password": {
+                                        "type": "string",
+                                        "format": "Password",
+                                        "example": "pass123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "Login Successfully"
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout from Email",
+                "description": "User Logout from his email ",
+                "operationId": "Logout",
+                "responses": {
+                    "200": {
+                        "description": "Logout Successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                }
+            }
+        },
+        "/signup": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register to tumblr",
+                "description": "User register to the website",
+                "operationId": "Signup",
+                "parameters": [
+                    {
+                        "name": "Email",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "Password",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "Blogname",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "Blogname"
+                                ],
+                                "properties": {
+                                    "Email": {
+                                        "type": "email",
+                                        "format": "email",
+                                        "example": "tumblr.email@gmail.com"
+                                    },
+                                    "Password": {
+                                        "type": "string",
+                                        "format": "Password",
+                                        "example": "pass123"
+                                    },
+                                    "Blogname": {
+                                        "type": "string",
+                                        "format": "Password",
+                                        "example": "Winter-is-comming"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Registered Successfully"
+                    },
+                    "422": {
+                        "description": "Invalid Data"
+                    }
+                }
+            }
+        },
         "/blog/{blog-identifier}/blocks": {
             "get": {
                 "tags": [
@@ -47,51 +425,69 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "blocked_blogs": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "title": {
-                                                        "type": "string",
-                                                        "example": "John Doe"
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "example": "john-doe"
-                                                    },
-                                                    "updated": {
-                                                        "type": "number",
-                                                        "example": 1308953007
-                                                    },
-                                                    "url": {
-                                                        "type": "string",
-                                                        "example": "https://www.cmplr.com/blogs/john-doe"
-                                                    },
-                                                    "description": {
-                                                        "type": "string",
-                                                        "example": "<p><strong>Mr. Karp</strong> is tall and skinny, with unflinching blue eyes a mop of brown hair.\\r\\nHe speaks incredibly fast and in complete paragraphs.</p>"
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "blocked_blogs": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "title": {
+                                                                "type": "string",
+                                                                "example": "John Doe"
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "john-doe"
+                                                            },
+                                                            "updated": {
+                                                                "type": "number",
+                                                                "example": 1308953007
+                                                            },
+                                                            "url": {
+                                                                "type": "string",
+                                                                "example": "https://www.cmplr.com/blogs/john-doe"
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "example": "<p><strong>Mr. Karp</strong> is tall and skinny, with unflinching blue eyes a mop of brown hair.\\r\\nHe speaks incredibly fast and in complete paragraphs.</p>"
+                                                            }
+                                                        },
+                                                        "type": "object"
                                                     }
                                                 },
-                                                "type": "object"
-                                            }
-                                        },
-                                        "_links": {
-                                            "properties": {
-                                                "next": {
+                                                "_links": {
                                                     "properties": {
-                                                        "href": {
-                                                            "type": "string",
-                                                            "example": "/api/v1/blogs/john-doe/blocks?offset=20"
-                                                        },
-                                                        "method": {
-                                                            "type": "string",
-                                                            "example": "GET"
-                                                        },
-                                                        "query_params": {
+                                                        "next": {
                                                             "properties": {
-                                                                "offset": {
-                                                                    "type": "number",
-                                                                    "example": 20
+                                                                "href": {
+                                                                    "type": "string",
+                                                                    "example": "/api/v1/blogs/john-doe/blocks?offset=20"
+                                                                },
+                                                                "method": {
+                                                                    "type": "string",
+                                                                    "example": "GET"
+                                                                },
+                                                                "query_params": {
+                                                                    "properties": {
+                                                                        "offset": {
+                                                                            "type": "number",
+                                                                            "example": 20
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
                                                                 }
                                                             },
                                                             "type": "object"
@@ -149,7 +545,29 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Success"
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -192,54 +610,31 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Success"
-                    }
-                },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
-            }
-        },
-        "/blog/{blog-identifier}/blocks/bulk": {
-            "post": {
-                "tags": [
-                    "Blogs"
-                ],
-                "summary": "Block a list of Blogs",
-                "description": "Block a list of blogs by sending their identifiers",
-                "operationId": "blockManyBlogs",
-                "parameters": [
-                    {
-                        "name": "blog-identifier",
-                        "in": "path",
-                        "description": "Your blog identifier",
-                        "required": true
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "blocked_blogs": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "john-doe, abdullah-alshawafi"
-                                    }
-                                },
-                                "type": "object"
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
                             }
                         }
                     }
                 },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                },
                 "security": [
                     {
                         "bearer": []
@@ -247,42 +642,21 @@
                 ]
             }
         },
-        "Blog/{blog-identifier}/followed_by": {
+        "/blog/{blog-identifier}/followed_by": {
             "get": {
                 "tags": [
                     "Blogs"
                 ],
-                "summary": "blog/Followed_by",
-                "description": "This method can be used to check if one of your blogs is followed by another blog",
-                "operationId": "Followed_by",
+                "summary": "Check If Followed By Blog",
+                "description": "This method can be used to check if one of your blogs is followed by another blog.",
+                "operationId": "followedBy",
                 "parameters": [
                     {
                         "name": "blog-identifier",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     }
                 ],
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "blog-identifier"
-                                ],
-                                "properties": {
-                                    "blog-identifier": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "summer_blog"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "404": {
                         "description": "Not Found"
@@ -291,22 +665,32 @@
                         "description": "Unauthenticated"
                     },
                     "200": {
-                        "description": "sucess",
+                        "description": "Success",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "Status": {
-                                            "type": "integer",
-                                            "example": 200
-                                        },
-                                        "msg": {
-                                            "type": "string",
-                                            "example": "OK"
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
                                         },
                                         "response": {
-                                            "type": "string",
-                                            "example": "{followed_by : false}"
+                                            "properties": {
+                                                "followed_by": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -317,18 +701,18 @@
                 }
             }
         },
-        "blog/{blog-identifier}/followers": {
+        "/blog/{blog-identifier}/followers": {
             "get": {
                 "tags": [
                     "Blogs"
                 ],
-                "summary": "blog/follows",
-                "description": "This method can be used to get followers for specific Blog",
-                "operationId": "followers",
+                "summary": "Retrieve a Blog's Followers",
+                "description": "This method can be used to get the followers of a specific blog",
+                "operationId": "getFollowers",
                 "parameters": [
                     {
                         "name": "blog-identifier",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     },
                     {
@@ -378,14 +762,14 @@
                         "description": "Unauthenticated"
                     },
                     "200": {
-                        "description": "sucess",
+                        "description": "Success",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "Meta": {
+                                        "meta": {
                                             "properties": {
-                                                "Status": {
+                                                "status": {
                                                     "type": "integer",
                                                     "example": 200
                                                 },
@@ -414,9 +798,9 @@
                                                                 "type": "Boolean",
                                                                 "example": true
                                                             },
-                                                            "Url": {
+                                                            "url": {
                                                                 "type": "string",
-                                                                "example": "https:www.davidslog.com"
+                                                                "example": "https://www.davidslog.com"
                                                             },
                                                             "updated": {
                                                                 "type": "integer",
@@ -473,55 +857,73 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "total_blogs": {
-                                            "type": "number",
-                                            "example": 20
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
                                         },
-                                        "blogs": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "title": {
-                                                        "type": "string",
-                                                        "example": "John Doe"
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "example": "john-doe"
-                                                    },
-                                                    "updated": {
-                                                        "type": "number",
-                                                        "example": 1308953007
-                                                    },
-                                                    "url": {
-                                                        "type": "string",
-                                                        "example": "https://www.cmplr.com/blogs/john-doe"
-                                                    },
-                                                    "description": {
-                                                        "type": "string",
-                                                        "example": "<p><strong>Mr. Karp</strong> is tall and skinny, with unflinching blue eyes a mop of brown hair.\\r\\nHe speaks incredibly fast and in complete paragraphs.</p>"
+                                        "response": {
+                                            "properties": {
+                                                "total_blogs": {
+                                                    "type": "number",
+                                                    "example": 20
+                                                },
+                                                "blogs": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "title": {
+                                                                "type": "string",
+                                                                "example": "John Doe"
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "john-doe"
+                                                            },
+                                                            "updated": {
+                                                                "type": "number",
+                                                                "example": 1308953007
+                                                            },
+                                                            "url": {
+                                                                "type": "string",
+                                                                "example": "https://www.cmplr.com/blogs/john-doe"
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "example": "<p><strong>Mr. Karp</strong> is tall and skinny, with unflinching blue eyes a mop of brown hair.\\r\\nHe speaks incredibly fast and in complete paragraphs.</p>"
+                                                            }
+                                                        },
+                                                        "type": "object"
                                                     }
                                                 },
-                                                "type": "object"
-                                            }
-                                        },
-                                        "_links": {
-                                            "properties": {
-                                                "next": {
+                                                "_links": {
                                                     "properties": {
-                                                        "href": {
-                                                            "type": "string",
-                                                            "example": "/api/v1/blogs/john-doe/blocks?offset=20"
-                                                        },
-                                                        "method": {
-                                                            "type": "string",
-                                                            "example": "GET"
-                                                        },
-                                                        "query_params": {
+                                                        "next": {
                                                             "properties": {
-                                                                "offset": {
-                                                                    "type": "number",
-                                                                    "example": 20
+                                                                "href": {
+                                                                    "type": "string",
+                                                                    "example": "/api/v1/blogs/john-doe/blocks?offset=20"
+                                                                },
+                                                                "method": {
+                                                                    "type": "string",
+                                                                    "example": "GET"
+                                                                },
+                                                                "query_params": {
+                                                                    "properties": {
+                                                                        "offset": {
+                                                                            "type": "number",
+                                                                            "example": 20
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
                                                                 }
                                                             },
                                                             "type": "object"
@@ -564,99 +966,117 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "title": {
-                                            "type": "string",
-                                            "example": "John Doe"
-                                        },
-                                        "avatar": {
-                                            "type": "string",
-                                            "example": "https://www.example.com/image/avatar.png"
-                                        },
-                                        "posts": {
-                                            "type": "number",
-                                            "example": 69
-                                        },
-                                        "name": {
-                                            "type": "string",
-                                            "example": "john-doe"
-                                        },
-                                        "url": {
-                                            "type": "string",
-                                            "example": "https://www.cmplr.com/blogs/john-doe"
-                                        },
-                                        "updated": {
-                                            "type": "number",
-                                            "example": 1308953007
-                                        },
-                                        "description": {
-                                            "type": "string",
-                                            "example": "<p><strong>Mr. Karp</strong> is tall and skinny, with unflinching blue eyes a mop of brown hair.\\r\\nHe speaks incredibly fast and in complete paragraphs.</p>"
-                                        },
-                                        "ask": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "ask_anon": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "likes": {
-                                            "type": "number",
-                                            "example": 420
-                                        },
-                                        "is_blocked_from_primary": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "theme": {
+                                        "meta": {
                                             "properties": {
-                                                "avatar_shape": {
-                                                    "type": "string",
-                                                    "example": "circle"
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
                                                 },
-                                                "background_color": {
+                                                "msg": {
                                                     "type": "string",
-                                                    "example": "#00f980"
-                                                },
-                                                "body_font": {
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "title": {
                                                     "type": "string",
-                                                    "example": "Arial"
+                                                    "example": "John Doe"
                                                 },
-                                                "header_image": {
+                                                "avatar": {
                                                     "type": "string",
-                                                    "example": "https://www.example.com/image/header.png"
+                                                    "example": "https://www.example.com/image/avatar.png"
                                                 },
-                                                "link_color": {
+                                                "posts": {
+                                                    "type": "number",
+                                                    "example": 69
+                                                },
+                                                "name": {
                                                     "type": "string",
-                                                    "example": "#eefeef"
+                                                    "example": "john-doe"
                                                 },
-                                                "show_avatar": {
+                                                "url": {
+                                                    "type": "string",
+                                                    "example": "https://www.cmplr.com/blogs/john-doe"
+                                                },
+                                                "updated": {
+                                                    "type": "number",
+                                                    "example": 1308953007
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "<p><strong>Mr. Karp</strong> is tall and skinny, with unflinching blue eyes a mop of brown hair.\\r\\nHe speaks incredibly fast and in complete paragraphs.</p>"
+                                                },
+                                                "ask": {
                                                     "type": "boolean",
                                                     "example": false
                                                 },
-                                                "show_description": {
+                                                "ask_anon": {
                                                     "type": "boolean",
                                                     "example": false
                                                 },
-                                                "show_header_image": {
+                                                "likes": {
+                                                    "type": "number",
+                                                    "example": 420
+                                                },
+                                                "is_blocked_from_primary": {
                                                     "type": "boolean",
                                                     "example": false
                                                 },
-                                                "show_title": {
-                                                    "type": "boolean",
-                                                    "example": false
-                                                },
-                                                "title_color": {
-                                                    "type": "string",
-                                                    "example": "#f0f0f0"
-                                                },
-                                                "title_font": {
-                                                    "type": "string",
-                                                    "example": "Arial"
-                                                },
-                                                "title_font_weight": {
-                                                    "type": "string",
-                                                    "example": "bold"
+                                                "theme": {
+                                                    "properties": {
+                                                        "avatar_shape": {
+                                                            "type": "string",
+                                                            "example": "circle"
+                                                        },
+                                                        "background_color": {
+                                                            "type": "string",
+                                                            "example": "#00f980"
+                                                        },
+                                                        "body_font": {
+                                                            "type": "string",
+                                                            "example": "Arial"
+                                                        },
+                                                        "header_image": {
+                                                            "type": "string",
+                                                            "example": "https://www.example.com/image/header.png"
+                                                        },
+                                                        "link_color": {
+                                                            "type": "string",
+                                                            "example": "#eefeef"
+                                                        },
+                                                        "show_avatar": {
+                                                            "type": "boolean",
+                                                            "example": false
+                                                        },
+                                                        "show_description": {
+                                                            "type": "boolean",
+                                                            "example": false
+                                                        },
+                                                        "show_header_image": {
+                                                            "type": "boolean",
+                                                            "example": false
+                                                        },
+                                                        "show_title": {
+                                                            "type": "boolean",
+                                                            "example": false
+                                                        },
+                                                        "title_color": {
+                                                            "type": "string",
+                                                            "example": "#f0f0f0"
+                                                        },
+                                                        "title_font": {
+                                                            "type": "string",
+                                                            "example": "Arial"
+                                                        },
+                                                        "title_font_weight": {
+                                                            "type": "string",
+                                                            "example": "bold"
+                                                        }
+                                                    },
+                                                    "type": "object"
                                                 }
                                             },
                                             "type": "object"
@@ -705,51 +1125,69 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "liked_posts": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "blog_name": {
-                                                        "type": "string",
-                                                        "example": "john-doe"
-                                                    },
-                                                    "blog_url": {
-                                                        "type": "string",
-                                                        "example": "https://www.cmplr.com/blogs/john-doe"
-                                                    },
-                                                    "post_id": {
-                                                        "type": "number",
-                                                        "example": "1234567890"
-                                                    },
-                                                    "post_notes_count": {
-                                                        "type": "number",
-                                                        "example": 20
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "liked_posts": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "blog_name": {
+                                                                "type": "string",
+                                                                "example": "john-doe"
+                                                            },
+                                                            "blog_url": {
+                                                                "type": "string",
+                                                                "example": "https://www.cmplr.com/blogs/john-doe"
+                                                            },
+                                                            "post_id": {
+                                                                "type": "number",
+                                                                "example": "1234567890"
+                                                            },
+                                                            "post_notes_count": {
+                                                                "type": "number",
+                                                                "example": 20
+                                                            }
+                                                        },
+                                                        "type": "object"
                                                     }
                                                 },
-                                                "type": "object"
-                                            }
-                                        },
-                                        "liked_count": {
-                                            "type": "number",
-                                            "example": 20
-                                        },
-                                        "_links": {
-                                            "properties": {
-                                                "next": {
+                                                "liked_count": {
+                                                    "type": "number",
+                                                    "example": 20
+                                                },
+                                                "_links": {
                                                     "properties": {
-                                                        "href": {
-                                                            "type": "string",
-                                                            "example": "/api/v1/blogs/john-doe/likes?offset=20"
-                                                        },
-                                                        "method": {
-                                                            "type": "string",
-                                                            "example": "GET"
-                                                        },
-                                                        "query_params": {
+                                                        "next": {
                                                             "properties": {
-                                                                "offset": {
-                                                                    "type": "number",
-                                                                    "example": 20
+                                                                "href": {
+                                                                    "type": "string",
+                                                                    "example": "/api/v1/blogs/john-doe/likes?offset=20"
+                                                                },
+                                                                "method": {
+                                                                    "type": "string",
+                                                                    "example": "GET"
+                                                                },
+                                                                "query_params": {
+                                                                    "properties": {
+                                                                        "offset": {
+                                                                            "type": "number",
+                                                                            "example": 20
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
                                                                 }
                                                             },
                                                             "type": "object"
@@ -2328,7 +2766,7 @@
                 }
             }
         },
-        "post/notes": {
+        "/post/notes": {
             "get": {
                 "tags": [
                     "Posts"
@@ -2611,7 +3049,7 @@
                 }
             }
         },
-        "user/info": {
+        "/user/info": {
             "get": {
                 "tags": [
                     "Users"
@@ -2726,7 +3164,7 @@
                 }
             }
         },
-        "user/dashboard": {
+        "/user/dashboard": {
             "get": {
                 "tags": [
                     "Users"
@@ -2850,7 +3288,7 @@
                 }
             }
         },
-        "user/likes": {
+        "/user/likes": {
             "get": {
                 "tags": [
                     "Users"
@@ -2993,7 +3431,7 @@
                 }
             }
         },
-        "user/following": {
+        "/user/following": {
             "get": {
                 "tags": [
                     "Users"
@@ -3108,7 +3546,7 @@
                 }
             }
         },
-        "user/filtered_tags": {
+        "/user/filtered_tags": {
             "get": {
                 "tags": [
                     "Tags"
@@ -3241,7 +3679,7 @@
                 }
             }
         },
-        "user/filtered_tags/{tag}": {
+        "/user/filtered_tags/{tag}": {
             "delete": {
                 "tags": [
                     "Tags"
@@ -3294,7 +3732,7 @@
                 }
             }
         },
-        "user/filtered_content": {
+        "/user/filtered_content": {
             "get": {
                 "tags": [
                     "Tags"
@@ -3538,7 +3976,7 @@
                 }
             }
         },
-        "blog/{blog-identifier}/subscription": {
+        "/blog/{blog-identifier}/subscription": {
             "post": {
                 "tags": [
                     "Blogs"
@@ -3630,7 +4068,7 @@
                 }
             }
         },
-        "{blog-identifier}/add_tags_to_posts": {
+        "/{blog-identifier}/add_tags_to_posts": {
             "post": {
                 "tags": [
                     "Blogs"
@@ -3696,7 +4134,7 @@
                 }
             }
         },
-        "{blog-identifier}/delete_posts": {
+        "/{blog-identifier}/delete_posts": {
             "delete": {
                 "tags": [
                     "Posts"
@@ -3787,7 +4225,7 @@
                 }
             }
         },
-        "{blog-identifier}/get_tags_for_posts": {
+        "/{blog-identifier}/get_tags_for_posts": {
             "post": {
                 "tags": [
                     "Blogs"
@@ -3880,7 +4318,7 @@
                 ]
             }
         },
-        "{blog-identifier}/remove_tags_from_posts": {
+        "/{blog-identifier}/remove_tags_from_posts": {
             "delete": {
                 "tags": [
                     "Blogs"
@@ -3938,7 +4376,7 @@
                 ]
             }
         },
-        "Blog/": {
+        "/blog": {
             "post": {
                 "tags": [
                     "Blogs"
@@ -4104,7 +4542,7 @@
                 }
             }
         },
-        "user/follow": {
+        "/user/follow": {
             "post": {
                 "tags": [
                     "Users"
@@ -4172,7 +4610,7 @@
                 }
             }
         },
-        "user/unfollow": {
+        "/user/unfollow": {
             "post": {
                 "tags": [
                     "Users"
@@ -4225,7 +4663,7 @@
                 }
             }
         },
-        "user/like": {
+        "/user/like": {
             "post": {
                 "tags": [
                     "Users"
@@ -4293,7 +4731,7 @@
                 }
             }
         },
-        "user/unlike": {
+        "/user/unlike": {
             "post": {
                 "tags": [
                     "Users"
@@ -4361,7 +4799,7 @@
                 }
             }
         },
-        "user/post/reply": {
+        "/user/post/reply": {
             "post": {
                 "tags": [
                     "Users"
@@ -4441,21 +4879,21 @@
         "/settings/account": {
             "get": {
                 "tags": [
-                    "User"
+                    "Settings"
                 ],
                 "summary": "User setting",
                 "description": "Retrieve Account Setting for User.",
-                "operationId": "GEtAccountSetting",
+                "operationId": "accountSettings",
                 "responses": {
                     "200": {
-                        "description": "sucess",
+                        "description": "Success",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "Meta": {
+                                        "meta": {
                                             "properties": {
-                                                "Status": {
+                                                "status": {
                                                     "type": "integer",
                                                     "example": 200
                                                 },
@@ -4468,15 +4906,15 @@
                                         },
                                         "response": {
                                             "properties": {
-                                                "Email": {
+                                                "email": {
                                                     "type": "string",
                                                     "example": "example@gmail.com"
                                                 },
-                                                "Password": {
+                                                "password": {
                                                     "type": "string",
                                                     "example": "password123"
                                                 },
-                                                "GoogleLogin": {
+                                                "google_login": {
                                                     "type": "Boolean",
                                                     "example": false
                                                 },
@@ -4484,11 +4922,11 @@
                                                     "type": "Boolean",
                                                     "example": true
                                                 },
-                                                "Two-factor_authentication": {
+                                                "two-factor_authentication": {
                                                     "type": "Boolean",
                                                     "example": false
                                                 },
-                                                "filtteringTags": {
+                                                "filtering_tags": {
                                                     "type": "string",
                                                     "example": "summer,winter,sunny"
                                                 }
@@ -4718,7 +5156,47 @@
                 ]
             }
         },
-        "user/tags/add": {
+        "/settings/account/delete": {
+            "delete": {
+                "tags": [
+                    "Settings"
+                ],
+                "summary": "Delete User Account",
+                "description": "This method is used to delete the account of the authenticated user.",
+                "operationId": "deleteAccount",
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/tags/add": {
             "post": {
                 "tags": [
                     "Tags"
@@ -4770,7 +5248,7 @@
                 }
             }
         },
-        "user/tags/remove": {
+        "/user/tags/remove": {
             "delete": {
                 "tags": [
                     "Tags"
@@ -4820,6 +5298,13 @@
                         }
                     }
                 }
+            }
+        }
+    },
+    "components": {
+        "responses": {
+            "401": {
+                "description": "Unauthenticated"
             }
         }
     },

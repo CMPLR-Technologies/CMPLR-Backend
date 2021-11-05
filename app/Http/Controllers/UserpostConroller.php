@@ -8,7 +8,7 @@ class UserpostConroller extends Controller
 {
     /**
      * @OA\POST(
-     * path="user/like",
+     * path="/user/like",
      * summary="Like a Post",
      * description="enables the user to like a post through the post id",
      * operationId="UserLike",
@@ -65,7 +65,7 @@ class UserpostConroller extends Controller
 
     /**
      * @OA\POST(
-     * path="user/unlike",
+     * path="/user/unlike",
      * summary="Unlike a Post",
      * description="enables the user to unlike a post through the post id",
      * operationId="UserUnlike",
@@ -121,7 +121,7 @@ class UserpostConroller extends Controller
     }
     /**
      * @OA\Post(
-     ** path="user/post/reply",
+     *   path="/user/post/reply",
      *   tags={"Users"},
      *   summary="add new reply to Specific Post",
      *   operationId="add reply",
