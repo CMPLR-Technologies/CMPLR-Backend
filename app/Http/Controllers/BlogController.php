@@ -18,72 +18,6 @@ class BlogController extends Controller
         //
     }
 
-
-    /**
-     * @OA\Post(
-     * path="Blog/",
-     * summary="Create new Blog",
-     * description="User create new Blog ",
-     * operationId="Create",
-     * tags={"Blogs"},
-     *  @OA\Parameter(
-     *         name="Title",
-     *         in="query",
-     *         required=true,
-     *      ),
-     *  @OA\Parameter(
-     *         name="Url",
-     *         in="query",
-     *         required=false,
-     *      ),
-     *  @OA\Parameter(
-     *         name="Privacy",
-     *         in="query",
-     *         required=false,
-     *      ),
-     *  @OA\Parameter(
-     *         name="Password",
-     *         in="query",
-     *         required=false,
-     *      ),
-     * @OA\RequestBody(
-     *    required=true,
-     *    description="Pass user credentials",
-     *    @OA\JsonContent(
-     *       required={"Title"},
-     *       @OA\Property(property="Title", type="string", format="text", example="Summer_Blog"),
-     *       @OA\Property(property="url", type="string", format="url", example="example.tumblr.com"),
-     *       @OA\Property(property="Privacy", type="boolean", example="true"),
-     *       @OA\Property(property="Password", type="string",format="Password", example="pass123"),
-     *    ),
-     * ),
-     * @OA\Response(
-     *    response=201,
-     *    description="Created Successfully",
-     * ),
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
-     * @OA\Response(
-     *    response=422,
-     *    description="Invalid Data",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="Blog url is not available!")
-     *        )
-     *     )
-     * )
-     */
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -335,67 +269,10 @@ class BlogController extends Controller
      *         )
      *       )
      *     )
-     *   ),
-     *   security ={{"bearer":{}}}
+     *   )
      * )
      */
     public function getFollowing(Request $request, Blog $blog)
     {
-    }
-
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Blog  $blog
-     * @return \Illuminate\Http\Response
-     */
-    /**
-     * @OA\Delete(
-     * path="Blog/",
-     * summary="Delete Specific Blog",
-     * description="User Delete Specific Blog ",
-     * operationId="Delete",
-     * tags={"Blogs"},
-     *  @OA\Parameter(
-     *         name="Email",
-     *         in="query",
-     *         required=true,
-     *      ),
-     *  @OA\Parameter(
-     *         name="Password",
-     *         in="query",
-     *         required=true,
-     *      ),
-     * @OA\RequestBody(
-     *    required=true,
-     *    description="Pass user credentials",
-     *    @OA\JsonContent(
-     *       required={"Email","Password"},
-     *       @OA\Property(property="Email", type="string", format="email", example="Email@gmail.com"),
-     *       @OA\Property(property="Password", type="string", format="Password", example="Password123"),
-     *    ),
-     * ),
-     * @OA\Response(
-     *    response=200,
-     *    description="successful",
-     * ),
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
-     * @OA\Response(
-     *    response=422,
-     *    description="Invalid Data",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="msg", type="integer", example=422),
-     *       @OA\Property(property="status", type="string", example="That password is incorrect. Please try again")
-     *        )
-     *     )
-     * )
-     */
-    public function destroy(Blog $blog)
-    {
-        //
     }
 }
