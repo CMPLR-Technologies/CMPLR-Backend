@@ -9,7 +9,7 @@ class LoginController extends Controller
 {
     /**
      * @OA\Post(
-     * path="/Login",
+     * path="/login",
      * summary="Login for existing Email",
      * description="User Login to his email ",
      * operationId="Login",
@@ -45,13 +45,6 @@ class LoginController extends Controller
      * ),
      * )
      */
-
-    /**
-     * check user data in the database
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function Login(Request $request)
     {
         //
@@ -59,7 +52,7 @@ class LoginController extends Controller
 
     /**
      * @OA\Post(
-     * path="/Logout",
+     * path="/logout",
      * summary="Logout from Email",
      * description="User Logout from his email ",
      * operationId="Logout",
@@ -74,17 +67,8 @@ class LoginController extends Controller
      *   ),
      * )
      */
-
-    /**
-     * logout user from his email
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function Logout()
     {
         //
     }
-
-    
 }

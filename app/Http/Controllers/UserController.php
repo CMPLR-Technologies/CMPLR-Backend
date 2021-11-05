@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     /**
-     * @OA\GET(
-     * path="user/info",
+     * @OA\Get(
+     * path="/user/info",
      * summary=" retrieving the user’s account information ",
      * description="This method can be used to  retrieve the user’s account information that matches the OAuth credentials submitted with the request",
      * operationId="index",
@@ -93,19 +93,14 @@ class UserController extends Controller
      *     )
      * )
      */
-
-    /**
-     * Display a listing of user info.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         //
     }
+
     /**
-     * @OA\GET(
-     * path="user/dashboard",
+     * @OA\Get(
+     * path="/user/dashboard",
      * summary=" retrieving the user’s dashboard",
      * description="This method can be used to  retrieve the user’s dashboard that matches the OAuth credentials submitted with the request",
      * operationId="index",
@@ -212,21 +207,14 @@ class UserController extends Controller
      * 
      * )
      */
-
-
-    /**
-     * Display a dashboard of user info.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function getDashboard()
     {
         //
     }
 
     /**
-     * @OA\GET(
-     * path="user/likes",
+     * @OA\Get(
+     * path="/user/likes",
      * summary="Retrieve a User's Likes",
      * description="retrieve the posts liked by the user",
      * operationId="getUserLikes",
@@ -289,51 +277,49 @@ class UserController extends Controller
      *       description="Unauthenticated"
      *   ),
      *   
-    *       @OA\Response
-    *		(
-    *	    	response=200,
-    *    		description="success",
-    *    		@OA\JsonContent
-    *			(
-    *       			type="object",
-    *       			@OA\Property
-    *				    (
-    *					    property="Meta", type="object",
-    *					    @OA\Property(property="Status", type="integer", example=200),
-    *					    @OA\Property(property="msg", type="string", example="OK"),
-    *        			),
-    *
-    *       			@OA\Property
-    *				    (
-    *					    property="response", type="object",
-    *             			@OA\Property(property="total_posts", type="Number", example=263),
-    *             			@OA\Property
-    *					    (
-    *						    property="posts", type="array",
-    *                			@OA\Items
-    *						    (
-    *			        	        @OA\Property(property="post1",description="the first post",type="object"),
-    *			        	        @OA\Property(property="post2",description="the second post",type="object"),
-    *			        	        @OA\Property(property="post3",description="the third post",type="object"),
-    *			        	    ),
-    *       
-    *               		),
-    *           		),
-    *        		),
-    *     	)
+     *       @OA\Response
+     *		(
+     *	    	response=200,
+     *    		description="success",
+     *    		@OA\JsonContent
+     *			(
+     *       			type="object",
+     *       			@OA\Property
+     *				    (
+     *					    property="Meta", type="object",
+     *					    @OA\Property(property="Status", type="integer", example=200),
+     *					    @OA\Property(property="msg", type="string", example="OK"),
+     *        			),
+     *
+     *       			@OA\Property
+     *				    (
+     *					    property="response", type="object",
+     *             			@OA\Property(property="total_posts", type="Number", example=263),
+     *             			@OA\Property
+     *					    (
+     *						    property="posts", type="array",
+     *                			@OA\Items
+     *						    (
+     *			        	        @OA\Property(property="post1",description="the first post",type="object"),
+     *			        	        @OA\Property(property="post2",description="the second post",type="object"),
+     *			        	        @OA\Property(property="post3",description="the third post",type="object"),
+     *			        	    ),
+     *       
+     *               		),
+     *           		),
+     *        		),
+     *     	)
      * 
      * )
      */
-
     public function getLikes()
     {
         //
     }
 
-
     /**
-     * @OA\GET(
-     * path="user/following",
+     * @OA\Get(
+     * path="/user/following",
      * summary="Retrieve the Blogs a User Is Following",
      * description="Used to return the blogs followed by the user, and info about those blogs.",
      * operationId="getUserFollowing",
@@ -376,39 +362,39 @@ class UserController extends Controller
      *       description="Unauthenticated"
      *   ),
      * 
-    *       @OA\Response
-    *		(
-    *	    	response=200,
-    *    		description="success",
-    *    		@OA\JsonContent
-    *			(
-    *       			type="object",
-    *       			@OA\Property
-    *				    (
-    *					    property="Meta", type="object",
-    *					    @OA\Property(property="Status", type="integer", example=200),
-    *					    @OA\Property(property="msg", type="string", example="OK"),
-    *        			),
-    *
-    *       			@OA\Property
-    *				    (
-    *					    property="response", type="object",
-    *             			@OA\Property(property="total_blogs", type="Number", example=263),
-    *             			@OA\Property
-    *					    (
-    *						    property="blogs", type="array",
-    *                			@OA\Items
-    *						    (
-    *			        	        @OA\Property(property="blog1",description="the first blog",type="object"),
-    *			        	        @OA\Property(property="blog2",description="the second blog",type="object"),
-    *			        	        @OA\Property(property="blog3",description="the third blog",type="object"),
-    *			        	    ),
-    *       
-    *               		),
-    *           		),
-    *        		),
-    *     	)
-    * 
+     *       @OA\Response
+     *		(
+     *	    	response=200,
+     *    		description="success",
+     *    		@OA\JsonContent
+     *			(
+     *       			type="object",
+     *       			@OA\Property
+     *				    (
+     *					    property="Meta", type="object",
+     *					    @OA\Property(property="Status", type="integer", example=200),
+     *					    @OA\Property(property="msg", type="string", example="OK"),
+     *        			),
+     *
+     *       			@OA\Property
+     *				    (
+     *					    property="response", type="object",
+     *             			@OA\Property(property="total_blogs", type="Number", example=263),
+     *             			@OA\Property
+     *					    (
+     *						    property="blogs", type="array",
+     *                			@OA\Items
+     *						    (
+     *			        	        @OA\Property(property="blog1",description="the first blog",type="object"),
+     *			        	        @OA\Property(property="blog2",description="the second blog",type="object"),
+     *			        	        @OA\Property(property="blog3",description="the third blog",type="object"),
+     *			        	    ),
+     *       
+     *               		),
+     *           		),
+     *        		),
+     *     	)
+     * 
      * )
      */
     public function getFollowing()
@@ -416,14 +402,9 @@ class UserController extends Controller
         //
     }
 
-
-
-
-
-
     /**
      * @OA\Get(
-     * path="user/filtered_tags",
+     * path="/user/filtered_tags",
      * summary="Retrieve Tag Filtering",
      * description="Retrieve a list of currently-filtered tag strings.",
      * operationId="UserGetFilteredTags",
@@ -471,7 +452,7 @@ class UserController extends Controller
 
     /**
      * @OA\Post(
-     * path="user/filtered_tags",
+     * path="/user/filtered_tags",
      * summary="Add Tag Filtering",
      * description="Add one or more tags to filter.",
      * operationId="UserPostFilterTag",
@@ -522,11 +503,9 @@ class UserController extends Controller
     }
 
 
-
     /**
-     *	@OA\Delete
-     *	(
-     * 		path="user/filtered_tags/{tag}",
+     *	@OA\Delete(
+     * 		path="/user/filtered_tags/{tag}",
      * 		summary="Remove Tag Filtering",
      * 		description="Remove a tag filter.",
      * 		operationId="UserDeleteFilteringTag",
@@ -580,14 +559,12 @@ class UserController extends Controller
     }
 
     /**
-     *	@OA\Get
-     *	(
-     * 		path="user/filtered_content",
+     *	@OA\Get(
+     * 		path="/user/filtered_content",
      * 		summary="Retrieve Content Filtering",
      * 		description="Retrieve a list of currently-filtered content strings.",
      * 		operationId="UserGetFilteredContent",
      * 		tags={"Tags"},
-     *
      *    	@OA\RequestBody
      *		(
      *      		required=true,
@@ -642,9 +619,8 @@ class UserController extends Controller
     }
 
     /**
-     *	@OA\Post
-     *	(
-     * 		path="user/filtered_content",
+     *	@OA\Post(
+     * 		path="/user/filtered_content",
      * 		summary="Add Content Filtering",
      * 		description="Add one or more content strings to filter.",
      * 		operationId="UserPostFilteringContent",
@@ -704,9 +680,8 @@ class UserController extends Controller
     }
 
     /**
-     *	@OA\Delete
-     *	(
-     * 		path="user/filtered_content",
+     *	@OA\Delete(
+     * 		path="/user/filtered_content",
      * 		summary="Remove filtered_content",
      * 		description="rRemove a content filter string.",
      * 		operationId="UserDeleteFilteringContent",
@@ -758,13 +733,9 @@ class UserController extends Controller
     {
     }
 
-
-
-
-
     /**
      * @OA\Delete(
-     ** path="/{blog-identifier}/notes/delete",
+     *   path="/{blog-identifier}/notes/delete",
      *   tags={"Users"},
      *   summary="unfollow tag",
      *   operationId="unfollow tag",
@@ -816,7 +787,7 @@ class UserController extends Controller
 
     /**
      * @OA\Post(
-     ** path="blog/{blog-identifier}/subscription",
+     *   path="/blog/{blog-identifier}/subscription",
      *   tags={"Blogs"},
      *   summary="subscription a blog",
      *   operationId="subscription",
@@ -848,7 +819,7 @@ class UserController extends Controller
 
     /**
      * @OA\Delete(
-     ** path="blog/{blog-identifier}/subscription",
+     *   path="/blog/{blog-identifier}/subscription",
      *   tags={"Blogs"},
      *   summary="subscription a blog",
      *   operationId="Unsubscription",
@@ -891,7 +862,7 @@ class UserController extends Controller
 
     /**
      * @OA\Post(
-     ** path="{blog-identifier}/add_tags_to_posts",
+     *   path="/{blog-identifier}/add_tags_to_posts",
      *   tags={"Blogs"},
      *   summary="add new tag(s) to existing post(s)",
      *   operationId="Add Tags to Posts",
@@ -941,7 +912,7 @@ class UserController extends Controller
 
     /**
      * @OA\Delete(
-     ** path="{blog-identifier}/delete_posts",
+     *   path="/{blog-identifier}/delete_posts",
      *   tags={"Posts"},
      *   summary="user can delete one or more posts",
      *   operationId="DeletePosts",
@@ -1005,7 +976,7 @@ class UserController extends Controller
 
     /**
      * @OA\Post(
-     ** path="{blog-identifier}/get_tags_for_posts",
+     *   path="/{blog-identifier}/get_tags_for_posts",
      *   tags={"Blogs"},
      *   summary="get all tag(s) existing in post(s)",
      *   operationId="get_tags_for_posts",
@@ -1065,7 +1036,7 @@ class UserController extends Controller
 
     /**
      * @OA\Delete(
-     ** path="{blog-identifier}/remove_tags_from_posts",
+     *   path="/{blog-identifier}/remove_tags_from_posts",
      *   tags={"Blogs"},
      *   summary="remove tag(s) existing in post(s)",
      *   operationId="remove_tags_from_posts",
@@ -1107,6 +1078,4 @@ class UserController extends Controller
     public function remove_tags_from_posts()
     {
     }
-
-    
 }

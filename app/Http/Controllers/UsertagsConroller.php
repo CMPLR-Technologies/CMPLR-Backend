@@ -13,7 +13,7 @@ class UsertagsConroller extends Controller
 
     /**
      * @OA\Post(
-     ** path="user/tags/add",
+     *   path="/user/tags/add",
      *   tags={"Tags"},
      *   summary="follow new tag",
      *   operationId="follow tag",
@@ -55,7 +55,7 @@ class UsertagsConroller extends Controller
 
     /**
      * @OA\Delete(
-     ** path="user/tags/remove",
+     *   path="/user/tags/remove",
      *   tags={"Tags"},
      *   summary="unfollow tag",
      *   operationId="unfollow tag",
