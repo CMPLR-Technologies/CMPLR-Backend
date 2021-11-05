@@ -12,6 +12,215 @@
         }
     ],
     "paths": {
+        "/forgot_password": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "forget password for existing user",
+                "description": "User can reset password for existing email",
+                "operationId": "forgetPassword",
+                "responses": {
+                    "200": {
+                        "description": "Successfully redirect"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "reset password for existing user",
+                "description": "User can reset password for existing email",
+                "operationId": "resetPassword",
+                "parameters": [
+                    {
+                        "name": "Email",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully sent email to reset password"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "user/resend_verification_email": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "resend verification email for the user",
+                "description": "User can get verification for existing email",
+                "operationId": "resendVerificationEmail",
+                "responses": {
+                    "200": {
+                        "description": "Successfully sent email to reset password",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email sent to yousef.elftah00@eng-st.cu.edu.eg!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/Login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login for existing Email",
+                "description": "User Login to his email ",
+                "operationId": "Login",
+                "parameters": [
+                    {
+                        "name": "Email",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "Password",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "Password"
+                                ],
+                                "properties": {
+                                    "Email": {
+                                        "type": "email",
+                                        "format": "email",
+                                        "example": "tumblr.email@gmail.com"
+                                    },
+                                    "Password": {
+                                        "type": "string",
+                                        "format": "Password",
+                                        "example": "pass123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "Login Successfully"
+                    }
+                }
+            }
+        },
+        "/Logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout from Email",
+                "description": "User Logout from his email ",
+                "operationId": "Logout",
+                "responses": {
+                    "200": {
+                        "description": "Logout Successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                }
+            }
+        },
+        "/Signup": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register to tumblr",
+                "description": "User register to the website",
+                "operationId": "Signup",
+                "parameters": [
+                    {
+                        "name": "Email",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "Password",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "Blogname",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "Blogname"
+                                ],
+                                "properties": {
+                                    "Email": {
+                                        "type": "email",
+                                        "format": "email",
+                                        "example": "tumblr.email@gmail.com"
+                                    },
+                                    "Password": {
+                                        "type": "string",
+                                        "format": "Password",
+                                        "example": "pass123"
+                                    },
+                                    "Blogname": {
+                                        "type": "string",
+                                        "format": "Password",
+                                        "example": "Winter-is-comming"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Registered Successfully"
+                    },
+                    "422": {
+                        "description": "Invalid Data"
+                    }
+                }
+            }
+        },
         "/blog/{blog-identifier}/blocks": {
             "get": {
                 "tags": [
@@ -827,6 +1036,163 @@
                         }
                     }
                 }
+            }
+        },
+        "/notifications": {
+            "get": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Retrieve Blog's Activity Feed",
+                "description": "Retrieve the activity items for a specific blog.",
+                "operationId": "notifications",
+                "parameters": [
+                    {
+                        "name": "blog-identifier",
+                        "in": "path",
+                        "description": "Any blog identifier",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "type[]",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Api Example : api.tumblr.com/v1/blog/{blog-identifier}/notifications <br/>\r\n     *    Available types include:\\n <br/>\r\n     *      all : get all notifications  <br/>\r\n     *      like:\tA like on your post <br/>\r\n     *      reply:\tA reply on your post <br/>\r\n     *      follow:\tA new follower <br/>\r\n     *      mention_in_reply:\tA mention of your blog in a reply <br/>\r\n     *      mention_in_post:\tA mention of your blog in a post <br/>\r\n     *      reblog_naked:\tA reblog of your post, without commentary <br/>\r\n     *      reblog_with_content:\tA reblog of your post, with commentary <br/>\r\n     *      ask:\tA new ask received <br/>\r\n     *      answered_ask:\tAn answered ask that you had sent <br/>\r\n     *      new_group_blog_member:\tA new member of your group blog <br/>\r\n     *      post_flagged:\tA post of yours being flagged <br/>\r\n     *      conversational_note\tA conversational note (reply, reblog with comment) on a post you're watching",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "all"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "total_users": {
+                                                    "type": "integer",
+                                                    "example": 1235
+                                                },
+                                                "notifications": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "type": {
+                                                                "type": "string",
+                                                                "example": "like"
+                                                            },
+                                                            "timestamp": {
+                                                                "type": "integer",
+                                                                "example": 1636069200
+                                                            },
+                                                            "targetTumblelogName": {
+                                                                "type": "string",
+                                                                "example": "ahmed-abdelhamed"
+                                                            },
+                                                            "targetTumblelogUuid": {
+                                                                "type": "string/integer",
+                                                                "example": "t:nrXV2XvboWHMYIHJGCl"
+                                                            },
+                                                            "fromTumblelogName": {
+                                                                "type": "string",
+                                                                "example": "abdullah-alshawafi"
+                                                            },
+                                                            "fromTumblelogUuid": {
+                                                                "type": "string/integer",
+                                                                "example": "t:T7U1RijeZIfSsttMS7dYjw"
+                                                            },
+                                                            "targetPostId": {
+                                                                "type": "integer",
+                                                                "example": 666925284723982336
+                                                            },
+                                                            "targetPostSummary": {
+                                                                "type": "string",
+                                                                "example": "hi it is a very nice day"
+                                                            },
+                                                            "mediaUrl": {
+                                                                "description": "return only one image of the post or none if not images",
+                                                                "type": "string",
+                                                                "example": "https://64.media.tumblr.com/e861484f7a4fce4e/63d1a2478316-bb/s75x7b91d6a7.jpg"
+                                                            },
+                                                            "reblogKey": {
+                                                                "type": "string",
+                                                                "example": "3bHZPzR2"
+                                                            },
+                                                            "addedText": {
+                                                                "type": "string",
+                                                                "example": ""
+                                                            },
+                                                            "tags[]": {
+                                                                "type": "string",
+                                                                "example": "['winter','summer']"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         },
         "/posts": {
@@ -2210,6 +2576,155 @@
                 }
             }
         },
+        "/tagged": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Get Posts with Tag",
+                "description": "retrieve the posts with specific tag",
+                "operationId": "getTaggedPosts",
+                "parameters": [
+                    {
+                        "name": "tag",
+                        "in": "path",
+                        "description": "The tag on the posts you'd like to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "String"
+                        }
+                    },
+                    {
+                        "name": "before",
+                        "in": "query",
+                        "description": "The timestamp of when you'd like to see posts before.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "the number of posts to return",
+                        "required": false,
+                        "schema": {
+                            "type": "Number"
+                        }
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Specifies the post format to return, other than HTML: text – Plain text, no HTML; raw – As entered by the user (no post-processing)",
+                        "required": false,
+                        "schema": {
+                            "type": "String"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "tag"
+                                ],
+                                "properties": {
+                                    "tag": {
+                                        "type": "String",
+                                        "format": "text",
+                                        "example": "anime"
+                                    },
+                                    "before": {
+                                        "type": "integer",
+                                        "format": "integer",
+                                        "example": 10
+                                    },
+                                    "limit": {
+                                        "type": "integer",
+                                        "format": "integer",
+                                        "example": 1
+                                    },
+                                    "filter": {
+                                        "type": "String",
+                                        "format": "text",
+                                        "example": "HTML"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "blog": {
+                                                    "type": "object"
+                                                },
+                                                "posts": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "post1": {
+                                                                "description": "the first post",
+                                                                "type": "object"
+                                                            },
+                                                            "post2": {
+                                                                "description": "the second post",
+                                                                "type": "object"
+                                                            },
+                                                            "post3": {
+                                                                "description": "the third post",
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "total_posts": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/user/info": {
             "get": {
                 "tags": [
@@ -2536,7 +3051,58 @@
                         "description": "Unauthenticated"
                     },
                     "200": {
-                        "description": "success"
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "total_posts": {
+                                                    "type": "Number",
+                                                    "example": 263
+                                                },
+                                                "posts": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "post1": {
+                                                                "description": "the first post",
+                                                                "type": "object"
+                                                            },
+                                                            "post2": {
+                                                                "description": "the second post",
+                                                                "type": "object"
+                                                            },
+                                                            "post3": {
+                                                                "description": "the third post",
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -2600,7 +3166,58 @@
                         "description": "Unauthenticated"
                     },
                     "200": {
-                        "description": "success"
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "total_blogs": {
+                                                    "type": "Number",
+                                                    "example": 263
+                                                },
+                                                "blogs": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "blog1": {
+                                                                "description": "the first blog",
+                                                                "type": "object"
+                                                            },
+                                                            "blog2": {
+                                                                "description": "the second blog",
+                                                                "type": "object"
+                                                            },
+                                                            "blog3": {
+                                                                "description": "the third blog",
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -3935,6 +4552,72 @@
                 }
             }
         },
+        "/settings/account": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "User setting",
+                "description": "Retrieve Account Setting for User.",
+                "operationId": "GEtAccountSetting",
+                "responses": {
+                    "200": {
+                        "description": "sucess",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "Email": {
+                                                    "type": "string",
+                                                    "example": "example@gmail.com"
+                                                },
+                                                "Password": {
+                                                    "type": "string",
+                                                    "example": "password123"
+                                                },
+                                                "GoogleLogin": {
+                                                    "type": "Boolean",
+                                                    "example": false
+                                                },
+                                                "account_activity": {
+                                                    "type": "Boolean",
+                                                    "example": true
+                                                },
+                                                "Two-factor_authentication": {
+                                                    "type": "Boolean",
+                                                    "example": false
+                                                },
+                                                "filtteringTags": {
+                                                    "type": "string",
+                                                    "example": "summer,winter,sunny"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/user/tags/add": {
             "post": {
                 "tags": [
@@ -4037,6 +4720,13 @@
                         }
                     }
                 }
+            }
+        }
+    },
+    "components": {
+        "responses": {
+            "401": {
+                "description": "Unauthenticated"
             }
         }
     },
