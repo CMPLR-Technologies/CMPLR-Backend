@@ -21,7 +21,7 @@ class PostsController extends Controller
     /**
      * @OA\Post(
      *   path="/posts",
-     *   tags={"posts"},
+     *   tags={"Posts"},
      *   summary="create new post",
      *   operationId="create",
      *   @OA\Parameter(
@@ -219,7 +219,7 @@ class PostsController extends Controller
     /**
      * @OA\Put(
      ** path="/posts/edit",
-     *   tags={"posts"},
+     *   tags={"Posts"},
      *   summary="Edit existing Post",
      *   operationId="edit",
      *
@@ -268,11 +268,11 @@ class PostsController extends Controller
      * @param  \App\Models\Posts  $posts
      * @return \Illuminate\Http\Response
      */
-    
+
     /**
      * @OA\GET(
      ** path="/post/{post-id}",
-     *   tags={"posts"},
+     *   tags={"Posts"},
      *   summary="fetch a post for editing",
      *   operationId="edit",
      *
@@ -296,24 +296,24 @@ class PostsController extends Controller
      *          response=200,
      *          description="successful post fetching",
      *           @OA\JsonContent(
-    *           type="object",
-    *           @OA\Property(property="Meta", type="object",
-    *           @OA\Property(property="Status", type="integer", example=200),
-    *           @OA\Property(property="msg", type="string", example="OK"),
-    *           ),
-    *           @OA\Property(property="reponse", type="object",
-    *           @OA\Property(property="object_type", type="String", example="post"),
-    *           @OA\Property(property="type", type="string", example="text"),
-    *           @OA\Property(property="id", type="string", example="2312145464"),
-    *           @OA\Property(property="tumbllelog_uuid", type="string", example="yousiflasheen"),
-    *           @OA\Property(property="parent_tumnlelog_uuid", type="string", example="john-abdelhamid"),
-    *           @OA\Property(property="reblog_key", type="string", example="2312145464"),
-    *           @OA\Property(property="trail", type="string", example="[, , ]"),
-    *           @OA\Property(property="content", type="string", example="[hello everyboady]"),
-    *           @OA\Property(property="layout", type="string", example="[1 ,3]"),
-    *           
-    *           ),
-    *       ),
+     *           type="object",
+     *           @OA\Property(property="Meta", type="object",
+     *           @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="OK"),
+     *           ),
+     *           @OA\Property(property="reponse", type="object",
+     *           @OA\Property(property="object_type", type="String", example="post"),
+     *           @OA\Property(property="type", type="string", example="text"),
+     *           @OA\Property(property="id", type="string", example="2312145464"),
+     *           @OA\Property(property="tumbllelog_uuid", type="string", example="yousiflasheen"),
+     *           @OA\Property(property="parent_tumnlelog_uuid", type="string", example="john-abdelhamid"),
+     *           @OA\Property(property="reblog_key", type="string", example="2312145464"),
+     *           @OA\Property(property="trail", type="string", example="[, , ]"),
+     *           @OA\Property(property="content", type="string", example="[hello everyboady]"),
+     *           @OA\Property(property="layout", type="string", example="[1 ,3]"),
+     *           
+     *           ),
+     *       ),
      *       ),
      *)
      **/
@@ -325,7 +325,7 @@ class PostsController extends Controller
     /**
      * @OA\PUT(
      ** path="/post/{post-id}",
-     *   tags={"posts"},
+     *   tags={"Posts"},
      *   summary="edit posts with specific id",
      *   operationId="edit",
      *
@@ -349,16 +349,16 @@ class PostsController extends Controller
      *          response=200,
      *          description="successful post fetching",
      *           @OA\JsonContent(
-    *           type="object",
-    *           @OA\Property(property="Meta", type="object",
-    *           @OA\Property(property="Status", type="integer", example=200),
-    *           @OA\Property(property="msg", type="string", example="OK"),
-    *           ),
-    *           @OA\Property(property="reponse", type="object",
-    *           @OA\Property(property="post_id", type="String", example="1211464646"),
-    *           
-    *           ),
-    *       ),
+     *           type="object",
+     *           @OA\Property(property="Meta", type="object",
+     *           @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="OK"),
+     *           ),
+     *           @OA\Property(property="reponse", type="object",
+     *           @OA\Property(property="post_id", type="String", example="1211464646"),
+     *           
+     *           ),
+     *       ),
      *       ),
      *)
      **/
@@ -385,7 +385,7 @@ class PostsController extends Controller
      * summary="blog/blog_url/posts/?",
      * description="user can get the posts published by certain blog",
      * operationId="published_posts",
-     * tags={"posts"},
+     * tags={"Posts"},
      *  @OA\Parameter(
      *         name="blog-identifier",
      *         in="query",
@@ -551,7 +551,7 @@ class PostsController extends Controller
      * summary="{blog-identifier}/Retrieve Queued Posts",
      * description="user can get the posts that had been queued",
      * operationId="Queued_posts",
-     * tags={"posts"},
+     * tags={"Posts"},
      *  @OA\Parameter(
      *         name="Limit",
      *         in="query",
@@ -656,7 +656,7 @@ class PostsController extends Controller
     /**
      * @OA\Post(
      ** path="/posts/queue/reorder",
-     *   tags={"posts"},
+     *   tags={"Posts"},
      *   summary="reorder a post within the queue",
      *   operationId="reorder queued posts",
      *  @OA\Parameter(
@@ -705,7 +705,7 @@ class PostsController extends Controller
     /**
      * @OA\Post(
      ** path="/posts/queue/shuffle",
-     *   tags={"posts"},
+     *   tags={"Posts"},
      *   summary="shuffle posts within the queue",
      *   operationId="shuffle queued posts",
      * @OA\Response(
@@ -739,7 +739,7 @@ class PostsController extends Controller
      * summary="{blog-identifier}/posts/draft",
      * description="user can get the draft posts",
      * operationId="Drafted_posts",
-     * tags={"posts"},
+     * tags={"Posts"},
      *  @OA\Parameter(
      *         name="before_id",
      *         in="query",
@@ -844,103 +844,101 @@ class PostsController extends Controller
 
 
 
-        /**
-    * @OA\GET(
-    * path="/posts/submission",
-    * summary="{blog-identifier}/posts/submission",
-    * description="retrieve submission posts",
-    * operationId="Submission_Posts",
-    * tags={"posts"},
-    *  @OA\Parameter(
-    *         name="offset",
-    *         in="query",
-    *         required=false,
-    *         description="Post number to start at",
-    *         @OA\Schema(
-    *              type="String"
-    *         )
-    *      ),
-    *  @OA\Parameter(
-    *         name="filter",
-    *         in="query",
-    *         required=false,
-    *         description="Specifies the post format to return(Html,MarkDown,Rich)",
-    *         @OA\Schema(
-    *              type="string"
-    *         )
-    *      ),
-    * @OA\RequestBody(
-    *    required=true,
-    *    description="Url Example: api.tumblr.com/v1/blog/{blog-identifier}/posts/submission",
-    *    @OA\JsonContent(
-    *       @OA\Property(property="filter", type="string", format="string", example="Markdown"),
-    *    ),
-    * ),
-    * @OA\Response(
-    *    response=404,
-    *    description="Not Found",
-    *    @OA\JsonContent(
-    *       type="object",
-    *       @OA\Property(property="Meta", type="object",
-    *          @OA\Property(property="Status", type="integer", example=404),
-    *           @OA\Property(property="msg", type="string", example="not found"),
-    *        ),
-    *   ),
-    * ),
-    *   @OA\Response(
-    *      response=401,
-    *       description="Unauthenticated"
-    *   ),
-    * @OA\Response(
-    *    response=200,
-    *    description="sucess",
-    *    @OA\JsonContent(
-    *       type="object",
-    *       @OA\Property(property="Meta", type="object",
-    *          @OA\Property(property="Status", type="integer", example=200),
-    *           @OA\Property(property="msg", type="string", example="OK"),
-    *        ),
-    *       @OA\Property(property="response", type="object",
-    *             @OA\Property(property="id", type="string/integer",description="The ID of the submitted post",example=12351312),           
-    *             @OA\Property(property="post_url", type="string",description="The location of the post",example="https://ahmed-abdelhamed.tumblr.com/post/66686750959666/hajsdfhks"),           
-    *             @OA\Property(property="slug", type="string",description="Short text summary to the end of the post URL",example="hajsdfhks"),           
-    *             @OA\Property(property="type", type="string",description="The type of post. One of the following: text, photo, quote, link, video",example="text"),           
-    *             @OA\Property(property="date", type="string",description="The GMT date and time of the post",example="YYYY-DD-MM HH:MM:SS"),           
-    *             @OA\Property(property="timestamp", type="integer",description="The time of the post, in seconds since the epoch",example="1635865720"),           
-    *             @OA\Property(property="state", type="string",description="Indicates the current state of the post (submission)",example="submission"),           
-    *             @OA\Property(property="format", type="String",description="Format type of post.",example="Html"),           
-    *             @OA\Property(property="reblog_key", type="string",description="The reblog key for the post",example="HNvqLd5G"),           
-    *             @OA\Property(property="tags", type="array",
-    *                @OA\Items(
-    *                       example={"winter","summer"}
-    *                      ),
+    /**
+     * @OA\GET(
+     * path="/posts/submission",
+     * summary="{blog-identifier}/posts/submission",
+     * description="retrieve submission posts",
+     * operationId="Submission_Posts",
+     * tags={"Posts"},
+     *  @OA\Parameter(
+     *         name="offset",
+     *         in="query",
+     *         required=false,
+     *         description="Post number to start at",
+     *         @OA\Schema(
+     *              type="String"
+     *         )
+     *      ),
+     *  @OA\Parameter(
+     *         name="filter",
+     *         in="query",
+     *         required=false,
+     *         description="Specifies the post format to return(Html,MarkDown,Rich)",
+     *         @OA\Schema(
+     *              type="string"
+     *         )
+     *      ),
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Url Example: api.tumblr.com/v1/blog/{blog-identifier}/posts/submission",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="filter", type="string", format="string", example="Markdown"),
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=404,
+     *    description="Not Found",
+     *    @OA\JsonContent(
+     *       type="object",
+     *       @OA\Property(property="Meta", type="object",
+     *          @OA\Property(property="Status", type="integer", example=404),
+     *           @OA\Property(property="msg", type="string", example="not found"),
+     *        ),
+     *   ),
+     * ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     * @OA\Response(
+     *    response=200,
+     *    description="sucess",
+     *    @OA\JsonContent(
+     *       type="object",
+     *       @OA\Property(property="Meta", type="object",
+     *          @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="OK"),
+     *        ),
+     *       @OA\Property(property="response", type="object",
+     *             @OA\Property(property="id", type="string/integer",description="The ID of the submitted post",example=12351312),           
+     *             @OA\Property(property="post_url", type="string",description="The location of the post",example="https://ahmed-abdelhamed.tumblr.com/post/66686750959666/hajsdfhks"),           
+     *             @OA\Property(property="slug", type="string",description="Short text summary to the end of the post URL",example="hajsdfhks"),           
+     *             @OA\Property(property="type", type="string",description="The type of post. One of the following: text, photo, quote, link, video",example="text"),           
+     *             @OA\Property(property="date", type="string",description="The GMT date and time of the post",example="YYYY-DD-MM HH:MM:SS"),           
+     *             @OA\Property(property="timestamp", type="integer",description="The time of the post, in seconds since the epoch",example="1635865720"),           
+     *             @OA\Property(property="state", type="string",description="Indicates the current state of the post (submission)",example="submission"),           
+     *             @OA\Property(property="format", type="String",description="Format type of post.",example="Html"),           
+     *             @OA\Property(property="reblog_key", type="string",description="The reblog key for the post",example="HNvqLd5G"),           
+     *             @OA\Property(property="tags", type="array",
+     *                @OA\Items(
+     *                       example={"winter","summer"}
+     *                      ),
 
-    *                   ),
-    *            @OA\Property(property="post_author", type="string",description="Author of post, only available when submission is not anonymous",example="ahmed-abdelhamed"),             
-    *            @OA\Property(property="is_submission", type="Boolean",description="Indicates post is a submission (true)",example=true),             
-    *            @OA\Property(property="is_anonymous", type="Boolean",description="Indicates if the  post is a anonymous",example=false),             
-    *            ),
-    *        ),
-    *     ),
-    *  security ={{"bearer":{}}}
-    * )
-    */
+     *                   ),
+     *            @OA\Property(property="post_author", type="string",description="Author of post, only available when submission is not anonymous",example="ahmed-abdelhamed"),             
+     *            @OA\Property(property="is_submission", type="Boolean",description="Indicates post is a submission (true)",example=true),             
+     *            @OA\Property(property="is_anonymous", type="Boolean",description="Indicates if the  post is a anonymous",example=false),             
+     *            ),
+     *        ),
+     *     ),
+     *  security ={{"bearer":{}}}
+     * )
+     */
     public function RetrieveSubmissionPosts()
     {
-
     }
 
-    
+
     public function Notifications()
     {
-
-    } 
+    }
 
 
     /**
      * @OA\Delete(
      ** path="/post/delete",
-     *   tags={"posts"},
+     *   tags={"Posts"},
      *   summary="delete existing post",
      *   operationId="destroy",
      *
@@ -995,7 +993,7 @@ class PostsController extends Controller
     /**
      * @OA\Post(
      ** path="/posts/reblog",
-     *   tags={"posts"},
+     *   tags={"Posts"},
      *   summary="Reblog existing Post",
      *   operationId="reblog",
      *
@@ -1072,7 +1070,7 @@ class PostsController extends Controller
      * summary="getting notes for specific post",
      * description="This method can be used to get notes for specific post",
      * operationId="getNotes",
-     * tags={"posts"},
+     * tags={"Posts"},
      *  @OA\Parameter(
      *         name="blog-identifier",
      *         in="query",

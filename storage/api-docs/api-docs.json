@@ -538,12 +538,7 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
+                }
             }
         },
         "/blog/{blog-identifier}/info": {
@@ -562,9 +557,6 @@
                         "required": true
                     }
                 ],
-                "requestBody": {
-                    "description": "URL: http://www.cmplr.com/api/v1/{blog-identifier}/info"
-                },
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -678,10 +670,109 @@
                 }
             }
         },
+        "/blog/{blog-identifier}/likes": {
+            "get": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Retrieve Blog's Likes",
+                "description": "This method can be used to retrieve the publicly exposed likes from a blog.",
+                "operationId": "getBlogLikes",
+                "parameters": [
+                    {
+                        "name": "blog-identifier",
+                        "in": "path",
+                        "description": "Any blog identifier",
+                        "required": true
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Block number to start at",
+                        "required": false
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "The number of blocks to retrieve, 1-20, inclusive",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "liked_posts": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "blog_name": {
+                                                        "type": "string",
+                                                        "example": "john-doe"
+                                                    },
+                                                    "blog_url": {
+                                                        "type": "string",
+                                                        "example": "https://www.cmplr.com/blogs/john-doe"
+                                                    },
+                                                    "post_id": {
+                                                        "type": "number",
+                                                        "example": "1234567890"
+                                                    },
+                                                    "post_notes_count": {
+                                                        "type": "number",
+                                                        "example": 20
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "liked_count": {
+                                            "type": "number",
+                                            "example": 20
+                                        },
+                                        "_links": {
+                                            "properties": {
+                                                "next": {
+                                                    "properties": {
+                                                        "href": {
+                                                            "type": "string",
+                                                            "example": "/api/v1/blogs/john-doe/likes?offset=20"
+                                                        },
+                                                        "method": {
+                                                            "type": "string",
+                                                            "example": "GET"
+                                                        },
+                                                        "query_params": {
+                                                            "properties": {
+                                                                "offset": {
+                                                                    "type": "number",
+                                                                    "example": 20
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/posts": {
             "get": {
                 "tags": [
-                    "posts"
+                    "Posts"
                 ],
                 "summary": "blog/blog_url/posts/?",
                 "description": "user can get the posts published by certain blog",
@@ -867,7 +958,7 @@
             },
             "post": {
                 "tags": [
-                    "posts"
+                    "Posts"
                 ],
                 "summary": "create new post",
                 "operationId": "create",
@@ -1053,7 +1144,7 @@
         "/posts/edit": {
             "put": {
                 "tags": [
-                    "posts"
+                    "Posts"
                 ],
                 "summary": "Edit existing Post",
                 "operationId": "edit",
@@ -1127,7 +1218,7 @@
         "/post/{post-id}": {
             "get": {
                 "tags": [
-                    "posts"
+                    "Posts"
                 ],
                 "summary": "fetch a post for editing",
                 "operationId": "edit",
@@ -1218,7 +1309,7 @@
             },
             "put": {
                 "tags": [
-                    "posts"
+                    "Posts"
                 ],
                 "summary": "edit posts with specific id",
                 "operationId": "edit",
@@ -1279,7 +1370,7 @@
         "/posts/queue": {
             "get": {
                 "tags": [
-                    "posts"
+                    "Posts"
                 ],
                 "summary": "{blog-identifier}/Retrieve Queued Posts",
                 "description": "user can get the posts that had been queued",
@@ -1394,7 +1485,7 @@
         "/posts/queue/reorder": {
             "post": {
                 "tags": [
-                    "posts"
+                    "Posts"
                 ],
                 "summary": "reorder a post within the queue",
                 "operationId": "reorder queued posts",
@@ -1455,7 +1546,7 @@
         "/posts/queue/shuffle": {
             "post": {
                 "tags": [
-                    "posts"
+                    "Posts"
                 ],
                 "summary": "shuffle posts within the queue",
                 "operationId": "shuffle queued posts",
@@ -1497,7 +1588,7 @@
         "/posts/draft": {
             "get": {
                 "tags": [
-                    "posts"
+                    "Posts"
                 ],
                 "summary": "{blog-identifier}/posts/draft",
                 "description": "user can get the draft posts",
@@ -1615,7 +1706,7 @@
         "/posts/submission": {
             "get": {
                 "tags": [
-                    "posts"
+                    "Posts"
                 ],
                 "summary": "{blog-identifier}/posts/submission",
                 "description": "retrieve submission posts",
@@ -1797,7 +1888,7 @@
         "/post/delete": {
             "delete": {
                 "tags": [
-                    "posts"
+                    "Posts"
                 ],
                 "summary": "delete existing post",
                 "operationId": "destroy",
@@ -1850,7 +1941,7 @@
         "/posts/reblog": {
             "post": {
                 "tags": [
-                    "posts"
+                    "Posts"
                 ],
                 "summary": "Reblog existing Post",
                 "operationId": "reblog",
@@ -1928,7 +2019,7 @@
         "post/notes": {
             "get": {
                 "tags": [
-                    "posts"
+                    "Posts"
                 ],
                 "summary": "getting notes for specific post",
                 "description": "This method can be used to get notes for specific post",
@@ -2062,7 +2153,7 @@
         "user/info": {
             "get": {
                 "tags": [
-                    "users"
+                    "Users"
                 ],
                 "summary": " retrieving the user’s account information ",
                 "description": "This method can be used to  retrieve the user’s account information that matches the OAuth credentials submitted with the request",
@@ -2177,7 +2268,7 @@
         "user/dashboard": {
             "get": {
                 "tags": [
-                    "users"
+                    "Users"
                 ],
                 "summary": " retrieving the user’s dashboard",
                 "description": "This method can be used to  retrieve the user’s dashboard that matches the OAuth credentials submitted with the request",
@@ -2301,7 +2392,7 @@
         "user/likes": {
             "get": {
                 "tags": [
-                    "users"
+                    "Users"
                 ],
                 "summary": "Retrieve a User's Likes",
                 "description": "retrieve the posts liked by the user",
@@ -2393,7 +2484,7 @@
         "user/following": {
             "get": {
                 "tags": [
-                    "users"
+                    "Users"
                 ],
                 "summary": "Retrieve the Blogs a User Is Following",
                 "description": "Used to return the blogs followed by the user, and info about those blogs.",
@@ -2457,7 +2548,7 @@
         "user/filtered_tags": {
             "get": {
                 "tags": [
-                    "tags"
+                    "Tags"
                 ],
                 "summary": "Retrieve Tag Filtering",
                 "description": "Retrieve a list of currently-filtered tag strings.",
@@ -2522,7 +2613,7 @@
             },
             "post": {
                 "tags": [
-                    "tags"
+                    "Tags"
                 ],
                 "summary": "Add Tag Filtering",
                 "description": "Add one or more tags to filter.",
@@ -2590,7 +2681,7 @@
         "user/filtered_tags/{tag}": {
             "delete": {
                 "tags": [
-                    "tags"
+                    "Tags"
                 ],
                 "summary": "Remove Tag Filtering",
                 "description": "Remove a tag filter.",
@@ -2643,7 +2734,7 @@
         "user/filtered_content": {
             "get": {
                 "tags": [
-                    "tags"
+                    "Tags"
                 ],
                 "summary": "Retrieve Content Filtering",
                 "description": "Retrieve a list of currently-filtered content strings.",
@@ -2707,7 +2798,7 @@
             },
             "post": {
                 "tags": [
-                    "users"
+                    "Users"
                 ],
                 "summary": "Add Content Filtering",
                 "description": "Add one or more content strings to filter.",
@@ -2773,7 +2864,7 @@
             },
             "delete": {
                 "tags": [
-                    "users"
+                    "Users"
                 ],
                 "summary": "Remove filtered_content",
                 "description": "rRemove a content filter string.",
@@ -2826,7 +2917,7 @@
         "/{blog-identifier}/notes/delete": {
             "delete": {
                 "tags": [
-                    "users"
+                    "Users"
                 ],
                 "summary": "unfollow tag",
                 "operationId": "unfollow tag",
@@ -2887,7 +2978,7 @@
         "blog/{blog-identifier}/subscription": {
             "post": {
                 "tags": [
-                    "Blog"
+                    "Blogs"
                 ],
                 "summary": "subscription a blog",
                 "operationId": "subscription",
@@ -2927,7 +3018,7 @@
             },
             "delete": {
                 "tags": [
-                    "Blog"
+                    "Blogs"
                 ],
                 "summary": "subscription a blog",
                 "operationId": "Unsubscription",
@@ -2979,7 +3070,7 @@
         "{blog-identifier}/add_tags_to_posts": {
             "post": {
                 "tags": [
-                    "Blog"
+                    "Blogs"
                 ],
                 "summary": "add new tag(s) to existing post(s)",
                 "operationId": "Add Tags to Posts",
@@ -3045,7 +3136,7 @@
         "{blog-identifier}/delete_posts": {
             "delete": {
                 "tags": [
-                    "posts"
+                    "Posts"
                 ],
                 "summary": "user can delete one or more posts",
                 "operationId": "DeletePosts",
@@ -3136,7 +3227,7 @@
         "{blog-identifier}/get_tags_for_posts": {
             "post": {
                 "tags": [
-                    "Blog"
+                    "Blogs"
                 ],
                 "summary": "get all tag(s) existing in post(s)",
                 "operationId": "get_tags_for_posts",
@@ -3229,7 +3320,7 @@
         "{blog-identifier}/remove_tags_from_posts": {
             "delete": {
                 "tags": [
-                    "Blog"
+                    "Blogs"
                 ],
                 "summary": "remove tag(s) existing in post(s)",
                 "operationId": "remove_tags_from_posts",
@@ -3287,7 +3378,7 @@
         "Blog/": {
             "post": {
                 "tags": [
-                    "Blog"
+                    "Blogs"
                 ],
                 "summary": "Create new Blog",
                 "description": "User create new Blog ",
@@ -3376,7 +3467,7 @@
             },
             "delete": {
                 "tags": [
-                    "Blog"
+                    "Blogs"
                 ],
                 "summary": "Delete Specific Blog",
                 "description": "User Delete Specific Blog ",
@@ -3453,7 +3544,7 @@
         "user/follow": {
             "post": {
                 "tags": [
-                    "users"
+                    "Users"
                 ],
                 "summary": "Follow a blog",
                 "description": "enable the user to follow a blog using the blog Email or URL",
@@ -3521,7 +3612,7 @@
         "user/unfollow": {
             "post": {
                 "tags": [
-                    "users"
+                    "Users"
                 ],
                 "summary": "Unfollow a blog",
                 "description": "enable the user to Unfollow a blog using the blog URL",
@@ -3574,7 +3665,7 @@
         "user/like": {
             "post": {
                 "tags": [
-                    "users"
+                    "Users"
                 ],
                 "summary": "Like a Post",
                 "description": "enables the user to like a post through the post id",
@@ -3642,7 +3733,7 @@
         "user/unlike": {
             "post": {
                 "tags": [
-                    "users"
+                    "Users"
                 ],
                 "summary": "Unlike a Post",
                 "description": "enables the user to unlike a post through the post id",
@@ -3710,7 +3801,7 @@
         "user/post/reply": {
             "post": {
                 "tags": [
-                    "users"
+                    "Users"
                 ],
                 "summary": "add new reply to Specific Post",
                 "operationId": "add reply",
@@ -3787,7 +3878,7 @@
         "user/tags/add": {
             "post": {
                 "tags": [
-                    "tags"
+                    "Tags"
                 ],
                 "summary": "follow new tag",
                 "operationId": "follow tag",
@@ -3839,7 +3930,7 @@
         "user/tags/remove": {
             "delete": {
                 "tags": [
-                    "tags"
+                    "Tags"
                 ],
                 "summary": "unfollow tag",
                 "operationId": "unfollow tag",

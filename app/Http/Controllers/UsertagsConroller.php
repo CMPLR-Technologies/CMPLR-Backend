@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class UsertagsConroller extends Controller
 {
-      
+
     /*
     3b hameeed
     */
@@ -14,7 +14,7 @@ class UsertagsConroller extends Controller
     /**
      * @OA\Post(
      ** path="user/tags/add",
-     *   tags={"tags"},
+     *   tags={"Tags"},
      *   summary="follow new tag",
      *   operationId="follow tag",
      *  @OA\Parameter(
@@ -48,15 +48,15 @@ class UsertagsConroller extends Controller
      *       ),
      *)
      **/
-    public function FollowTag(){
-
+    public function FollowTag()
+    {
     }
 
 
     /**
      * @OA\Delete(
      ** path="user/tags/remove",
-     *   tags={"tags"},
+     *   tags={"Tags"},
      *   summary="unfollow tag",
      *   operationId="unfollow tag",
      *  @OA\Parameter(
@@ -90,8 +90,7 @@ class UsertagsConroller extends Controller
      *       ),
      *)
      **/
-    public function UnFollowTag(){
-
+    public function UnFollowTag()
+    {
     }
-
 }

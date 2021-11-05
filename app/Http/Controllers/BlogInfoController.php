@@ -19,9 +19,6 @@ class BlogInfoController extends Controller
      *     description="Any blog identifier",
      *     required=true,
      *   ),
-     *   @OA\RequestBody(
-     *     description="URL: http://www.cmplr.com/api/v1/{blog-identifier}/info",
-     *   ),
      *   @OA\Response(
      *     response=200,
      *     description="Success",
@@ -56,6 +53,62 @@ class BlogInfoController extends Controller
      * )
      */
     public function getBlogInfo()
+    {
+        //
+    }
+
+    /**
+     * @OA\Get(
+     *   path="/blog/{blog-identifier}/likes",
+     *   summary="Retrieve Blog's Likes",
+     *   description="This method can be used to retrieve the publicly exposed likes from a blog.",
+     *   operationId="getBlogLikes",
+     *   tags={"Blogs"},
+     *   @OA\Parameter(
+     *     name="blog-identifier",
+     *     in="path",
+     *     description="Any blog identifier",
+     *     required=true,
+     *   ),
+     *   @OA\Parameter(
+     *     name="offset",
+     *     in="query",
+     *     description="Block number to start at",
+     *     required=false,
+     *   ),
+     *   @OA\Parameter(
+     *     name="limit",
+     *     in="query",
+     *     description="The number of blocks to retrieve, 1-20, inclusive",
+     *     required=false,
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="liked_posts", type="array", 
+     *         @OA\Items(
+     *           @OA\Property(property="blog_name", type="string", example="john-doe"),
+     *           @OA\Property(property="blog_url", type="string", example="https://www.cmplr.com/blogs/john-doe"),
+     *           @OA\Property(property="post_id", type="number", example="1234567890"),
+     *           @OA\Property(property="post_notes_count", type="number", example=20),
+     *         ),
+     *       ),
+     *       @OA\Property(property="liked_count", type="number", example=20),
+     *       @OA\Property(property="_links", type="object",
+     *         @OA\Property(property="next", type="object",
+     *           @OA\Property(property="href", type="string", example="/api/v1/blogs/john-doe/likes?offset=20"),
+     *           @OA\Property(property="method", type="string", example="GET"),
+     *           @OA\Property(property="query_params", type="object",
+     *             @OA\Property(property="offset", type="number", example=20),
+     *           )
+     *         )
+     *       )
+     *     )
+     *   )
+     * )
+     */
+    public function getBlogLikes()
     {
         //
     }

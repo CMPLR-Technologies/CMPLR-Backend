@@ -12,7 +12,7 @@ class UserblogConroller extends Controller
      * summary="Create new Blog",
      * description="User create new Blog ",
      * operationId="Create",
-     * tags={"Blog"},
+     * tags={"Blogs"},
      *  @OA\Parameter(
      *         name="Title",
      *         in="query",
@@ -61,8 +61,8 @@ class UserblogConroller extends Controller
      *     )
      * )
      */
-    
-     /**
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -72,110 +72,110 @@ class UserblogConroller extends Controller
         //
     }
 
-     /**
-    * @OA\POST(
-    * path="user/follow",
-    * summary="Follow a blog",
-    * description="enable the user to follow a blog using the blog Email or URL",
-    * operationId="UserFollow",
-    * tags={"users"},
-    *
-    *   @OA\Parameter(
-    *      name="url",
-    *      description="the url of the blog to follow",
-    *      in="query",
-    *      required=true,
-    *      @OA\Schema(
-    *           type="string"
-    *      )
-    *   ),
-    *    @OA\Parameter(
-    *      name="email",
-    *      description="The email of the blog to follow",
-    *      in="query",
-    *      required=true,
-    *      @OA\Schema(
-    *           type="string"
-    *      )
-    *   ),
-    *    
-    *    @OA\RequestBody(
-    *      required=true,
-    *      description="Pass user credentials",
-    *      @OA\JsonContent(
-    *      required={"url","email"},
-    *      @OA\Property(property="url", type="string", format="url", example="http://wwww.something.com"),
-    *      @OA\Property(property="email", type="string", format="email", example="name@something.com"),
-    *      ),
-    *    ),
-    *
-    * @OA\Response(
-    *    response=404,
-    *    description="Not Found",
-    * ),
-    *   @OA\Response(
-    *      response=401,
-    *       description="Unauthenticated"
-    *   ),
-    * @OA\Response(
-    *    response=200,
-    *    description="success",
-    *     ),
-    * 
-    * )
-    */
+    /**
+     * @OA\POST(
+     * path="user/follow",
+     * summary="Follow a blog",
+     * description="enable the user to follow a blog using the blog Email or URL",
+     * operationId="UserFollow",
+     * tags={"Users"},
+     *
+     *   @OA\Parameter(
+     *      name="url",
+     *      description="the url of the blog to follow",
+     *      in="query",
+     *      required=true,
+     *      @OA\Schema(
+     *           type="string"
+     *      )
+     *   ),
+     *    @OA\Parameter(
+     *      name="email",
+     *      description="The email of the blog to follow",
+     *      in="query",
+     *      required=true,
+     *      @OA\Schema(
+     *           type="string"
+     *      )
+     *   ),
+     *    
+     *    @OA\RequestBody(
+     *      required=true,
+     *      description="Pass user credentials",
+     *      @OA\JsonContent(
+     *      required={"url","email"},
+     *      @OA\Property(property="url", type="string", format="url", example="http://wwww.something.com"),
+     *      @OA\Property(property="email", type="string", format="email", example="name@something.com"),
+     *      ),
+     *    ),
+     *
+     * @OA\Response(
+     *    response=404,
+     *    description="Not Found",
+     * ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     * @OA\Response(
+     *    response=200,
+     *    description="success",
+     *     ),
+     * 
+     * )
+     */
     public function follow()
     {
         //
     }
 
     /**
-    * @OA\POST(
-    * path="user/unfollow",
-    * summary="Unfollow a blog",
-    * description="enable the user to Unfollow a blog using the blog URL",
-    * operationId="UserUnfollow",
-    * tags={"users"},
-    *
-    *   @OA\Parameter(
-    *      name="url",
-    *      description="the url of the blog to unfollow",
-    *      in="query",
-    *      required=true,
-    *      @OA\Schema(
-    *           type="string"
-    *      )
-    *   ),
-    *    
-    *    @OA\RequestBody(
-    *      required=true,
-    *      description="Pass user credentials",
-    *      @OA\JsonContent(
-    *      required={"url"},
-    *      @OA\Property(property="url", type="string", format="url", example="http://wwww.something.com"),
-    *      ),
-    *    ),
-    *
-    * @OA\Response(
-    *    response=404,
-    *    description="Not Found",
-    * ),
-    *   @OA\Response(
-    *      response=401,
-    *       description="Unauthenticated"
-    *   ),
-    * @OA\Response(
-    *    response=200,
-    *    description="success",
-    *     ),
-    * 
-    * )
-    */
+     * @OA\POST(
+     * path="user/unfollow",
+     * summary="Unfollow a blog",
+     * description="enable the user to Unfollow a blog using the blog URL",
+     * operationId="UserUnfollow",
+     * tags={"Users"},
+     *
+     *   @OA\Parameter(
+     *      name="url",
+     *      description="the url of the blog to unfollow",
+     *      in="query",
+     *      required=true,
+     *      @OA\Schema(
+     *           type="string"
+     *      )
+     *   ),
+     *    
+     *    @OA\RequestBody(
+     *      required=true,
+     *      description="Pass user credentials",
+     *      @OA\JsonContent(
+     *      required={"url"},
+     *      @OA\Property(property="url", type="string", format="url", example="http://wwww.something.com"),
+     *      ),
+     *    ),
+     *
+     * @OA\Response(
+     *    response=404,
+     *    description="Not Found",
+     * ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     * @OA\Response(
+     *    response=200,
+     *    description="success",
+     *     ),
+     * 
+     * )
+     */
     public function unfollow()
     {
         //
     }
-     /**
+    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Blog  $blog
@@ -187,7 +187,7 @@ class UserblogConroller extends Controller
      * summary="Delete Specific Blog",
      * description="User Delete Specific Blog ",
      * operationId="Delete",
-     * tags={"Blog"},
+     * tags={"Blogs"},
      *  @OA\Parameter(
      *         name="Email",
      *         in="query",
@@ -225,9 +225,8 @@ class UserblogConroller extends Controller
      *     )
      * )
      */
-    public function destroy(Blog $blog)
+    public function destroy($id)
     {
         //
     }
-
 }
