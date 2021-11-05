@@ -47,51 +47,69 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "blocked_blogs": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "title": {
-                                                        "type": "string",
-                                                        "example": "John Doe"
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "example": "john-doe"
-                                                    },
-                                                    "updated": {
-                                                        "type": "number",
-                                                        "example": 1308953007
-                                                    },
-                                                    "url": {
-                                                        "type": "string",
-                                                        "example": "https://www.cmplr.com/blogs/john-doe"
-                                                    },
-                                                    "description": {
-                                                        "type": "string",
-                                                        "example": "<p><strong>Mr. Karp</strong> is tall and skinny, with unflinching blue eyes a mop of brown hair.\\r\\nHe speaks incredibly fast and in complete paragraphs.</p>"
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "blocked_blogs": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "title": {
+                                                                "type": "string",
+                                                                "example": "John Doe"
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "john-doe"
+                                                            },
+                                                            "updated": {
+                                                                "type": "number",
+                                                                "example": 1308953007
+                                                            },
+                                                            "url": {
+                                                                "type": "string",
+                                                                "example": "https://www.cmplr.com/blogs/john-doe"
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "example": "<p><strong>Mr. Karp</strong> is tall and skinny, with unflinching blue eyes a mop of brown hair.\\r\\nHe speaks incredibly fast and in complete paragraphs.</p>"
+                                                            }
+                                                        },
+                                                        "type": "object"
                                                     }
                                                 },
-                                                "type": "object"
-                                            }
-                                        },
-                                        "_links": {
-                                            "properties": {
-                                                "next": {
+                                                "_links": {
                                                     "properties": {
-                                                        "href": {
-                                                            "type": "string",
-                                                            "example": "/api/v1/blogs/john-doe/blocks?offset=20"
-                                                        },
-                                                        "method": {
-                                                            "type": "string",
-                                                            "example": "GET"
-                                                        },
-                                                        "query_params": {
+                                                        "next": {
                                                             "properties": {
-                                                                "offset": {
-                                                                    "type": "number",
-                                                                    "example": 20
+                                                                "href": {
+                                                                    "type": "string",
+                                                                    "example": "/api/v1/blogs/john-doe/blocks?offset=20"
+                                                                },
+                                                                "method": {
+                                                                    "type": "string",
+                                                                    "example": "GET"
+                                                                },
+                                                                "query_params": {
+                                                                    "properties": {
+                                                                        "offset": {
+                                                                            "type": "number",
+                                                                            "example": 20
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
                                                                 }
                                                             },
                                                             "type": "object"
@@ -149,7 +167,29 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Success"
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -192,54 +232,31 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Success"
-                    }
-                },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
-            }
-        },
-        "/blog/{blog-identifier}/blocks/bulk": {
-            "post": {
-                "tags": [
-                    "Blogs"
-                ],
-                "summary": "Block a list of Blogs",
-                "description": "Block a list of blogs by sending their identifiers",
-                "operationId": "blockManyBlogs",
-                "parameters": [
-                    {
-                        "name": "blog-identifier",
-                        "in": "path",
-                        "description": "Your blog identifier",
-                        "required": true
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "blocked_blogs": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "john-doe, abdullah-alshawafi"
-                                    }
-                                },
-                                "type": "object"
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
                             }
                         }
                     }
                 },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                },
                 "security": [
                     {
                         "bearer": []
@@ -247,42 +264,21 @@
                 ]
             }
         },
-        "Blog/{blog-identifier}/followed_by": {
+        "/blog/{blog-identifier}/followed_by": {
             "get": {
                 "tags": [
                     "Blogs"
                 ],
-                "summary": "blog/Followed_by",
-                "description": "This method can be used to check if one of your blogs is followed by another blog",
-                "operationId": "Followed_by",
+                "summary": "Check If Followed By Blog",
+                "description": "This method can be used to check if one of your blogs is followed by another blog.",
+                "operationId": "followedBy",
                 "parameters": [
                     {
                         "name": "blog-identifier",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     }
                 ],
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "blog-identifier"
-                                ],
-                                "properties": {
-                                    "blog-identifier": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "summer_blog"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "404": {
                         "description": "Not Found"
@@ -291,22 +287,32 @@
                         "description": "Unauthenticated"
                     },
                     "200": {
-                        "description": "sucess",
+                        "description": "Success",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "Status": {
-                                            "type": "integer",
-                                            "example": 200
-                                        },
-                                        "msg": {
-                                            "type": "string",
-                                            "example": "OK"
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
                                         },
                                         "response": {
-                                            "type": "string",
-                                            "example": "{followed_by : false}"
+                                            "properties": {
+                                                "followed_by": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -317,18 +323,18 @@
                 }
             }
         },
-        "blog/{blog-identifier}/followers": {
+        "/blog/{blog-identifier}/followers": {
             "get": {
                 "tags": [
                     "Blogs"
                 ],
-                "summary": "blog/follows",
-                "description": "This method can be used to get followers for specific Blog",
-                "operationId": "followers",
+                "summary": "Retrieve a Blog's Followers",
+                "description": "This method can be used to get the followers of a specific blog",
+                "operationId": "getFollowers",
                 "parameters": [
                     {
                         "name": "blog-identifier",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     },
                     {
@@ -378,14 +384,14 @@
                         "description": "Unauthenticated"
                     },
                     "200": {
-                        "description": "sucess",
+                        "description": "Success",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "Meta": {
+                                        "meta": {
                                             "properties": {
-                                                "Status": {
+                                                "status": {
                                                     "type": "integer",
                                                     "example": 200
                                                 },
@@ -414,9 +420,9 @@
                                                                 "type": "Boolean",
                                                                 "example": true
                                                             },
-                                                            "Url": {
+                                                            "url": {
                                                                 "type": "string",
-                                                                "example": "https:www.davidslog.com"
+                                                                "example": "https://www.davidslog.com"
                                                             },
                                                             "updated": {
                                                                 "type": "integer",
@@ -473,55 +479,73 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "total_blogs": {
-                                            "type": "number",
-                                            "example": 20
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
                                         },
-                                        "blogs": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "title": {
-                                                        "type": "string",
-                                                        "example": "John Doe"
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "example": "john-doe"
-                                                    },
-                                                    "updated": {
-                                                        "type": "number",
-                                                        "example": 1308953007
-                                                    },
-                                                    "url": {
-                                                        "type": "string",
-                                                        "example": "https://www.cmplr.com/blogs/john-doe"
-                                                    },
-                                                    "description": {
-                                                        "type": "string",
-                                                        "example": "<p><strong>Mr. Karp</strong> is tall and skinny, with unflinching blue eyes a mop of brown hair.\\r\\nHe speaks incredibly fast and in complete paragraphs.</p>"
+                                        "response": {
+                                            "properties": {
+                                                "total_blogs": {
+                                                    "type": "number",
+                                                    "example": 20
+                                                },
+                                                "blogs": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "title": {
+                                                                "type": "string",
+                                                                "example": "John Doe"
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "john-doe"
+                                                            },
+                                                            "updated": {
+                                                                "type": "number",
+                                                                "example": 1308953007
+                                                            },
+                                                            "url": {
+                                                                "type": "string",
+                                                                "example": "https://www.cmplr.com/blogs/john-doe"
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "example": "<p><strong>Mr. Karp</strong> is tall and skinny, with unflinching blue eyes a mop of brown hair.\\r\\nHe speaks incredibly fast and in complete paragraphs.</p>"
+                                                            }
+                                                        },
+                                                        "type": "object"
                                                     }
                                                 },
-                                                "type": "object"
-                                            }
-                                        },
-                                        "_links": {
-                                            "properties": {
-                                                "next": {
+                                                "_links": {
                                                     "properties": {
-                                                        "href": {
-                                                            "type": "string",
-                                                            "example": "/api/v1/blogs/john-doe/blocks?offset=20"
-                                                        },
-                                                        "method": {
-                                                            "type": "string",
-                                                            "example": "GET"
-                                                        },
-                                                        "query_params": {
+                                                        "next": {
                                                             "properties": {
-                                                                "offset": {
-                                                                    "type": "number",
-                                                                    "example": 20
+                                                                "href": {
+                                                                    "type": "string",
+                                                                    "example": "/api/v1/blogs/john-doe/blocks?offset=20"
+                                                                },
+                                                                "method": {
+                                                                    "type": "string",
+                                                                    "example": "GET"
+                                                                },
+                                                                "query_params": {
+                                                                    "properties": {
+                                                                        "offset": {
+                                                                            "type": "number",
+                                                                            "example": 20
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
                                                                 }
                                                             },
                                                             "type": "object"
@@ -564,99 +588,117 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "title": {
-                                            "type": "string",
-                                            "example": "John Doe"
-                                        },
-                                        "avatar": {
-                                            "type": "string",
-                                            "example": "https://www.example.com/image/avatar.png"
-                                        },
-                                        "posts": {
-                                            "type": "number",
-                                            "example": 69
-                                        },
-                                        "name": {
-                                            "type": "string",
-                                            "example": "john-doe"
-                                        },
-                                        "url": {
-                                            "type": "string",
-                                            "example": "https://www.cmplr.com/blogs/john-doe"
-                                        },
-                                        "updated": {
-                                            "type": "number",
-                                            "example": 1308953007
-                                        },
-                                        "description": {
-                                            "type": "string",
-                                            "example": "<p><strong>Mr. Karp</strong> is tall and skinny, with unflinching blue eyes a mop of brown hair.\\r\\nHe speaks incredibly fast and in complete paragraphs.</p>"
-                                        },
-                                        "ask": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "ask_anon": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "likes": {
-                                            "type": "number",
-                                            "example": 420
-                                        },
-                                        "is_blocked_from_primary": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "theme": {
+                                        "meta": {
                                             "properties": {
-                                                "avatar_shape": {
-                                                    "type": "string",
-                                                    "example": "circle"
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
                                                 },
-                                                "background_color": {
+                                                "msg": {
                                                     "type": "string",
-                                                    "example": "#00f980"
-                                                },
-                                                "body_font": {
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "title": {
                                                     "type": "string",
-                                                    "example": "Arial"
+                                                    "example": "John Doe"
                                                 },
-                                                "header_image": {
+                                                "avatar": {
                                                     "type": "string",
-                                                    "example": "https://www.example.com/image/header.png"
+                                                    "example": "https://www.example.com/image/avatar.png"
                                                 },
-                                                "link_color": {
+                                                "posts": {
+                                                    "type": "number",
+                                                    "example": 69
+                                                },
+                                                "name": {
                                                     "type": "string",
-                                                    "example": "#eefeef"
+                                                    "example": "john-doe"
                                                 },
-                                                "show_avatar": {
+                                                "url": {
+                                                    "type": "string",
+                                                    "example": "https://www.cmplr.com/blogs/john-doe"
+                                                },
+                                                "updated": {
+                                                    "type": "number",
+                                                    "example": 1308953007
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "<p><strong>Mr. Karp</strong> is tall and skinny, with unflinching blue eyes a mop of brown hair.\\r\\nHe speaks incredibly fast and in complete paragraphs.</p>"
+                                                },
+                                                "ask": {
                                                     "type": "boolean",
                                                     "example": false
                                                 },
-                                                "show_description": {
+                                                "ask_anon": {
                                                     "type": "boolean",
                                                     "example": false
                                                 },
-                                                "show_header_image": {
+                                                "likes": {
+                                                    "type": "number",
+                                                    "example": 420
+                                                },
+                                                "is_blocked_from_primary": {
                                                     "type": "boolean",
                                                     "example": false
                                                 },
-                                                "show_title": {
-                                                    "type": "boolean",
-                                                    "example": false
-                                                },
-                                                "title_color": {
-                                                    "type": "string",
-                                                    "example": "#f0f0f0"
-                                                },
-                                                "title_font": {
-                                                    "type": "string",
-                                                    "example": "Arial"
-                                                },
-                                                "title_font_weight": {
-                                                    "type": "string",
-                                                    "example": "bold"
+                                                "theme": {
+                                                    "properties": {
+                                                        "avatar_shape": {
+                                                            "type": "string",
+                                                            "example": "circle"
+                                                        },
+                                                        "background_color": {
+                                                            "type": "string",
+                                                            "example": "#00f980"
+                                                        },
+                                                        "body_font": {
+                                                            "type": "string",
+                                                            "example": "Arial"
+                                                        },
+                                                        "header_image": {
+                                                            "type": "string",
+                                                            "example": "https://www.example.com/image/header.png"
+                                                        },
+                                                        "link_color": {
+                                                            "type": "string",
+                                                            "example": "#eefeef"
+                                                        },
+                                                        "show_avatar": {
+                                                            "type": "boolean",
+                                                            "example": false
+                                                        },
+                                                        "show_description": {
+                                                            "type": "boolean",
+                                                            "example": false
+                                                        },
+                                                        "show_header_image": {
+                                                            "type": "boolean",
+                                                            "example": false
+                                                        },
+                                                        "show_title": {
+                                                            "type": "boolean",
+                                                            "example": false
+                                                        },
+                                                        "title_color": {
+                                                            "type": "string",
+                                                            "example": "#f0f0f0"
+                                                        },
+                                                        "title_font": {
+                                                            "type": "string",
+                                                            "example": "Arial"
+                                                        },
+                                                        "title_font_weight": {
+                                                            "type": "string",
+                                                            "example": "bold"
+                                                        }
+                                                    },
+                                                    "type": "object"
                                                 }
                                             },
                                             "type": "object"
@@ -705,51 +747,69 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "liked_posts": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "blog_name": {
-                                                        "type": "string",
-                                                        "example": "john-doe"
-                                                    },
-                                                    "blog_url": {
-                                                        "type": "string",
-                                                        "example": "https://www.cmplr.com/blogs/john-doe"
-                                                    },
-                                                    "post_id": {
-                                                        "type": "number",
-                                                        "example": "1234567890"
-                                                    },
-                                                    "post_notes_count": {
-                                                        "type": "number",
-                                                        "example": 20
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "liked_posts": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "blog_name": {
+                                                                "type": "string",
+                                                                "example": "john-doe"
+                                                            },
+                                                            "blog_url": {
+                                                                "type": "string",
+                                                                "example": "https://www.cmplr.com/blogs/john-doe"
+                                                            },
+                                                            "post_id": {
+                                                                "type": "number",
+                                                                "example": "1234567890"
+                                                            },
+                                                            "post_notes_count": {
+                                                                "type": "number",
+                                                                "example": 20
+                                                            }
+                                                        },
+                                                        "type": "object"
                                                     }
                                                 },
-                                                "type": "object"
-                                            }
-                                        },
-                                        "liked_count": {
-                                            "type": "number",
-                                            "example": 20
-                                        },
-                                        "_links": {
-                                            "properties": {
-                                                "next": {
+                                                "liked_count": {
+                                                    "type": "number",
+                                                    "example": 20
+                                                },
+                                                "_links": {
                                                     "properties": {
-                                                        "href": {
-                                                            "type": "string",
-                                                            "example": "/api/v1/blogs/john-doe/likes?offset=20"
-                                                        },
-                                                        "method": {
-                                                            "type": "string",
-                                                            "example": "GET"
-                                                        },
-                                                        "query_params": {
+                                                        "next": {
                                                             "properties": {
-                                                                "offset": {
-                                                                    "type": "number",
-                                                                    "example": 20
+                                                                "href": {
+                                                                    "type": "string",
+                                                                    "example": "/api/v1/blogs/john-doe/likes?offset=20"
+                                                                },
+                                                                "method": {
+                                                                    "type": "string",
+                                                                    "example": "GET"
+                                                                },
+                                                                "query_params": {
+                                                                    "properties": {
+                                                                        "offset": {
+                                                                            "type": "number",
+                                                                            "example": 20
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
                                                                 }
                                                             },
                                                             "type": "object"
@@ -2016,7 +2076,7 @@
                 }
             }
         },
-        "post/notes": {
+        "/post/notes": {
             "get": {
                 "tags": [
                     "Posts"
@@ -2150,7 +2210,7 @@
                 }
             }
         },
-        "user/info": {
+        "/user/info": {
             "get": {
                 "tags": [
                     "Users"
@@ -2265,7 +2325,7 @@
                 }
             }
         },
-        "user/dashboard": {
+        "/user/dashboard": {
             "get": {
                 "tags": [
                     "Users"
@@ -2389,7 +2449,7 @@
                 }
             }
         },
-        "user/likes": {
+        "/user/likes": {
             "get": {
                 "tags": [
                     "Users"
@@ -2481,7 +2541,7 @@
                 }
             }
         },
-        "user/following": {
+        "/user/following": {
             "get": {
                 "tags": [
                     "Users"
@@ -2545,7 +2605,7 @@
                 }
             }
         },
-        "user/filtered_tags": {
+        "/user/filtered_tags": {
             "get": {
                 "tags": [
                     "Tags"
@@ -2678,7 +2738,7 @@
                 }
             }
         },
-        "user/filtered_tags/{tag}": {
+        "/user/filtered_tags/{tag}": {
             "delete": {
                 "tags": [
                     "Tags"
@@ -2731,7 +2791,7 @@
                 }
             }
         },
-        "user/filtered_content": {
+        "/user/filtered_content": {
             "get": {
                 "tags": [
                     "Tags"
@@ -2975,7 +3035,7 @@
                 }
             }
         },
-        "blog/{blog-identifier}/subscription": {
+        "/blog/{blog-identifier}/subscription": {
             "post": {
                 "tags": [
                     "Blogs"
@@ -3067,7 +3127,7 @@
                 }
             }
         },
-        "{blog-identifier}/add_tags_to_posts": {
+        "/{blog-identifier}/add_tags_to_posts": {
             "post": {
                 "tags": [
                     "Blogs"
@@ -3133,7 +3193,7 @@
                 }
             }
         },
-        "{blog-identifier}/delete_posts": {
+        "/{blog-identifier}/delete_posts": {
             "delete": {
                 "tags": [
                     "Posts"
@@ -3224,7 +3284,7 @@
                 }
             }
         },
-        "{blog-identifier}/get_tags_for_posts": {
+        "/{blog-identifier}/get_tags_for_posts": {
             "post": {
                 "tags": [
                     "Blogs"
@@ -3317,7 +3377,7 @@
                 ]
             }
         },
-        "{blog-identifier}/remove_tags_from_posts": {
+        "/{blog-identifier}/remove_tags_from_posts": {
             "delete": {
                 "tags": [
                     "Blogs"
@@ -3375,7 +3435,7 @@
                 ]
             }
         },
-        "Blog/": {
+        "/blog": {
             "post": {
                 "tags": [
                     "Blogs"
@@ -3541,7 +3601,7 @@
                 }
             }
         },
-        "user/follow": {
+        "/user/follow": {
             "post": {
                 "tags": [
                     "Users"
@@ -3609,7 +3669,7 @@
                 }
             }
         },
-        "user/unfollow": {
+        "/user/unfollow": {
             "post": {
                 "tags": [
                     "Users"
@@ -3662,7 +3722,7 @@
                 }
             }
         },
-        "user/like": {
+        "/user/like": {
             "post": {
                 "tags": [
                     "Users"
@@ -3730,7 +3790,7 @@
                 }
             }
         },
-        "user/unlike": {
+        "/user/unlike": {
             "post": {
                 "tags": [
                     "Users"
@@ -3798,7 +3858,7 @@
                 }
             }
         },
-        "user/post/reply": {
+        "/user/post/reply": {
             "post": {
                 "tags": [
                     "Users"
@@ -3875,7 +3935,7 @@
                 }
             }
         },
-        "user/tags/add": {
+        "/user/tags/add": {
             "post": {
                 "tags": [
                     "Tags"
@@ -3927,7 +3987,7 @@
                 }
             }
         },
-        "user/tags/remove": {
+        "/user/tags/remove": {
             "delete": {
                 "tags": [
                     "Tags"

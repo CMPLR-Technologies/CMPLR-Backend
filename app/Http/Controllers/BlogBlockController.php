@@ -35,21 +35,27 @@ class BlogBlockController extends Controller
      *     response=200,
      *     description="Success",
      *     @OA\JsonContent(
-     *       @OA\Property(property="blocked_blogs", type="array",
-     *         @OA\Items(
-     *           @OA\Property(property="title", type="string", example="John Doe"),
-     *           @OA\Property(property="name", type="string", example="john-doe"),
-     *           @OA\Property(property="updated", type="number", example=1308953007),
-     *           @OA\Property(property="url", type="string", example="https://www.cmplr.com/blogs/john-doe"),
-     *           @OA\Property(property="description", type="string", example="<p><strong>Mr. Karp</strong> is tall and skinny, with unflinching blue eyes a mop of brown hair.\r\nHe speaks incredibly fast and in complete paragraphs.</p>"),
-     *         )
+     *       @OA\Property(property="meta", type="object",
+     *         @OA\Property(property="status", type="integer", example=200),
+     *         @OA\Property(property="msg", type="string", example="OK"),
      *       ),
-     *       @OA\Property(property="_links", type="object",
-     *         @OA\Property(property="next", type="object",
-     *           @OA\Property(property="href", type="string", example="/api/v1/blogs/john-doe/blocks?offset=20"),
-     *           @OA\Property(property="method", type="string", example="GET"),
-     *           @OA\Property(property="query_params", type="object",
-     *             @OA\Property(property="offset", type="number", example=20),
+     *       @OA\Property(property="response", type="object",
+     *         @OA\Property(property="blocked_blogs", type="array",
+     *           @OA\Items(
+     *             @OA\Property(property="title", type="string", example="John Doe"),
+     *             @OA\Property(property="name", type="string", example="john-doe"),
+     *             @OA\Property(property="updated", type="number", example=1308953007),
+     *             @OA\Property(property="url", type="string", example="https://www.cmplr.com/blogs/john-doe"),
+     *             @OA\Property(property="description", type="string", example="<p><strong>Mr. Karp</strong> is tall and skinny, with unflinching blue eyes a mop of brown hair.\r\nHe speaks incredibly fast and in complete paragraphs.</p>"),
+     *           )
+     *         ),
+     *         @OA\Property(property="_links", type="object",
+     *           @OA\Property(property="next", type="object",
+     *             @OA\Property(property="href", type="string", example="/api/v1/blogs/john-doe/blocks?offset=20"),
+     *             @OA\Property(property="method", type="string", example="GET"),
+     *             @OA\Property(property="query_params", type="object",
+     *               @OA\Property(property="offset", type="number", example=20),
+     *             )
      *           )
      *         )
      *       )
@@ -84,43 +90,18 @@ class BlogBlockController extends Controller
      *   ),
      *   @OA\Response(
      *     response=200,
-     *     description="Success"
+     *     description="Success",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="meta", type="object",
+     *         @OA\Property(property="status", type="integer", example=200),
+     *         @OA\Property(property="msg", type="string", example="OK"),
+     *       )
+     *     )
      *   ),
      *   security ={{"bearer":{}}}
      * )
      */
     public function blockBlog(Request $request)
-    {
-        //
-    }
-
-    /**
-     * @OA\Post(
-     *   path="/blog/{blog-identifier}/blocks/bulk",
-     *   summary="Block a list of Blogs",
-     *   description="Block a list of blogs by sending their identifiers",
-     *   operationId="blockManyBlogs",
-     *   tags={"Blogs"},
-     *   @OA\Parameter(
-     *     name="blog-identifier",
-     *     in="path",
-     *     description="Your blog identifier",
-     *     required=true,
-     *   ),
-     *   @OA\RequestBody(
-     *     required=true,
-     *     @OA\JsonContent(
-     *       @OA\Property(property="blocked_blogs", type="string", format="text", example="john-doe, abdullah-alshawafi"),
-     *    )
-     *   ),
-     *   @OA\Response(
-     *     response=200,
-     *     description="Success"
-     *   ),
-     *   security ={{"bearer":{}}}
-     * )
-     */
-    public function blockManyBlogs(Request $request)
     {
         //
     }
@@ -169,7 +150,13 @@ class BlogBlockController extends Controller
      *   ),
      *   @OA\Response(
      *     response=200,
-     *     description="Success"
+     *     description="Success",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="meta", type="object",
+     *         @OA\Property(property="status", type="integer", example=200),
+     *         @OA\Property(property="msg", type="string", example="OK"),
+     *       )
+     *     )
      *   ),
      *   security ={{"bearer":{}}}
      * )

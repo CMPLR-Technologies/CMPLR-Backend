@@ -8,7 +8,7 @@ class UserblogConroller extends Controller
 {
     /**
      * @OA\Post(
-     * path="Blog/",
+     * path="/blog",
      * summary="Create new Blog",
      * description="User create new Blog ",
      * operationId="Create",
@@ -74,7 +74,7 @@ class UserblogConroller extends Controller
 
     /**
      * @OA\POST(
-     * path="user/follow",
+     * path="/user/follow",
      * summary="Follow a blog",
      * description="enable the user to follow a blog using the blog Email or URL",
      * operationId="UserFollow",
@@ -131,7 +131,7 @@ class UserblogConroller extends Controller
 
     /**
      * @OA\POST(
-     * path="user/unfollow",
+     * path="/user/unfollow",
      * summary="Unfollow a blog",
      * description="enable the user to Unfollow a blog using the blog URL",
      * operationId="UserUnfollow",
@@ -175,15 +175,11 @@ class UserblogConroller extends Controller
     {
         //
     }
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Blog  $blog
-     * @return \Illuminate\Http\Response
-     */
+
+
     /**
      * @OA\Delete(
-     * path="Blog/",
+     * path="/blog",
      * summary="Delete Specific Blog",
      * description="User Delete Specific Blog ",
      * operationId="Delete",

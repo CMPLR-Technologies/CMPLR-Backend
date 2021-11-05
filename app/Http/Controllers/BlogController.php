@@ -72,57 +72,53 @@ class BlogController extends Controller
 
     /**
      * @OA\Get(
-     * path="Blog/{blog-identifier}/followed_by",
-     * summary="blog/Followed_by",
-     * description="This method can be used to check if one of your blogs is followed by another blog",
-     * operationId="Followed_by",
+     * path="/blog/{blog-identifier}/followed_by",
+     * summary="Check If Followed By Blog",
+     * description="This method can be used to check if one of your blogs is followed by another blog.",
+     * operationId="followedBy",
      * tags={"Blogs"},
      *  @OA\Parameter(
      *         name="blog-identifier",
-     *         in="query",
+     *         in="path",
      *         required=true,
      *      ),
-     * @OA\RequestBody(
-     *    required=true,
-     *    description="Pass user credentials",
-     *    @OA\JsonContent(
-     *       required={"blog-identifier"},
-     *       @OA\Property(property="blog-identifier", type="string", format="text", example="summer_blog"),
-     *    ),
-     * ),
      * @OA\Response(
      *    response=404,
      *    description="Not Found",
      * ),
      *   @OA\Response(
      *      response=401,
-     *       description="Unauthenticated"
+     *       description="Unauthenticated",
      *   ),
      * @OA\Response(
      *    response=200,
-     *    description="sucess",
+     *    description="Success",
      *    @OA\JsonContent(
-     *       @OA\Property(property="Status", type="integer", example=200),
-     *       @OA\Property(property="msg", type="string", example="OK"),
-     *       @OA\Property(property="response", type="string", example="{followed_by : false}")
-     *        )
-     *     )
+     *       @OA\Property(property="meta", type="object",
+     *         @OA\Property(property="status", type="integer", example=200),
+     *         @OA\Property(property="msg", type="string", example="OK"),
+     *       ),
+     *       @OA\Property(property="response", type="object",
+     *         @OA\Property(property="followed_by", type="boolean", example=false),
+     *       )
+     *    )
+     * )
      * )
      */
-    public function Followed_by(Request $request, Blog $blog)
+    public function followedBy(Request $request, Blog $blog)
     {
     }
 
     /**
      * @OA\Get(
-     * path="blog/{blog-identifier}/followers",
-     * summary="blog/follows",
-     * description="This method can be used to get followers for specific Blog",
-     * operationId="followers",
+     * path="/blog/{blog-identifier}/followers",
+     * summary="Retrieve a Blog's Followers",
+     * description="This method can be used to get the followers of a specific blog",
+     * operationId="getFollowers",
      * tags={"Blogs"},
      *  @OA\Parameter(
      *         name="blog-identifier",
-     *         in="query",
+     *         in="path",
      *         required=true,
      *      ),
      *  @OA\Parameter(
@@ -156,11 +152,11 @@ class BlogController extends Controller
      *   ),
      * @OA\Response(
      *    response=200,
-     *    description="sucess",
+     *    description="Success",
      *    @OA\JsonContent(
      *       type="object",
-     *       @OA\Property(property="Meta", type="object",
-     *          @OA\Property(property="Status", type="integer", example=200),
+     *       @OA\Property(property="meta", type="object",
+     *          @OA\Property(property="status", type="integer", example=200),
      *           @OA\Property(property="msg", type="string", example="OK"),
      *        ),
      *       @OA\Property(property="response", type="object",
@@ -178,9 +174,9 @@ class BlogController extends Controller
      *                         example=true
      *                      ),
      *                      @OA\Property(
-     *                         property="Url",
+     *                         property="url",
      *                         type="string",
-     *                         example="https:www.davidslog.com"
+     *                         example="https://www.davidslog.com"
      *                      ),
      *                      @OA\Property(
      *                         property="updated",
@@ -188,35 +184,13 @@ class BlogController extends Controller
      *                         example=1308781073
      *                      ),
      *                ),
-     *               @OA\Items(
-     *                      @OA\Property(
-     *                         property="namea",
-     *                         type="string",
-     *                         example="ahmed"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="followinga",
-     *                         type="Boolean",
-     *                         example=true
-     *                      ),
-     *                      @OA\Property(
-     *                         property="Urla",
-     *                         type="string",
-     *                         example="https:www.ahmed_a1.com"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="updateda",
-     *                         type="integer",
-     *                         example=1308781073
-     *                      ),
-     *                  ),
-     *               ),           
+     *             ),           
      *           ),
      *        ),
      *     )
      * )
      */
-    public function GetFollower(Request $request, Blog $blog)
+    public function getFollowers(Request $request, Blog $blog)
     {
     }
 
@@ -249,22 +223,28 @@ class BlogController extends Controller
      *     response=200,
      *     description="Success",
      *     @OA\JsonContent(
-     *       @OA\Property(property="total_blogs", type="number", example=20),
-     *       @OA\Property(property="blogs", type="array",
-     *         @OA\Items(
-     *           @OA\Property(property="title", type="string", example="John Doe"),
-     *           @OA\Property(property="name", type="string", example="john-doe"),
-     *           @OA\Property(property="updated", type="number", example=1308953007),
-     *           @OA\Property(property="url", type="string", example="https://www.cmplr.com/blogs/john-doe"),
-     *           @OA\Property(property="description", type="string", example="<p><strong>Mr. Karp</strong> is tall and skinny, with unflinching blue eyes a mop of brown hair.\r\nHe speaks incredibly fast and in complete paragraphs.</p>"),
-     *         )
+     *       @OA\Property(property="meta", type="object",
+     *         @OA\Property(property="status", type="integer", example=200),
+     *         @OA\Property(property="msg", type="string", example="OK"),
      *       ),
-     *       @OA\Property(property="_links", type="object",
-     *         @OA\Property(property="next", type="object",
-     *           @OA\Property(property="href", type="string", example="/api/v1/blogs/john-doe/blocks?offset=20"),
-     *           @OA\Property(property="method", type="string", example="GET"),
-     *           @OA\Property(property="query_params", type="object",
-     *             @OA\Property(property="offset", type="number", example=20),
+     *       @OA\Property(property="response", type="object",
+     *         @OA\Property(property="total_blogs", type="number", example=20),
+     *         @OA\Property(property="blogs", type="array",
+     *           @OA\Items(
+     *             @OA\Property(property="title", type="string", example="John Doe"),
+     *             @OA\Property(property="name", type="string", example="john-doe"),
+     *             @OA\Property(property="updated", type="number", example=1308953007),
+     *             @OA\Property(property="url", type="string", example="https://www.cmplr.com/blogs/john-doe"),
+     *             @OA\Property(property="description", type="string", example="<p><strong>Mr. Karp</strong> is tall and skinny, with unflinching blue eyes a mop of brown hair.\r\nHe speaks incredibly fast and in complete paragraphs.</p>"),
+     *           )
+     *         ),
+     *         @OA\Property(property="_links", type="object",
+     *           @OA\Property(property="next", type="object",
+     *             @OA\Property(property="href", type="string", example="/api/v1/blogs/john-doe/blocks?offset=20"),
+     *             @OA\Property(property="method", type="string", example="GET"),
+     *             @OA\Property(property="query_params", type="object",
+     *               @OA\Property(property="offset", type="number", example=20),
+     *             )
      *           )
      *         )
      *       )
