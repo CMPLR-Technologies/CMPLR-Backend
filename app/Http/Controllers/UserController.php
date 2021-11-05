@@ -288,10 +288,39 @@ class UserController extends Controller
      *      response=401,
      *       description="Unauthenticated"
      *   ),
-     * @OA\Response(
-     *    response=200,
-     *    description="success",
-     *     ),
+     *   
+    *       @OA\Response
+    *		(
+    *	    	response=200,
+    *    		description="success",
+    *    		@OA\JsonContent
+    *			(
+    *       			type="object",
+    *       			@OA\Property
+    *				    (
+    *					    property="Meta", type="object",
+    *					    @OA\Property(property="Status", type="integer", example=200),
+    *					    @OA\Property(property="msg", type="string", example="OK"),
+    *        			),
+    *
+    *       			@OA\Property
+    *				    (
+    *					    property="response", type="object",
+    *             			@OA\Property(property="total_posts", type="Number", example=263),
+    *             			@OA\Property
+    *					    (
+    *						    property="posts", type="array",
+    *                			@OA\Items
+    *						    (
+    *			        	        @OA\Property(property="post1",description="the first post",type="object"),
+    *			        	        @OA\Property(property="post2",description="the second post",type="object"),
+    *			        	        @OA\Property(property="post3",description="the third post",type="object"),
+    *			        	    ),
+    *       
+    *               		),
+    *           		),
+    *        		),
+    *     	)
      * 
      * )
      */
@@ -346,11 +375,40 @@ class UserController extends Controller
      *      response=401,
      *       description="Unauthenticated"
      *   ),
-     * @OA\Response(
-     *    response=200,
-     *    description="success",
-     *     ),
      * 
+    *       @OA\Response
+    *		(
+    *	    	response=200,
+    *    		description="success",
+    *    		@OA\JsonContent
+    *			(
+    *       			type="object",
+    *       			@OA\Property
+    *				    (
+    *					    property="Meta", type="object",
+    *					    @OA\Property(property="Status", type="integer", example=200),
+    *					    @OA\Property(property="msg", type="string", example="OK"),
+    *        			),
+    *
+    *       			@OA\Property
+    *				    (
+    *					    property="response", type="object",
+    *             			@OA\Property(property="total_blogs", type="Number", example=263),
+    *             			@OA\Property
+    *					    (
+    *						    property="blogs", type="array",
+    *                			@OA\Items
+    *						    (
+    *			        	        @OA\Property(property="blog1",description="the first blog",type="object"),
+    *			        	        @OA\Property(property="blog2",description="the second blog",type="object"),
+    *			        	        @OA\Property(property="blog3",description="the third blog",type="object"),
+    *			        	    ),
+    *       
+    *               		),
+    *           		),
+    *        		),
+    *     	)
+    * 
      * )
      */
     public function getFollowing()

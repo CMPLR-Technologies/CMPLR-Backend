@@ -1167,4 +1167,128 @@ class PostsController extends Controller
     {
         //
     }
+
+        /**
+    *	@OA\Get
+    *	(
+    * 		path="/tagged",
+    * 		summary="Get Posts with Tag",
+    * 		description="retrieve the posts with specific tag",
+    * 		operationId="getTaggedPosts",
+    * 		tags={"Posts"},
+    *
+    *    	@OA\Parameter
+    *		(
+    *      		name="tag",
+    *      		description="The tag on the posts you'd like to retrieve",
+    *      		in="path",
+    *      		required=true,
+    *      		@OA\Schema
+    *			(
+    *           		type="String"
+    *      		)
+    *   	),
+    *
+    *    	@OA\Parameter
+    *		(
+    *			name="before",
+    *			description="The timestamp of when you'd like to see posts before.",
+    *			in="query",
+    *			required=false,
+    *		    @OA\Schema
+    *		 	(
+    *		           type="integer"
+    *			)
+    *   	),
+    *
+    *   	@OA\Parameter
+    *		(
+    *      		name="limit",
+    *      		description="the number of posts to return",
+    *      		in="query",
+    *      		required=false,
+    *      		@OA\Schema
+    *			(
+    *           		type="Number"
+    *      		)
+    *   	),
+    *
+    *    	@OA\Parameter
+    *		(
+    *			name="filter",
+    *			description="Specifies the post format to return, other than HTML: text – Plain text, no HTML; raw – As entered by the user (no post-processing)",
+    *			in="query",
+    *			required=false,
+    *		    @OA\Schema
+    *		 	(
+    *		           type="String"
+    *			)
+    *   	),
+    *    
+    *    	@OA\RequestBody
+    *		(
+    *      		required=true,
+    *      		description="Pass user credentials",
+    *      		@OA\JsonContent
+    *			(
+    *	    		required={"tag"},
+    *      			@OA\Property(property="tag", type="String", format="text", example="anime"),
+    *      			@OA\Property(property="before", type="integer", format="integer", example=10),
+    *      			@OA\Property(property="limit", type="integer", format="integer", example=1),
+    *      			@OA\Property(property="filter", type="String", format="text", example="HTML"),
+    *      		),
+    *    	),
+    *
+    * 		@OA\Response
+    *		(
+    *    		response=404,
+    *    		description="Not Found",
+    * 		),
+    *
+    *	   	@OA\Response
+    *		(
+    *		      response=401,
+    *		      description="Unauthenticated"
+    *	   	),
+    *
+    *		@OA\Response
+    *		(
+    *	    	response=200,
+    *    		description="success",
+    *    		@OA\JsonContent
+    *			(
+    *       			type="object",
+    *       			@OA\Property
+    *				    (
+    *					    property="Meta", type="object",
+    *					    @OA\Property(property="Status", type="integer", example=200),
+    *					    @OA\Property(property="msg", type="string", example="OK"),
+    *        			),
+    *
+    *       			@OA\Property
+    *				    (
+    *					    property="response", type="object",
+    *             			@OA\Property(property="blog", type="object"),
+    *             			@OA\Property
+    *					    (
+    *						    property="posts", type="array",
+    *                			@OA\Items
+    *						    (
+    *			        	        @OA\Property(property="post1",description="the first post",type="object"),
+    *			        	        @OA\Property(property="post2",description="the second post",type="object"),
+    *			        	        @OA\Property(property="post3",description="the third post",type="object"),
+    *			        	    ),
+    *       
+    *               		),
+    *					    @OA\Property(property="total_posts", type="integer", example=3),
+    *           		),
+    *        		),
+    *     	)
+    * )
+    */
+    public function getTaggedPosts()
+    {
+
+    }
+
 }

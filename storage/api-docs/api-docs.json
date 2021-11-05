@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8000",
+            "url": "http://my-default-host.com",
             "description": "CMPLR API Server"
         }
     ],
@@ -2150,6 +2150,155 @@
                 }
             }
         },
+        "/tagged": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Get Posts with Tag",
+                "description": "retrieve the posts with specific tag",
+                "operationId": "getTaggedPosts",
+                "parameters": [
+                    {
+                        "name": "tag",
+                        "in": "path",
+                        "description": "The tag on the posts you'd like to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "String"
+                        }
+                    },
+                    {
+                        "name": "before",
+                        "in": "query",
+                        "description": "The timestamp of when you'd like to see posts before.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "the number of posts to return",
+                        "required": false,
+                        "schema": {
+                            "type": "Number"
+                        }
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Specifies the post format to return, other than HTML: text – Plain text, no HTML; raw – As entered by the user (no post-processing)",
+                        "required": false,
+                        "schema": {
+                            "type": "String"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "tag"
+                                ],
+                                "properties": {
+                                    "tag": {
+                                        "type": "String",
+                                        "format": "text",
+                                        "example": "anime"
+                                    },
+                                    "before": {
+                                        "type": "integer",
+                                        "format": "integer",
+                                        "example": 10
+                                    },
+                                    "limit": {
+                                        "type": "integer",
+                                        "format": "integer",
+                                        "example": 1
+                                    },
+                                    "filter": {
+                                        "type": "String",
+                                        "format": "text",
+                                        "example": "HTML"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "blog": {
+                                                    "type": "object"
+                                                },
+                                                "posts": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "post1": {
+                                                                "description": "the first post",
+                                                                "type": "object"
+                                                            },
+                                                            "post2": {
+                                                                "description": "the second post",
+                                                                "type": "object"
+                                                            },
+                                                            "post3": {
+                                                                "description": "the third post",
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "total_posts": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "user/info": {
             "get": {
                 "tags": [
@@ -2476,7 +2625,58 @@
                         "description": "Unauthenticated"
                     },
                     "200": {
-                        "description": "success"
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "total_posts": {
+                                                    "type": "Number",
+                                                    "example": 263
+                                                },
+                                                "posts": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "post1": {
+                                                                "description": "the first post",
+                                                                "type": "object"
+                                                            },
+                                                            "post2": {
+                                                                "description": "the second post",
+                                                                "type": "object"
+                                                            },
+                                                            "post3": {
+                                                                "description": "the third post",
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -2540,7 +2740,58 @@
                         "description": "Unauthenticated"
                     },
                     "200": {
-                        "description": "success"
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "total_blogs": {
+                                                    "type": "Number",
+                                                    "example": 263
+                                                },
+                                                "blogs": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "blog1": {
+                                                                "description": "the first blog",
+                                                                "type": "object"
+                                                            },
+                                                            "blog2": {
+                                                                "description": "the second blog",
+                                                                "type": "object"
+                                                            },
+                                                            "blog3": {
+                                                                "description": "the third blog",
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
