@@ -19,172 +19,6 @@
         }
     ],
     "paths": {
-        "Blog/": {
-            "post": {
-                "tags": [
-                    "Blog"
-                ],
-                "summary": "Create new Blog",
-                "description": "User create new Blog ",
-                "operationId": "Create",
-                "parameters": [
-                    {
-                        "name": "Title",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "name": "Url",
-                        "in": "query",
-                        "required": false
-                    },
-                    {
-                        "name": "Privacy",
-                        "in": "query",
-                        "required": false
-                    },
-                    {
-                        "name": "Password",
-                        "in": "query",
-                        "required": false
-                    }
-                ],
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "Title"
-                                ],
-                                "properties": {
-                                    "Title": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "Summer_Blog"
-                                    },
-                                    "url": {
-                                        "type": "string",
-                                        "format": "url",
-                                        "example": "example.tumblr.com"
-                                    },
-                                    "Privacy": {
-                                        "type": "boolean",
-                                        "example": "true"
-                                    },
-                                    "Password": {
-                                        "type": "string",
-                                        "format": "Password",
-                                        "example": "pass123"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Created Successfully"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "422": {
-                        "description": "Invalid Data",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Blog url is not available!"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Blog"
-                ],
-                "summary": "Delete Specific Blog",
-                "description": "User Delete Specific Blog ",
-                "operationId": "Delete",
-                "parameters": [
-                    {
-                        "name": "Email",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "name": "Password",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "Email",
-                                    "Password"
-                                ],
-                                "properties": {
-                                    "Email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "Email@gmail.com"
-                                    },
-                                    "Password": {
-                                        "type": "string",
-                                        "format": "Password",
-                                        "example": "Password123"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "successful"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "msg": {
-                                            "type": "integer",
-                                            "example": 403
-                                        },
-                                        "status": {
-                                            "type": "string",
-                                            "example": "That password is incorrect. Please try again"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "Blog/{blog-identifier}/followed_by": {
             "get": {
                 "tags": [
@@ -366,6 +200,172 @@
                                                 }
                                             },
                                             "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "Blog/": {
+            "post": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "Create new Blog",
+                "description": "User create new Blog ",
+                "operationId": "Create",
+                "parameters": [
+                    {
+                        "name": "Title",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "Url",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "Privacy",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "Password",
+                        "in": "query",
+                        "required": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "Title"
+                                ],
+                                "properties": {
+                                    "Title": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "Summer_Blog"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": "example.tumblr.com"
+                                    },
+                                    "Privacy": {
+                                        "type": "boolean",
+                                        "example": "true"
+                                    },
+                                    "Password": {
+                                        "type": "string",
+                                        "format": "Password",
+                                        "example": "pass123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created Successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Invalid Data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Blog url is not available!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "Delete Specific Blog",
+                "description": "User Delete Specific Blog ",
+                "operationId": "Delete",
+                "parameters": [
+                    {
+                        "name": "Email",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "Password",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "Email",
+                                    "Password"
+                                ],
+                                "properties": {
+                                    "Email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "Email@gmail.com"
+                                    },
+                                    "Password": {
+                                        "type": "string",
+                                        "format": "Password",
+                                        "example": "Password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "msg": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "That password is incorrect. Please try again"
                                         }
                                     },
                                     "type": "object"
@@ -2152,263 +2152,6 @@
                 }
             }
         },
-        "user/follow": {
-            "post": {
-                "tags": [
-                    "users"
-                ],
-                "summary": "Follow a blog",
-                "description": "enable the user to follow a blog using the blog Email or URL",
-                "operationId": "UserFollow",
-                "parameters": [
-                    {
-                        "name": "url",
-                        "in": "query",
-                        "description": "the url of the blog to follow",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "The email of the blog to follow",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "url",
-                                    "email"
-                                ],
-                                "properties": {
-                                    "url": {
-                                        "type": "string",
-                                        "format": "url",
-                                        "example": "http://wwww.something.com"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "name@something.com"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "404": {
-                        "description": "Not Found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "200": {
-                        "description": "success"
-                    }
-                }
-            }
-        },
-        "user/unfollow": {
-            "post": {
-                "tags": [
-                    "users"
-                ],
-                "summary": "Unfollow a blog",
-                "description": "enable the user to Unfollow a blog using the blog URL",
-                "operationId": "UserUnfollow",
-                "parameters": [
-                    {
-                        "name": "url",
-                        "in": "query",
-                        "description": "the url of the blog to unfollow",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "url"
-                                ],
-                                "properties": {
-                                    "url": {
-                                        "type": "string",
-                                        "format": "url",
-                                        "example": "http://wwww.something.com"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "404": {
-                        "description": "Not Found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "200": {
-                        "description": "success"
-                    }
-                }
-            }
-        },
-        "user/like": {
-            "post": {
-                "tags": [
-                    "users"
-                ],
-                "summary": "Like a Post",
-                "description": "enables the user to like a post through the post id",
-                "operationId": "UserLike",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "query",
-                        "description": "The ID of the post to like",
-                        "required": true,
-                        "schema": {
-                            "type": "Number"
-                        }
-                    },
-                    {
-                        "name": "reblog_key",
-                        "in": "query",
-                        "description": "The reblog key for the post id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "id",
-                                    "reblog_key"
-                                ],
-                                "properties": {
-                                    "id": {
-                                        "type": "integer",
-                                        "format": "integer",
-                                        "example": 1
-                                    },
-                                    "reblog_key": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "hello123"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "404": {
-                        "description": "Not Found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "200": {
-                        "description": "success"
-                    }
-                }
-            }
-        },
-        "user/unlike": {
-            "post": {
-                "tags": [
-                    "users"
-                ],
-                "summary": "Unlike a Post",
-                "description": "enables the user to unlike a post through the post id",
-                "operationId": "UserUnlike",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "query",
-                        "description": "The ID of the post to unlike",
-                        "required": true,
-                        "schema": {
-                            "type": "Number"
-                        }
-                    },
-                    {
-                        "name": "reblog_key",
-                        "in": "query",
-                        "description": "The reblog key for the post id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "id",
-                                    "reblog_key"
-                                ],
-                                "properties": {
-                                    "id": {
-                                        "type": "integer",
-                                        "format": "integer",
-                                        "example": 1
-                                    },
-                                    "reblog_key": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "hello123"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "404": {
-                        "description": "Not Found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "200": {
-                        "description": "success"
-                    }
-                }
-            }
-        },
         "user/filtered_tags": {
             "get": {
                 "tags": [
@@ -2774,187 +2517,6 @@
                     },
                     "200": {
                         "description": "success"
-                    }
-                }
-            }
-        },
-        "/user/tags/add": {
-            "post": {
-                "tags": [
-                    "users"
-                ],
-                "summary": "follow new tag",
-                "operationId": "follow tag",
-                "parameters": [
-                    {
-                        "name": "tag_name",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "Meta": {
-                                            "properties": {
-                                                "Status": {
-                                                    "type": "integer",
-                                                    "example": 200
-                                                },
-                                                "msg": {
-                                                    "type": "string",
-                                                    "example": "ok"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/user/tags/remove": {
-            "delete": {
-                "tags": [
-                    "users"
-                ],
-                "summary": "unfollow tag",
-                "operationId": "unfollow tag",
-                "parameters": [
-                    {
-                        "name": "tag_name",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "Meta": {
-                                            "properties": {
-                                                "Status": {
-                                                    "type": "integer",
-                                                    "example": 200
-                                                },
-                                                "msg": {
-                                                    "type": "string",
-                                                    "example": "ok"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "user/post/reply": {
-            "post": {
-                "tags": [
-                    "users"
-                ],
-                "summary": "add new reply to Specific Post",
-                "operationId": "add reply",
-                "parameters": [
-                    {
-                        "name": "post_id",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "reblog_key",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "reply_text",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "text"
-                        }
-                    },
-                    {
-                        "name": "tumblelog",
-                        "in": "query",
-                        "description": "the name of blog containing post to get if he is the original poster",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    },
-                    "201": {
-                        "description": "created Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "Meta": {
-                                            "properties": {
-                                                "Status": {
-                                                    "type": "integer",
-                                                    "example": 200
-                                                },
-                                                "msg": {
-                                                    "type": "string",
-                                                    "example": "ok"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -3418,6 +2980,444 @@
                         "bearer": []
                     }
                 ]
+            }
+        },
+        "user/follow": {
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Follow a blog",
+                "description": "enable the user to follow a blog using the blog Email or URL",
+                "operationId": "UserFollow",
+                "parameters": [
+                    {
+                        "name": "url",
+                        "in": "query",
+                        "description": "the url of the blog to follow",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "The email of the blog to follow",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "url",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "url": {
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": "http://wwww.something.com"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "name@something.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
+        },
+        "user/unfollow": {
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Unfollow a blog",
+                "description": "enable the user to Unfollow a blog using the blog URL",
+                "operationId": "UserUnfollow",
+                "parameters": [
+                    {
+                        "name": "url",
+                        "in": "query",
+                        "description": "the url of the blog to unfollow",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "url"
+                                ],
+                                "properties": {
+                                    "url": {
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": "http://wwww.something.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
+        },
+        "user/like": {
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Like a Post",
+                "description": "enables the user to like a post through the post id",
+                "operationId": "UserLike",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "The ID of the post to like",
+                        "required": true,
+                        "schema": {
+                            "type": "Number"
+                        }
+                    },
+                    {
+                        "name": "reblog_key",
+                        "in": "query",
+                        "description": "The reblog key for the post id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id",
+                                    "reblog_key"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "format": "integer",
+                                        "example": 1
+                                    },
+                                    "reblog_key": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "hello123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
+        },
+        "user/unlike": {
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Unlike a Post",
+                "description": "enables the user to unlike a post through the post id",
+                "operationId": "UserUnlike",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "The ID of the post to unlike",
+                        "required": true,
+                        "schema": {
+                            "type": "Number"
+                        }
+                    },
+                    {
+                        "name": "reblog_key",
+                        "in": "query",
+                        "description": "The reblog key for the post id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id",
+                                    "reblog_key"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "format": "integer",
+                                        "example": 1
+                                    },
+                                    "reblog_key": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "hello123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
+        },
+        "user/post/reply": {
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "add new reply to Specific Post",
+                "operationId": "add reply",
+                "parameters": [
+                    {
+                        "name": "post_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "reblog_key",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "reply_text",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "text"
+                        }
+                    },
+                    {
+                        "name": "tumblelog",
+                        "in": "query",
+                        "description": "the name of blog containing post to get if he is the original poster",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "201": {
+                        "description": "created Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "ok"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/tags/add": {
+            "post": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "follow new tag",
+                "operationId": "follow tag",
+                "parameters": [
+                    {
+                        "name": "tag_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "ok"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/tags/remove": {
+            "delete": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "unfollow tag",
+                "operationId": "unfollow tag",
+                "parameters": [
+                    {
+                        "name": "tag_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "ok"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     },
