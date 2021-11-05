@@ -210,172 +210,6 @@
                 }
             }
         },
-        "Blog/": {
-            "post": {
-                "tags": [
-                    "Blog"
-                ],
-                "summary": "Create new Blog",
-                "description": "User create new Blog ",
-                "operationId": "Create",
-                "parameters": [
-                    {
-                        "name": "Title",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "name": "Url",
-                        "in": "query",
-                        "required": false
-                    },
-                    {
-                        "name": "Privacy",
-                        "in": "query",
-                        "required": false
-                    },
-                    {
-                        "name": "Password",
-                        "in": "query",
-                        "required": false
-                    }
-                ],
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "Title"
-                                ],
-                                "properties": {
-                                    "Title": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "Summer_Blog"
-                                    },
-                                    "url": {
-                                        "type": "string",
-                                        "format": "url",
-                                        "example": "example.tumblr.com"
-                                    },
-                                    "Privacy": {
-                                        "type": "boolean",
-                                        "example": "true"
-                                    },
-                                    "Password": {
-                                        "type": "string",
-                                        "format": "Password",
-                                        "example": "pass123"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Created Successfully"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "422": {
-                        "description": "Invalid Data",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Blog url is not available!"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Blog"
-                ],
-                "summary": "Delete Specific Blog",
-                "description": "User Delete Specific Blog ",
-                "operationId": "Delete",
-                "parameters": [
-                    {
-                        "name": "Email",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "name": "Password",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "Email",
-                                    "Password"
-                                ],
-                                "properties": {
-                                    "Email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "Email@gmail.com"
-                                    },
-                                    "Password": {
-                                        "type": "string",
-                                        "format": "Password",
-                                        "example": "Password123"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "successful"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "msg": {
-                                            "type": "integer",
-                                            "example": 403
-                                        },
-                                        "status": {
-                                            "type": "string",
-                                            "example": "That password is incorrect. Please try again"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/posts": {
             "get": {
                 "tags": [
@@ -2155,7 +1989,7 @@
         "user/filtered_tags": {
             "get": {
                 "tags": [
-                    "users"
+                    "tags"
                 ],
                 "summary": "Retrieve Tag Filtering",
                 "description": "Retrieve a list of currently-filtered tag strings.",
@@ -2220,7 +2054,7 @@
             },
             "post": {
                 "tags": [
-                    "users"
+                    "tags"
                 ],
                 "summary": "Add Tag Filtering",
                 "description": "Add one or more tags to filter.",
@@ -2288,7 +2122,7 @@
         "user/filtered_tags/{tag}": {
             "delete": {
                 "tags": [
-                    "users"
+                    "tags"
                 ],
                 "summary": "Remove Tag Filtering",
                 "description": "Remove a tag filter.",
@@ -2341,7 +2175,7 @@
         "user/filtered_content": {
             "get": {
                 "tags": [
-                    "users"
+                    "tags"
                 ],
                 "summary": "Retrieve Content Filtering",
                 "description": "Retrieve a list of currently-filtered content strings.",
@@ -2982,6 +2816,172 @@
                 ]
             }
         },
+        "Blog/": {
+            "post": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "Create new Blog",
+                "description": "User create new Blog ",
+                "operationId": "Create",
+                "parameters": [
+                    {
+                        "name": "Title",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "Url",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "Privacy",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "Password",
+                        "in": "query",
+                        "required": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "Title"
+                                ],
+                                "properties": {
+                                    "Title": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "Summer_Blog"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": "example.tumblr.com"
+                                    },
+                                    "Privacy": {
+                                        "type": "boolean",
+                                        "example": "true"
+                                    },
+                                    "Password": {
+                                        "type": "string",
+                                        "format": "Password",
+                                        "example": "pass123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created Successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Invalid Data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Blog url is not available!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "Delete Specific Blog",
+                "description": "User Delete Specific Blog ",
+                "operationId": "Delete",
+                "parameters": [
+                    {
+                        "name": "Email",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "Password",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "Email",
+                                    "Password"
+                                ],
+                                "properties": {
+                                    "Email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "Email@gmail.com"
+                                    },
+                                    "Password": {
+                                        "type": "string",
+                                        "format": "Password",
+                                        "example": "Password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "msg": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "That password is incorrect. Please try again"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "user/follow": {
             "post": {
                 "tags": [
@@ -3316,7 +3316,7 @@
                 }
             }
         },
-        "/user/tags/add": {
+        "user/tags/add": {
             "post": {
                 "tags": [
                     "tags"
@@ -3368,7 +3368,7 @@
                 }
             }
         },
-        "/user/tags/remove": {
+        "user/tags/remove": {
             "delete": {
                 "tags": [
                     "tags"

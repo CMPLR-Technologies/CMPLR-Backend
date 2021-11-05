@@ -369,7 +369,7 @@ class UserController extends Controller
     * summary="Retrieve Tag Filtering",
     * description="Retrieve a list of currently-filtered tag strings.",
     * operationId="UserGetFilteredTags",
-    * tags={"users"},
+    * tags={"tags"},
     *
     *    @OA\RequestBody(
     *      required=true,
@@ -417,7 +417,7 @@ class UserController extends Controller
     * summary="Add Tag Filtering",
     * description="Add one or more tags to filter.",
     * operationId="UserPostFilterTag",
-    * tags={"users"},
+    * tags={"tags"},
     *
     *   @OA\Parameter(
     *      name="filtered_tags",
@@ -472,7 +472,7 @@ class UserController extends Controller
     * 		summary="Remove Tag Filtering",
     * 		description="Remove a tag filter.",
     * 		operationId="UserDeleteFilteringTag",
-    * 		tags={"users"},
+    * 		tags={"tags"},
     *
     *   	@OA\Parameter
     *		(
@@ -528,7 +528,7 @@ class UserController extends Controller
     * 		summary="Retrieve Content Filtering",
     * 		description="Retrieve a list of currently-filtered content strings.",
     * 		operationId="UserGetFilteredContent",
-    * 		tags={"users"},
+    * 		tags={"tags"},
     *
     *    	@OA\RequestBody
     *		(
