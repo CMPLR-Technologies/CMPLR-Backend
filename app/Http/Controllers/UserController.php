@@ -1107,4 +1107,6 @@ class UserController extends Controller
     public function remove_tags_from_posts()
     {
     }
+
+    
 }

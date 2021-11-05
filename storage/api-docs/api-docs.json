@@ -769,6 +769,163 @@
                 }
             }
         },
+        "/notifications": {
+            "get": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Retrieve Blog's Activity Feed",
+                "description": "Retrieve the activity items for a specific blog.",
+                "operationId": "notifications",
+                "parameters": [
+                    {
+                        "name": "blog-identifier",
+                        "in": "path",
+                        "description": "Any blog identifier",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "type[]",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Api Example : api.tumblr.com/v1/blog/{blog-identifier}/notifications <br/>\n     *    Available types include:\\n <br/>\n     *      all : get all notifications  <br/>\n     *      like:\tA like on your post <br/>\n     *      reply:\tA reply on your post <br/>\n     *      follow:\tA new follower <br/>\n     *      mention_in_reply:\tA mention of your blog in a reply <br/>\n     *      mention_in_post:\tA mention of your blog in a post <br/>\n     *      reblog_naked:\tA reblog of your post, without commentary <br/>\n     *      reblog_with_content:\tA reblog of your post, with commentary <br/>\n     *      ask:\tA new ask received <br/>\n     *      answered_ask:\tAn answered ask that you had sent <br/>\n     *      new_group_blog_member:\tA new member of your group blog <br/>\n     *      post_flagged:\tA post of yours being flagged <br/>\n     *      conversational_note\tA conversational note (reply, reblog with comment) on a post you're watching",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "all"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "total_users": {
+                                                    "type": "integer",
+                                                    "example": 1235
+                                                },
+                                                "notifications": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "type": {
+                                                                "type": "string",
+                                                                "example": "like"
+                                                            },
+                                                            "timestamp": {
+                                                                "type": "integer",
+                                                                "example": 1636069200
+                                                            },
+                                                            "targetTumblelogName": {
+                                                                "type": "string",
+                                                                "example": "ahmed-abdelhamed"
+                                                            },
+                                                            "targetTumblelogUuid": {
+                                                                "type": "string/integer",
+                                                                "example": "t:nrXV2XvboWHMYIHJGCl"
+                                                            },
+                                                            "fromTumblelogName": {
+                                                                "type": "string",
+                                                                "example": "abdullah-alshawafi"
+                                                            },
+                                                            "fromTumblelogUuid": {
+                                                                "type": "string/integer",
+                                                                "example": "t:T7U1RijeZIfSsttMS7dYjw"
+                                                            },
+                                                            "targetPostId": {
+                                                                "type": "integer",
+                                                                "example": 666925284723982336
+                                                            },
+                                                            "targetPostSummary": {
+                                                                "type": "string",
+                                                                "example": "hi it is a very nice day"
+                                                            },
+                                                            "mediaUrl": {
+                                                                "description": "return only one image of the post or none if not images",
+                                                                "type": "string",
+                                                                "example": "https://64.media.tumblr.com/e861484f7a4fce4e/63d1a2478316-bb/s75x7b91d6a7.jpg"
+                                                            },
+                                                            "reblogKey": {
+                                                                "type": "string",
+                                                                "example": "3bHZPzR2"
+                                                            },
+                                                            "addedText": {
+                                                                "type": "string",
+                                                                "example": ""
+                                                            },
+                                                            "tags[]": {
+                                                                "type": "string",
+                                                                "example": "['winter','summer']"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
         "/posts": {
             "get": {
                 "tags": [
@@ -4113,6 +4270,72 @@
                                                 "msg": {
                                                     "type": "string",
                                                     "example": "ok"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/settings/account": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "User setting",
+                "description": "Retrieve Account Setting for User.",
+                "operationId": "GEtAccountSetting",
+                "responses": {
+                    "200": {
+                        "description": "sucess",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "Email": {
+                                                    "type": "string",
+                                                    "example": "example@gmail.com"
+                                                },
+                                                "Password": {
+                                                    "type": "string",
+                                                    "example": "password123"
+                                                },
+                                                "GoogleLogin": {
+                                                    "type": "Boolean",
+                                                    "example": false
+                                                },
+                                                "account_activity": {
+                                                    "type": "Boolean",
+                                                    "example": true
+                                                },
+                                                "Two-factor_authentication": {
+                                                    "type": "Boolean",
+                                                    "example": false
+                                                },
+                                                "filtteringTags": {
+                                                    "type": "string",
+                                                    "example": "summer,winter,sunny"
                                                 }
                                             },
                                             "type": "object"
