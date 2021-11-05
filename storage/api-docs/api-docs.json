@@ -769,6 +769,161 @@
                 }
             }
         },
+        "settings/blog/{Blog identifier}": {
+            "get": {
+                "tags": [
+                    "BlogSetting"
+                ],
+                "summary": "Blog setting",
+                "description": "Retrieve Blog Setting for User.",
+                "operationId": "GEtBlogSetting",
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "Blog_id": {
+                                                    "type": "string/integer",
+                                                    "example": "12135515"
+                                                },
+                                                "BlogName": {
+                                                    "type": "string",
+                                                    "example": "Summer Photos 2019"
+                                                },
+                                                "Blogtitle": {
+                                                    "type": "string",
+                                                    "example": "summer"
+                                                },
+                                                "avatar": {
+                                                    "type": "string",
+                                                    "example": "https://www.example.com/image/avatar.png"
+                                                },
+                                                "Replies": {
+                                                    "type": "string",
+                                                    "example": "Every can reply"
+                                                },
+                                                "Ask": {
+                                                    "properties": {
+                                                        "permit ask": {
+                                                            "type": "Boolean",
+                                                            "example": true
+                                                        },
+                                                        "Ask page title": {
+                                                            "type": "string",
+                                                            "example": ""
+                                                        },
+                                                        "permit anonymous questions": {
+                                                            "type": "Boolean",
+                                                            "example": false
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "Submissions": {
+                                                    "properties": {
+                                                        "permit submit": {
+                                                            "type": "Boolean",
+                                                            "example": true
+                                                        },
+                                                        "Submissions page title": {
+                                                            "type": "string",
+                                                            "example": "Submit a post"
+                                                        },
+                                                        "Submissions guidelines": {
+                                                            "type": "string",
+                                                            "example": "Don't violate the community rules"
+                                                        },
+                                                        "is_text_allowed": {
+                                                            "type": "Boolean",
+                                                            "example": true
+                                                        },
+                                                        "is_photo_allowed": {
+                                                            "type": "Boolean",
+                                                            "example": true
+                                                        },
+                                                        "is_quote_allowed": {
+                                                            "type": "Boolean",
+                                                            "example": true
+                                                        },
+                                                        "is_link_allowed": {
+                                                            "type": "Boolean",
+                                                            "example": true
+                                                        },
+                                                        "is_video_allowed": {
+                                                            "type": "Boolean",
+                                                            "example": true
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "permit Messaging": {
+                                                    "type": "Boolean",
+                                                    "example": true
+                                                },
+                                                "Protected": {
+                                                    "type": "Boolean",
+                                                    "example": false
+                                                },
+                                                "Visibility": {
+                                                    "properties": {
+                                                        "Dashboard_Hide": {
+                                                            "type": "Boolean",
+                                                            "example": false
+                                                        },
+                                                        "Search_Hide": {
+                                                            "type": "Boolean",
+                                                            "example": false
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "Queue": {
+                                                    "properties": {
+                                                        "posts_per_day": {
+                                                            "type": "integer",
+                                                            "example": 3
+                                                        },
+                                                        "Between": {
+                                                            "type": "string",
+                                                            "example": "12am,4pm"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
         "/notifications": {
             "get": {
                 "tags": [
@@ -864,19 +1019,19 @@
                                                                 "type": "integer",
                                                                 "example": 1636069200
                                                             },
-                                                            "targetTumblelogName": {
+                                                            "targetBlogName": {
                                                                 "type": "string",
                                                                 "example": "ahmed-abdelhamed"
                                                             },
-                                                            "targetTumblelogUuid": {
+                                                            "targetBlogUuid": {
                                                                 "type": "string/integer",
                                                                 "example": "t:nrXV2XvboWHMYIHJGCl"
                                                             },
-                                                            "fromTumblelogName": {
+                                                            "fromBlogName": {
                                                                 "type": "string",
                                                                 "example": "abdullah-alshawafi"
                                                             },
-                                                            "fromTumblelogUuid": {
+                                                            "fromBlogUuid": {
                                                                 "type": "string/integer",
                                                                 "example": "t:T7U1RijeZIfSsttMS7dYjw"
                                                             },
@@ -4346,7 +4501,221 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "settings/notifications": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Retrieve Notifications Setting for User.",
+                "operationId": "get_notification_setting",
+                "responses": {
+                    "200": {
+                        "description": "Url Example: api.tumblr.com/v2/settings/notifications",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "blogs": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "Blog_name": {
+                                                        "type": "string",
+                                                        "example": ""
+                                                    },
+                                                    "blog_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "blog_title": {
+                                                        "type": "string",
+                                                        "example": ""
+                                                    },
+                                                    "blog_avatar": {
+                                                        "type": "string",
+                                                        "example": ""
+                                                    },
+                                                    "email_about_new_follower": {
+                                                        "type": "boolean",
+                                                        "example": ""
+                                                    },
+                                                    "email_about_new_replies": {
+                                                        "type": "boolean",
+                                                        "example": ""
+                                                    },
+                                                    "email_about_new_submissions": {
+                                                        "type": "boolean",
+                                                        "example": ""
+                                                    },
+                                                    "email_about_mentions": {
+                                                        "type": "boolean",
+                                                        "example": ""
+                                                    },
+                                                    "email_about_new_asks": {
+                                                        "type": "boolean",
+                                                        "example": ""
+                                                    },
+                                                    "notify_form": {
+                                                        "type": "string",
+                                                        "example": ""
+                                                    },
+                                                    "applly_to_all_blogs": {
+                                                        "type": "boolean",
+                                                        "example": ""
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "example": [
+                                                {
+                                                    "Blog_name": "summer memories",
+                                                    "blog_id": 13515315315,
+                                                    "blog_title": "summer22",
+                                                    "blog_avatar": "https://www.example.com/image/avatar.png",
+                                                    "email_about_new_follower": true,
+                                                    "email_about_new_replies": true,
+                                                    "email_about_new_submissions": true,
+                                                    "email_about_mentions": true,
+                                                    "email_about_new_asks": true,
+                                                    "notify_form": "from everyone",
+                                                    "applly_to_all_blogs": false
+                                                },
+                                                {
+                                                    "Blog_name": "summer memories 2 ",
+                                                    "blog_id": 13515315314,
+                                                    "blog_title": "summer21",
+                                                    "blog_avatar": "https://www.example.com/image/avatar.png",
+                                                    "email_about_new_follower": false,
+                                                    "email_about_new_replies": true,
+                                                    "email_about_new_submissions": true,
+                                                    "email_about_mentions": false,
+                                                    "email_about_new_asks": true,
+                                                    "notify_form": "from people you follow",
+                                                    "applly_to_all_blogs": false
+                                                }
+                                            ]
+                                        },
+                                        "tumblr_news": {
+                                            "type": "Boolean",
+                                            "example": true
+                                        },
+                                        "conversational_notifications": {
+                                            "type": "Boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/settings/dashboard": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "User dashboard setting",
+                "description": "Retrieve DashBoard Setting for User.",
+                "operationId": "GEtDashBoardSetting",
+                "responses": {
+                    "200": {
+                        "description": "sucess",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "interface": {
+                                                    "properties": {
+                                                        "enable_endless_scrolling": {
+                                                            "type": "Boolean",
+                                                            "example": true
+                                                        },
+                                                        "show badge": {
+                                                            "type": "Boolean",
+                                                            "example": true
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "text_editor": {
+                                                    "type": "string",
+                                                    "example": "Rich text editor"
+                                                },
+                                                "message sounds": {
+                                                    "type": "Boolean",
+                                                    "example": true
+                                                },
+                                                "preferences": {
+                                                    "properties": {
+                                                        "Include followed tag posts": {
+                                                            "type": "Boolean",
+                                                            "example": true
+                                                        },
+                                                        "best_stuff__first": {
+                                                            "type": "Boolean",
+                                                            "example": true
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         },
         "user/tags/add": {

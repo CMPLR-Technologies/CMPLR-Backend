@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class Notifications extends Controller
+class NotificationsController extends Controller
 {
     //
     /**
@@ -86,22 +86,22 @@ class Notifications extends Controller
      *                         example=1636069200
      *                      ),
      *                      @OA\Property(
-     *                         property="targetTumblelogName",
+     *                         property="targetBlogName",
      *                         type="string",
      *                         example="ahmed-abdelhamed"
      *                      ),
      *                      @OA\Property(
-     *                         property="targetTumblelogUuid",
+     *                         property="targetBlogUuid",
      *                         type="string/integer",
      *                         example="t:nrXV2XvboWHMYIHJGCl"
      *                      ),
      *                      @OA\Property(
-     *                         property="fromTumblelogName",
+     *                         property="fromBlogName",
      *                         type="string",
      *                         example="abdullah-alshawafi"
      *                      ),
      *                      @OA\Property(
-     *                         property="fromTumblelogUuid",
+     *                         property="fromBlogUuid",
      *                         type="string/integer",
      *                         example="t:T7U1RijeZIfSsttMS7dYjw"
      *                      ),
