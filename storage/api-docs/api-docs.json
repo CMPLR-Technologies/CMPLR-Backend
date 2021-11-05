@@ -7,11 +7,180 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8000",
+            "url": "http://my-default-host.com",
             "description": "CMPLR API Server"
         }
     ],
     "paths": {
+        "blog/{blog-identifier}/ask": {
+            "post": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Ask A Blog",
+                "description": "used to send a question to a blog",
+                "operationId": "CreateAsk",
+                "parameters": [
+                    {
+                        "name": "anonymously",
+                        "in": "path",
+                        "description": "whether to ask the question anonymously or to use the user info",
+                        "required": false,
+                        "schema": {
+                            "type": "Boolean"
+                        }
+                    },
+                    {
+                        "name": "question",
+                        "in": "query",
+                        "description": "the content of the question",
+                        "required": true,
+                        "schema": {
+                            "type": "String"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "description": "Pass user credentials",
+                                "required": [
+                                    "question"
+                                ],
+                                "properties": {
+                                    "anonymously": {
+                                        "type": "Boolean",
+                                        "format": "Boolean",
+                                        "example": "true"
+                                    },
+                                    "question": {
+                                        "type": "String",
+                                        "format": "text",
+                                        "example": "how are you?"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
+        },
+        "user/inbox": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "the user's inbox",
+                "description": "Retrieve the all asks and  submissions",
+                "operationId": "GetUserInbox",
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "total_asks": {
+                                                    "type": "Number",
+                                                    "example": 263
+                                                },
+                                                "total_submissions": {
+                                                    "type": "Number",
+                                                    "example": 214
+                                                },
+                                                "asks": {
+                                                    "description": "asks in user's inbox",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "ask_1": {
+                                                                "description": "the first ask",
+                                                                "type": "object"
+                                                            },
+                                                            "ask_2": {
+                                                                "description": "the second ask",
+                                                                "type": "object"
+                                                            },
+                                                            "ask_3": {
+                                                                "description": "the third ask",
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "submissions": {
+                                                    "description": "submissions in user's inbox",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "sub_1": {
+                                                                "description": "the first submission",
+                                                                "type": "object"
+                                                            },
+                                                            "sub_2": {
+                                                                "description": "the second submission",
+                                                                "type": "object"
+                                                            },
+                                                            "sub_3": {
+                                                                "description": "the third submission",
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/forgot_password": {
             "get": {
                 "tags": [
@@ -1069,7 +1238,7 @@
                     }
                 ],
                 "requestBody": {
-                    "description": "Api Example : api.tumblr.com/v1/blog/{blog-identifier}/notifications <br/>\r\n     *    Available types include:\\n <br/>\r\n     *      all : get all notifications  <br/>\r\n     *      like:\tA like on your post <br/>\r\n     *      reply:\tA reply on your post <br/>\r\n     *      follow:\tA new follower <br/>\r\n     *      mention_in_reply:\tA mention of your blog in a reply <br/>\r\n     *      mention_in_post:\tA mention of your blog in a post <br/>\r\n     *      reblog_naked:\tA reblog of your post, without commentary <br/>\r\n     *      reblog_with_content:\tA reblog of your post, with commentary <br/>\r\n     *      ask:\tA new ask received <br/>\r\n     *      answered_ask:\tAn answered ask that you had sent <br/>\r\n     *      new_group_blog_member:\tA new member of your group blog <br/>\r\n     *      post_flagged:\tA post of yours being flagged <br/>\r\n     *      conversational_note\tA conversational note (reply, reblog with comment) on a post you're watching",
+                    "description": "Api Example : api.tumblr.com/v1/blog/{blog-identifier}/notifications <br/>\n     *    Available types include:\\n <br/>\n     *      all : get all notifications  <br/>\n     *      like:\tA like on your post <br/>\n     *      reply:\tA reply on your post <br/>\n     *      follow:\tA new follower <br/>\n     *      mention_in_reply:\tA mention of your blog in a reply <br/>\n     *      mention_in_post:\tA mention of your blog in a post <br/>\n     *      reblog_naked:\tA reblog of your post, without commentary <br/>\n     *      reblog_with_content:\tA reblog of your post, with commentary <br/>\n     *      ask:\tA new ask received <br/>\n     *      answered_ask:\tAn answered ask that you had sent <br/>\n     *      new_group_blog_member:\tA new member of your group blog <br/>\n     *      post_flagged:\tA post of yours being flagged <br/>\n     *      conversational_note\tA conversational note (reply, reblog with comment) on a post you're watching",
                     "required": true,
                     "content": {
                         "application/json": {
