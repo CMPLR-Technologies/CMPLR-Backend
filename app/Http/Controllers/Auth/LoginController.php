@@ -8,57 +8,83 @@ use Illuminate\Http\Request;
 class LoginController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\Post(
+     * path="/Login",
+     * summary="Login for existing Email",
+     * description="User Login to his email ",
+     * operationId="Login",
+     * tags={"Auth"},
+     *  @OA\Parameter(
+     *         name="Email",
+     *         in="query",
+     *         required=true,
+     *      ),
+     *  @OA\Parameter(
+     *         name="Password",
+     *         in="query",
+     *         required=true,
+     *      ),
+     *  
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass user credentials",
+     *    @OA\JsonContent(
+     *       required={"Email"},
+     *       required={"Password"},
+     *       @OA\Property(property="Email", type="email", format="email", example="tumblr.email@gmail.com"),
+     *       @OA\Property(property="Password", type="string",format="Password", example="pass123"),
+     *    ),
+     * ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated",
+     *   ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Login Successfully",
+     * ),
+     * )
      */
-    public function index()
-    {
-        //
-    }
 
     /**
-     * Store a newly created resource in storage.
+     * check user data in the database
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function Login(Request $request)
     {
         //
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @OA\Post(
+     * path="/Logout",
+     * summary="Logout from Email",
+     * description="User Logout from his email ",
+     * operationId="Logout",
+     * tags={"Auth"},
+     * @OA\Response(
+     *    response=200,
+     *    description="Logout Successfully",
+     * ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated",
+     *   ),
+     * )
      */
-    public function show($id)
-    {
-        //
-    }
 
     /**
-     * Update the specified resource in storage.
+     * logout user from his email
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function Logout()
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+    
 }
