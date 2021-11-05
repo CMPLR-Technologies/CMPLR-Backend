@@ -15,7 +15,7 @@ class AskController extends Controller
     * 		summary="Ask A Blog",
     * 		description="used to send a question to a blog",
     * 		operationId="CreateAsk",
-    * 		tags={"blogs"},
+    * 		tags={"Blogs"},
     *
     *   	@OA\Parameter
     *		(

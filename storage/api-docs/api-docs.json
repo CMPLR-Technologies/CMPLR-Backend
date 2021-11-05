@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8000",
+            "url": "http://my-default-host.com",
             "description": "CMPLR API Server"
         }
     ],
@@ -119,7 +119,7 @@
                 }
             }
         },
-        "user/resend_verification_email": {
+        "/user/resend_verification_email": {
             "post": {
                 "tags": [
                     "Auth"
@@ -147,7 +147,7 @@
                 }
             }
         },
-        "/Login": {
+        "/login": {
             "post": {
                 "tags": [
                     "Auth"
@@ -203,7 +203,7 @@
                 }
             }
         },
-        "/Logout": {
+        "/logout": {
             "post": {
                 "tags": [
                     "Auth"
@@ -221,7 +221,7 @@
                 }
             }
         },
-        "/Signup": {
+        "/signup": {
             "post": {
                 "tags": [
                     "Auth"
