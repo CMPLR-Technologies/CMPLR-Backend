@@ -286,7 +286,62 @@ class BlogController extends Controller
     {
     }
 
-
+    /**
+     * @OA\Get(
+     *   path="/blog/{blog-identifier}/following",
+     *   summary="Retrieve Blog's following",
+     *   description="This method can be used to retrieve the publicly exposed list of blogs that a blog follows, in order from most recently-followed to first.",
+     *   operationId="getFollowing",
+     *   tags={"Blogs"},
+     *   @OA\Parameter(
+     *     name="blog-identifier",
+     *     in="path",
+     *     description="Any blog identifier",
+     *     required=true,
+     *   ),
+     *   @OA\Parameter(
+     *     name="offset",
+     *     in="query",
+     *     description="Followed blog index to start at",
+     *     required=false,
+     *   ),
+     *   @OA\Parameter(
+     *     name="limit",
+     *     in="query",
+     *     description="The number of results to retrieve, 1-20, inclusive",
+     *     required=false,
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="total_blogs", type="number", example=20),
+     *       @OA\Property(property="blogs", type="array",
+     *         @OA\Items(
+     *           @OA\Property(property="title", type="string", example="John Doe"),
+     *           @OA\Property(property="name", type="string", example="john-doe"),
+     *           @OA\Property(property="updated", type="number", example=1308953007),
+     *           @OA\Property(property="url", type="string", example="https://www.cmplr.com/blogs/john-doe"),
+     *           @OA\Property(property="description", type="string", example="<p><strong>Mr. Karp</strong> is tall and skinny, with unflinching blue eyes a mop of brown hair.\r\nHe speaks incredibly fast and in complete paragraphs.</p>"),
+     *         )
+     *       ),
+     *       @OA\Property(property="_links", type="object",
+     *         @OA\Property(property="next", type="object",
+     *           @OA\Property(property="href", type="string", example="/api/v1/blogs/john-doe/blocks?offset=20"),
+     *           @OA\Property(property="method", type="string", example="GET"),
+     *           @OA\Property(property="query_params", type="object",
+     *             @OA\Property(property="offset", type="number", example=20),
+     *           )
+     *         )
+     *       )
+     *     )
+     *   ),
+     *   security ={{"bearer":{}}}
+     * )
+     */
+    public function getFollowing(Request $request, Blog $blog)
+    {
+    }
 
 
     /**

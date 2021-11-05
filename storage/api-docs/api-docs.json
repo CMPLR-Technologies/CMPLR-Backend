@@ -7,11 +7,246 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8000/api/v1",
+            "url": "http://localhost:8000",
             "description": "CMPLR API Server"
         }
     ],
     "paths": {
+        "/blog/{blog-identifier}/blocks": {
+            "get": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Retrieve Blog's Block",
+                "description": "Get the blogs that the requested blog is currently blocking. The requesting user must be an admin of the blog to retrieve this list.",
+                "operationId": "getBlogBlocks",
+                "parameters": [
+                    {
+                        "name": "blog-identifier",
+                        "in": "path",
+                        "description": "Any blog identifier",
+                        "required": true
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Block number to start at",
+                        "required": false
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "The number of blocks to retrieve, 1-20, inclusive",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "blocked_blogs": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "title": {
+                                                        "type": "string",
+                                                        "example": "John Doe"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "john-doe"
+                                                    },
+                                                    "updated": {
+                                                        "type": "number",
+                                                        "example": 1308953007
+                                                    },
+                                                    "url": {
+                                                        "type": "string",
+                                                        "example": "https://www.cmplr.com/blogs/john-doe"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "<p><strong>Mr. Karp</strong> is tall and skinny, with unflinching blue eyes a mop of brown hair.\\r\\nHe speaks incredibly fast and in complete paragraphs.</p>"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "_links": {
+                                            "properties": {
+                                                "next": {
+                                                    "properties": {
+                                                        "href": {
+                                                            "type": "string",
+                                                            "example": "/api/v1/blogs/john-doe/blocks?offset=20"
+                                                        },
+                                                        "method": {
+                                                            "type": "string",
+                                                            "example": "GET"
+                                                        },
+                                                        "query_params": {
+                                                            "properties": {
+                                                                "offset": {
+                                                                    "type": "number",
+                                                                    "example": 20
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Block a Blog",
+                "description": "Block a blog by sending its identifier",
+                "operationId": "blockBlog",
+                "parameters": [
+                    {
+                        "name": "blog-identifier",
+                        "in": "path",
+                        "description": "Your blog identifier",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "blocked_blog": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "john-doe"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Remove a Block",
+                "description": "Remove a block by sending its identifier",
+                "operationId": "unblockBlog",
+                "parameters": [
+                    {
+                        "name": "blog-identifier",
+                        "in": "path",
+                        "description": "Your blog identifier",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "blocked_blog": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "john-doe"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/blog/{blog-identifier}/blocks/bulk": {
+            "post": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Block a list of Blogs",
+                "description": "Block a list of blogs by sending their identifiers",
+                "operationId": "blockManyBlogs",
+                "parameters": [
+                    {
+                        "name": "blog-identifier",
+                        "in": "path",
+                        "description": "Your blog identifier",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "blocked_blogs": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "john-doe, abdullah-alshawafi"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
         "Blog/": {
             "post": {
                 "tags": [
@@ -356,6 +591,246 @@
                                                         },
                                                         "type": "object"
                                                     }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/blog/{blog-identifier}/following": {
+            "get": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Retrieve Blog's following",
+                "description": "This method can be used to retrieve the publicly exposed list of blogs that a blog follows, in order from most recently-followed to first.",
+                "operationId": "getFollowing",
+                "parameters": [
+                    {
+                        "name": "blog-identifier",
+                        "in": "path",
+                        "description": "Any blog identifier",
+                        "required": true
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Followed blog index to start at",
+                        "required": false
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "The number of results to retrieve, 1-20, inclusive",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "total_blogs": {
+                                            "type": "number",
+                                            "example": 20
+                                        },
+                                        "blogs": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "title": {
+                                                        "type": "string",
+                                                        "example": "John Doe"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "john-doe"
+                                                    },
+                                                    "updated": {
+                                                        "type": "number",
+                                                        "example": 1308953007
+                                                    },
+                                                    "url": {
+                                                        "type": "string",
+                                                        "example": "https://www.cmplr.com/blogs/john-doe"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "<p><strong>Mr. Karp</strong> is tall and skinny, with unflinching blue eyes a mop of brown hair.\\r\\nHe speaks incredibly fast and in complete paragraphs.</p>"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "_links": {
+                                            "properties": {
+                                                "next": {
+                                                    "properties": {
+                                                        "href": {
+                                                            "type": "string",
+                                                            "example": "/api/v1/blogs/john-doe/blocks?offset=20"
+                                                        },
+                                                        "method": {
+                                                            "type": "string",
+                                                            "example": "GET"
+                                                        },
+                                                        "query_params": {
+                                                            "properties": {
+                                                                "offset": {
+                                                                    "type": "number",
+                                                                    "example": 20
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/blog/{blog-identifier}/info": {
+            "get": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Retrieve Blog Info",
+                "description": "This method returns general information about the blog, such as the title, number of posts, and other high-level data.",
+                "operationId": "getBlogInfo",
+                "parameters": [
+                    {
+                        "name": "blog-identifier",
+                        "in": "path",
+                        "description": "Any blog identifier",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "description": "URL: http://www.cmplr.com/api/v1/{blog-identifier}/info"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "John Doe"
+                                        },
+                                        "avatar": {
+                                            "type": "string",
+                                            "example": "https://www.example.com/image/avatar.png"
+                                        },
+                                        "posts": {
+                                            "type": "number",
+                                            "example": 69
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "john-doe"
+                                        },
+                                        "url": {
+                                            "type": "string",
+                                            "example": "https://www.cmplr.com/blogs/john-doe"
+                                        },
+                                        "updated": {
+                                            "type": "number",
+                                            "example": 1308953007
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "<p><strong>Mr. Karp</strong> is tall and skinny, with unflinching blue eyes a mop of brown hair.\\r\\nHe speaks incredibly fast and in complete paragraphs.</p>"
+                                        },
+                                        "ask": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "ask_anon": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "likes": {
+                                            "type": "number",
+                                            "example": 420
+                                        },
+                                        "is_blocked_from_primary": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "theme": {
+                                            "properties": {
+                                                "avatar_shape": {
+                                                    "type": "string",
+                                                    "example": "circle"
+                                                },
+                                                "background_color": {
+                                                    "type": "string",
+                                                    "example": "#00f980"
+                                                },
+                                                "body_font": {
+                                                    "type": "string",
+                                                    "example": "Arial"
+                                                },
+                                                "header_image": {
+                                                    "type": "string",
+                                                    "example": "https://www.example.com/image/header.png"
+                                                },
+                                                "link_color": {
+                                                    "type": "string",
+                                                    "example": "#eefeef"
+                                                },
+                                                "show_avatar": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "show_description": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "show_header_image": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "show_title": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "title_color": {
+                                                    "type": "string",
+                                                    "example": "#f0f0f0"
+                                                },
+                                                "title_font": {
+                                                    "type": "string",
+                                                    "example": "Arial"
+                                                },
+                                                "title_font_weight": {
+                                                    "type": "string",
+                                                    "example": "bold"
                                                 }
                                             },
                                             "type": "object"
@@ -2035,7 +2510,7 @@
                         "description": "Unauthenticated"
                     },
                     "200": {
-                        "description": "Success",
+                        "description": "success",
                         "content": {
                             "application/json": {
                                 "schema": {
