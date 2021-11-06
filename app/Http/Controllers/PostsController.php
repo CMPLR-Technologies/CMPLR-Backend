@@ -94,27 +94,9 @@ class PostsController extends Controller
      *           type="String"
      *      )
      *   ),
-     *  @OA\Parameter(
-     *      name="send_to_twitter",
-     *      description="Whether or not to share this via any connected Twitter account on post publish",
-     *      in="query",
-     *      required=false,
-     *      @OA\Schema(
-     *           type="Boolean"
-     *      )
-     *   ),
      *   @OA\Parameter(
      *      name="is_private",
      *      description="Whether this should be a private answer, if this is an answer.",
-     *      in="query",
-     *      required=false,
-     *      @OA\Schema(
-     *           type="Boolean"
-     *      )
-     *   ),
-     *   @OA\Parameter(
-     *      name="send_to_facebook",
-     *      description="Whether or not to share this via any connected Facebook account on post publish",
      *      in="query",
      *      required=false,
      *      @OA\Schema(
@@ -392,19 +374,13 @@ class PostsController extends Controller
      *         required=true,
      *      ),
      *  @OA\Parameter(
-     *         name="api_key",
-     *         in="query",
-     *         required=true,
-     *         description="Your OAuth Consumer Key",
-     *      ),
-     *  @OA\Parameter(
      *         name="type",
      *         in="query",
      *         required=false,
      *         description="The type of post to return one of the following: text, quote, link, answer, video, audio, photo, chat",
      * ),
      *  @OA\Parameter(
-     *         name="id",
+     *         name="post_id",
      *         in="query",
      *         required=false,
      *         description="A specific post ID",
@@ -413,13 +389,12 @@ class PostsController extends Controller
      *         )
      *      ),
      *  @OA\Parameter(
-     *         name="tag[]",
+     *         name="tags",
      *         in="query",
      *         required=false,
-     *         description="Limits the response to posts with all these specified tag(s),",
+     *         description="Limits the response to posts with the specified tag(s), see note below",
      *         @OA\Schema(
-     *         type="array",
-     *              @OA\Items(type="string")
+     *              type="string"
      *          )
      *      ),
      *  @OA\Parameter(
@@ -460,11 +435,9 @@ class PostsController extends Controller
      *      ),
      * @OA\RequestBody(
      *    required=true,
-     *    description="Pass user credentials",
      *    @OA\JsonContent(
      *       required={"blog-identifier","api_key"},
      *       @OA\Property(property="blog-identifier", type="string", format="text", example="summer_blog"),
-     *       @OA\Property(property="api_key", type="string", format="string", example="??!"),
      *       @OA\Property(property="type", type="string", format="string", example="text"),
      *       @OA\Property(property="tag", type="string", example="summer"),
      *    ),
@@ -487,53 +460,209 @@ class PostsController extends Controller
      *           @OA\Property(property="msg", type="string", example="OK"),
      *        ),
      *       @OA\Property(property="response", type="object",
-     *             @OA\Property(property="total_users", type="integer", example=1235),           
-     *             @OA\Property(property="Users", type="array",
+     *             @OA\Property(property="total_no_posts", type="integer", example=2),           
+     *             @OA\Property(property="posts", type="array",
      *                @OA\Items(
      *                      @OA\Property(
-     *                         property="name",
+     *                         property="post_state",
      *                         type="string",
-     *                         example="david"
+     *                         example="published"
      *                      ),
      *                      @OA\Property(
-     *                         property="following",
-     *                         type="Boolean",
-     *                         example=true
-     *                      ),
-     *                      @OA\Property(
-     *                         property="Url",
-     *                         type="string",
-     *                         example="https:www.davidslog.com"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="updated",
+     *                         property="post_id",
      *                         type="integer",
-     *                         example=1308781073
+     *                         example=13212313
+     *                      ),
+     *                      @OA\Property(
+     *                         property="blog_id",
+     *                         type="integer",
+     *                         example=123153
+     *                      ),
+     *                      @OA\Property(
+     *                         property="blog_name",
+     *                         type="string",
+     *                         example="summer"
+     *                      ),
+     *                      @OA\Property(
+     *                         property="post_type",
+     *                         type="string",
+     *                         example="text"
+     *                      ),
+     *            @OA\Property(
+     *                property="content",
+     *                type="array",
+     *                example={{
+     *                  "type": "text",
+     *                  "title":"hello",
+     *                  "text": "i am very tired of this",
+     *                }, {
+     *                  "type": "image",
+     *                  "image_url": "http://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90",
+     *                  "caption": "my image in cmp",
+     *                  "alt_text": "photo about friend taking a photo in university"
+     *                },{
+     *                  "type": "link",
+     *                  "url": "https://www.youtube.com/watch?v=yn6ehJS9vv4",
+     *                  "title": "Secrecy Surrounding Senate Health Bill Raises Alarms in Both Parties",
+     *                  "description":"Senate leaders are writing legislation to repeal and replace the Affordable Care Act without a single hearing on the bill and without an open drafting session.",
+     *                  "site_name":"youtube"
+     *                },{
+     *                  "type": "audio",
+     *                  "url": "https://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90/tumblr_nshp8oVOnV1rg0s9xo1.mp3",
+     *                  "provider": "soundcloud",
+     *                  "title":"believer",
+     *                  "artist(optional)":"imagine dragon",
+     *                  "album(optional)":"evolve",
+     *                  "description":"Senate leaders are writing legislation to repeal and replace the Affordable Care Act without a single hearing on the bill and without an open drafting session.",
+     *                  "site_name":"youtube"
+     *                },{
+     *                  "type": "video",
+     *                  "url": "http://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90",
+     *                  "provider":"youtube"
+     *                }
+     * },
+     *                @OA\Items(
+     *                      @OA\Property(
+     *                         property="firstName",
+     *                         type="string",
+     *                         example=""
+     *                      ),
+     *                      @OA\Property(
+     *                         property="lastName",
+     *                         type="string",
+     *                         example=""
+     *                      ),
+     *                      @OA\Property(
+     *                         property="companyId",
+     *                         type="string",
+     *                         example=""
+     *                      ),
+     *                      @OA\Property(
+     *                         property="accountNumber",
+     *                         type="number",
+     *                         example=""
+     *                      ),
+     *                      @OA\Property(
+     *                         property="netPay",
+     *                         type="money",
+     *                         example=""
      *                      ),
      *                ),
-     *               @OA\Items(
+     *             ),
      *                      @OA\Property(
-     *                         property="namea",
-     *                         type="string",
-     *                         example="ahmed"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="followinga",
-     *                         type="Boolean",
-     *                         example=true
-     *                      ),
-     *                      @OA\Property(
-     *                         property="Urla",
-     *                         type="string",
-     *                         example="https:www.ahmed_a1.com"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="updateda",
+     *                         property="reblog_key",
      *                         type="integer",
-     *                         example=1308781073
+     *                         example=12553
      *                      ),
+     *                      @OA\Property(
+     *                         property="parent_blog_id",
+     *                         type="integer",
+     *                         example=12523
+     *                      ),
+     *                      @OA\Property(
+     *                         property="parent_post_id",
+     *                         type="integer",
+     *                         example=1223
+     *                      ),
+     *                      @OA\Property(
+     *                         property="post_timestamp",
+     *                         type="integer",
+     *                         example="15311351351"
+     *                      ),
+     *                      @OA\Property(
+     *                         property="post_date",
+     *                         type="string",
+     *                         example="01:01:11"
+     *                      ),
+     *                      @OA\Property(
+     *                         property="format",
+     *                         type="string",
+     *                         example="Rich text"
+     *                      ),
+     *                      @OA\Property(
+     *                         property="blog_avatar",
+     *                         type="string",
+     *                         example="http://media.tumblr.com/avatar/b06fe71cc4ab"
+     *                      ),
+     *                      @OA\Property(
+     *                         property="number_notes",
+     *                         type="integer",
+     *                         example=25
+     *                      ),
+     *            @OA\Property(
+     *                property="layout",
+     *                type="array",
+     *                example={{
+     *                  "type": "rows",
+     *                  "display": "[{blocks:[0,1]} , {blocks:[2]}]",
+     *                }
+     *              },
+     *                @OA\Items(
+     *                      @OA\Property(
+     *                         property="firstName",
+     *                         type="string",
+     *                         example=""
+     *                      ),
+     *                      @OA\Property(
+     *                         property="lastName",
+     *                         type="string",
+     *                         example=""
+     *                      ),
+     *                      @OA\Property(
+     *                         property="companyId",
+     *                         type="string",
+     *                         example=""
+     *                      ),
+     *                      @OA\Property(
+     *                         property="accountNumber",
+     *                         type="number",
+     *                         example=""
+     *                      ),
+     *                      @OA\Property(
+     *                         property="netPay",
+     *                         type="money",
+     *                         example=""
+     *                      ),
+     *                ),
+     *             ),
+   *            @OA\Property(
+     *                property="tags",
+     *                type="array",
+     *                example={{
+     *                     "summer","winter"
+     *                }
+     *              },
+     *                @OA\Items(
+     *                      @OA\Property(
+     *                         property="firstName",
+     *                         type="string",
+     *                         example=""
+     *                      ),
+     *                      @OA\Property(
+     *                         property="lastName",
+     *                         type="string",
+     *                         example=""
+     *                      ),
+     *                      @OA\Property(
+     *                         property="companyId",
+     *                         type="string",
+     *                         example=""
+     *                      ),
+     *                      @OA\Property(
+     *                         property="accountNumber",
+     *                         type="number",
+     *                         example=""
+     *                      ),
+     *                      @OA\Property(
+     *                         property="netPay",
+     *                         type="money",
+     *                         example=""
+     *                      ),
+     *                ),
+     *             ),
      *                  ),
-     *               ),           
+     *               ),
+
      *           ),
      *        ),
      *     )
