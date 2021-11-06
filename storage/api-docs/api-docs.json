@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8000",
+            "url": "http://127.0.0.1:8000",
             "description": "CMPLR API Server"
         }
     ],
@@ -2281,7 +2281,7 @@
                     }
                 ],
                 "requestBody": {
-                    "description": "Api Example : api.tumblr.com/v1/blog/{blog-identifier}/notifications <br/>\r\n     *    Available types include:\\n <br/>\r\n     *      all : get all notifications  <br/>\r\n     *      like:\tA like on your post <br/>\r\n     *      reply:\tA reply on your post <br/>\r\n     *      follow:\tA new follower <br/>\r\n     *      mention_in_reply:\tA mention of your blog in a reply <br/>\r\n     *      mention_in_post:\tA mention of your blog in a post <br/>\r\n     *      reblog_naked:\tA reblog of your post, without commentary <br/>\r\n     *      reblog_with_content:\tA reblog of your post, with commentary <br/>\r\n     *      ask:\tA new ask received <br/>\r\n     *      answered_ask:\tAn answered ask that you had sent <br/>\r\n     *      new_group_blog_member:\tA new member of your group blog <br/>\r\n     *      post_flagged:\tA post of yours being flagged <br/>\r\n     *      conversational_note\tA conversational note (reply, reblog with comment) on a post you're watching",
+                    "description": "Api Example : api.tumblr.com/v1/blog/{blog-identifier}/notifications <br/>\n     *    Available types include:\\n <br/>\n     *      all : get all notifications  <br/>\n     *      like:\tA like on your post <br/>\n     *      reply:\tA reply on your post <br/>\n     *      follow:\tA new follower <br/>\n     *      mention_in_reply:\tA mention of your blog in a reply <br/>\n     *      mention_in_post:\tA mention of your blog in a post <br/>\n     *      reblog_naked:\tA reblog of your post, without commentary <br/>\n     *      reblog_with_content:\tA reblog of your post, with commentary <br/>\n     *      ask:\tA new ask received <br/>\n     *      answered_ask:\tAn answered ask that you had sent <br/>\n     *      new_group_blog_member:\tA new member of your group blog <br/>\n     *      post_flagged:\tA post of yours being flagged <br/>\n     *      conversational_note\tA conversational note (reply, reblog with comment) on a post you're watching",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -2638,6 +2638,10 @@
                                                             "reblog_key": {
                                                                 "type": "integer",
                                                                 "example": 12553
+                                                            },
+                                                            "limit": {
+                                                                "type": "integer",
+                                                                "example": 5
                                                             },
                                                             "parent_blog_id": {
                                                                 "type": "integer",
@@ -3218,29 +3222,204 @@
                                         },
                                         "response": {
                                             "properties": {
-                                                "total_users": {
+                                                "total_no_posts": {
                                                     "type": "integer",
-                                                    "example": 1235
+                                                    "example": 2
                                                 },
-                                                "Users": {
+                                                "posts": {
                                                     "type": "array",
                                                     "items": {
                                                         "properties": {
-                                                            "name": {
+                                                            "post_state": {
                                                                 "type": "string",
-                                                                "example": "david"
+                                                                "example": "published"
                                                             },
-                                                            "following": {
-                                                                "type": "Boolean",
-                                                                "example": true
-                                                            },
-                                                            "Url": {
-                                                                "type": "string",
-                                                                "example": "https:www.davidslog.com"
-                                                            },
-                                                            "updated": {
+                                                            "post_id": {
                                                                 "type": "integer",
-                                                                "example": 1308781073
+                                                                "example": 13212313
+                                                            },
+                                                            "blog_id": {
+                                                                "type": "integer",
+                                                                "example": 123153
+                                                            },
+                                                            "blog_name": {
+                                                                "type": "string",
+                                                                "example": "summer"
+                                                            },
+                                                            "post_type": {
+                                                                "type": "string",
+                                                                "example": "text"
+                                                            },
+                                                            "content": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "properties": {
+                                                                        "firstName": {
+                                                                            "type": "string",
+                                                                            "example": ""
+                                                                        },
+                                                                        "lastName": {
+                                                                            "type": "string",
+                                                                            "example": ""
+                                                                        },
+                                                                        "companyId": {
+                                                                            "type": "string",
+                                                                            "example": ""
+                                                                        },
+                                                                        "accountNumber": {
+                                                                            "type": "number",
+                                                                            "example": ""
+                                                                        },
+                                                                        "netPay": {
+                                                                            "type": "money",
+                                                                            "example": ""
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                },
+                                                                "example": [
+                                                                    {
+                                                                        "type": "text",
+                                                                        "title": "hello",
+                                                                        "text": "i am very tired of this"
+                                                                    },
+                                                                    {
+                                                                        "type": "image",
+                                                                        "image_url": "http://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90",
+                                                                        "caption": "my image in cmp",
+                                                                        "alt_text": "photo about friend taking a photo in university"
+                                                                    },
+                                                                    {
+                                                                        "type": "link",
+                                                                        "url": "https://www.youtube.com/watch?v=yn6ehJS9vv4",
+                                                                        "title": "Secrecy Surrounding Senate Health Bill Raises Alarms in Both Parties",
+                                                                        "description": "Senate leaders are writing legislation to repeal and replace the Affordable Care Act without a single hearing on the bill and without an open drafting session.",
+                                                                        "site_name": "youtube"
+                                                                    },
+                                                                    {
+                                                                        "type": "audio",
+                                                                        "url": "https://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90/tumblr_nshp8oVOnV1rg0s9xo1.mp3",
+                                                                        "provider": "soundcloud",
+                                                                        "title": "believer",
+                                                                        "artist(optional)": "imagine dragon",
+                                                                        "album(optional)": "evolve",
+                                                                        "description": "Senate leaders are writing legislation to repeal and replace the Affordable Care Act without a single hearing on the bill and without an open drafting session.",
+                                                                        "site_name": "youtube"
+                                                                    },
+                                                                    {
+                                                                        "type": "video",
+                                                                        "url": "http://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90",
+                                                                        "provider": "youtube"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            "reblog_key": {
+                                                                "type": "integer",
+                                                                "example": 12553
+                                                            },
+                                                            "limit": {
+                                                                "type": "integer",
+                                                                "example": 5
+                                                            },
+                                                            "order_in_queue": {
+                                                                "type": "integer",
+                                                                "example": 2
+                                                            },
+                                                            "parent_blog_id": {
+                                                                "type": "integer",
+                                                                "example": 12523
+                                                            },
+                                                            "parent_post_id": {
+                                                                "type": "integer",
+                                                                "example": 1223
+                                                            },
+                                                            "post_timestamp": {
+                                                                "type": "integer",
+                                                                "example": "15311351351"
+                                                            },
+                                                            "post_date": {
+                                                                "type": "string",
+                                                                "example": "01:01:11"
+                                                            },
+                                                            "format": {
+                                                                "type": "string",
+                                                                "example": "Rich text"
+                                                            },
+                                                            "blog_avatar": {
+                                                                "type": "string",
+                                                                "example": "http://media.tumblr.com/avatar/b06fe71cc4ab"
+                                                            },
+                                                            "number_notes": {
+                                                                "type": "integer",
+                                                                "example": 25
+                                                            },
+                                                            "layout": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "properties": {
+                                                                        "firstName": {
+                                                                            "type": "string",
+                                                                            "example": ""
+                                                                        },
+                                                                        "lastName": {
+                                                                            "type": "string",
+                                                                            "example": ""
+                                                                        },
+                                                                        "companyId": {
+                                                                            "type": "string",
+                                                                            "example": ""
+                                                                        },
+                                                                        "accountNumber": {
+                                                                            "type": "number",
+                                                                            "example": ""
+                                                                        },
+                                                                        "netPay": {
+                                                                            "type": "money",
+                                                                            "example": ""
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                },
+                                                                "example": [
+                                                                    {
+                                                                        "type": "rows",
+                                                                        "display": "[{blocks:[0,1]} , {blocks:[2]}]"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            "tags": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "properties": {
+                                                                        "firstName": {
+                                                                            "type": "string",
+                                                                            "example": ""
+                                                                        },
+                                                                        "lastName": {
+                                                                            "type": "string",
+                                                                            "example": ""
+                                                                        },
+                                                                        "companyId": {
+                                                                            "type": "string",
+                                                                            "example": ""
+                                                                        },
+                                                                        "accountNumber": {
+                                                                            "type": "number",
+                                                                            "example": ""
+                                                                        },
+                                                                        "netPay": {
+                                                                            "type": "money",
+                                                                            "example": ""
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                },
+                                                                "example": [
+                                                                    [
+                                                                        "summer",
+                                                                        "winter"
+                                                                    ]
+                                                                ]
                                                             }
                                                         },
                                                         "type": "object"
@@ -3527,29 +3706,7 @@
                 },
                 "responses": {
                     "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "Meta": {
-                                            "properties": {
-                                                "Status": {
-                                                    "type": "integer",
-                                                    "example": 404
-                                                },
-                                                "msg": {
-                                                    "type": "string",
-                                                    "example": "not found"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Not Found"
                     },
                     "401": {
                         "description": "Unauthenticated"
@@ -3575,74 +3732,204 @@
                                         },
                                         "response": {
                                             "properties": {
-                                                "id": {
-                                                    "description": "The ID of the submitted post",
-                                                    "type": "string/integer",
-                                                    "example": 12351312
-                                                },
-                                                "post_url": {
-                                                    "description": "The location of the post",
-                                                    "type": "string",
-                                                    "example": "https://ahmed-abdelhamed.tumblr.com/post/66686750959666/hajsdfhks"
-                                                },
-                                                "slug": {
-                                                    "description": "Short text summary to the end of the post URL",
-                                                    "type": "string",
-                                                    "example": "hajsdfhks"
-                                                },
-                                                "type": {
-                                                    "description": "The type of post. One of the following: text, photo, quote, link, video",
-                                                    "type": "string",
-                                                    "example": "text"
-                                                },
-                                                "date": {
-                                                    "description": "The GMT date and time of the post",
-                                                    "type": "string",
-                                                    "example": "YYYY-DD-MM HH:MM:SS"
-                                                },
-                                                "timestamp": {
-                                                    "description": "The time of the post, in seconds since the epoch",
+                                                "total_no_posts": {
                                                     "type": "integer",
-                                                    "example": "1635865720"
+                                                    "example": 2
                                                 },
-                                                "state": {
-                                                    "description": "Indicates the current state of the post (submission)",
-                                                    "type": "string",
-                                                    "example": "submission"
-                                                },
-                                                "format": {
-                                                    "description": "Format type of post.",
-                                                    "type": "String",
-                                                    "example": "Html"
-                                                },
-                                                "reblog_key": {
-                                                    "description": "The reblog key for the post",
-                                                    "type": "string",
-                                                    "example": "HNvqLd5G"
-                                                },
-                                                "tags": {
+                                                "posts": {
                                                     "type": "array",
                                                     "items": {
-                                                        "example": [
-                                                            "winter",
-                                                            "summer"
-                                                        ]
+                                                        "properties": {
+                                                            "post_state": {
+                                                                "type": "string",
+                                                                "example": "published"
+                                                            },
+                                                            "post_id": {
+                                                                "type": "integer",
+                                                                "example": 13212313
+                                                            },
+                                                            "blog_id": {
+                                                                "type": "integer",
+                                                                "example": 123153
+                                                            },
+                                                            "blog_name": {
+                                                                "type": "string",
+                                                                "example": "summer"
+                                                            },
+                                                            "post_type": {
+                                                                "type": "string",
+                                                                "example": "text"
+                                                            },
+                                                            "content": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "properties": {
+                                                                        "firstName": {
+                                                                            "type": "string",
+                                                                            "example": ""
+                                                                        },
+                                                                        "lastName": {
+                                                                            "type": "string",
+                                                                            "example": ""
+                                                                        },
+                                                                        "companyId": {
+                                                                            "type": "string",
+                                                                            "example": ""
+                                                                        },
+                                                                        "accountNumber": {
+                                                                            "type": "number",
+                                                                            "example": ""
+                                                                        },
+                                                                        "netPay": {
+                                                                            "type": "money",
+                                                                            "example": ""
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                },
+                                                                "example": [
+                                                                    {
+                                                                        "type": "text",
+                                                                        "title": "hello",
+                                                                        "text": "i am very tired of this"
+                                                                    },
+                                                                    {
+                                                                        "type": "image",
+                                                                        "image_url": "http://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90",
+                                                                        "caption": "my image in cmp",
+                                                                        "alt_text": "photo about friend taking a photo in university"
+                                                                    },
+                                                                    {
+                                                                        "type": "link",
+                                                                        "url": "https://www.youtube.com/watch?v=yn6ehJS9vv4",
+                                                                        "title": "Secrecy Surrounding Senate Health Bill Raises Alarms in Both Parties",
+                                                                        "description": "Senate leaders are writing legislation to repeal and replace the Affordable Care Act without a single hearing on the bill and without an open drafting session.",
+                                                                        "site_name": "youtube"
+                                                                    },
+                                                                    {
+                                                                        "type": "audio",
+                                                                        "url": "https://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90/tumblr_nshp8oVOnV1rg0s9xo1.mp3",
+                                                                        "provider": "soundcloud",
+                                                                        "title": "believer",
+                                                                        "artist(optional)": "imagine dragon",
+                                                                        "album(optional)": "evolve",
+                                                                        "description": "Senate leaders are writing legislation to repeal and replace the Affordable Care Act without a single hearing on the bill and without an open drafting session.",
+                                                                        "site_name": "youtube"
+                                                                    },
+                                                                    {
+                                                                        "type": "video",
+                                                                        "url": "http://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90",
+                                                                        "provider": "youtube"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            "reblog_key": {
+                                                                "type": "integer",
+                                                                "example": 12553
+                                                            },
+                                                            "limit": {
+                                                                "type": "integer",
+                                                                "example": 5
+                                                            },
+                                                            "parent_blog_id": {
+                                                                "type": "integer",
+                                                                "example": 12523
+                                                            },
+                                                            "parent_post_id": {
+                                                                "type": "integer",
+                                                                "example": 1223
+                                                            },
+                                                            "post_timestamp": {
+                                                                "type": "integer",
+                                                                "example": "15311351351"
+                                                            },
+                                                            "post_date": {
+                                                                "type": "string",
+                                                                "example": "01:01:11"
+                                                            },
+                                                            "format": {
+                                                                "type": "string",
+                                                                "example": "Rich text"
+                                                            },
+                                                            "blog_avatar": {
+                                                                "type": "string",
+                                                                "example": "http://media.tumblr.com/avatar/b06fe71cc4ab"
+                                                            },
+                                                            "number_notes": {
+                                                                "type": "integer",
+                                                                "example": 25
+                                                            },
+                                                            "layout": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "properties": {
+                                                                        "firstName": {
+                                                                            "type": "string",
+                                                                            "example": ""
+                                                                        },
+                                                                        "lastName": {
+                                                                            "type": "string",
+                                                                            "example": ""
+                                                                        },
+                                                                        "companyId": {
+                                                                            "type": "string",
+                                                                            "example": ""
+                                                                        },
+                                                                        "accountNumber": {
+                                                                            "type": "number",
+                                                                            "example": ""
+                                                                        },
+                                                                        "netPay": {
+                                                                            "type": "money",
+                                                                            "example": ""
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                },
+                                                                "example": [
+                                                                    {
+                                                                        "type": "rows",
+                                                                        "display": "[{blocks:[0,1]} , {blocks:[2]}]"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            "tags": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "properties": {
+                                                                        "firstName": {
+                                                                            "type": "string",
+                                                                            "example": ""
+                                                                        },
+                                                                        "lastName": {
+                                                                            "type": "string",
+                                                                            "example": ""
+                                                                        },
+                                                                        "companyId": {
+                                                                            "type": "string",
+                                                                            "example": ""
+                                                                        },
+                                                                        "accountNumber": {
+                                                                            "type": "number",
+                                                                            "example": ""
+                                                                        },
+                                                                        "netPay": {
+                                                                            "type": "money",
+                                                                            "example": ""
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                },
+                                                                "example": [
+                                                                    [
+                                                                        "summer",
+                                                                        "winter"
+                                                                    ]
+                                                                ]
+                                                            }
+                                                        },
+                                                        "type": "object"
                                                     }
-                                                },
-                                                "post_author": {
-                                                    "description": "Author of post, only available when submission is not anonymous",
-                                                    "type": "string",
-                                                    "example": "ahmed-abdelhamed"
-                                                },
-                                                "is_submission": {
-                                                    "description": "Indicates post is a submission (true)",
-                                                    "type": "Boolean",
-                                                    "example": true
-                                                },
-                                                "is_anonymous": {
-                                                    "description": "Indicates if the  post is a anonymous",
-                                                    "type": "Boolean",
-                                                    "example": false
                                                 }
                                             },
                                             "type": "object"
@@ -3711,7 +3998,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         },
         "/posts/reblog": {
@@ -3789,7 +4081,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         },
         "/post/notes": {
@@ -4946,8 +5243,8 @@
                 "tags": [
                     "Users"
                 ],
-                "summary": "unfollow tag",
-                "operationId": "unfollow tag",
+                "summary": "Delete a note from a post",
+                "operationId": "deleteNote",
                 "parameters": [
                     {
                         "name": "post_id",
