@@ -12,7 +12,7 @@
         }
     ],
     "paths": {
-        "blog/{blog-identifier}/ask": {
+        "/blog/{blog-identifier}/ask": {
             "post": {
                 "tags": [
                     "Blogs"
@@ -79,7 +79,7 @@
                 }
             }
         },
-        "user/inbox": {
+        "/user/inbox": {
             "get": {
                 "tags": [
                     "Users"
