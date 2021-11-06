@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class Notifications extends Controller
+class NotificationsController extends Controller
 {
     //
     /**
@@ -86,22 +86,22 @@ class Notifications extends Controller
      *                         example=1636069200
      *                      ),
      *                      @OA\Property(
-     *                         property="targetTumblelogName",
+     *                         property="targetBlogName",
      *                         type="string",
      *                         example="ahmed-abdelhamed"
      *                      ),
      *                      @OA\Property(
-     *                         property="targetTumblelogUuid",
+     *                         property="targetBlog_id",
      *                         type="string/integer",
      *                         example="t:nrXV2XvboWHMYIHJGCl"
      *                      ),
      *                      @OA\Property(
-     *                         property="fromTumblelogName",
+     *                         property="fromBlogName",
      *                         type="string",
      *                         example="abdullah-alshawafi"
      *                      ),
      *                      @OA\Property(
-     *                         property="fromTumblelogUuid",
+     *                         property="fromBlogid",
      *                         type="string/integer",
      *                         example="t:T7U1RijeZIfSsttMS7dYjw"
      *                      ),
@@ -131,6 +131,11 @@ class Notifications extends Controller
      *                         type="string",
      *                         example="",
      *                      ),
+     *                      @OA\Property(
+     *                         property="is_anonymous",
+     *                         type="boolean",
+     *                         example=false,
+     *                      ),
      *                  @OA\Property(property="tags[]", type="string", 
      *                          example="['winter','summer']"               
      *                       ),
@@ -152,7 +157,7 @@ class Notifications extends Controller
      *                         example="ahmed-abdelhamed"
      *                      ),
      *                      @OA\Property(
-     *                         property="targetTumblelogUuid",
+     *                         property="targetTumblelog_id",
      *                         type="string/integer",
      *                         example="t:nrXV2XvboWHMYIHJGCl"
      *                      ),
@@ -162,7 +167,7 @@ class Notifications extends Controller
      *                         example="yousiflasheen"
      *                      ),
      *                      @OA\Property(
-     *                         property="fromTumblelogUuid",
+     *                         property="fromTumblelog_id",
      *                         type="string/integer",
      *                         example="t:T7U1RijeZIfSsttMS7dYjw"
      *                      ),
@@ -191,6 +196,11 @@ class Notifications extends Controller
      *                         property="addedText",
      *                         type="string",
      *                         example="hello",
+     *                      ),
+     *                      @OA\Property(
+     *                         property="is_anonymous",
+     *                         type="boolean",
+     *                         example=false,
      *                      ),
      *                  @OA\Property(property="tags[]", type="string", 
      *                          example="['winter']"               
