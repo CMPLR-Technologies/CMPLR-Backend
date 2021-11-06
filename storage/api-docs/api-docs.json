@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://127.0.0.1:8000",
+            "url": "http://localhost:8000",
             "description": "CMPLR API Server"
         }
     ],
@@ -181,7 +181,7 @@
                 }
             }
         },
-        "user/inbox/{blog-identifier}": {
+        "/user/inbox/{blog-identifier}": {
             "get": {
                 "tags": [
                     "Users"
@@ -1518,7 +1518,7 @@
                 }
             }
         },
-        "settings/blog/{Blog identifier}": {
+        "/settings/blog/{Blog identifier}": {
             "get": {
                 "tags": [
                     "BlogSetting"
@@ -1673,17 +1673,17 @@
                 ]
             }
         },
-        "settings/blog/{blog-identifier}/save": {
+        "/settings/blog/{blog-identifier}/save": {
             "put": {
                 "tags": [
-                    "BlogSettings"
+                    "BlogSetting"
                 ],
-                "summary": "save specfic blog setting",
+                "summary": "save specific blog setting",
                 "description": "user can save changes in one of its blogs",
                 "operationId": "blogSettingSave",
                 "parameters": [
                     {
-                        "name": "new_email",
+                        "name": "Username",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -1691,28 +1691,28 @@
                         }
                     },
                     {
-                        "name": "current_confirm_password",
+                        "name": "likes",
                         "in": "query",
-                        "description": "used as confirm_password for change accout email or current password for change password",
+                        "description": "make your likes public at blog_url",
                         "required": false,
                         "schema": {
-                            "type": "string"
+                            "type": "boolean"
                         }
                     },
                     {
-                        "name": "new_password",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "google_login",
+                        "name": "following",
                         "in": "query",
                         "required": false,
                         "schema": {
                             "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "Replies",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     {
@@ -1859,6 +1859,90 @@
                     },
                     "200": {
                         "description": "sucess"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/blog/{blog-identifier}/submit": {
+            "post": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Submit a Post",
+                "description": "Used to submit a post to a blog's inbox",
+                "operationId": "submitPost",
+                "parameters": [
+                    {
+                        "name": "blog-identifier",
+                        "in": "path",
+                        "description": "Blog name of the person you want to submit a post to",
+                        "required": true,
+                        "schema": {
+                            "type": "Boolean"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "description": "Pass user credentials",
+                                "required": [
+                                    "type",
+                                    "content"
+                                ],
+                                "properties": {
+                                    "fromBlogName": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "abdullah-alshawafi"
+                                    },
+                                    "fromBlogId": {
+                                        "type": "integer",
+                                        "format": "number",
+                                        "example": "230"
+                                    },
+                                    "tags": {
+                                        "type": "Boolean",
+                                        "format": "boolean",
+                                        "example": "true"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "Text"
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "My Post"
+                                    },
+                                    "content": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "how are you?"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "Success"
                     }
                 },
                 "security": [
@@ -4059,7 +4143,7 @@
         "/user/filtered_tags": {
             "get": {
                 "tags": [
-                    "Tags"
+                    "UserSettings"
                 ],
                 "summary": "Retrieve Tag Filtering",
                 "description": "Retrieve a list of currently-filtered tag strings.",
@@ -4124,7 +4208,7 @@
             },
             "post": {
                 "tags": [
-                    "Tags"
+                    "UserSettings"
                 ],
                 "summary": "Add Tag Filtering",
                 "description": "Add one or more tags to filter.",
@@ -4192,7 +4276,7 @@
         "/user/filtered_tags/{tag}": {
             "delete": {
                 "tags": [
-                    "Tags"
+                    "UserSettings"
                 ],
                 "summary": "Remove Tag Filtering",
                 "description": "Remove a tag filter.",
@@ -4245,7 +4329,7 @@
         "/user/filtered_content": {
             "get": {
                 "tags": [
-                    "Tags"
+                    "UserSettings"
                 ],
                 "summary": "Retrieve Content Filtering",
                 "description": "Retrieve a list of currently-filtered content strings.",
@@ -4309,7 +4393,7 @@
             },
             "post": {
                 "tags": [
-                    "Users"
+                    "UserSettings"
                 ],
                 "summary": "Add Content Filtering",
                 "description": "Add one or more content strings to filter.",
@@ -4375,7 +4459,7 @@
             },
             "delete": {
                 "tags": [
-                    "Users"
+                    "UserSettings"
                 ],
                 "summary": "Remove filtered_content",
                 "description": "rRemove a content filter string.",
@@ -5494,10 +5578,15 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         },
-        "settings/notifications": {
+        "/settings/notifications": {
             "post": {
                 "tags": [
                     "UserSettings"
@@ -5697,6 +5786,201 @@
                                 }
                             }
                         }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/setting/account/save": {
+            "put": {
+                "tags": [
+                    "UserSettings"
+                ],
+                "summary": "{blog-identifier}/posts/draft",
+                "description": "user can get the draft posts",
+                "operationId": "Drafted_posts",
+                "parameters": [
+                    {
+                        "name": "new_email",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "current_confirm_password",
+                        "in": "query",
+                        "description": "used as confirm_password for change accout email or current password for change password",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "new_password",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "google_login",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "account_activity",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "two-factor_authentication",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "filtered tags",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "winter,summer"
+                    },
+                    {
+                        "name": "filtered post_content",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "enable_endless_scrolling",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "show_badge",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "text_editor",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "message sounds",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "best_stuff_first",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "include_followed_tags_posts",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "tumblr_news",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "conversation_notifications",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "new_example@gmail.com"
+                                    },
+                                    "current_confirm_password": {
+                                        "type": "string",
+                                        "example": "new_pass123"
+                                    },
+                                    "account_activity": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "two_factor_authentication": {
+                                        "type": "boolean",
+                                        "example": false
+                                    },
+                                    "namea": {
+                                        "type": "string",
+                                        "example": "ahmed"
+                                    },
+                                    "Text Editor": {
+                                        "type": "string",
+                                        "example": "Rich text editor"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
                     }
                 },
                 "security": [

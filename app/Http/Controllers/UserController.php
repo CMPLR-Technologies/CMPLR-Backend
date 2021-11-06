@@ -408,7 +408,7 @@ class UserController extends Controller
      * summary="Retrieve Tag Filtering",
      * description="Retrieve a list of currently-filtered tag strings.",
      * operationId="UserGetFilteredTags",
-     * tags={"Tags"},
+     * tags={"UserSettings"},
      *
      *    @OA\RequestBody(
      *      required=true,
@@ -456,7 +456,7 @@ class UserController extends Controller
      * summary="Add Tag Filtering",
      * description="Add one or more tags to filter.",
      * operationId="UserPostFilterTag",
-     * tags={"Tags"},
+     * tags={"UserSettings"},
      *
      *   @OA\Parameter(
      *      name="filtered_tags",
@@ -509,7 +509,7 @@ class UserController extends Controller
      * 		summary="Remove Tag Filtering",
      * 		description="Remove a tag filter.",
      * 		operationId="UserDeleteFilteringTag",
-     * 		tags={"Tags"},
+     * 		tags={"UserSettings"},
      *
      *   	@OA\Parameter
      *		(
@@ -564,7 +564,7 @@ class UserController extends Controller
      * 		summary="Retrieve Content Filtering",
      * 		description="Retrieve a list of currently-filtered content strings.",
      * 		operationId="UserGetFilteredContent",
-     * 		tags={"Tags"},
+     * 		tags={"UserSettings"},
      *    	@OA\RequestBody
      *		(
      *      		required=true,
@@ -624,7 +624,7 @@ class UserController extends Controller
      * 		summary="Add Content Filtering",
      * 		description="Add one or more content strings to filter.",
      * 		operationId="UserPostFilteringContent",
-     * 		tags={"Users"},
+     * 		tags={"UserSettings"},
      *
      *   	@OA\Parameter
      *		(
@@ -685,7 +685,7 @@ class UserController extends Controller
      * 		summary="Remove filtered_content",
      * 		description="rRemove a content filter string.",
      * 		operationId="UserDeleteFilteringContent",
-     * 		tags={"Users"},
+     * 		tags={"UserSettings"},
      *
      *   	@OA\Parameter
      *		(
