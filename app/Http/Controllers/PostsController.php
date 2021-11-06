@@ -942,7 +942,8 @@ class PostsController extends Controller
 
      *           ),
      *        ),
-     *     )
+     *     ),
+     * security ={{"bearer":{}}}
      * )
      */
     public function RetrieveQueuedPosts(Request $request, Posts $posts)
@@ -994,7 +995,8 @@ class PostsController extends Controller
      *   @OA\Response(
      *      response=400,
      *      description="Bad Request"
-     *   )
+     *   ),
+     * security ={{"bearer":{}}}
      *)
      **/
     public function ReorderQueuedPosts(Request $request)
@@ -1026,7 +1028,8 @@ class PostsController extends Controller
      *   @OA\Response(
      *      response=400,
      *      description="Bad Request"
-     *   )
+     *   ),
+     * security ={{"bearer":{}}}
      *)
      **/
     public function ShuffleQueuedPosts(Request $request)
@@ -1133,7 +1136,8 @@ class PostsController extends Controller
      *               ),           
      *           ),
      *        ),
-     *     )
+     *     ),
+     * security ={{"bearer":{}}}
      * )
      */
 

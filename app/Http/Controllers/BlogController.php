@@ -102,7 +102,8 @@ class BlogController extends Controller
      *         @OA\Property(property="followed_by", type="boolean", example=false),
      *       )
      *    )
-     * )
+     * ),
+     * security ={{"bearer":{}}}
      * )
      */
     public function followedBy(Request $request, Blog $blog)
@@ -187,7 +188,8 @@ class BlogController extends Controller
      *             ),           
      *           ),
      *        ),
-     *     )
+     *     ),
+     * security ={{"bearer":{}}}
      * )
      */
     public function getFollowers(Request $request, Blog $blog)
@@ -249,7 +251,8 @@ class BlogController extends Controller
      *         )
      *       )
      *     )
-     *   )
+     *   ),
+     * security ={{"bearer":{}}}
      * )
      */
     public function getFollowing(Request $request, Blog $blog)
