@@ -205,7 +205,7 @@ class BlogSettingController extends Controller
      *         )
      *      ),
      *  @OA\Parameter(
-     *         name="account_activity",
+     *         name="allow_ask",
      *         in="query",
      *         required=false,
      *         @OA\Schema(
@@ -213,24 +213,7 @@ class BlogSettingController extends Controller
      *         )
      *      ),
      *  @OA\Parameter(
-     *         name="two-factor_authentication",
-     *         in="query",
-     *         required=false,
-     *         @OA\Schema(
-     *              type="boolean"
-     *         )
-     *      ),
-     *   @OA\Parameter(
-     *         name="filtered tags",
-     *         in="query",
-     *         required=false,
-     *         example="winter,summer",
-     *         @OA\Schema(
-     *              type="string"
-     *         )
-     *      ),
-     *   @OA\Parameter(
-     *         name="filtered post_content",
+     *         name="ask_page_title",
      *         in="query",
      *         required=false,
      *         @OA\Schema(
@@ -238,7 +221,7 @@ class BlogSettingController extends Controller
      *         )
      *      ),
      *   @OA\Parameter(
-     *         name="enable_endless_scrolling",
+     *         name="allow_anonymous_questions",
      *         in="query",
      *         required=false,
      *         @OA\Schema(
@@ -246,7 +229,7 @@ class BlogSettingController extends Controller
      *         )
      *      ),
      *   @OA\Parameter(
-     *         name="show_badge",
+     *         name="allow_sumbit_posts",
      *         in="query",
      *         required=false,
      *         @OA\Schema(
@@ -254,7 +237,7 @@ class BlogSettingController extends Controller
      *         )
      *      ),
      *   @OA\Parameter(
-     *         name="text_editor",
+     *         name="submission_page_title",
      *         in="query",
      *         required=false,
      *         @OA\Schema(
@@ -262,7 +245,15 @@ class BlogSettingController extends Controller
      *         )
      *      ),
      *   @OA\Parameter(
-     *         name="message sounds",
+     *         name="submission_guideline",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="string"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="is_text_allowed",
      *         in="query",
      *         required=false,
      *         @OA\Schema(
@@ -270,7 +261,7 @@ class BlogSettingController extends Controller
      *         )
      *      ),
      *   @OA\Parameter(
-     *         name="best_stuff_first",
+     *         name="is_photo_allowed",
      *         in="query",
      *         required=false,
      *         @OA\Schema(
@@ -278,7 +269,7 @@ class BlogSettingController extends Controller
      *         )
      *      ),
      *   @OA\Parameter(
-     *         name="include_followed_tags_posts",
+     *         name="is_quote_allowed",
      *         in="query",
      *         required=false,
      *         @OA\Schema(
@@ -286,7 +277,7 @@ class BlogSettingController extends Controller
      *         )
      *      ),
      *   @OA\Parameter(
-     *         name="tumblr_news",
+     *         name="is_link_allowed",
      *         in="query",
      *         required=false,
      *         @OA\Schema(
@@ -294,7 +285,31 @@ class BlogSettingController extends Controller
      *         )
      *      ),
      *   @OA\Parameter(
-     *         name="conversation_notifications",
+     *         name="is_video_allowed",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="allow_messages",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="dashboard_hide",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="search_hide",
      *         in="query",
      *         required=false,
      *         @OA\Schema(
@@ -307,41 +322,57 @@ class BlogSettingController extends Controller
      *    @OA\JsonContent(
      *       type="object",
      *    @OA\Property(
-     *       property="email",
+     *       property="Username",
      *       type="string",
-     *       example="new_example@gmail.com"
+     *       example="ahmed-abdelhamed1"
      *    ),
      *    @OA\Property(
-     *       property="current_confirm_password",
+     *       property="replies",
      *       type="string",
-     *       example="new_pass123"
+     *       example="Everyone can reply"
      *    ),
      *    @OA\Property(
-     *       property="account_activity",
+     *       property="allow_ask",
      *       type="boolean",
      *       example=true
      *    ),
      *    @OA\Property(
-     *       property="two_factor_authentication",
+     *       property="ask_page_title",
+     *       type="string",
+     *       example="hello ask me whatever you want"
+     *    ),
+     *    @OA\Property(
+     *       property="allow_sumbit_posts",
+     *       type="boolean",
+     *       example=true
+     *    ),
+     *    @OA\Property(
+     *       property="submission_guideline",
+     *       type="string",
+     *       example="submissions should follow community standards"
+     *    ),
+     *    @OA\Property(
+     *       property="is_link_allowed",
+     *       type="boolean",
+     *       example=true
+     *    ),
+     *    @OA\Property(
+     *       property="is_video_allowed",
      *       type="boolean",
      *       example=false
-     *    ),
-     * 
-     *    @OA\Property(
-     *       property="namea",
-     *       type="string",
-     *       example="ahmed"
-     *    ),
-     *    @OA\Property(
-     *       property="Text Editor",
-     *       type="string",
-     *       example="Rich text editor"
      *    ), 
      *  ),         
      * ),
      * @OA\Response(
-     *    response=404,
-     *    description="Not Found",
+     *    response=400,
+     *    description="bad request",
+     *    @OA\JsonContent(
+     *       type="object",
+     *       @OA\Property(property="Meta", type="object",
+     *          @OA\Property(property="Status", type="integer", example=400),
+     *           @OA\Property(property="msg", type="string", example="Bad Request"),
+     *        ),
+     *     ),
      * ),
      *   @OA\Response(
      *      response=401,
@@ -349,8 +380,15 @@ class BlogSettingController extends Controller
      *   ),
      * @OA\Response(
      *    response=200,
-     *    description="sucess",
+     *    description="success",
+     *    @OA\JsonContent(
+     *       type="object",
+     *       @OA\Property(property="Meta", type="object",
+     *          @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="OK"),
+     *        ),
      *     ),
+     *   ),
      *   security ={{"bearer":{}}},
      * )
      */

@@ -12,7 +12,7 @@
         }
     ],
     "paths": {
-        "blog/{blog-identifier}/ask": {
+        "/blog/{blog-identifier}/ask": {
             "post": {
                 "tags": [
                     "Blogs"
@@ -79,7 +79,7 @@
                 }
             }
         },
-        "user/inbox": {
+        "/user/inbox": {
             "get": {
                 "tags": [
                     "Users"
@@ -1701,6 +1701,8 @@
                     },
                     {
                         "name": "following",
+<<<<<<< HEAD
+=======
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -1709,6 +1711,19 @@
                     },
                     {
                         "name": "Replies",
+>>>>>>> 3fb92c600e5fff659f14d362fd71963fa76a96eb
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+<<<<<<< HEAD
+                        "name": "Replies",
+=======
+                        "name": "allow_ask",
+>>>>>>> 3fb92c600e5fff659f14d362fd71963fa76a96eb
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -1716,32 +1731,7 @@
                         }
                     },
                     {
-                        "name": "account_activity",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "name": "two-factor_authentication",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "name": "filtered tags",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "winter,summer"
-                    },
-                    {
-                        "name": "filtered post_content",
+                        "name": "ask_page_title",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -1749,7 +1739,7 @@
                         }
                     },
                     {
-                        "name": "enable_endless_scrolling",
+                        "name": "allow_anonymous_questions",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -1757,7 +1747,7 @@
                         }
                     },
                     {
-                        "name": "show_badge",
+                        "name": "allow_sumbit_posts",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -1765,7 +1755,7 @@
                         }
                     },
                     {
-                        "name": "text_editor",
+                        "name": "submission_page_title",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -1773,7 +1763,15 @@
                         }
                     },
                     {
-                        "name": "message sounds",
+                        "name": "submission_guideline",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "is_text_allowed",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -1781,7 +1779,7 @@
                         }
                     },
                     {
-                        "name": "best_stuff_first",
+                        "name": "is_photo_allowed",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -1789,7 +1787,7 @@
                         }
                     },
                     {
-                        "name": "include_followed_tags_posts",
+                        "name": "is_quote_allowed",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -1797,7 +1795,7 @@
                         }
                     },
                     {
-                        "name": "tumblr_news",
+                        "name": "is_link_allowed",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -1805,7 +1803,31 @@
                         }
                     },
                     {
-                        "name": "conversation_notifications",
+                        "name": "is_video_allowed",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "allow_messages",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "dashboard_hide",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "search_hide",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -1820,29 +1842,37 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "email": {
+                                    "Username": {
                                         "type": "string",
-                                        "example": "new_example@gmail.com"
+                                        "example": "ahmed-abdelhamed1"
                                     },
-                                    "current_confirm_password": {
+                                    "replies": {
                                         "type": "string",
-                                        "example": "new_pass123"
+                                        "example": "Everyone can reply"
                                     },
-                                    "account_activity": {
+                                    "allow_ask": {
                                         "type": "boolean",
                                         "example": true
                                     },
-                                    "two_factor_authentication": {
+                                    "ask_page_title": {
+                                        "type": "string",
+                                        "example": "hello ask me whatever you want"
+                                    },
+                                    "allow_sumbit_posts": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "submission_guideline": {
+                                        "type": "string",
+                                        "example": "submissions should follow community standards"
+                                    },
+                                    "is_link_allowed": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "is_video_allowed": {
                                         "type": "boolean",
                                         "example": false
-                                    },
-                                    "namea": {
-                                        "type": "string",
-                                        "example": "ahmed"
-                                    },
-                                    "Text Editor": {
-                                        "type": "string",
-                                        "example": "Rich text editor"
                                     }
                                 },
                                 "type": "object"
@@ -1851,14 +1881,58 @@
                     }
                 },
                 "responses": {
-                    "404": {
-                        "description": "Not Found"
+                    "400": {
+                        "description": "bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 400
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "Bad Request"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "Unauthenticated"
                     },
                     "200": {
-                        "description": "sucess"
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
