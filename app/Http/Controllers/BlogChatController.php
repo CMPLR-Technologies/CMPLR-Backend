@@ -35,7 +35,8 @@ class BlogChatController extends Controller
      *         @OA\Property(property="content", type="Sring", example="hello"),
      *       )
      *    )
-     * )
+     * ),
+     * security ={{"bearer":{}}}
      * )
      */
     public function messaging()
@@ -62,7 +63,8 @@ class BlogChatController extends Controller
      *         @OA\Property(property="msg", type="string", example="OK"),
      *       ),
      *    )
-     * )
+     * ),
+     * security ={{"bearer":{}}}
      * )
      */
     public function conversation()
@@ -102,7 +104,8 @@ class BlogChatController extends Controller
      *         @OA\Property(property="msg", type="string", example="OK"),
      *       ),
      *    )
-     * )
+     * ),
+     * security ={{"bearer":{}}}
      * )
      */
     public function sendMessage()
@@ -129,7 +132,8 @@ class BlogChatController extends Controller
      *         @OA\Property(property="msg", type="string", example="OK"),
      *       ),
      *    )
-     * )
+     * ),
+     * security ={{"bearer":{}}}
      * )
      */
     /**

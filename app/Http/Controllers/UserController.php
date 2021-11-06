@@ -90,7 +90,8 @@ class UserController extends Controller
      *               ),           
      *           ),
      *        ),
-     *     )
+     *     ),
+     * security ={{"bearer":{}}}
      * )
      */
     public function index()
@@ -308,8 +309,8 @@ class UserController extends Controller
      *               		),
      *           		),
      *        		),
-     *     	)
-     * 
+     *     	),
+     * security ={{"bearer":{}}}
      * )
      */
     public function getLikes()
@@ -393,7 +394,8 @@ class UserController extends Controller
      *               		),
      *           		),
      *        		),
-     *     	)
+     *     	),
+     * security ={{"bearer":{}}}
      * 
      * )
      */
@@ -811,6 +813,7 @@ class UserController extends Controller
      *       ),
      *            
      *    ),
+     * security ={{"bearer":{}}}
      *)
      **/
     public function BlogSubscription()
@@ -851,6 +854,7 @@ class UserController extends Controller
      *       ),
      *            
      *    ),
+     * security ={{"bearer":{}}}
      *)
      **/
     public function BlogUnSubscription()
@@ -904,6 +908,7 @@ class UserController extends Controller
      *       ),
      *            
      *    ),
+     * security ={{"bearer":{}}}
      *)
      **/
     public function AddTagsToPosts()
@@ -967,6 +972,7 @@ class UserController extends Controller
      *       ),
      *            
      *    ),
+     * security ={{"bearer":{}}}
      *)
      **/
     public function DeletePosts(Request $request)

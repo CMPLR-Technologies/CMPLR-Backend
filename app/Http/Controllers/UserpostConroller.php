@@ -55,7 +55,7 @@ class UserpostConroller extends Controller
      *    response=200,
      *    description="success",
      *     ),
-     * 
+     * security ={{"bearer":{}}}
      * )
      */
     public function like()
@@ -112,7 +112,7 @@ class UserpostConroller extends Controller
      *    response=200,
      *    description="success",
      *     ),
-     * 
+     * security ={{"bearer":{}}}
      * )
      */
     public function unlike()
@@ -179,6 +179,7 @@ class UserpostConroller extends Controller
      *         
      *          
      *       ),
+     * security ={{"bearer":{}}}
      *)
      **/
     public function UserReply()
