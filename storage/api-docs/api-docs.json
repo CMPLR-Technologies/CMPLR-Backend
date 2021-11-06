@@ -181,6 +181,108 @@
                 }
             }
         },
+        "user/inbox/{blog-identifier}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "blog's inbox",
+                "description": "Retrieve the all asks and  submissions of a certain blog",
+                "operationId": "GetBlogInbox",
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "total_asks": {
+                                                    "type": "Number",
+                                                    "example": 263
+                                                },
+                                                "total_submissions": {
+                                                    "type": "Number",
+                                                    "example": 214
+                                                },
+                                                "asks": {
+                                                    "description": "asks in user's inbox",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "ask_1": {
+                                                                "description": "the first ask",
+                                                                "type": "object"
+                                                            },
+                                                            "ask_2": {
+                                                                "description": "the second ask",
+                                                                "type": "object"
+                                                            },
+                                                            "ask_3": {
+                                                                "description": "the third ask",
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "submissions": {
+                                                    "description": "submissions in user's inbox",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "sub_1": {
+                                                                "description": "the first submission",
+                                                                "type": "object"
+                                                            },
+                                                            "sub_2": {
+                                                                "description": "the second submission",
+                                                                "type": "object"
+                                                            },
+                                                            "sub_3": {
+                                                                "description": "the third submission",
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/forgot_password": {
             "get": {
                 "tags": [
@@ -640,6 +742,215 @@
                         "bearer": []
                     }
                 ]
+            }
+        },
+        "/messaging": {
+            "get": {
+                "tags": [
+                    "Chats"
+                ],
+                "summary": "getting all messages",
+                "description": "This method can be used to get all messages of authorized user",
+                "operationId": "messaging",
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "blog-id_from": {
+                                                    "type": "integer",
+                                                    "example": 123154564
+                                                },
+                                                "blog-name_from": {
+                                                    "type": "Sring",
+                                                    "example": "summer-abdlhamid"
+                                                },
+                                                "blog-id_to": {
+                                                    "type": "integer",
+                                                    "example": 634344
+                                                },
+                                                "blog-name_to": {
+                                                    "type": "Sring",
+                                                    "example": "yousif-lasheen"
+                                                },
+                                                "content": {
+                                                    "type": "Sring",
+                                                    "example": "hello"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/messaging/conversation/{blog-id-from}/{blog-id-to}": {
+            "get": {
+                "tags": [
+                    "Chats"
+                ],
+                "summary": "getting all messages from some blog",
+                "description": "This method can be used to get all messages from some blog",
+                "operationId": "conversation",
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "Successfully getting all messages",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Chats"
+                ],
+                "summary": "send message to blog",
+                "description": "This method can be used to send message to blog",
+                "operationId": "sendMessage",
+                "parameters": [
+                    {
+                        "name": "Content",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "Content"
+                                ],
+                                "properties": {
+                                    "Content": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "hello"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "Successfully sending messages",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Chats"
+                ],
+                "summary": "delete all messages with blog",
+                "description": "This method can be used to send message to blog",
+                "operationId": "destroy",
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "Successfully deleting messages",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/blog/{blog-identifier}/followed_by": {
@@ -1588,7 +1899,7 @@
                     }
                 ],
                 "requestBody": {
-                    "description": "Api Example : api.tumblr.com/v1/blog/{blog-identifier}/notifications <br/>\n     *    Available types include:\\n <br/>\n     *      all : get all notifications  <br/>\n     *      like:\tA like on your post <br/>\n     *      reply:\tA reply on your post <br/>\n     *      follow:\tA new follower <br/>\n     *      mention_in_reply:\tA mention of your blog in a reply <br/>\n     *      mention_in_post:\tA mention of your blog in a post <br/>\n     *      reblog_naked:\tA reblog of your post, without commentary <br/>\n     *      reblog_with_content:\tA reblog of your post, with commentary <br/>\n     *      ask:\tA new ask received <br/>\n     *      answered_ask:\tAn answered ask that you had sent <br/>\n     *      new_group_blog_member:\tA new member of your group blog <br/>\n     *      post_flagged:\tA post of yours being flagged <br/>\n     *      conversational_note\tA conversational note (reply, reblog with comment) on a post you're watching",
+                    "description": "Api Example : api.tumblr.com/v1/blog/{blog-identifier}/notifications <br/>\r\n     *    Available types include:\\n <br/>\r\n     *      all : get all notifications  <br/>\r\n     *      like:\tA like on your post <br/>\r\n     *      reply:\tA reply on your post <br/>\r\n     *      follow:\tA new follower <br/>\r\n     *      mention_in_reply:\tA mention of your blog in a reply <br/>\r\n     *      mention_in_post:\tA mention of your blog in a post <br/>\r\n     *      reblog_naked:\tA reblog of your post, without commentary <br/>\r\n     *      reblog_with_content:\tA reblog of your post, with commentary <br/>\r\n     *      ask:\tA new ask received <br/>\r\n     *      answered_ask:\tAn answered ask that you had sent <br/>\r\n     *      new_group_blog_member:\tA new member of your group blog <br/>\r\n     *      post_flagged:\tA post of yours being flagged <br/>\r\n     *      conversational_note\tA conversational note (reply, reblog with comment) on a post you're watching",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -5393,196 +5704,6 @@
                         "bearer": []
                     }
                 ]
-            }
-        },
-        "setting/account/save": {
-            "put": {
-                "tags": [
-                    "UserSettings"
-                ],
-                "summary": "{blog-identifier}/posts/draft",
-                "description": "user can get the draft posts",
-                "operationId": "Drafted_posts",
-                "parameters": [
-                    {
-                        "name": "new_email",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "current_confirm_password",
-                        "in": "query",
-                        "description": "used as confirm_password for change accout email or current password for change password",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "new_password",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "google_login",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "name": "account_activity",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "name": "two-factor_authentication",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "name": "filtered tags",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "winter,summer"
-                    },
-                    {
-                        "name": "filtered post_content",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "enable_endless_scrolling",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "name": "show_badge",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "name": "text_editor",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "message sounds",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "name": "best_stuff_first",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "name": "include_followed_tags_posts",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "name": "tumblr_news",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "name": "conversation_notifications",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "email": {
-                                        "type": "string",
-                                        "example": "new_example@gmail.com"
-                                    },
-                                    "current_confirm_password": {
-                                        "type": "string",
-                                        "example": "new_pass123"
-                                    },
-                                    "account_activity": {
-                                        "type": "boolean",
-                                        "example": true
-                                    },
-                                    "two_factor_authentication": {
-                                        "type": "boolean",
-                                        "example": false
-                                    },
-                                    "namea": {
-                                        "type": "string",
-                                        "example": "ahmed"
-                                    },
-                                    "Text Editor": {
-                                        "type": "string",
-                                        "example": "Rich text editor"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "404": {
-                        "description": "Not Found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "200": {
-                        "description": "sucess"
-                    }
-                }
             }
         },
         "/user/tags/add": {
