@@ -6291,7 +6291,7 @@
         "/user/tags/add": {
             "post": {
                 "tags": [
-                    "Tags"
+                    "Users"
                 ],
                 "summary": "follow new tag",
                 "operationId": "follow tag",
@@ -6343,7 +6343,7 @@
         "/user/tags/remove": {
             "delete": {
                 "tags": [
-                    "Tags"
+                    "Users"
                 ],
                 "summary": "unfollow tag",
                 "operationId": "unfollow tag",

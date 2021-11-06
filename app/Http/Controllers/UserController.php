@@ -737,8 +737,8 @@ class UserController extends Controller
      * @OA\Delete(
      *   path="/{blog-identifier}/notes/delete",
      *   tags={"Users"},
-     *   summary="unfollow tag",
-     *   operationId="unfollow tag",
+     *   summary="Delete a note from a post",
+     *   operationId="deleteNote",
      *  @OA\Parameter(
      *      name="post_id",
      *      in="query",
