@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://127.0.0.1:8000",
+            "url": "http://my-default-host.com",
             "description": "CMPLR API Server"
         }
     ],
@@ -82,7 +82,7 @@
         "user/inbox": {
             "get": {
                 "tags": [
-                    "user"
+                    "Users"
                 ],
                 "summary": "the user's inbox",
                 "description": "Retrieve the all asks and  submissions",
@@ -1676,14 +1676,14 @@
         "settings/blog/{blog-identifier}/save": {
             "put": {
                 "tags": [
-                    "BlogSettings"
+                    "BlogSetting"
                 ],
                 "summary": "save specfic blog setting",
                 "description": "user can save changes in one of its blogs",
                 "operationId": "blogSettingSave",
                 "parameters": [
                     {
-                        "name": "new_email",
+                        "name": "Username",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -1691,28 +1691,28 @@
                         }
                     },
                     {
-                        "name": "current_confirm_password",
+                        "name": "likes",
                         "in": "query",
-                        "description": "used as confirm_password for change accout email or current password for change password",
+                        "description": "make your likes public at blog_url",
                         "required": false,
                         "schema": {
-                            "type": "string"
+                            "type": "boolean"
                         }
                     },
                     {
-                        "name": "new_password",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "google_login",
+                        "name": "following",
                         "in": "query",
                         "required": false,
                         "schema": {
                             "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "Replies",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     {
@@ -1868,6 +1868,237 @@
                 ]
             }
         },
+        "setttings/blog/{blog-identifier}/theme": {
+            "put": {
+                "tags": [
+                    "BlogSetting"
+                ],
+                "summary": "Edit blog theme",
+                "description": "used to change the theme of a certain blog",
+                "operationId": "EditBlogTheme",
+                "parameters": [
+                    {
+                        "name": "header_image",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "text"
+                        }
+                    },
+                    {
+                        "name": "avatar",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "text"
+                        }
+                    },
+                    {
+                        "name": "avatar_shape",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "text"
+                        }
+                    },
+                    {
+                        "name": "background_color",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "text"
+                        }
+                    },
+                    {
+                        "name": "accent_color",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "text"
+                        }
+                    },
+                    {
+                        "name": "show_header_image",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "stretch_header_image",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "show_avatar",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "show_title",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "show_description",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "user_new_post_type",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "url_handling",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "layout",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "text"
+                        }
+                    },
+                    {
+                        "name": "sliding_header",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "show_navigation",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "header_image": {
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": "http://www.google.com/image"
+                                    },
+                                    "avatar": {
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": "http://www.google.com/image"
+                                    },
+                                    "heaavatar_shape": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "triangle"
+                                    },
+                                    "background_color": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "red"
+                                    },
+                                    "accent_color": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "red"
+                                    },
+                                    "how_header_image": {
+                                        "type": "boolean",
+                                        "format": "boolean",
+                                        "example": "true"
+                                    },
+                                    "stretch_header_image": {
+                                        "type": "boolean",
+                                        "format": "boolean",
+                                        "example": "true"
+                                    },
+                                    "show_avatar": {
+                                        "type": "boolean",
+                                        "format": "boolean",
+                                        "example": "true"
+                                    },
+                                    "show_title": {
+                                        "type": "boolean",
+                                        "format": "boolean",
+                                        "example": "true"
+                                    },
+                                    "show_description": {
+                                        "type": "boolean",
+                                        "format": "boolean",
+                                        "example": "true"
+                                    },
+                                    "use_new_post_type": {
+                                        "type": "boolean",
+                                        "format": "boolean",
+                                        "example": "true"
+                                    },
+                                    "url_handling": {
+                                        "type": "boolean",
+                                        "format": "boolean",
+                                        "example": "true"
+                                    },
+                                    "layout": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "true"
+                                    },
+                                    "sliding_header": {
+                                        "type": "boolean",
+                                        "format": "boolean",
+                                        "example": "true"
+                                    },
+                                    "show_navigation": {
+                                        "type": "boolean",
+                                        "format": "boolean",
+                                        "example": "true"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
+        },
         "/notifications": {
             "get": {
                 "tags": [
@@ -1899,7 +2130,7 @@
                     }
                 ],
                 "requestBody": {
-                    "description": "Api Example : api.tumblr.com/v1/blog/{blog-identifier}/notifications <br/>\r\n     *    Available types include:\\n <br/>\r\n     *      all : get all notifications  <br/>\r\n     *      like:\tA like on your post <br/>\r\n     *      reply:\tA reply on your post <br/>\r\n     *      follow:\tA new follower <br/>\r\n     *      mention_in_reply:\tA mention of your blog in a reply <br/>\r\n     *      mention_in_post:\tA mention of your blog in a post <br/>\r\n     *      reblog_naked:\tA reblog of your post, without commentary <br/>\r\n     *      reblog_with_content:\tA reblog of your post, with commentary <br/>\r\n     *      ask:\tA new ask received <br/>\r\n     *      answered_ask:\tAn answered ask that you had sent <br/>\r\n     *      new_group_blog_member:\tA new member of your group blog <br/>\r\n     *      post_flagged:\tA post of yours being flagged <br/>\r\n     *      conversational_note\tA conversational note (reply, reblog with comment) on a post you're watching",
+                    "description": "Api Example : api.tumblr.com/v1/blog/{blog-identifier}/notifications <br/>\n     *    Available types include:\\n <br/>\n     *      all : get all notifications  <br/>\n     *      like:\tA like on your post <br/>\n     *      reply:\tA reply on your post <br/>\n     *      follow:\tA new follower <br/>\n     *      mention_in_reply:\tA mention of your blog in a reply <br/>\n     *      mention_in_post:\tA mention of your blog in a post <br/>\n     *      reblog_naked:\tA reblog of your post, without commentary <br/>\n     *      reblog_with_content:\tA reblog of your post, with commentary <br/>\n     *      ask:\tA new ask received <br/>\n     *      answered_ask:\tAn answered ask that you had sent <br/>\n     *      new_group_blog_member:\tA new member of your group blog <br/>\n     *      post_flagged:\tA post of yours being flagged <br/>\n     *      conversational_note\tA conversational note (reply, reblog with comment) on a post you're watching",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -5704,6 +5935,196 @@
                         "bearer": []
                     }
                 ]
+            }
+        },
+        "setting/account/save": {
+            "put": {
+                "tags": [
+                    "UserSettings"
+                ],
+                "summary": "{blog-identifier}/posts/draft",
+                "description": "user can get the draft posts",
+                "operationId": "Drafted_posts",
+                "parameters": [
+                    {
+                        "name": "new_email",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "current_confirm_password",
+                        "in": "query",
+                        "description": "used as confirm_password for change accout email or current password for change password",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "new_password",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "google_login",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "account_activity",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "two-factor_authentication",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "filtered tags",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "winter,summer"
+                    },
+                    {
+                        "name": "filtered post_content",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "enable_endless_scrolling",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "show_badge",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "text_editor",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "message sounds",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "best_stuff_first",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "include_followed_tags_posts",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "tumblr_news",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "conversation_notifications",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "new_example@gmail.com"
+                                    },
+                                    "current_confirm_password": {
+                                        "type": "string",
+                                        "example": "new_pass123"
+                                    },
+                                    "account_activity": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "two_factor_authentication": {
+                                        "type": "boolean",
+                                        "example": false
+                                    },
+                                    "namea": {
+                                        "type": "string",
+                                        "example": "ahmed"
+                                    },
+                                    "Text Editor": {
+                                        "type": "string",
+                                        "example": "Rich text editor"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "sucess"
+                    }
+                }
             }
         },
         "/user/tags/add": {

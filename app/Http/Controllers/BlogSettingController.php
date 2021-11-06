@@ -165,7 +165,7 @@ class BlogSettingController extends Controller
 
     }
       /**
-     * @OA\PUT(
+     * @OA\Put(
      * path="settings/blog/{blog-identifier}/save",
      * summary="save specfic blog setting",
      * description="user can save changes in one of its blogs",
@@ -358,4 +358,229 @@ class BlogSettingController extends Controller
     {
 
     }
+
+
+        /**
+    *	@OA\Put
+    *	(
+    * 		path="setttings/blog/{blog-identifier}/theme",
+    * 		summary="Edit blog theme",
+    * 		description="used to change the theme of a certain blog",
+    * 		operationId="EditBlogTheme",
+    * 		tags={"BlogSetting"},
+    *
+    *   	@OA\Parameter
+    *		  (
+    *      		name="header_image",
+    *      		in="query",
+    *      		required=false,
+    *      		@OA\Schema
+    *			    (
+    *           		type="text"
+    *      		)
+    *   	),
+    *
+    *   	@OA\Parameter
+    *		  (
+    *      		name="avatar",
+    *      		in="query",
+    *      		required=false,
+    *      		@OA\Schema
+    *			    (
+    *           		type="text"
+    *      		)
+    *   	),
+    *  
+    *   	@OA\Parameter
+    *		  (
+    *      		name="avatar_shape",
+    *      		in="query",
+    *      		required=false,
+    *      		@OA\Schema
+    *			    (
+    *           		type="text"
+    *      		)
+    *   	),
+    *
+    *   	@OA\Parameter
+    *		  (
+    *      		name="background_color",
+    *      		in="query",
+    *      		required=false,
+    *      		@OA\Schema
+    *			    (
+    *           		type="text"
+    *      		)
+    *   	),    
+    *    
+    *   	@OA\Parameter
+    *		  (
+    *      		name="accent_color",
+    *      		in="query",
+    *      		required=false,
+    *      		@OA\Schema
+    *			    (
+    *           		type="text"
+    *      		)
+    *   	),
+    *    
+    *   	@OA\Parameter
+    *		  (
+    *      		name="show_header_image",
+    *      		in="query",
+    *      		required=false,
+    *      		@OA\Schema
+    *			    (
+    *           		type="boolean"
+    *      		)
+    *   	),   
+    * 
+    *   	@OA\Parameter
+    *		  (
+    *      		name="stretch_header_image",
+    *      		in="query",
+    *      		required=false,
+    *      		@OA\Schema
+    *			    (
+    *           		type="boolean"
+    *      		)
+    *   	),  
+    *
+    *   	@OA\Parameter
+    *		  (
+    *      		name="show_avatar",
+    *      		in="query",
+    *      		required=false,
+    *      		@OA\Schema
+    *			    (
+    *           		type="boolean"
+    *      		)
+    *   	),    
+    *
+    *   	@OA\Parameter
+    *		  (
+    *      		name="show_title",
+    *      		in="query",
+    *      		required=false,
+    *      		@OA\Schema
+    *			    (
+    *           		type="boolean"
+    *      		)
+    *   	),     
+    *
+    *   	@OA\Parameter
+    *		  (
+    *      		name="show_description",
+    *      		in="query",
+    *      		required=false,
+    *      		@OA\Schema
+    *			    (
+    *           		type="boolean"
+    *      		)
+    *   	),  
+    *
+    *   	@OA\Parameter
+    *		  (
+    *      		name="user_new_post_type",
+    *      		in="query",
+    *      		required=false,
+    *      		@OA\Schema
+    *			    (
+    *           		type="boolean"
+    *      		)
+    *   	),  
+    *
+    *   	@OA\Parameter
+    *		  (
+    *      		name="url_handling",
+    *      		in="query",
+    *      		required=false,
+    *      		@OA\Schema
+    *			    (
+    *           		type="boolean"
+    *      		)
+    *   	),  
+    *
+    *   	@OA\Parameter
+    *		  (
+    *      		name="layout",
+    *      		in="query",
+    *      		required=false,
+    *      		@OA\Schema
+    *			    (
+    *           		type="text"
+    *      		)
+    *   	),  
+    *
+    *   	@OA\Parameter
+    *		  (
+    *      		name="sliding_header",
+    *      		in="query",
+    *      		required=false,
+    *      		@OA\Schema
+    *			    (
+    *           		type="boolean"
+    *      		)
+    *   	),  
+    *
+    *   	@OA\Parameter
+    *		  (
+    *      		name="show_navigation",
+    *      		in="query",
+    *      		required=false,
+    *      		@OA\Schema
+    *			    (
+    *           		type="boolean"
+    *      		)
+    *   	),  
+    *
+    *    	@OA\RequestBody
+    *		  (
+    *      		required=true,
+    *      		description="Pass user credentials",
+    *      		@OA\JsonContent
+    *			    (
+    *      			@OA\Property(property="header_image", type="string", format="url", example="http://www.google.com/image"),
+    *      			@OA\Property(property="avatar", type="string", format="url", example="http://www.google.com/image"),
+    *      			@OA\Property(property="heaavatar_shape", type="string", format="text", example="triangle"),
+    *      			@OA\Property(property="background_color", type="string", format="text", example="red"),
+    *      			@OA\Property(property="accent_color", type="string", format="text", example="red"),
+    *      			@OA\Property(property="how_header_image", type="boolean", format="boolean", example="true"),
+    *      			@OA\Property(property="stretch_header_image", type="boolean", format="boolean", example="true"),
+    *      			@OA\Property(property="show_avatar", type="boolean", format="boolean", example="true"),
+    *      			@OA\Property(property="show_title", type="boolean", format="boolean", example="true"),
+    *      			@OA\Property(property="show_description", type="boolean", format="boolean", example="true"),
+    *      			@OA\Property(property="use_new_post_type", type="boolean", format="boolean", example="true"),
+    *      			@OA\Property(property="url_handling", type="boolean", format="boolean", example="true"),
+    *      			@OA\Property(property="layout", type="string", format="text", example="true"),
+    *      			@OA\Property(property="sliding_header", type="boolean", format="boolean", example="true"),
+    *      			@OA\Property(property="show_navigation", type="boolean", format="boolean", example="true"),
+    *         ),
+    *    	),
+    *
+    * 		@OA\Response
+    *		  (
+    *    		response=404,
+    *    		description="Not Found",
+    * 		),
+    *
+    *	   	@OA\Response
+    *		  (
+    *		      response=401,
+    *		      description="Unauthenticated"
+    *	   	),
+    *
+    *		@OA\Response
+    *		(
+    *	    	response=200,
+    *    		description="success",
+    *   )
+    * )
+    */
+
+    public function BlogSettingEditTheme()
+    {
+
+    }
+
 }
