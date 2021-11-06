@@ -47,7 +47,8 @@ CREATE TABLE "Posts"(
     "target_user_id" INTEGER NOT NULL,
     "is_anonymous" BOOLEAN NOT NULL,
     "is_apporved" BOOLEAN NOT NULL,
-    "post_summary" TEXT NOT NULL
+    "post_summary" TEXT NOT NULL,
+    "order_in_queue" INTEGER NULL
 );
 ALTER TABLE
     "Posts" ADD PRIMARY KEY("id");
@@ -97,14 +98,11 @@ CREATE TABLE "BlogSetting"(
     "background_color" TEXT NOT NULL,
     "accent_color" TEXT NOT NULL,
     "show_header_image" BOOLEAN NOT NULL,
-    "stretch_header_image" BOOLEAN NOT NULL,
     "show_avatar" BOOLEAN NOT NULL,
     "show_title" BOOLEAN NOT NULL,
     "show_description" BOOLEAN NOT NULL,
     "use_new_post_type" BOOLEAN NOT NULL,
-    "url_handling" BOOLEAN NOT NULL,
     "layout" TEXT NOT NULL,
-    "sliding_header" BOOLEAN NOT NULL,
     "show_navigation" BOOLEAN NOT NULL
 );
 ALTER TABLE
