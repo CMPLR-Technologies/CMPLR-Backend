@@ -153,7 +153,7 @@ class AskController extends Controller
     /**
      *	@OA\Get
      *	(
-     * 		path="user/inbox/{blog-identifier}",
+     * 		path="/user/inbox/{blog-identifier}",
      * 		summary="blog's inbox",
      * 		description="Retrieve the all asks and  submissions of a certain blog",
      * 		operationId="GetBlogInbox",
