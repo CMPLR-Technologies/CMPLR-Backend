@@ -91,7 +91,7 @@ class NotificationsController extends Controller
      *                         example="ahmed-abdelhamed"
      *                      ),
      *                      @OA\Property(
-     *                         property="targetBlogUuid",
+     *                         property="targetBlog_id",
      *                         type="string/integer",
      *                         example="t:nrXV2XvboWHMYIHJGCl"
      *                      ),
@@ -101,7 +101,7 @@ class NotificationsController extends Controller
      *                         example="abdullah-alshawafi"
      *                      ),
      *                      @OA\Property(
-     *                         property="fromBlogUuid",
+     *                         property="fromBlogid",
      *                         type="string/integer",
      *                         example="t:T7U1RijeZIfSsttMS7dYjw"
      *                      ),
@@ -131,6 +131,11 @@ class NotificationsController extends Controller
      *                         type="string",
      *                         example="",
      *                      ),
+     *                      @OA\Property(
+     *                         property="is_anonymous",
+     *                         type="boolean",
+     *                         example=false,
+     *                      ),
      *                  @OA\Property(property="tags[]", type="string", 
      *                          example="['winter','summer']"               
      *                       ),
@@ -152,7 +157,7 @@ class NotificationsController extends Controller
      *                         example="ahmed-abdelhamed"
      *                      ),
      *                      @OA\Property(
-     *                         property="targetTumblelogUuid",
+     *                         property="targetTumblelog_id",
      *                         type="string/integer",
      *                         example="t:nrXV2XvboWHMYIHJGCl"
      *                      ),
@@ -162,7 +167,7 @@ class NotificationsController extends Controller
      *                         example="yousiflasheen"
      *                      ),
      *                      @OA\Property(
-     *                         property="fromTumblelogUuid",
+     *                         property="fromTumblelog_id",
      *                         type="string/integer",
      *                         example="t:T7U1RijeZIfSsttMS7dYjw"
      *                      ),
@@ -191,6 +196,11 @@ class NotificationsController extends Controller
      *                         property="addedText",
      *                         type="string",
      *                         example="hello",
+     *                      ),
+     *                      @OA\Property(
+     *                         property="is_anonymous",
+     *                         type="boolean",
+     *                         example=false,
      *                      ),
      *                  @OA\Property(property="tags[]", type="string", 
      *                          example="['winter']"               

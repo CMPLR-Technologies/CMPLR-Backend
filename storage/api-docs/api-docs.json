@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://my-default-host.com",
+            "url": "http://127.0.0.1:8000",
             "description": "CMPLR API Server"
         }
     ],
@@ -82,7 +82,7 @@
         "user/inbox": {
             "get": {
                 "tags": [
-                    "users"
+                    "user"
                 ],
                 "summary": "the user's inbox",
                 "description": "Retrieve the all asks and  submissions",
@@ -1362,6 +1362,201 @@
                 ]
             }
         },
+        "settings/blog/{blog-identifier}/save": {
+            "put": {
+                "tags": [
+                    "BlogSettings"
+                ],
+                "summary": "save specfic blog setting",
+                "description": "user can save changes in one of its blogs",
+                "operationId": "blogSettingSave",
+                "parameters": [
+                    {
+                        "name": "new_email",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "current_confirm_password",
+                        "in": "query",
+                        "description": "used as confirm_password for change accout email or current password for change password",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "new_password",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "google_login",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "account_activity",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "two-factor_authentication",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "filtered tags",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "winter,summer"
+                    },
+                    {
+                        "name": "filtered post_content",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "enable_endless_scrolling",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "show_badge",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "text_editor",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "message sounds",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "best_stuff_first",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "include_followed_tags_posts",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "tumblr_news",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "conversation_notifications",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "new_example@gmail.com"
+                                    },
+                                    "current_confirm_password": {
+                                        "type": "string",
+                                        "example": "new_pass123"
+                                    },
+                                    "account_activity": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "two_factor_authentication": {
+                                        "type": "boolean",
+                                        "example": false
+                                    },
+                                    "namea": {
+                                        "type": "string",
+                                        "example": "ahmed"
+                                    },
+                                    "Text Editor": {
+                                        "type": "string",
+                                        "example": "Rich text editor"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "sucess"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
         "/notifications": {
             "get": {
                 "tags": [
@@ -1461,7 +1656,7 @@
                                                                 "type": "string",
                                                                 "example": "ahmed-abdelhamed"
                                                             },
-                                                            "targetBlogUuid": {
+                                                            "targetBlog_id": {
                                                                 "type": "string/integer",
                                                                 "example": "t:nrXV2XvboWHMYIHJGCl"
                                                             },
@@ -1469,7 +1664,7 @@
                                                                 "type": "string",
                                                                 "example": "abdullah-alshawafi"
                                                             },
-                                                            "fromBlogUuid": {
+                                                            "fromBlogid": {
                                                                 "type": "string/integer",
                                                                 "example": "t:T7U1RijeZIfSsttMS7dYjw"
                                                             },
@@ -1493,6 +1688,10 @@
                                                             "addedText": {
                                                                 "type": "string",
                                                                 "example": ""
+                                                            },
+                                                            "is_anonymous": {
+                                                                "type": "boolean",
+                                                                "example": false
                                                             },
                                                             "tags[]": {
                                                                 "type": "string",
@@ -4879,7 +5078,7 @@
         "/settings/account": {
             "get": {
                 "tags": [
-                    "Settings"
+                    "UserSettings"
                 ],
                 "summary": "User setting",
                 "description": "Retrieve Account Setting for User.",
@@ -4947,10 +5146,50 @@
                 ]
             }
         },
+        "/settings/account/delete": {
+            "delete": {
+                "tags": [
+                    "UserSettings"
+                ],
+                "summary": "Delete User Account",
+                "description": "This method is used to delete the account of the authenticated user.",
+                "operationId": "deleteAccount",
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "settings/notifications": {
             "post": {
                 "tags": [
-                    "User"
+                    "UserSettings"
                 ],
                 "summary": "Retrieve Notifications Setting for User.",
                 "operationId": "get_notification_setting",
@@ -5078,7 +5317,7 @@
         "/settings/dashboard": {
             "get": {
                 "tags": [
-                    "User"
+                    "UserSettings"
                 ],
                 "summary": "User dashboard setting",
                 "description": "Retrieve DashBoard Setting for User.",
@@ -5111,7 +5350,7 @@
                                                             "type": "Boolean",
                                                             "example": true
                                                         },
-                                                        "show badge": {
+                                                        "show_badge": {
                                                             "type": "Boolean",
                                                             "example": true
                                                         }
@@ -5156,42 +5395,192 @@
                 ]
             }
         },
-        "/settings/account/delete": {
-            "delete": {
+        "setting/account/save": {
+            "put": {
                 "tags": [
-                    "Settings"
+                    "UserSettings"
                 ],
-                "summary": "Delete User Account",
-                "description": "This method is used to delete the account of the authenticated user.",
-                "operationId": "deleteAccount",
+                "summary": "{blog-identifier}/posts/draft",
+                "description": "user can get the draft posts",
+                "operationId": "Drafted_posts",
+                "parameters": [
+                    {
+                        "name": "new_email",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "current_confirm_password",
+                        "in": "query",
+                        "description": "used as confirm_password for change accout email or current password for change password",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "new_password",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "google_login",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "account_activity",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "two-factor_authentication",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "filtered tags",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "winter,summer"
+                    },
+                    {
+                        "name": "filtered post_content",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "enable_endless_scrolling",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "show_badge",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "text_editor",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "message sounds",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "best_stuff_first",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "include_followed_tags_posts",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "tumblr_news",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "conversation_notifications",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "new_example@gmail.com"
+                                    },
+                                    "current_confirm_password": {
+                                        "type": "string",
+                                        "example": "new_pass123"
+                                    },
+                                    "account_activity": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "two_factor_authentication": {
+                                        "type": "boolean",
+                                        "example": false
+                                    },
+                                    "namea": {
+                                        "type": "string",
+                                        "example": "ahmed"
+                                    },
+                                    "Text Editor": {
+                                        "type": "string",
+                                        "example": "Rich text editor"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
                     "401": {
                         "description": "Unauthenticated"
                     },
                     "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "meta": {
-                                            "properties": {
-                                                "status": {
-                                                    "type": "integer",
-                                                    "example": 200
-                                                },
-                                                "msg": {
-                                                    "type": "string",
-                                                    "example": "OK"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "sucess"
                     }
                 }
             }

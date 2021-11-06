@@ -13,7 +13,7 @@ class UsersettingController extends Controller
      * 		summary="User setting",
      * 		description="Retrieve Account Setting for User.",
      * 		operationId="accountSettings",
-     * 		tags={"Settings"},
+     * 		tags={"UserSettings"},
      *
      * @OA\Response(
      *    response=200,
@@ -73,7 +73,7 @@ class UsersettingController extends Controller
      *   summary="Delete User Account",
      *   description="This method is used to delete the account of the authenticated user.",
      *   operationId="deleteAccount",
-     *   tags={"Settings"},
+     *   tags={"UserSettings"},
      *
      *   @OA\Response(
      *     response=401,
@@ -103,7 +103,7 @@ class UsersettingController extends Controller
  *     path="settings/notifications",
  *     summary="Retrieve Notifications Setting for User.",
  * 		operationId="get_notification_setting",
- *     tags={"User"},
+ *     tags={"UserSettings"},
  *  @OA\Response(
  *      response=200,
  *        description = "Url Example: api.tumblr.com/v2/settings/notifications",
@@ -228,7 +228,7 @@ class UsersettingController extends Controller
      * 		summary="User dashboard setting",
      * 		description="Retrieve DashBoard Setting for User.",
      * 		operationId="GEtDashBoardSetting",
-     * 		tags={"User"},
+     * 		tags={"UserSettings"},
      *
      * @OA\Response(
      *    response=200,
@@ -249,7 +249,7 @@ class UsersettingController extends Controller
      *                              example=true
      *                           ),
      *                           @OA\Property(
-     *                              property="show badge",
+     *                              property="show_badge",
      *                              type="Boolean",
      *                              example=true
      *                           ),                               
@@ -287,5 +287,201 @@ class UsersettingController extends Controller
     public function DashboardSetting()
     {
         //
+    }
+
+
+    /**
+     * @OA\PUT(
+     * path="setting/account/save",
+     * summary="{blog-identifier}/posts/draft",
+     * description="user can get the draft posts",
+     * operationId="Drafted_posts",
+     * tags={"UserSettings"},
+     *  @OA\Parameter(
+     *         name="new_email",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="string"
+     *         )
+     *      ),
+     *  @OA\Parameter(
+     *         name="current_confirm_password",
+     *         in="query",
+     *         description="used as confirm_password for change accout email or current password for change password", 
+     *         required=false,
+     *         @OA\Schema(
+     *              type="string",
+     *         )
+     *      ),
+     *  @OA\Parameter(
+     *         name="new_password",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="string"
+     *         )
+     *      ),
+     *  @OA\Parameter(
+     *         name="google_login",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     *  @OA\Parameter(
+     *         name="account_activity",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     *  @OA\Parameter(
+     *         name="two-factor_authentication",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="filtered tags",
+     *         in="query",
+     *         required=false,
+     *         example="winter,summer",
+     *         @OA\Schema(
+     *              type="string"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="filtered post_content",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="string"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="enable_endless_scrolling",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="show_badge",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="text_editor",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="string"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="message sounds",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="best_stuff_first",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="include_followed_tags_posts",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="tumblr_news",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="conversation_notifications",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass user credentials",
+     *    @OA\JsonContent(
+     *       type="object",
+     *    @OA\Property(
+     *       property="email",
+     *       type="string",
+     *       example="new_example@gmail.com"
+     *    ),
+     *    @OA\Property(
+     *       property="current_confirm_password",
+     *       type="string",
+     *       example="new_pass123"
+     *    ),
+     *    @OA\Property(
+     *       property="account_activity",
+     *       type="boolean",
+     *       example=true
+     *    ),
+     *    @OA\Property(
+     *       property="two_factor_authentication",
+     *       type="boolean",
+     *       example=false
+     *    ),
+     * 
+     *    @OA\Property(
+     *       property="namea",
+     *       type="string",
+     *       example="ahmed"
+     *    ),
+     *    @OA\Property(
+     *       property="Text Editor",
+     *       type="string",
+     *       example="Rich text editor"
+     *    ), 
+     *  ),         
+     * ),
+     * @OA\Response(
+     *    response=404,
+     *    description="Not Found",
+     * ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     * @OA\Response(
+     *    response=200,
+     *    description="sucess",
+     *     )
+     * )
+     */
+
+    public function UserSettingSave()
+    {
+
     }
 }

@@ -160,7 +160,202 @@ class BlogSettingController extends Controller
      *  security ={{"bearer":{}}}
      * )
      */
-    public function BlogSetting(){
+    public function BlogSetting()
+    {
+
+    }
+      /**
+     * @OA\PUT(
+     * path="settings/blog/{blog-identifier}/save",
+     * summary="save specfic blog setting",
+     * description="user can save changes in one of its blogs",
+     * operationId="blogSettingSave",
+     * tags={"BlogSetting"},
+     *  @OA\Parameter(
+     *         name="Username",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="string"
+     *         )
+     *      ),
+     *  @OA\Parameter(
+     *         name="likes",
+     *         in="query",
+     *         description="make your likes public at blog_url", 
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean",
+     *         )
+     *      ),
+     *  @OA\Parameter(
+     *         name="following",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     *  @OA\Parameter(
+     *         name="Replies",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="string"
+     *         )
+     *      ),
+     *  @OA\Parameter(
+     *         name="account_activity",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     *  @OA\Parameter(
+     *         name="two-factor_authentication",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="filtered tags",
+     *         in="query",
+     *         required=false,
+     *         example="winter,summer",
+     *         @OA\Schema(
+     *              type="string"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="filtered post_content",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="string"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="enable_endless_scrolling",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="show_badge",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="text_editor",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="string"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="message sounds",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="best_stuff_first",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="include_followed_tags_posts",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="tumblr_news",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     *   @OA\Parameter(
+     *         name="conversation_notifications",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(
+     *              type="boolean"
+     *         )
+     *      ),
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass user credentials",
+     *    @OA\JsonContent(
+     *       type="object",
+     *    @OA\Property(
+     *       property="email",
+     *       type="string",
+     *       example="new_example@gmail.com"
+     *    ),
+     *    @OA\Property(
+     *       property="current_confirm_password",
+     *       type="string",
+     *       example="new_pass123"
+     *    ),
+     *    @OA\Property(
+     *       property="account_activity",
+     *       type="boolean",
+     *       example=true
+     *    ),
+     *    @OA\Property(
+     *       property="two_factor_authentication",
+     *       type="boolean",
+     *       example=false
+     *    ),
+     * 
+     *    @OA\Property(
+     *       property="namea",
+     *       type="string",
+     *       example="ahmed"
+     *    ),
+     *    @OA\Property(
+     *       property="Text Editor",
+     *       type="string",
+     *       example="Rich text editor"
+     *    ), 
+     *  ),         
+     * ),
+     * @OA\Response(
+     *    response=404,
+     *    description="Not Found",
+     * ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     * @OA\Response(
+     *    response=200,
+     *    description="sucess",
+     *     ),
+     *   security ={{"bearer":{}}},
+     * )
+     */
+    public function BlogSettingSave()
+    {
 
     }
 }
