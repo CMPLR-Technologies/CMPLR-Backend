@@ -15,6 +15,7 @@ class CreatePostsTable extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
+            $table->string("blog_name");
             $table->string("type");
             $table->jsonb("content");
             $table->json("layout");
@@ -23,7 +24,6 @@ class CreatePostsTable extends Migration
             $table->string("format");
             $table->string("source_url");
             $table->string("reblog_key")->nullable();
-            $table->string("blog_name");
             $table->integer("blog_id");
             $table->boolean("mobile");
             $table->string("source_title")->nullable();

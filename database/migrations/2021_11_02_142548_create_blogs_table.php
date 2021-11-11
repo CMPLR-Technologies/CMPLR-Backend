@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use phpDocumentor\Reflection\PseudoTypes\False_;
 
 class CreateBlogsTable extends Migration
 {
@@ -15,6 +16,15 @@ class CreateBlogsTable extends Migration
     {
         Schema::create('blogs', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->unique();
+            $table->string('url')->unique();
+            $table->string('title')->nullable();
+            $table->boolean('primary')->default(False);
+            $table->string('type')->nullable();
+            $table->string('password')->nullable();
+            $table->boolean('full_priveleges')->nullable();
+            $table->boolean('contributor_priveleges')->nullable();
+            $table->timestamp('created_at');
             $table->timestamps();
         });
     }
