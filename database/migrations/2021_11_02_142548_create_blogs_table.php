@@ -24,7 +24,6 @@ class CreateBlogsTable extends Migration
             $table->string('password')->nullable();
             $table->boolean('full_priveleges')->nullable();
             $table->boolean('contributor_priveleges')->nullable();
-            $table->timestamp('created_at');
             $table->timestamps();
         });
     }
