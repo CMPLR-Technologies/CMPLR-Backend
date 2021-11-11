@@ -52,9 +52,9 @@ class LoginController extends Controller
             'password'=>'required|string'
         ]);
         
-        if (Auth()->attempt($login_credenials)){
+        if (auth()->attempt($login_credenials)){
             //generate the token for the user 
-            $user_login_token = Auth()->user()->CreateToken('authToken')->accessToken;
+            $user_login_token = auth()->user()->CreateToken('authToken')->accessToken;
 
             //now return this token on success login attempt
             return response()->json(['token'=>$user_login_token, 'user'=>Auth()->user()] ,200);
