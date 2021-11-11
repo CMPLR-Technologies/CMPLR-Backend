@@ -83,6 +83,16 @@ class LoginController extends Controller
      */
     public function Logout()
     {
-        //
+        // checking wether the user is authenticated
+        if (auth()->check()) {
+            //getting user token the revoke it
+            $user_token = auth()->user()->token();
+            $user_token->revoke();
+            return response()->json(['message'=>'Logout Successfully'], 200);
+
+        }else {
+        // wrong login user not authorized to our system error code 401
+             return response()->json(['error' => 'UnAuthorized Access'],401);
+        }
     }
 }
