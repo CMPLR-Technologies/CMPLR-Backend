@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -51,7 +52,7 @@ class LoginController extends Controller
             'email' =>  $request->email,
             'password'=> $request->password
         ];
-        if (auth()->attempt($login_credenials)){
+        if (Auth::attempt($login_credenials)){
             //generate the token for the user 
             $user_login_token = auth()->user()->CreateToken('authToken')->accessToken;
 
@@ -83,6 +84,8 @@ class LoginController extends Controller
     public function Logout()
     {
         // checking wether the user is authenticated
+        
+        
         if (auth()->check()) {
             //getting user token the revoke it
             $user_token = auth()->user()->token();

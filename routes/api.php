@@ -14,8 +14,8 @@ use App\Http\Controllers\Auth\LoginController;
 |
 */
 Route::post('login' , [LoginController::class , 'Login']);
-Route::post('logout' , [LoginController::class , 'Logout']);
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:api')->group(function () {
+    Route::post('logout' , [LoginController::class , 'Logout']);
+
 });
 
