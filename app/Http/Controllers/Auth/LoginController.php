@@ -47,17 +47,16 @@ class LoginController extends Controller
      */
     public function Login(Request $request)
     {
-        $login_credenials = $request->validate([
-            'email' => 'required|string',
-            'password'=>'required|string'
-        ]);
-        
+        $login_credenials = [
+            'email' =>  $request->email,
+            'password'=> $request->password
+        ];
         if (auth()->attempt($login_credenials)){
             //generate the token for the user 
             $user_login_token = auth()->user()->CreateToken('authToken')->accessToken;
 
             //now return this token on success login attempt
-            return response()->json(['token'=>$user_login_token, 'user'=>Auth()->user()] ,200);
+            return response()->json(['token'=>$user_login_token] ,200);
         }else{
             // wrong login user not authorized to our system error code 401
             return response()->json(['error' => 'UnAuthorized Access'],401);
