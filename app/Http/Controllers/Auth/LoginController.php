@@ -38,7 +38,7 @@ class LoginController extends Controller
      * ),
      *   @OA\Response(
      *      response=401,
-     *       description="Unauthenticated",
+     *       description="UnAuthorized Access",
      *   ),
      * @OA\Response(
      *    response=200,
@@ -77,15 +77,13 @@ class LoginController extends Controller
      * ),
      *   @OA\Response(
      *      response=401,
-     *       description="Unauthenticated",
+     *       description="UnAuthorized Access",
      *   ),
      * )
      */
     public function Logout()
     {
         // checking wether the user is authenticated
-        
-        
         if (auth()->check()) {
             //getting user token the revoke it
             $user_token = auth()->user()->token();
