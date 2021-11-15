@@ -16,25 +16,10 @@ use \App\Models\Blog;
 class RegisterController extends Controller
 {
 
-   public function ValidateRegister(Request $request)
+   public function ValidateRegister(RegisterRequest $request)
    {
-      $validator = Validator::make($request->all(), [
-         'blog_name' => ['required','unique:blogs','max:255'],
-         'email' => ['required','email','unique:users','max:255'],
-         'password' => ['required','string',Password::min(8) 
-                                             ->mixedCase()     
-                                             ->letters()
-                                             ->numbers()
-                                             ->symbols()
-                                             ->uncompromised()],
-         ]);
-
-         if ($validator->fails()) {
-              return response()->json(['error'=>$validator->errors()], 401);
-         }
-        
-         return response()->json(['response'=>$request->email],200);
-   }
+      return response()->json(['response' => $request->email], 200);
+   } 
 
 
    /**
@@ -94,22 +79,22 @@ class RegisterController extends Controller
       } catch (\Exception $exception) {
          return response()->json(['error' => 'Error While creating'], 400);
       }
-    
+
       try {
          $blog = Blog::create([
             'blog_name' => $request->blog_name,
             'url' => 'https' . $request->blog_name . 'tumblr.com',
          ]);
-      } catch (\Throwable $th) {
+      } catch (\Exception $exception) {
          return response()->json(['error' => 'Error While creating'], 400);
       }
-   
+
       $request['token'] = $user->createToken('tumblr_token')->accessToken;
       $request['blog_name'] = $blog->blog_name;
 
-      if (Auth::attempt($request->only('email','age','password'))) 
-      {
-         return new RegisterResource($request);
+      if (Auth::attempt($request->only('email', 'age', 'password'))) {
+         $resource =  new RegisterResource($request);
+         return $resource->response()->setStatusCode(201);
       }
 
       return response()->json(['error' => 'Error While Registeration'], 400);

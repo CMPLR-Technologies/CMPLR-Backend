@@ -6,6 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class RegisterResource extends JsonResource
 {
+    
     /**
      * Transform the resource into an array.
      *
@@ -16,7 +17,7 @@ class RegisterResource extends JsonResource
     {
         return [
             'meta'=>[
-                'status'=>201,
+                'status'=>'201',
                 'msg'=>'successfully created'
             ],
             "response"=>[

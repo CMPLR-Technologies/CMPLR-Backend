@@ -37,7 +37,7 @@ class ForgetPasswordController extends Controller
 
     public function ForgetPassword(Request $request)
     {
-
+       
         $email = $request -> input('email');
 
         if(User::where('email',$email)->doesntExist()){
@@ -68,40 +68,5 @@ class ForgetPasswordController extends Controller
             ],400);
         }
     }
-
-
-    public function reset(Request $request)
-    {
-        $token = $request->input('token');
-        $email = $request->input('email');
-        if (!$passwordResets = DB::table('password_resets')->where('token',$token)->first()){
-            return response([
-                'message'=>'Invalid token'
-            ],400);
-        }
-        if(!$passwordResets = DB::table('password_resets')->where('email',$email)->first())
-        {
-            return response([
-                'message'=>'Invalid user'
-            ],400); 
-        }
-
-        if(!$user = User::where('email',$passwordResets->email))
-        {
-            return response([
-                'message'=>'User doesn\'t exist'
-            ],404);
-        }
-
-        $user->password=Hash::make($request->input('password'));
-        $user->save();
-        $passwordResets = DB::table('password_resets')->where('token',$token)->delete();
-        return response([
-            'message'=>'success'
-        ]);
-
-    }
-
-
 
 }
