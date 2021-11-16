@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Blog;
+use App\Models\BlogUser;
+use Illuminate\Support\Facades\Auth;
+use app\Models\User;
 
-class UserBlogConroller extends Controller
+class UserBlogController extends Controller
 {
     /**
      * @OA\Post(
@@ -26,7 +30,7 @@ class UserBlogConroller extends Controller
      *  @OA\Parameter(
      *         name="Privacy",
      *         in="query",
-     *         required=false,
+     *         required=true,
      *      ),
      *  @OA\Parameter(
      *         name="Password",
@@ -62,14 +66,31 @@ class UserBlogConroller extends Controller
      * )
      */
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    
+    public function create(Request $request)
     {
-        //
+
+        $this->validate($request,[
+            'title'=>'required',
+            'url'=>'required',
+            'privacy'=>'required',
+            'password'=>'required_if:privacy,true'
+        ]);
+
+        $blog=Blog::create([
+            'title'=>$request->title,
+            'url'=>$request->url,
+            'privacy'=>$request->privacy,
+            'password'=>$request->password
+        ]);
+
+        $blog->Users()->create([
+            'user_id'=>auth()->id(),
+            'primary'=>'true',
+            'full_privileges'=>'true',
+            'contributor_privileges'=>'false'
+        ]);
+
     }
 
     /**
@@ -221,8 +242,8 @@ class UserBlogConroller extends Controller
      *     )
      * )
      */
-    public function destroy($id)
+    public function destroy()
     {
-        //
+        dd('hi delete blog');
     }
 }

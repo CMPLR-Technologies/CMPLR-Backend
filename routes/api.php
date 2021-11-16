@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserBlogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,5 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Create/Delete blog
-Rout::post('/blog',[UserBlogController::class,'create']);
-Rout::delete('/blog','UserBlogController@destroy');
+Route::post('/blog',[UserBlogController::class,'create']);
+Route::delete('/blog',[UserBlogController::class,'destroy']);
