@@ -18,34 +18,40 @@ class UserBlogController extends Controller
      * operationId="Create",
      * tags={"Blogs"},
      *  @OA\Parameter(
-     *         name="Title",
+     *         name="title",
      *         in="query",
      *         required=true,
      *      ),
      *  @OA\Parameter(
-     *         name="Url",
+     *         name="url",
      *         in="query",
      *         required=true,
      *      ),
      *  @OA\Parameter(
-     *         name="Privacy",
+     *         name="privacy",
      *         in="query",
      *         required=true,
      *      ),
      *  @OA\Parameter(
-     *         name="Password",
+     *         name="password",
      *         in="query",
      *         required=false,
+     *      ),
+     *  @OA\Parameter(
+     *         name="primary",
+     *         in="query",
+     *         required=true,
      *      ),
      * @OA\RequestBody(
      *    required=true,
      *    description="Pass user credentials",
      *    @OA\JsonContent(
-     *       required={"Title"},
-     *       @OA\Property(property="Title", type="string", format="text", example="Summer_Blog"),
+     *       required={"title"},
+     *       @OA\Property(property="title", type="string", format="text", example="Summer_Blog"),
      *       @OA\Property(property="url", type="string", format="url", example="example.tumblr.com"),
-     *       @OA\Property(property="Privacy", type="boolean", example="true"),
-     *       @OA\Property(property="Password", type="string",format="Password", example="pass123"),
+     *       @OA\Property(property="privacy", type="boolean", example="true"),
+     *       @OA\Property(property="primary", type="boolean", example="false"),
+     *       @OA\Property(property="password", type="string",format="Password", example="pass123"),
      *    ),
      * ),
      * @OA\Response(
@@ -66,7 +72,7 @@ class UserBlogController extends Controller
      * )
      */
 
-    
+    //this function creates a new blog and 
     public function create(Request $request)
     {
 
@@ -74,7 +80,8 @@ class UserBlogController extends Controller
             'title'=>'required',
             'url'=>'required',
             'privacy'=>'required',
-            'password'=>'required_if:privacy,true'
+            'password'=>'required_if:privacy,true',
+            'primary'=>'required'
         ]);
 
         $blog=Blog::create([
@@ -85,8 +92,8 @@ class UserBlogController extends Controller
         ]);
 
         $blog->Users()->create([
-            'user_id'=>auth()->id(),
-            'primary'=>'true',
+            // 'user_id'=>auth()->id(),
+            'primary'=>$request->primary,
             'full_privileges'=>'true',
             'contributor_privileges'=>'false'
         ]);
@@ -200,18 +207,18 @@ class UserBlogController extends Controller
 
     /**
      * @OA\Delete(
-     * path="/blog",
+     * path="/blog/{url}",
      * summary="Delete Specific Blog",
      * description="User Delete Specific Blog ",
      * operationId="Delete",
      * tags={"Blogs"},
      *  @OA\Parameter(
-     *         name="Email",
+     *         name="email",
      *         in="query",
      *         required=true,
      *      ),
      *  @OA\Parameter(
-     *         name="Password",
+     *         name="password",
      *         in="query",
      *         required=true,
      *      ),
@@ -219,9 +226,9 @@ class UserBlogController extends Controller
      *    required=true,
      *    description="Pass user credentials",
      *    @OA\JsonContent(
-     *       required={"Email","Password"},
-     *       @OA\Property(property="Email", type="string", format="email", example="Email@gmail.com"),
-     *       @OA\Property(property="Password", type="string", format="Password", example="Password123"),
+     *       required={"email","password"},
+     *       @OA\Property(property="email", type="string", format="email", example="Email@gmail.com"),
+     *       @OA\Property(property="password", type="string", format="Password", example="Password123"),
      *    ),
      * ),
      * @OA\Response(
@@ -242,8 +249,13 @@ class UserBlogController extends Controller
      *     )
      * )
      */
-    public function destroy()
+
+    //this method deletes a specific blog 
+    public function destroy($url,Request $request)
     {
-        dd('hi delete blog');
+        $blog=Blog::where('url',$url)->first();
+        $this->authorize('delete',$blog,$request);
+        $blog->delete();
+
     }
 }
