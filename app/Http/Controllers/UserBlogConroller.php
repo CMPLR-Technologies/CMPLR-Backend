@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 
-class UserblogConroller extends Controller
+class UserBlogConroller extends Controller
 {
     /**
      * @OA\Post(
@@ -124,9 +125,9 @@ class UserblogConroller extends Controller
      * 
      * )
      */
-    public function follow()
+    public function follow(Request $request)
     {
-        //
+        
     }
 
     /**
