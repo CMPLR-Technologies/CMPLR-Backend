@@ -130,7 +130,7 @@ class UserBlogConroller extends Controller
     {
         $blog=Blog::where('url',$request->url)->first();
         if($blog->Followers.contains('user_id',auth()->id()))
-            return 0;
+            return response(null,409);
         $blog->Followers()->create([
             'user_id'=>auth()->id()
         ]);
@@ -178,9 +178,12 @@ class UserBlogConroller extends Controller
      * 
      * )
      */
-    public function unfollow()
+    public function unfollow(Request $request)
     {
-        //
+        $blog=Blog::where('url',$request->url)->first();
+        if(!$blog->Followers.contains('user_id',auth()->id()))
+            return response(null,409);
+        $blog->Followers()->where('user_id',auth()->id())->delete;
     }
 
 
