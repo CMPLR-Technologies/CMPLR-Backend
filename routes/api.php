@@ -14,13 +14,13 @@ use App\Http\Controllers\Auth\EmailVerificationController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+
 Route::post('login' , [LoginController::class , 'Login']);
+Route::post('logout' , [LoginController::class , 'Logout'])->middleware('auth:api');
 
 Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail'])->middleware('auth:api');
 Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])->name('verification.verify')->middleware('auth:api');
 
-Route::middleware('auth:api')->group(function () {
-    Route::post('logout' , [LoginController::class , 'Logout']);
-
-});
+Route::middleware('auth:api')->group(function () {});
 
