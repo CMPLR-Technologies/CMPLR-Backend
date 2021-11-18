@@ -1,14 +1,20 @@
 <?php
 
 namespace App\Http\Requests\Auth;
-
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\validation\Rules\Password;
+use App\Http\Misc\Helpers\Errors;
+use Elegant\Sanitizer\Laravel\SanitizesInput;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\validation\Rules\Password;
 
 class RegisterRequest extends FormRequest
 {
+
+    use SanitizesInput;
+    
+
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -17,6 +23,18 @@ class RegisterRequest extends FormRequest
     public function authorize()
     {
         return true;
+    }
+
+    
+    /**
+     * filtering that apply to the request
+     */
+    public function filters()
+    {
+        return [
+            'email' => ['trim','lowercase'],
+            'blog_name'=>['trim','lowercase']
+        ];
     }
 
     /**
@@ -35,7 +53,6 @@ class RegisterRequest extends FormRequest
                                                         ->numbers()
                                                         ->symbols()
                                                         ->uncompromised()],
-            'age' => ['required', 'integer', 'between:16,120'],
         ];
     }
 
@@ -53,10 +70,11 @@ class RegisterRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'meta'=>[
                 'status'=>422,
-                'msg' => ""
+                'msg' => '',
             ],
-            'error' => $validator->errors(),
+            'error' => $validator->errors()->all(),
         ], 422));
+        
     }
 
 

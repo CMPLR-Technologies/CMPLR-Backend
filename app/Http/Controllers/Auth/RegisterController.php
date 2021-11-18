@@ -3,22 +3,40 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\validation\Rules\Password;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Resources\Auth\RegisterResource;
 use \App\Models\User;
 use \App\Models\Blog;
+use App\Notifications\WelcomeEmailNotification;
+use App\Services\Auth\RegisterService;
 
 class RegisterController extends Controller
 {
+   /*
+    |--------------------------------------------------------------------------
+    | Register Controller
+    |--------------------------------------------------------------------------|
+    | This controller handles the registration of new users as well as their
+    | validation and creation.
+    |
+   */
+  protected $RegisterService;
+
+  /**
+   * Instantiate a new controller instance.
+   *
+   * @return void
+   */
+  public function __construct(RegisterService $RegisterService)
+  {
+      $this->RegisterService = $RegisterService;
+  }
 
    public function ValidateRegister(RegisterRequest $request)
    {
-      return response()->json(['response' => $request->email], 200);
+      return $this->success_response((['email'=> $request->email]));
    } 
 
 
@@ -70,33 +88,32 @@ class RegisterController extends Controller
     */
    public function Register(RegisterRequest $request)
    {
-      try {
-         $user = User::create([
-            'email' => $request->email,
-            'age' => $request->age,
-            'password' => Hash::make($request->password)
-         ]);
-      } catch (\Exception $exception) {
-         return response()->json(['error' => 'Error While creating'], 400);
-      }
+    
+      $user = $this->RegisterService->CreateUser($request->email, $request->age,$request->password);
+      
+      if(!$user)
+         return $this->error_response('Error While creating',500);
+         
 
-      try {
-         $blog = Blog::create([
-            'blog_name' => $request->blog_name,
-            'url' => 'https' . $request->blog_name . 'tumblr.com',
-         ]);
-      } catch (\Exception $exception) {
-         return response()->json(['error' => 'Error While creating'], 400);
-      }
+      $blog = $this->RegisterService->CreateBlog($request->blog_name);
 
-      $request['token'] = $user->createToken('tumblr_token')->accessToken;
+      if(!$blog)
+         return $this->error_response('Error While creating',500);
+
+      $generate_token = $this->RegisterService->GenerateToken($user);
+      
+      if(!$generate_token)
+         return $this->error_response('Error Generating Token',500);
+
       $request['blog_name'] = $blog->blog_name;
+      $request['token'] = $user->token();
 
       if (Auth::attempt($request->only('email', 'age', 'password'))) {
          $resource =  new RegisterResource($request);
+         $user->notify(new WelcomeEmailNotification());
          return $resource->response()->setStatusCode(201);
       }
 
-      return response()->json(['error' => 'Error While Registeration'], 400);
+      return $this->error_response('Error While creating',500);
    }
 }

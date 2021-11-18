@@ -3,21 +3,39 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ResetPasswordMail;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Mail\Message;
+
 use Illuminate\Support\Facades\Mail;
+use App\Services\Auth\ForgetPasswordService;
+use App\Http\Misc\Helpers\Errors;
 
 class ForgetPasswordController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Password Reset Controller
+    |--------------------------------------------------------------------------
+    |
+    | This controller is responsible for handling password 
+    | reset for user's Account 
+    | 
+    |
+    */
+
+    protected $ForgetPasswordService;
+
     /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(ForgetPasswordService $ForgetPasswordService)
+    {
+        $this->ForgetPasswordService = $ForgetPasswordService;
+    }
+  
+     /**
      * @OA\Get(
      * path="/forgot_password",
      * summary="forget password for existing user",
@@ -34,39 +52,23 @@ class ForgetPasswordController extends Controller
      *   ),
      * )
      */
-
     public function ForgetPassword(Request $request)
     {
        
-        $email = $request -> input('email');
+        if (!$this->ForgetPasswordService->CheckIfExist($request->email)) 
+            return $this->error_response(Errors::NOT_FOUND_USER,404);
+        
+        $token = $this->ForgetPasswordService->AddToken($request->email);
 
-        if(User::where('email',$email)->doesntExist()){
-            return response([
-                'message'=>'User doesn\'t exist!'
-            ],404);
-        }
-        $token = Str::random(30);
+        if($token == null)
+            return $this->error_response(Errors::GENERATE_TOKEN,400);
 
-        try {
-            DB::table('password_resets')->insert([
-                'email' => $email,
-                'token' => $token
-            ]);
-            Mail::send('emails.demoEmail',
-                ['token' => $token],
-                function (Message $message) use ($email) {
-                    $message->to($email);
-                    $message->subject('Reset your password');
-            });
 
-            return response([
-                'message'=>'Check your email'
-            ]);
-        } catch(\Exception $exception){
-            return response ([
-                'message'=>$exception->getMessage()
-            ],400);
-        }
+        if(!$this->ForgetPasswordService->SendResetPasswordMail($request->email , $token))
+            return $this->error_response(Errors::ERROR_MAIL,500);
+
+        return $this->success_response('Check your email',200);
     }
-
+    
+ 
 }

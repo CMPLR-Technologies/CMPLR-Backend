@@ -2,10 +2,8 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use Faker\Generator as Faker;
-use function PHPUnit\Framework\assertJson;
 use App\Models\User;
+use Tests\TestCase;
 
 class ResgisterTest extends TestCase
 {
