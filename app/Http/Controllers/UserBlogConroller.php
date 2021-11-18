@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Blog;
 
 class UserBlogConroller extends Controller
 {
@@ -127,7 +128,12 @@ class UserBlogConroller extends Controller
      */
     public function follow(Request $request)
     {
-        
+        $blog=Blog::where('url',$request->url)->first();
+        if($blog->Followers.contains('user_id',auth()->id()))
+            return 0;
+        $blog->Followers()->create([
+            'user_id'=>auth()->id()
+        ]);
     }
 
     /**
