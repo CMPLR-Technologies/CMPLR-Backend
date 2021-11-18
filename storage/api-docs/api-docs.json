@@ -403,7 +403,29 @@
                         "description": "UnAuthorized Access"
                     },
                     "200": {
-                        "description": "Login Successfully"
+                        "description": "Login Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "required": [
+                                        "user"
+                                    ],
+                                    "properties": {
+                                        "user": {
+                                            "type": "string",
+                                            "format": "text",
+                                            "example": "{user data}"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "format": "text",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzIiwianRpIjoiZTlmMWFiZTdhYjgyYzI2NzU4YTkxNzgzOWUzMTBhMDQwNWI0YzU5M2ZmNmJmNmQwZDA1MzQyZjczMTc2MGM1ZTFhYmFmMjc2MDYzOTE4MDAiLCJpYXQiOjE2MzcyNTM5NzEuMjY0ODQ1LCJuYmYiOjE2MzcyNTM5NzEuMjY0ODcxLCJleHAiOjE2Njg3ODk5NzEuMTMyNTE2LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.m9s768g6BZQN53a1RC1fhvAqWCLR9l_9Y6INMcqFa72KBfuxgUE5ach1QA0NzCrM8ZZOryQNvl7rhpuLsvSx3YuVQARt8VXTjqT_MfqRhwIy8Xl1M9LQ95tJtTt3Z0OPh2Uc1rbyUv4QjRSOf0hYjOpxE5N0Wpd1HcZ5FidM1jKvQUcXOkoE2HafcG9KLAE19_Lm7FcH1T4gsx7jsQ5ACfgEkFxr-w66JXcRa9jVLKbTnA2KENm6YJPiLsjmtnwadSThY2dOqvM7EYEk45P-bHU-OMxFwF7NFsNKSC9vC8cM1PN3cyzJISo0vK-OWMmx8qbcz9b36LK4ucoel1XhatvXGw_APzyqz1LC7vK6Ojesv2ipafV7MVFLNxmXorDmjyFWo7_2uH_Kb3atAocyAaf6B7Q9PnkyiVKoLikJDz6bncigsM3a3_m0lZey_ESUkBi2fz1blHkkNWnTr-phJxKBBvncyg6VrKJe2CugGZ2j4QWh4tFMEunpvIJWZ8h7niKEIi-kPLN5VbFtcqxIIM4YDZEtpik_2ghh-73NCPXi6gfzWLisszaUpGMgrltfU3isGsXZVSmseb2HBdQv9OA4Y5w9P4oHVMvKiOVyIv3r-SKNxm9c-Vfxzc26KqgP3mC_ZmtR-2l0xPTcWzm2_0pTXFfj5C_XYEqNL3ktLwc"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
