@@ -400,7 +400,7 @@
                 },
                 "responses": {
                     "401": {
-                        "description": "Unauthenticated"
+                        "description": "UnAuthorized Access"
                     },
                     "200": {
                         "description": "Login Successfully"
@@ -421,7 +421,7 @@
                         "description": "Logout Successfully"
                     },
                     "401": {
-                        "description": "Unauthenticated"
+                        "description": "UnAuthorized Access"
                     }
                 }
             }

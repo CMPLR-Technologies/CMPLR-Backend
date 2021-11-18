@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\EmailVerificationController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +15,10 @@ use App\Http\Controllers\Auth\LoginController;
 |
 */
 Route::post('login' , [LoginController::class , 'Login']);
+
+Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail'])->middleware('auth:api');
+Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])->name('verification.verify')->middleware('auth:api');
+
 Route::middleware('auth:api')->group(function () {
     Route::post('logout' , [LoginController::class , 'Logout']);
 
