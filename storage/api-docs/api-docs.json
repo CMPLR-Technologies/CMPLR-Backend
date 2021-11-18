@@ -400,10 +400,32 @@
                 },
                 "responses": {
                     "401": {
-                        "description": "Unauthenticated"
+                        "description": "UnAuthorized Access"
                     },
                     "200": {
-                        "description": "Login Successfully"
+                        "description": "Login Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "required": [
+                                        "user"
+                                    ],
+                                    "properties": {
+                                        "user": {
+                                            "type": "string",
+                                            "format": "text",
+                                            "example": "{user data}"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "format": "text",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzIiwianRpIjoiZTlmMWFiZTdhYjgyYzI2NzU4YTkxNzgzOWUzMTBhMDQwNWI0YzU5M2ZmNmJmNmQwZDA1MzQyZjczMTc2MGM1ZTFhYmFmMjc2MDYzOTE4MDAiLCJpYXQiOjE2MzcyNTM5NzEuMjY0ODQ1LCJuYmYiOjE2MzcyNTM5NzEuMjY0ODcxLCJleHAiOjE2Njg3ODk5NzEuMTMyNTE2LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.m9s768g6BZQN53a1RC1fhvAqWCLR9l_9Y6INMcqFa72KBfuxgUE5ach1QA0NzCrM8ZZOryQNvl7rhpuLsvSx3YuVQARt8VXTjqT_MfqRhwIy8Xl1M9LQ95tJtTt3Z0OPh2Uc1rbyUv4QjRSOf0hYjOpxE5N0Wpd1HcZ5FidM1jKvQUcXOkoE2HafcG9KLAE19_Lm7FcH1T4gsx7jsQ5ACfgEkFxr-w66JXcRa9jVLKbTnA2KENm6YJPiLsjmtnwadSThY2dOqvM7EYEk45P-bHU-OMxFwF7NFsNKSC9vC8cM1PN3cyzJISo0vK-OWMmx8qbcz9b36LK4ucoel1XhatvXGw_APzyqz1LC7vK6Ojesv2ipafV7MVFLNxmXorDmjyFWo7_2uH_Kb3atAocyAaf6B7Q9PnkyiVKoLikJDz6bncigsM3a3_m0lZey_ESUkBi2fz1blHkkNWnTr-phJxKBBvncyg6VrKJe2CugGZ2j4QWh4tFMEunpvIJWZ8h7niKEIi-kPLN5VbFtcqxIIM4YDZEtpik_2ghh-73NCPXi6gfzWLisszaUpGMgrltfU3isGsXZVSmseb2HBdQv9OA4Y5w9P4oHVMvKiOVyIv3r-SKNxm9c-Vfxzc26KqgP3mC_ZmtR-2l0xPTcWzm2_0pTXFfj5C_XYEqNL3ktLwc"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -421,7 +443,7 @@
                         "description": "Logout Successfully"
                     },
                     "401": {
-                        "description": "Unauthenticated"
+                        "description": "UnAuthorized Access"
                     }
                 }
             }
@@ -2316,7 +2338,7 @@
                     }
                 ],
                 "requestBody": {
-                    "description": "Api Example : api.tumblr.com/v1/blog/{blog-identifier}/notifications <br/>\n     *    Available types include:\\n <br/>\n     *      all : get all notifications  <br/>\n     *      like:\tA like on your post <br/>\n     *      reply:\tA reply on your post <br/>\n     *      follow:\tA new follower <br/>\n     *      mention_in_reply:\tA mention of your blog in a reply <br/>\n     *      mention_in_post:\tA mention of your blog in a post <br/>\n     *      reblog_naked:\tA reblog of your post, without commentary <br/>\n     *      reblog_with_content:\tA reblog of your post, with commentary <br/>\n     *      ask:\tA new ask received <br/>\n     *      answered_ask:\tAn answered ask that you had sent <br/>\n     *      new_group_blog_member:\tA new member of your group blog <br/>\n     *      post_flagged:\tA post of yours being flagged <br/>\n     *      conversational_note\tA conversational note (reply, reblog with comment) on a post you're watching",
+                    "description": "Api Example : api.tumblr.com/v1/blog/{blog-identifier}/notifications <br/>\r\n     *    Available types include:\\n <br/>\r\n     *      all : get all notifications  <br/>\r\n     *      like:\tA like on your post <br/>\r\n     *      reply:\tA reply on your post <br/>\r\n     *      follow:\tA new follower <br/>\r\n     *      mention_in_reply:\tA mention of your blog in a reply <br/>\r\n     *      mention_in_post:\tA mention of your blog in a post <br/>\r\n     *      reblog_naked:\tA reblog of your post, without commentary <br/>\r\n     *      reblog_with_content:\tA reblog of your post, with commentary <br/>\r\n     *      ask:\tA new ask received <br/>\r\n     *      answered_ask:\tAn answered ask that you had sent <br/>\r\n     *      new_group_blog_member:\tA new member of your group blog <br/>\r\n     *      post_flagged:\tA post of yours being flagged <br/>\r\n     *      conversational_note\tA conversational note (reply, reblog with comment) on a post you're watching",
                     "required": true,
                     "content": {
                         "application/json": {

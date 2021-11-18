@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -37,17 +38,36 @@ class LoginController extends Controller
      * ),
      *   @OA\Response(
      *      response=401,
-     *       description="Unauthenticated",
+     *       description="UnAuthorized Access",
      *   ),
      * @OA\Response(
      *    response=200,
      *    description="Login Successfully",
+     *      @OA\JsonContent(
+     *       required={"token"},
+     *       required={"user"},
+     *       @OA\Property(property="user", type="string", format="text", example="{user data}"),
+     *       @OA\Property(property="token", type="string",format="text", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzIiwianRpIjoiZTlmMWFiZTdhYjgyYzI2NzU4YTkxNzgzOWUzMTBhMDQwNWI0YzU5M2ZmNmJmNmQwZDA1MzQyZjczMTc2MGM1ZTFhYmFmMjc2MDYzOTE4MDAiLCJpYXQiOjE2MzcyNTM5NzEuMjY0ODQ1LCJuYmYiOjE2MzcyNTM5NzEuMjY0ODcxLCJleHAiOjE2Njg3ODk5NzEuMTMyNTE2LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.m9s768g6BZQN53a1RC1fhvAqWCLR9l_9Y6INMcqFa72KBfuxgUE5ach1QA0NzCrM8ZZOryQNvl7rhpuLsvSx3YuVQARt8VXTjqT_MfqRhwIy8Xl1M9LQ95tJtTt3Z0OPh2Uc1rbyUv4QjRSOf0hYjOpxE5N0Wpd1HcZ5FidM1jKvQUcXOkoE2HafcG9KLAE19_Lm7FcH1T4gsx7jsQ5ACfgEkFxr-w66JXcRa9jVLKbTnA2KENm6YJPiLsjmtnwadSThY2dOqvM7EYEk45P-bHU-OMxFwF7NFsNKSC9vC8cM1PN3cyzJISo0vK-OWMmx8qbcz9b36LK4ucoel1XhatvXGw_APzyqz1LC7vK6Ojesv2ipafV7MVFLNxmXorDmjyFWo7_2uH_Kb3atAocyAaf6B7Q9PnkyiVKoLikJDz6bncigsM3a3_m0lZey_ESUkBi2fz1blHkkNWnTr-phJxKBBvncyg6VrKJe2CugGZ2j4QWh4tFMEunpvIJWZ8h7niKEIi-kPLN5VbFtcqxIIM4YDZEtpik_2ghh-73NCPXi6gfzWLisszaUpGMgrltfU3isGsXZVSmseb2HBdQv9OA4Y5w9P4oHVMvKiOVyIv3r-SKNxm9c-Vfxzc26KqgP3mC_ZmtR-2l0xPTcWzm2_0pTXFfj5C_XYEqNL3ktLwc"),
+     *    ),
      * ),
      * )
      */
     public function Login(Request $request)
     {
-        //
+        $login_credenials =$request->validate([
+            'email' =>  'email|required',
+            'password'=> 'required'
+        ]);
+        if (auth()->attempt($login_credenials)){
+            //generate the token for the user 
+            $user_login_token = auth()->user()->CreateToken('authToken')->accessToken;
+
+            //now return this token on success login attempt
+            return response()->json(['user'=>auth()->user(), 'token'=>$user_login_token] ,200);
+        }else{
+            // wrong login user not authorized to our system error code 401
+            return response()->json(['error' => 'UnAuthorized Access'],401);
+        }
     }
 
     /**
@@ -63,12 +83,22 @@ class LoginController extends Controller
      * ),
      *   @OA\Response(
      *      response=401,
-     *       description="Unauthenticated",
+     *       description="UnAuthorized Access",
      *   ),
      * )
      */
     public function Logout()
     {
-        //
+        // checking wether the user is authenticated
+        if (auth()->check()) {
+            //getting user token the revoke it
+            $user_token = auth()->user()->token();
+            $user_token->revoke();
+            return response()->json(['message'=>'Logout Successfully'], 200);
+
+        }else {
+        // wrong login user not authorized to our system error code 401
+             return response()->json(['error' => 'UnAuthorized Access'],401);
+        }
     }
 }
