@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Blog;
 use App\Models\BlogUser;
 use Illuminate\Support\Facades\Auth;
-use app\Models\User;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserBlogController extends Controller
 {
@@ -253,9 +254,12 @@ class UserBlogController extends Controller
     //this method deletes a specific blog 
     public function destroy($url,Request $request)
     {
+        $this->validate($request,[
+            'email'=>'required|email',
+            'password'=>'required'
+        ]);
         $blog=Blog::where('url',$url)->first();
         $this->authorize('delete',$blog,$request);
         $blog->delete();
-
     }
 }
