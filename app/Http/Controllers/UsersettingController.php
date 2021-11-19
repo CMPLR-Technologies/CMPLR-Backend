@@ -68,9 +68,8 @@ class UsersettingController extends Controller
     public function AccountSettings()
     {
         $user = Auth::user();
-        echo $user->id;
-        $data = User::where('id',$user->id)->first()->only(['name','id',]);
-        return $this->success_response($data); 
+        $data = User::where('id', $user->id)->first()->only(['email', 'login_options', 'email_activity_check', 'TFA', 'filtered_tags', 'filtering_content']);
+        return $this->success_response($data);
     }
 
     /**
@@ -224,7 +223,10 @@ class UsersettingController extends Controller
      */
     public function NotificationSetting()
     {
-        //
+        $user = Auth::user();
+        $data = User::where('id', $user->id)->first()
+                ->only(['email', 'login_options', 'email_activity_check', 'TFA', 'filtered_tags', 'filtering_content']);
+        return $this->success_response($data);
     }
 
 
@@ -293,7 +295,10 @@ class UsersettingController extends Controller
      */
     public function DashboardSetting()
     {
-        //
+        $user = Auth::user();
+        $data = User::where('id', $user->id)->first()
+                ->only(['endless_scrolling', 'show_badge', 'text_editor', 'msg_sound', 'best_stuff_first', 'include_followed_tags']);
+        return $this->success_response($data);
     }
 
 
