@@ -1,32 +1,29 @@
 <?php
 
 namespace App\Http\Misc\Traits;
+
+use App\Http\Misc\Helpers\Errors;
 use App\Http\Misc\Helpers\Success;
 trait WebServiceResponse
 {
     public function success_response($response,$code =200)
     {
-        return $this->general_response($response, "Success", $code);
+        return $this->general_response($status_code = $code, $msg ="Success", $data = $response);
     }
 
-    public function dummy_response($message)
-    {
-        return $this->general_response(['message' => $message], "", 200);
-    }
-
-    public function error_response($error, $code = 422)
+    public function error_response($msg,$error,$code = 400)
     { 
-        return $this->general_response("", $error, $code);
+        return $this->general_response($code, $msg, $error,'error');
     }
 
-    private function general_response($data = "", $msg = "", $status_code = 200)
+    private function general_response($status_code = 200  , $msg = "", $data = "", $type='response')
     {
         return response()->json([
             "meta"  => [
                 "status_code"   => $status_code,
                 "msg"  => $msg
             ],
-            "response" => $data,
+            $type => $data,
         ], $status_code);
     }
 }

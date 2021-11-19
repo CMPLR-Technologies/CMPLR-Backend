@@ -29,6 +29,7 @@ class ResetPasswordMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('Emails.ResetPassowrdMail')->with(['token'=>$this->token]);
+        
+        return $this->subject('Reset Password')->markdown('Emails.ResetPassowrdMail')->with(['token'=>$this->token]);
     }
 }

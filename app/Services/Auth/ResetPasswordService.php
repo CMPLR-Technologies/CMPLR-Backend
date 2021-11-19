@@ -20,7 +20,7 @@ class ResetPasswordService
      * 
      * @return User
      */
-    public function GetUser(string $email): User
+    public function GetUser(string $email)
     {
         $user = User::where('email', $email)->first();
         return $user;

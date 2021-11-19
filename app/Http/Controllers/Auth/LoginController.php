@@ -52,23 +52,23 @@ class LoginController extends Controller
      * ),
      * )
      */
-    public function Login(Request $request)
-    {
-        $login_credenials =$request->validate([
-            'email' =>  'email|required',
-            'password'=> 'required'
-        ]);
-        if (auth()->attempt($login_credenials)){
-            //generate the token for the user 
-            $user_login_token = auth()->user()->CreateToken('authToken')->accessToken;
+    // public function Login(Request $request)
+    // {
+    //     $login_credenials =$request->validate([
+    //         'email' =>  'email|required',
+    //         'password'=> 'required'
+    //     ]);
+    //     if (auth()->attempt($login_credenials)){
+    //         //generate the token for the user 
+    //         $user_login_token = auth()->user()->CreateToken('authToken')->accessToken;
 
-            //now return this token on success login attempt
-            return response()->json(['user'=>auth()->user(), 'token'=>$user_login_token] ,200);
-        }else{
-            // wrong login user not authorized to our system error code 401
-            return response()->json(['error' => 'UnAuthorized Access'],401);
-        }
-    }
+    //         //now return this token on success login attempt
+    //         return response()->json(['user'=>auth()->user(), 'token'=>$user_login_token] ,200);
+    //     }else{
+    //         // wrong login user not authorized to our system error code 401
+    //         return response()->json(['error' => 'UnAuthorized Access'],401);
+    //     }
+    // }
 
     /**
      * @OA\Post(
@@ -87,18 +87,18 @@ class LoginController extends Controller
      *   ),
      * )
      */
-    public function Logout()
-    {
-        // checking wether the user is authenticated
-        if (auth()->check()) {
-            //getting user token the revoke it
-            $user_token = auth()->user()->token();
-            $user_token->revoke();
-            return response()->json(['message'=>'Logout Successfully'], 200);
+    // public function Logout()
+    // {
+    //     // checking wether the user is authenticated
+    //     if (auth()->check()) {
+    //         //getting user token the revoke it
+    //         $user_token = auth()->user()->token();
+    //         $user_token->revoke();
+    //         return response()->json(['message'=>'Logout Successfully'], 200);
 
-        }else {
-        // wrong login user not authorized to our system error code 401
-             return response()->json(['error' => 'UnAuthorized Access'],401);
-        }
-    }
+    //     }else {
+    //     // wrong login user not authorized to our system error code 401
+    //          return response()->json(['error' => 'UnAuthorized Access'],401);
+    //     }
+    // }
 }

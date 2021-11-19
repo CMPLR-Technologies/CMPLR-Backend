@@ -16,14 +16,20 @@ class RegisterService{
      * @param string $password
      * @return User
      */
-    public function CreateUser(string $email, int $age, string $password):User
+    public function CreateUser(string $email, int $age, string $password)
     {
-        $user = User::create([
-            'email' => $email,
-            'age' => $age,
-            'password' => Hash::make($password)
-        ]);
+        try {
+            $user = User::create([
+                'email' => $email,
+                'age' => $age,
+                'password' => Hash::make($password)
+            ]);
+        } catch (\Throwable $th) {
+            return null;
+        }
         return $user;
+        
+        
     }
 
      /**
@@ -33,13 +39,17 @@ class RegisterService{
      * 
      * @return Blog
      */
-    public function CreateBlog(string $blog_name):Blog
+    public function CreateBlog(string $blog_name)
     {
-        $blog_url = 'https' . $blog_name . 'tumblr.com';
-        $blog = Blog::create([
-            'blog_name' => $blog_name,
-            'url' => $blog_url,
-        ]);
+        try {
+            $blog_url = 'https' . $blog_name . 'tumblr.com';
+            $blog = Blog::create([
+                'blog_name' => $blog_name,
+                'url' => $blog_url,
+            ]);
+        } catch (\Throwable $th) {
+            return null;
+        }
         return $blog;
     }
 
@@ -57,7 +67,7 @@ class RegisterService{
             return false;
         else
         {
-            //Generate the access to the user 
+            //Generate the accessToken to the user 
             $token = $user->createToken('User_access_token')->accessToken;
             $user->withAccessToken($token);
             return true;

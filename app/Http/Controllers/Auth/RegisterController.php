@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Misc\Helpers\Errors;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Resources\Auth\RegisterResource;
-use \App\Models\User;
-use \App\Models\Blog;
 use App\Notifications\WelcomeEmailNotification;
 use App\Services\Auth\RegisterService;
 
@@ -22,22 +20,25 @@ class RegisterController extends Controller
     | validation and creation.
     |
    */
-  protected $RegisterService;
+   protected $RegisterService;
 
-  /**
-   * Instantiate a new controller instance.
-   *
-   * @return void
-   */
-  public function __construct(RegisterService $RegisterService)
-  {
+   /**
+    * Instantiate a new controller instance.
+    *
+    * @return void
+    */
+   public function __construct(RegisterService $RegisterService)
+   {
       $this->RegisterService = $RegisterService;
-  }
+   }
 
+   /**
+   * This Function used to validate  
+   */
    public function ValidateRegister(RegisterRequest $request)
    {
-      return $this->success_response((['email'=> $request->email]));
-   } 
+      return $this->success_response((['email' => $request->email]));
+   }
 
 
    /**
@@ -88,32 +89,32 @@ class RegisterController extends Controller
     */
    public function Register(RegisterRequest $request)
    {
-    
-      $user = $this->RegisterService->CreateUser($request->email, $request->age,$request->password);
-      
-      if(!$user)
-         return $this->error_response('Error While creating',500);
-         
+
+      $user = $this->RegisterService->CreateUser($request->email, $request->age, $request->password);
+
+      if (!$user)
+         return $this->error_response(Errors::ERROR_MSGS_500,'Error While creating',500);
+
 
       $blog = $this->RegisterService->CreateBlog($request->blog_name);
 
-      if(!$blog)
-         return $this->error_response('Error While creating',500);
+      if (!$blog)
+         return $this->error_response(Errors::ERROR_MSGS_500,'Error While creating',500);
 
       $generate_token = $this->RegisterService->GenerateToken($user);
-      
-      if(!$generate_token)
-         return $this->error_response('Error Generating Token',500);
+
+      if (!$generate_token)
+         return $this->error_response(Errors::ERROR_MSGS_500,'Error Generating Token',500);
 
       $request['blog_name'] = $blog->blog_name;
       $request['token'] = $user->token();
 
       if (Auth::attempt($request->only('email', 'age', 'password'))) {
-         $resource =  new RegisterResource($request);
          $user->notify(new WelcomeEmailNotification());
-         return $resource->response()->setStatusCode(201);
+         $resource =  new RegisterResource($request);
+         return $this->success_response($resource,201);
       }
 
-      return $this->error_response('Error While creating',500);
+      return $this->error_response(Errors::ERROR_MSGS_500,'Error While creating',$code= 500);
    }
 }

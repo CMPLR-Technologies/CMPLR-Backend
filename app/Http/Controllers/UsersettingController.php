@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UsersettingController extends Controller
 {
@@ -63,8 +65,12 @@ class UsersettingController extends Controller
      * )
      */
 
-    public function accountSettings()
+    public function AccountSettings()
     {
+        $user = Auth::user();
+        echo $user->id;
+        $data = User::where('id',$user->id)->first()->only(['name','id',]);
+        return $this->success_response($data); 
     }
 
     /**

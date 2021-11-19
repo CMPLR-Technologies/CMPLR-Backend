@@ -7,6 +7,8 @@ use App\Http\Controllers\Auth\ForgetPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\UsersettingController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -34,3 +36,5 @@ Route::post('email/verification-notification', [EmailVerificationController::cla
 Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])->name('verification.verify')->middleware('auth:api');
 
 Route::middleware('auth:api')->group(function () {});
+
+Route::middleware('auth:api')->get('/settings/account',[UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
