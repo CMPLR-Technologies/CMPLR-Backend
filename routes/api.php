@@ -18,6 +18,14 @@ use App\Http\Controllers\Auth\EmailVerificationController;
 |
 */
 
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
+
+//Follow/Unfollow blog
+Route::post('/user/follow','App\Http\Controllers\UserBlogConroller@follow');
+Route::delete('/user/follow','App\Http\Controllers\UserBlogConroller@unfollow');
 
 
 

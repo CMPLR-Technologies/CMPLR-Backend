@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Blog;
+use Illuminate\Support\Facades\Auth;
 
-class UserblogConroller extends Controller
+
+class UserBlogConroller extends Controller
 {
     /**
      * @OA\Post(
@@ -124,9 +128,14 @@ class UserblogConroller extends Controller
      * 
      * )
      */
-    public function follow()
+    public function follow(Request $request)
     {
-        //
+        $blog=Blog::where('url',$request->url)->first();
+        if($blog->followedBy(auth()->user()))
+            return response(null,409);
+        $blog->Followers()->create([
+            'user_id'=>auth()->id()
+        ]);
     }
 
     /**
@@ -171,9 +180,12 @@ class UserblogConroller extends Controller
      * 
      * )
      */
-    public function unfollow()
+    public function unfollow(Request $request)
     {
-        //
+        $blog=Blog::where('url',$request->url)->first();
+        if(!$blog->FollowedBy(auth()->user()))
+            return response(null,409);
+        $blog->Followers()->where('user_id',auth()->id())->delete();
     }
 
 
