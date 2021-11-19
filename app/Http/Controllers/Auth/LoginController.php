@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-use Illuminate\Support\Facades\Auth;
+
 use App\Services\Auth\LoginService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -15,16 +15,16 @@ class LoginController extends Controller
     | This controller handles Login and Logout of existing users 
     |
    */
-    protected $LoginService;
+    protected $loginService;
 
     /**
      * Instantiate a new controller instance.
      *
      * @return void
      */
-    public function __construct(LoginService $LoginService)
+    public function __construct(LoginService $loginService)
     {
-        $this->LoginService = $LoginService;
+        $this->loginService = $loginService;
     }
     /**
      * @OA\Post(
@@ -76,9 +76,9 @@ class LoginController extends Controller
             'email' =>  'email|required',
             'password'=> 'required'
         ]);
-        if ($this->LoginService->CheckUserAuthorized($loginCredenials)){
+        if ($this->loginService->CheckUserAuthorized($loginCredenials)){
             //generate the token for the user 
-            $userLoginToken = $this->LoginService->CreateUserToken(auth()->user());
+            $userLoginToken = $this->loginService->CreateUserToken(auth()->user());
 
             //now return this token on success login attempt
             return response()->json(['user'=>auth()->user(), 'token'=>$userLoginToken] ,200);
@@ -108,10 +108,10 @@ class LoginController extends Controller
     public function Logout()
     {
         // checking wether the user is authenticated
-        if ($this->LoginService->CheckUserAuthenticated()) {
+        if ($this->loginService->CheckUserAuthenticated()) {
 
             //getting user token the revoke it
-            $this->LoginService->RevokeUserToken(auth()->user());
+            $this->loginService->RevokeUserToken(auth()->user());
             
             return response()->json(['message'=>'Logout Successfully'], 200);
 
