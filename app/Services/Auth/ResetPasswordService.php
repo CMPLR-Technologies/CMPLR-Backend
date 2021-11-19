@@ -2,11 +2,8 @@
 
 namespace App\Services\Auth;
 
-use Illuminate\Support\Str;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\ResetPasswordMail;
 use Illuminate\Support\Facades\Hash;
 
 class ResetPasswordService
@@ -20,7 +17,7 @@ class ResetPasswordService
      * 
      * @return User
      */
-    public function GetUser(string $email): User
+    public function GetUser(string $email)
     {
         $user = User::where('email', $email)->first();
         return $user;
@@ -43,7 +40,22 @@ class ResetPasswordService
             return true;    
     }
 
+      /**
+     *  set the new password for user and delete the token  
+     *
+     * if new password matches old password return false
+     * @param string $old_password (current_user->password)
+     * @param string $newpassword
+     * 
+     * @return bool
+     */
+    public function CheckPassword(string $old_Password, string $new_password): bool
+    {   
+        if (Hash::check($new_password, $old_Password)) 
+            return false;
 
+        return true;    
+    }
  
     /**
      *  set the new password for user and delete the token  

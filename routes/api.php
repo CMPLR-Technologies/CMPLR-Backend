@@ -7,7 +7,12 @@ use App\Http\Controllers\Auth\ForgetPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\EmailVerificationController;
+
 use App\Http\Controllers\UserBlogController;
+use App\Http\Controllers\UsersettingController;
+use App\Http\Controllers\Auth\GoogleController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -43,9 +48,19 @@ Route::post('logout' , [LoginController::class , 'Logout'])->middleware('auth:ap
 Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail'])->middleware('auth:api');
 Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])->name('verification.verify')->middleware('auth:api');
 
-Route::middleware('auth:api')->group(function () {});
+// setting routes
+Route::middleware('auth:api')->group(function () {
+    Route::get('/settings/account',[UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
+    Route::get('/settings/dashboard',[UsersettingController::class, 'DashboardSetting'])->name('GetDashboardSetting');
+});
+
+
+
+Route::get('auth/google', [GoogleController::class, 'redirectToGoogle']);
+Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
 
 // Create/Delete blog
 Route::post('/blog',[UserBlogController::class,'create']);
 Route::delete('/blog/{url}',[UserBlogController::class,'destroy']);
+

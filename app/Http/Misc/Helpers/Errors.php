@@ -40,5 +40,14 @@ class Errors
 
     // SentMail
     const ERROR_MAIL = "Error while Sending Mail";
+
+    // codes errors
+    const ERROR_MSGS_422 = "Unprocessable Entity";
+    const ERROR_MSGS_401 = "UNAUTHORIZED USER";
+    const ERROR_MSGS_400 = "Invalid Data";
+    const ERROR_MSGS_500 = "Internal Server Error";
+
+    //Duplicate Password
+    const DUPLICATE_PASSWORD = "New Password Cannot be Equal Old Password";
 }
 

@@ -24,10 +24,11 @@ class CreateUsersTable extends Migration
             $table->integer('following_count')->nullable();
             $table->integer('likes_count')->nullable();
             $table->string('default_post_format')->nullable();
-            $table->string('login_options')->nullable();
-            $table->boolean('email_activity_check')->nullable();
-            $table->boolean('TFA')->nullable();
+            $table->boolean('login_options')->default(false);
+            $table->boolean('email_activity_check')->default(true);
+            $table->boolean('TFA')->default(false);
             $table->json('filtered_tags')->nullable();
+            $table->json('filtering_content')->nullable();
             $table->boolean('endless_scrolling')->nullable();
             $table->boolean('show_badge')->nullable();
             $table->string('text_editor')->nullable();
@@ -36,7 +37,6 @@ class CreateUsersTable extends Migration
             $table->boolean('include_followed_tags')->nullable();
             $table->boolean('tumblr_news')->nullable();
             $table->boolean('conversational_notification')->nullable();
-            $table->json('filtering_content')->nullable();
             $table->string('google_id')->nullable();
             $table->rememberToken();
             $table->timestamps();

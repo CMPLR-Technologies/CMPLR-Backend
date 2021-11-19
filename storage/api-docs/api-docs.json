@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://127.0.0.1:8000",
+            "url": "http://my-default-host.com",
             "description": "CMPLR API Server"
         }
     ],
@@ -297,57 +297,6 @@
                     },
                     "404": {
                         "description": "Not Found"
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "reset password for existing user",
-                "description": "User can reset password for existing email",
-                "operationId": "resetPassword",
-                "parameters": [
-                    {
-                        "name": "Email",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully sent email to reset password"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    }
-                }
-            }
-        },
-        "/user/resend_verification_email": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "resend verification email for the user",
-                "description": "User can get verification for existing email",
-                "operationId": "resendVerificationEmail",
-                "responses": {
-                    "200": {
-                        "description": "Successfully sent email to reset password",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Email sent to yousef.elftah00@eng-st.cu.edu.eg!"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -6948,13 +6897,6 @@
                         }
                     }
                 }
-            }
-        }
-    },
-    "components": {
-        "responses": {
-            "401": {
-                "description": "Unauthenticated"
             }
         }
     },
