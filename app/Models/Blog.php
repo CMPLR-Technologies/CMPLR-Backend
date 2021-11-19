@@ -11,7 +11,11 @@ class Blog extends Model
 
     protected $fillable =[
         'blog_name',
-        'url'
+        'url',
+        'title',
+        'url',
+        'privacy',
+        'password'
     ];
 
     public function Followers()
@@ -22,6 +26,11 @@ class Blog extends Model
     public function FollowedBy(User $user)
     {
         return $this->Followers->contains('user_id',$user->id);
+    }
+
+    public function Users()
+    {
+        return $this->hasMany(BlogUser::class);
     }
 
 }
