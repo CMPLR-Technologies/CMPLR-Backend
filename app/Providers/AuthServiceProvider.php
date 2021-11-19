@@ -31,7 +31,7 @@ class AuthServiceProvider extends ServiceProvider
 
          // call passport:routes() here
             Passport::routes();
-        }
+        
         VerifyEmail::toMailUsing(function ($notifiable, $url) {
             $spaUrl = "http://spa.test?email_verify_url=".$url;
 
