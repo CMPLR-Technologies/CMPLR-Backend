@@ -9,7 +9,10 @@ class Blog extends Model
 {
     use HasFactory;
 
-
+    protected $fillable =[
+        'blog_name',
+        'url'
+    ];
 
     public function Followers()
     {

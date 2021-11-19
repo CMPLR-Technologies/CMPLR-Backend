@@ -7,11 +7,13 @@
     "require": {
         "php": "^7.3|^8.0",
         "darkaonline/l5-swagger": "^8.0",
+        "elegantweb/sanitizer": "^1.1",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.65",
         "laravel/passport": "^10.2",
         "laravel/sanctum": "^2.11",
+        "laravel/socialite": "^5.2",
         "laravel/tinker": "^2.5"
     },
     "require-dev": {
