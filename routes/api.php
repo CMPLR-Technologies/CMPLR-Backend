@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\Auth\ForgetPasswordController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\ForgetPasswordController;
-use App\Http\Controllers\Auth\ResetPasswordController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\EmailVerificationController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes

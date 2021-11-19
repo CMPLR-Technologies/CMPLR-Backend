@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Requests\Auth;
-use App\Http\Misc\Helpers\Errors;
 use Elegant\Sanitizer\Laravel\SanitizesInput;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;

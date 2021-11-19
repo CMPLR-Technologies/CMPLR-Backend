@@ -2,12 +2,12 @@
 
 namespace App\Services\Auth;
 
-use Illuminate\Support\Str;
+use App\Mail\ResetPasswordMail;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ResetPasswordMail;
-use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class ForgetPasswordService
 {

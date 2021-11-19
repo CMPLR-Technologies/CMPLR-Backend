@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 
 class BlogSettingController extends Controller
 {
@@ -12,7 +11,7 @@ class BlogSettingController extends Controller
    * 		path="/blog/{Blog identifier}/settings/",
    * 		summary="Blog setting",
    * 		description="Retrieve Blog Setting for User.",
-   * 		operationId="GEtBlogSetting",
+   * 		operationId="getBlogSetting",
    * 		tags={"BlogSetting"},
    *
    * @OA\Response(
@@ -160,7 +159,7 @@ class BlogSettingController extends Controller
    *  security ={{"bearer":{}}}
    * )
    */
-  public function BlogSetting()
+  public function getBlogSetting()
   {
   }
   /**

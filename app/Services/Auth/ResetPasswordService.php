@@ -2,11 +2,8 @@
 
 namespace App\Services\Auth;
 
-use Illuminate\Support\Str;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\ResetPasswordMail;
 use Illuminate\Support\Facades\Hash;
 
 class ResetPasswordService

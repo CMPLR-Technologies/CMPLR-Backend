@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://127.0.0.1:8000",
+            "url": "http://localhost:8000",
             "description": "CMPLR API Server"
         }
     ],
@@ -297,57 +297,6 @@
                     },
                     "404": {
                         "description": "Not Found"
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "reset password for existing user",
-                "description": "User can reset password for existing email",
-                "operationId": "resetPassword",
-                "parameters": [
-                    {
-                        "name": "Email",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully sent email to reset password"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    }
-                }
-            }
-        },
-        "/user/resend_verification_email": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "resend verification email for the user",
-                "description": "User can get verification for existing email",
-                "operationId": "resendVerificationEmail",
-                "responses": {
-                    "200": {
-                        "description": "Successfully sent email to reset password",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Email sent to yousef.elftah00@eng-st.cu.edu.eg!"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -4449,6 +4398,293 @@
                 }
             }
         },
+        "/blog": {
+            "post": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Create new Blog",
+                "description": "User create new Blog ",
+                "operationId": "Create",
+                "parameters": [
+                    {
+                        "name": "Title",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "Url",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "Privacy",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "Password",
+                        "in": "query",
+                        "required": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "Title"
+                                ],
+                                "properties": {
+                                    "Title": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "Summer_Blog"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": "example.tumblr.com"
+                                    },
+                                    "Privacy": {
+                                        "type": "boolean",
+                                        "example": "true"
+                                    },
+                                    "Password": {
+                                        "type": "string",
+                                        "format": "Password",
+                                        "example": "pass123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created Successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Invalid Data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Blog url is not available!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Delete Specific Blog",
+                "description": "User Delete Specific Blog ",
+                "operationId": "Delete",
+                "parameters": [
+                    {
+                        "name": "Email",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "Password",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "Email",
+                                    "Password"
+                                ],
+                                "properties": {
+                                    "Email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "Email@gmail.com"
+                                    },
+                                    "Password": {
+                                        "type": "string",
+                                        "format": "Password",
+                                        "example": "Password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "msg": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "That password is incorrect. Please try again"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/follow": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Follow a blog",
+                "description": "enable the user to follow a blog using the blog Email or URL",
+                "operationId": "UserFollow",
+                "parameters": [
+                    {
+                        "name": "url",
+                        "in": "query",
+                        "description": "the url of the blog to follow",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "The email of the blog to follow",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "url",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "url": {
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": "http://wwww.something.com"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "name@something.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
+        },
+        "/user/unfollow": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Unfollow a blog",
+                "description": "enable the user to Unfollow a blog using the blog URL",
+                "operationId": "UserUnfollow",
+                "parameters": [
+                    {
+                        "name": "url",
+                        "in": "query",
+                        "description": "the url of the blog to unfollow",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "url"
+                                ],
+                                "properties": {
+                                    "url": {
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": "http://wwww.something.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
+        },
         "/user/info": {
             "get": {
                 "tags": [
@@ -5811,293 +6047,6 @@
                 ]
             }
         },
-        "/blog": {
-            "post": {
-                "tags": [
-                    "Blogs"
-                ],
-                "summary": "Create new Blog",
-                "description": "User create new Blog ",
-                "operationId": "Create",
-                "parameters": [
-                    {
-                        "name": "Title",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "name": "Url",
-                        "in": "query",
-                        "required": false
-                    },
-                    {
-                        "name": "Privacy",
-                        "in": "query",
-                        "required": false
-                    },
-                    {
-                        "name": "Password",
-                        "in": "query",
-                        "required": false
-                    }
-                ],
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "Title"
-                                ],
-                                "properties": {
-                                    "Title": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "Summer_Blog"
-                                    },
-                                    "url": {
-                                        "type": "string",
-                                        "format": "url",
-                                        "example": "example.tumblr.com"
-                                    },
-                                    "Privacy": {
-                                        "type": "boolean",
-                                        "example": "true"
-                                    },
-                                    "Password": {
-                                        "type": "string",
-                                        "format": "Password",
-                                        "example": "pass123"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Created Successfully"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "422": {
-                        "description": "Invalid Data",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Blog url is not available!"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Blogs"
-                ],
-                "summary": "Delete Specific Blog",
-                "description": "User Delete Specific Blog ",
-                "operationId": "Delete",
-                "parameters": [
-                    {
-                        "name": "Email",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "name": "Password",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "Email",
-                                    "Password"
-                                ],
-                                "properties": {
-                                    "Email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "Email@gmail.com"
-                                    },
-                                    "Password": {
-                                        "type": "string",
-                                        "format": "Password",
-                                        "example": "Password123"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "successful"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "msg": {
-                                            "type": "integer",
-                                            "example": 403
-                                        },
-                                        "status": {
-                                            "type": "string",
-                                            "example": "That password is incorrect. Please try again"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/user/follow": {
-            "post": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Follow a blog",
-                "description": "enable the user to follow a blog using the blog Email or URL",
-                "operationId": "UserFollow",
-                "parameters": [
-                    {
-                        "name": "url",
-                        "in": "query",
-                        "description": "the url of the blog to follow",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "The email of the blog to follow",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "url",
-                                    "email"
-                                ],
-                                "properties": {
-                                    "url": {
-                                        "type": "string",
-                                        "format": "url",
-                                        "example": "http://wwww.something.com"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "name@something.com"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "404": {
-                        "description": "Not Found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "200": {
-                        "description": "success"
-                    }
-                }
-            }
-        },
-        "/user/unfollow": {
-            "post": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Unfollow a blog",
-                "description": "enable the user to Unfollow a blog using the blog URL",
-                "operationId": "UserUnfollow",
-                "parameters": [
-                    {
-                        "name": "url",
-                        "in": "query",
-                        "description": "the url of the blog to unfollow",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "url"
-                                ],
-                                "properties": {
-                                    "url": {
-                                        "type": "string",
-                                        "format": "url",
-                                        "example": "http://wwww.something.com"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "404": {
-                        "description": "Not Found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "200": {
-                        "description": "success"
-                    }
-                }
-            }
-        },
         "/user/like": {
             "post": {
                 "tags": [
@@ -6948,13 +6897,6 @@
                         }
                     }
                 }
-            }
-        }
-    },
-    "components": {
-        "responses": {
-            "401": {
-                "description": "Unauthenticated"
             }
         }
     },

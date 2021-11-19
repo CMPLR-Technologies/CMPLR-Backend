@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateFollowsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('follows', function (Blueprint $table) {
@@ -21,11 +16,6 @@ class CreateFollowsTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('follows');
