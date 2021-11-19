@@ -3,13 +3,10 @@
 
 namespace App\Http\Misc\Helpers;
 
-use GrahamCampbell\ResultType\Result;
 use Illuminate\Container\Container;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Http\Resources\MissingValue;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Collection;
 
 class CollectionHelper
 {

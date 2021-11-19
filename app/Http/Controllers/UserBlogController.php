@@ -2,17 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Blog;
-use App\Models\BlogUser;
-use Illuminate\Support\Facades\Auth;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-Use App\Services\Blog\CreateBlogService;
-Use App\Services\Blog\DeleteBlogService;
-Use App\Services\Blog\FollowBlogService;
-Use App\Services\Blog\UnfollowBlogService;
-use CreateBlogsTable;
+use App\Services\Blog\CreateBlogService;
+use App\Services\Blog\DeleteBlogService;
+use App\Services\Blog\FollowBlogService;
+use App\Services\Blog\UnfollowBlogService;
+use Illuminate\Http\Request;
 
 class UserBlogController extends Controller
 {

@@ -2,12 +2,7 @@
 
 namespace App\Services\Blog;
 
-use Illuminate\Http\Request;
 use App\Models\Blog;
-use App\Models\BlogUser;
-use Illuminate\Support\Facades\Auth;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 
 class CreateBlogService{
 

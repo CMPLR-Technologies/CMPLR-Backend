@@ -2,8 +2,7 @@
 
 namespace App\Http\Misc\Traits;
 
-use App\Http\Misc\Helpers\Errors;
-use App\Http\Misc\Helpers\Success;
+
 trait WebServiceResponse
 {
     public function success_response($response,$code =200)

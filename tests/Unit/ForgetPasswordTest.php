@@ -2,11 +2,10 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase; 
+use App\Models\User; 
 use App\Services\Auth\ForgetPasswordService;
-use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use Tests\TestCase;
 
 class ForgetPasswordTest extends TestCase
 {

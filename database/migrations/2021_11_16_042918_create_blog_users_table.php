@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateBlogUsersTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('blog_users', function (Blueprint $table) {
@@ -24,11 +19,6 @@ class CreateBlogUsersTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('blog_users');

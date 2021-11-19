@@ -2,14 +2,11 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase; 
+use App\Models\User; 
 use App\Services\Auth\ResetPasswordService;
-use App\Models\User;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-
-use function PHPUnit\Framework\assertTrue;
+use Tests\TestCase;
 
 class ResetPasswordTest extends TestCase
 {

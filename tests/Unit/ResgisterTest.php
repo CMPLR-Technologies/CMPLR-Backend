@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use App\Models\User;
 use Tests\TestCase;
 
 class ResgisterTest extends TestCase
