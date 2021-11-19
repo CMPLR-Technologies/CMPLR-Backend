@@ -3,8 +3,9 @@
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\ForgetPasswordController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\UserBlogController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,8 +26,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 //Follow/Unfollow blog
-Route::post('/user/follow','App\Http\Controllers\UserBlogConroller@follow');
-Route::delete('/user/follow','App\Http\Controllers\UserBlogConroller@unfollow');
+Route::post('/user/follow', 'App\Http\Controllers\UserBlogConroller@follow');
+Route::delete('/user/follow', 'App\Http\Controllers\UserBlogConroller@unfollow');
 
 
 
@@ -36,10 +37,16 @@ Route::post('/forgot_password', [ForgetPasswordController::class, 'ForgetPasswor
 Route::post('/reset-password', [ResetPasswordController::class, 'ResetPassword'])->name('password.reset');
 Route::get('/reset-password/{token}', [ResetPasswordController::class, 'GetResetPassword'])->name('password.reset');
 
-Route::post('login' , [LoginController::class , 'Login']);
-Route::post('logout' , [LoginController::class , 'Logout'])->middleware('auth:api');
+Route::post('login', [LoginController::class, 'Login']);
+Route::post('logout', [LoginController::class, 'Logout'])->middleware('auth:api');
 
 Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail'])->middleware('auth:api');
 Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])->name('verification.verify')->middleware('auth:api');
 
-Route::middleware('auth:api')->group(function () {});
+Route::middleware('auth:api')->group(function () {
+});
+
+
+// Create/Delete blog
+Route::post('/blog', [UserBlogController::class, 'create']);
+Route::delete('/blog/{url}', [UserBlogController::class, 'destroy']);
