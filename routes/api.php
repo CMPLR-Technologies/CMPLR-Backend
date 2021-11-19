@@ -30,7 +30,7 @@ Route::get('/reset-password/{token}', [ResetPasswordController::class, 'GetReset
 Route::post('login' , [LoginController::class , 'Login']);
 Route::post('logout' , [LoginController::class , 'Logout'])->middleware('auth:api');
 
-Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail'])->name('verification.send')->middleware('auth:api');
-Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])->name('verification.verify')->middleware('auth:api');
+Route::post('email/verification-notification', [EmailVerificationController::class, 'SendVerificationEmail'])->name('verification.send')->middleware('auth:api');
+Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'Verify'])->name('verification.verify')->middleware('auth:api');
 
 Route::middleware('auth:api')->group(function () {});

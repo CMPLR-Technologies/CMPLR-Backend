@@ -28,7 +28,7 @@ class EmailVerificationController extends Controller
         $this->emailVerificationService = $emailVerificationService;
     }
 
-    public function sendVerificationEmail (Request $request )
+    public function SendVerificationEmail (Request $request )
     {
         // chcking wether the user already verified the email
             if ($this->emailVerificationService->IsEmailVerified($request->user())) {
@@ -40,7 +40,7 @@ class EmailVerificationController extends Controller
             return response()->json(['message'=>'Email Verification sent'],200);
     }
 
-    public function verify(EmailVerificationRequest $request)
+    public function Verify(EmailVerificationRequest $request)
     {
         // checking wether the email is already verified 
         if ($this->emailVerificationService->IsEmailVerified($request->user())) {
