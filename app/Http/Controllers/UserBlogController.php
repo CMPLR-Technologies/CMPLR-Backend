@@ -38,20 +38,14 @@ class UserBlogController extends Controller
      *         in="query",
      *         required=false,
      *      ),
-     *  @OA\Parameter(
-     *         name="primary",
-     *         in="query",
-     *         required=true,
-     *      ),
      * @OA\RequestBody(
      *    required=true,
      *    description="Pass user credentials",
      *    @OA\JsonContent(
-     *       required={"title"},
+     *       required={"title","url"},
      *       @OA\Property(property="title", type="string", format="text", example="Summer_Blog"),
      *       @OA\Property(property="url", type="string", format="url", example="example.tumblr.com"),
      *       @OA\Property(property="privacy", type="boolean", example="true"),
-     *       @OA\Property(property="primary", type="boolean", example="false"),
      *       @OA\Property(property="password", type="string",format="Password", example="pass123"),
      *    ),
      * ),
@@ -75,26 +69,31 @@ class UserBlogController extends Controller
 
     //this function creates a new blog and 
     public function create(Request $request)
-    {
+    {        
+        Auth::attempt(['email' => $request->email, 'password' => $request->pass]);
 
         $this->validate($request,[
             'title'=>'required',
             'url'=>'required',
             'privacy'=>'required',
             'password'=>'required_if:privacy,true',
-            'primary'=>'required'
         ]);
 
+        $primary=false;
+        if(auth()->user()->Blogs->isEmpty())
+            $primary=true;
+
+        
         $blog=Blog::create([
             'title'=>$request->title,
             'url'=>$request->url,
             'privacy'=>$request->privacy,
-            'password'=>$request->password
+            'password'=>$request->password,
         ]);
 
         $blog->Users()->create([
-            // 'user_id'=>auth()->id(),
-            'primary'=>$request->primary,
+            'user_id'=>auth()->id(),
+            'primary'=>$primary,
             'full_privileges'=>'true',
             'contributor_privileges'=>'false'
         ]);
@@ -254,12 +253,30 @@ class UserBlogController extends Controller
     //this method deletes a specific blog 
     public function destroy($url,Request $request)
     {
+        Auth::attempt(['email' => $request->email, 'password' => $request->pass]);
+
         $this->validate($request,[
             'email'=>'required|email',
             'password'=>'required'
         ]);
+
+
         $blog=Blog::where('url',$url)->first();
-        $this->authorize('delete',$blog,$request);
+        
+        $this->authorize('delete',[$blog,$request]);
+        
+        $pUser=User::find($blog->Users->where('primary',true)->first()->user_id);
+        if($pUser!=null)
+        {
+            $pBlogsId=$pUser->Blogs()->get('blog_id')->pluck('blog_id')->toArray();
+            $pUser->delete();
+            $pBlogs=Blog::all()->whereIn('id',$pBlogsId);
+            foreach($pBlogs as $pblog)
+            {
+                if($pblog->Users->isEmpty())
+                    $pblog->delete();
+            }
+        }
         $blog->delete();
     }
 }
