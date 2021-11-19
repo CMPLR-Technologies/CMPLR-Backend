@@ -20,4 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 //Follow/Unfollow blog
-Route::post('/user/follow','app\Http\Controllers\UserBlogConroller@follow');
+Route::post('/user/follow','App\Http\Controllers\UserBlogConroller@follow');
+Route::delete('/user/follow','App\Http\Controllers\UserBlogConroller@unfollow');

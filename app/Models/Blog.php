@@ -16,4 +16,9 @@ class Blog extends Model
         return $this->hasMany(Follow::class);
     }
 
+    public function FollowedBy(User $user)
+    {
+        return $this->Followers->contains('user_id',$user->id);
+    }
+
 }
