@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Services\Auth\LoginService;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Services\Auth\LoginService;
+use App\Http\Requests\Auth\LoginRequest;
 
 class LoginController extends Controller
 {
@@ -70,12 +70,12 @@ class LoginController extends Controller
      * ),
      * )
      */
-    public function Login(Request $request)
+    public function Login(LoginRequest $request)
     {
-        $loginCredenials =$request->validate([
-            'email' =>  'email|required',
-            'password'=> 'required'
-        ]);
+        $loginCredenials =[
+            'email' =>  $request->email,
+            'password'=>  $request->password
+        ];
         if ($this->loginService->CheckUserAuthorized($loginCredenials)){
             //generate the token for the user 
             $userLoginToken = $this->loginService->CreateUserToken(auth()->user());
