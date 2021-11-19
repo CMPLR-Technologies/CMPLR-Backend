@@ -9,6 +9,7 @@ use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Resources\Auth\RegisterResource;
 use App\Notifications\WelcomeEmailNotification;
 use App\Services\Auth\RegisterService;
+use Illuminate\Auth\Events\Registered;
 
 class RegisterController extends Controller
 {
@@ -89,13 +90,13 @@ class RegisterController extends Controller
     */
    public function Register(RegisterRequest $request)
    {
-
+  
       $user = $this->RegisterService->CreateUser($request->email, $request->age, $request->password);
 
       if (!$user)
          return $this->error_response(Errors::ERROR_MSGS_500,'Error While creating',500);
 
-
+    
       $blog = $this->RegisterService->CreateBlog($request->blog_name);
 
       if (!$blog)
@@ -109,9 +110,11 @@ class RegisterController extends Controller
       $request['blog_name'] = $blog->blog_name;
       $request['token'] = $user->token();
 
+      // check if user is created
       if (Auth::attempt($request->only('email', 'age', 'password'))) {
-         $user->notify(new WelcomeEmailNotification());
-         $resource =  new RegisterResource($request);
+        // $user->notify(new WelcomeEmailNotification());
+        event(new Registered($user)); 
+        $resource =  new RegisterResource($request);
          return $this->success_response($resource,201);
       }
 

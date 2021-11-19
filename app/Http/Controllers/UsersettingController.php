@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Blog;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -225,7 +226,8 @@ class UsersettingController extends Controller
     {
         $user = Auth::user();
         $data = User::where('id', $user->id)->first()
-                ->only(['email', 'login_options', 'email_activity_check', 'TFA', 'filtered_tags', 'filtering_content']);
+                ->only(['conversational_notification','tumblr_news']);
+                        
         return $this->success_response($data);
     }
 
