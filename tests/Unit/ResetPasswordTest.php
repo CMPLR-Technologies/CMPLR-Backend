@@ -7,6 +7,9 @@ use App\Services\Auth\ResetPasswordService;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
+use function PHPUnit\Framework\assertTrue;
 
 class ResetPasswordTest extends TestCase
 {
@@ -63,6 +66,36 @@ class ResetPasswordTest extends TestCase
         $this->assertFalse($check);
     }
 
+
+    /**
+     * test if the new password entered by user matches the old password
+     * of user, as new password must be different form old password 
+     *
+     * @return void
+     */
+    public function test_Failure_CheckPassword()
+    {
+        $old_password = Hash::make('Ahmed_123');
+        $new_password = 'Ahmed_123';
+        $check = (new ResetPasswordService())->CheckPassword($old_password,$new_password);
+        $this->assertFalse($check);
+    }
+
+    
+    /**
+     * test if the new password entered by user matches the old password
+     * of user, as new password must be different form old password 
+     *
+     * @return void
+     */
+    public function test_Successful_CheckPassword()
+    {
+        $old_password = Hash::make('Ahmed_987');
+        $new_password = 'Ahmed_123';
+        $check = (new ResetPasswordService())->CheckPassword($old_password,$new_password);
+        $this->assertTrue($check);
+    }
+
     /**
      * test if this email is corrosponding to user in our database.
      *
@@ -75,6 +108,7 @@ class ResetPasswordTest extends TestCase
         $check = (new ResetPasswordService())->SetNewPassword($user,$password);
         $this->assertTrue($check);
     }
+
 
 
 

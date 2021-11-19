@@ -53,7 +53,7 @@ class ForgetPasswordController extends Controller
     {
        
         if (!$this->ForgetPasswordService->CheckIfUserExist($request->email)) 
-            return $this->error_response(Errors::NOT_FOUND_USER,404);
+            return $this->error_response($msg = Errors::NOT_FOUND_USER,$code = 404);
         
         $token = $this->ForgetPasswordService->AddToken($request->email);
 

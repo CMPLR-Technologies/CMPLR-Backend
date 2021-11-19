@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Services\Auth\ResetPasswordService;
 use App\Http\Misc\Helpers\Errors;
-
+use Illuminate\Auth\Events\PasswordReset;
 
 class ResetPasswordController extends Controller
 {
@@ -16,7 +16,7 @@ class ResetPasswordController extends Controller
     protected $ResetPasswordService;
 
     /**
-     * Instantiate a new controller instance.
+     * Instantiate a new instance of ResetPasswordService.
      *
      * @return void
      */
@@ -34,8 +34,14 @@ class ResetPasswordController extends Controller
         if (!$user)
             return  $this->error_response(Errors::NOT_FOUND_USER, 404);
 
+        $check_password = $this->ResetPasswordService->CheckPassword($user->password,$request->password);
+        if(!$check_password)
+            return  $this->error_response(Errors::NOT_FOUND_USER, 404);
+
         if (!$this->ResetPasswordService->SetNewPassword($user, $request->password))
-            return  $this->error_response(Errors::GENERAL, 400);
+            return  $this->error_response(Errors::DUPLICATE_PASSWORD, 400);
+        
+        event(new PasswordReset($user));
 
         return  $this->success_response($user, 200);
     }
@@ -47,8 +53,6 @@ class ResetPasswordController extends Controller
                 'message' => 'Invalid token'
             ], 400);
         }
-        return response([
-            'email' => $passwordResets->email,
-        ]);
+        return $this->success_response(['email'=> $passwordResets->email]);
     }
 }
