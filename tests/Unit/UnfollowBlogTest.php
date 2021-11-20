@@ -10,6 +10,7 @@ use Tests\TestCase;
 
 class UnfollowBlogTest extends TestCase
 {
+    //testing if wrong parameters were sent
     public function test_InvalidData()
     {
         $blog=null;
