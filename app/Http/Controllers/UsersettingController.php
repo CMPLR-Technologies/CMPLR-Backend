@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Misc\Helpers\Errors;
 use App\Http\Resources\Auth\UserSettingResource;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use App\Services\User\UserSettingService;
 
 class UsersettingController extends Controller
@@ -19,7 +17,7 @@ class UsersettingController extends Controller
      */
     public function __construct(UserSettingService $UserSettingService)
     {
-       $this->UserSettingService = $UserSettingService;
+        $this->UserSettingService = $UserSettingService;
     }
     /**
      *	@OA\Get
@@ -88,12 +86,12 @@ class UsersettingController extends Controller
     {
         //get auth user
         $user = $this->UserSettingService->GetAuthUser();
-        if(!$user)
-            return $this->error_response(Errors::ERROR_MSGS_401,'',401);
+        if (!$user)
+            return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
         // get data    
         $data = $this->UserSettingService->GetSettings($user->id);
-        if(!$user)
-            return $this->error_response(Errors::ERROR_MSGS_500,'',500);
+        if (!$user)
+            return $this->error_response(Errors::ERROR_MSGS_500, '', 500);
 
         return $this->success_response(new UserSettingResource($data));
     }
