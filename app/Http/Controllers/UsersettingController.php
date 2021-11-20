@@ -2,12 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Misc\Helpers\Errors;
 use App\Http\Resources\Auth\UserSettingResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Services\User\UserSettingService;
 
 class UsersettingController extends Controller
 {
+    protected $UserSettingService;
+
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(UserSettingService $UserSettingService)
+    {
+       $this->UserSettingService = $UserSettingService;
+    }
     /**
      *	@OA\Get
      *	(
@@ -64,17 +77,24 @@ class UsersettingController extends Controller
      * security ={{"bearer":{}}}
      * )
      */
-
+    /**
+     * Get AccountSetting Function Responisble for 
+     * get all settings(account,dashboard,notification) to user
+     * @param 
+     * 
+     * @return Response 
+     */
     public function AccountSettings()
     {
-        $user = Auth::user();
-        $data = User::where('id', $user->id)
-            ->get()->first()->makeHidden([
-                'email_verified_at', 'password',
-                'first_name', 'last_name', 'age',
-                'following_count', 'likes_count',
-                'default_post_format', 'google_id', 'created_at','updated_at'
-            ]);
+        //get auth user
+        $user = $this->UserSettingService->GetAuthUser();
+        if(!$user)
+            return $this->error_response(Errors::ERROR_MSGS_401,'',401);
+        // get data    
+        $data = $this->UserSettingService->GetSettings($user->id);
+        if(!$user)
+            return $this->error_response(Errors::ERROR_MSGS_500,'',500);
+
         return $this->success_response(new UserSettingResource($data));
     }
 

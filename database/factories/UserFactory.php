@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
+
 use Illuminate\Support\Str;
 
 class UserFactory extends Factory
@@ -16,7 +18,7 @@ class UserFactory extends Factory
     {
         return [
             'email' => $this->faker->unique()->safeEmail(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => Hash::make('Ahmed_123'), // password
             'age' => $this->faker->randomDigitNotZero(),
             'following_count' => $this->faker->randomDigit(),
             'likes_count' => $this->faker->randomDigit(),

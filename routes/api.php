@@ -40,8 +40,8 @@ Route::post('/forgot_password', [ForgetPasswordController::class, 'ForgetPasswor
 Route::post('/reset-password', [ResetPasswordController::class, 'ResetPassword'])->name('password.reset');
 Route::get('/reset-password/{token}', [ResetPasswordController::class, 'GetResetPassword'])->name('password.reset');
 
-Route::post('login', [LoginController::class, 'Login']);
-Route::post('logout', [LoginController::class, 'Logout'])->middleware('auth:api');
+Route::post('/login', [LoginController::class, 'Login']);
+Route::post('/logout', [LoginController::class, 'Logout'])->middleware('auth:api');
 
 Route::post('email/verification-notification', [EmailVerificationController::class, 'SendVerificationEmail'])->name('verification.send')->middleware('auth:api');
 Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'Verify'])->name('verification.verify')->middleware('auth:api');
