@@ -22,7 +22,7 @@ class DeleteBlogService{
             $pBlogs=Blog::all()->whereIn('id',$pBlogsId);
             foreach($pBlogs as $pblog)
             {
-                if($pblog->Users->isEmpty());
+                if($pblog->Users->isEmpty())
                     $pblog->delete();
             }
         }
