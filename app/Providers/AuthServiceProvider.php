@@ -3,11 +3,13 @@
 namespace App\Providers;
 
 use app\Models\Blog;
+use App\Models\BlogUser;
 use app\Policies\BlogPolicy;
-use Illuminate\Auth\Notifications\VerifyEmail;
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Notifications\Messages\MailMessage;
 use Laravel\Passport\Passport;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -31,19 +33,28 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-         // call passport:routes() here
-            Passport::routes();
-        
+        // Only authorize the authenticated user to control his own blog settings 
+        Gate::define('control-settings', function ($user, $blog) {
+            $blogUsers = BlogUser::where('user_id', $user->id)->get();
+
+            foreach ($blogUsers as $blogUser) {
+                if ($blogUser->blog_id == $blog->id) {
+                    return true;
+                }
+            }
+            return false;
+        });
+
+        // call passport:routes() here
+        Passport::routes();
 
         VerifyEmail::toMailUsing(function ($notifiable, $url) {
-            $spaUrl = "http://spa.test?email_verify_url=".$url;
+            $spaUrl = "http://spa.test?email_verify_url=" . $url;
 
             return (new MailMessage)
                 ->subject('Verify Email Address')
                 ->line('Click the button below to verify your email address.')
                 ->action('Verify Email Address', $spaUrl);
         });
-
-       
     }
 }
