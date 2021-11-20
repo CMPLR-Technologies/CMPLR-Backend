@@ -4,9 +4,6 @@ namespace App\Listeners;
 
 use App\Notifications\WelcomeEmailNotification;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use App\Models\User;
 
 class WelcomeEmailListener
 {
@@ -28,6 +25,10 @@ class WelcomeEmailListener
      */
     public function handle(Registered $event)
     {
-        $event->user->each->notify(new WelcomeEmailNotification());  
+        //$event->user->each->notify(new WelcomeEmailNotification());  
+        foreach ($event as $user) {
+            $user->notify(new WelcomeEmailNotification($user->email));
+            break;
+        }
     }
 }

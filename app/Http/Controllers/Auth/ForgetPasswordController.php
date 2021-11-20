@@ -49,18 +49,27 @@ class ForgetPasswordController extends Controller
      *   ),
      * )
      */
+    /**
+     * ForgetPassword Function handle Validate and sending
+     * forget password mail to user
+     * 
+     * @param Request
+     * 
+     * @return response
+     */
     public function ForgetPassword(Request $request)
     {
-       
+       // check if user is exist in DB
         if (!$this->ForgetPasswordService->CheckIfUserExist($request->email)) 
             return $this->error_response($msg = Errors::NOT_FOUND_USER,$code = 404);
         
+        //create reset password token to user
         $token = $this->ForgetPasswordService->AddToken($request->email);
 
         if($token == null)
-            return $this->error_response(Errors::GENERATE_TOKEN,400);
+            return $this->error_response(Errors::GENERATE_TOKEN_ERROR,400);
 
-
+        // send ResetPasswordMail
         if(!$this->ForgetPasswordService->SendResetPasswordMail($request->email , $token))
             return $this->error_response(Errors::ERROR_MAIL,500);
 

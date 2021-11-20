@@ -12,7 +12,14 @@ use Illuminate\Auth\Events\PasswordReset;
 
 class ResetPasswordController extends Controller
 {
-
+    /*
+    |--------------------------------------------------------------------------
+    | Reset Password Controller
+    |--------------------------------------------------------------------------
+    |
+    | This controller is responsible for handling password reset requests
+    |
+    */
     protected $ResetPasswordService;
 
     /**
@@ -24,7 +31,14 @@ class ResetPasswordController extends Controller
     {
         $this->ResetPasswordService = $ResetPasswordService;
     }
-
+    /**
+     * Function ResetPassword is responsible for handling and
+     * validating  user password reset
+     * 
+     * @param ResetPasswordRequest
+     * 
+     * @return Response
+     */
     public function ResetPassword(ResetPasswordRequest $request)
     {
         if (!$this->ResetPasswordService->CheckEmailToken($request->email, $request->token))

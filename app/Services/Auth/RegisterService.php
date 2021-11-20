@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Services\Auth;
-use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Blog;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class RegisterService{
 
@@ -27,6 +28,8 @@ class RegisterService{
         } catch (\Throwable $th) {
             return null;
         }
+        if(!$user)
+            return null;
         return $user;
         
         
@@ -42,15 +45,46 @@ class RegisterService{
     public function CreateBlog(string $blog_name)
     {
         try {
-            $blog_url = 'https' . $blog_name . 'tumblr.com';
+            $blog_url = 'https://www' . $blog_name . 'tumblr.com';
             $blog = Blog::create([
                 'blog_name' => $blog_name,
                 'url' => $blog_url,
             ]);
+            $check = DB::table('blog_')->insert([
+                
+            ]);
         } catch (\Throwable $th) {
             return null;
         }
+        if(!$blog)
+            return null;
         return $blog;
+    }
+    
+     
+    /**
+     * Adds the primary blog of the registered user to DataBase.
+     *
+     * @param User $user
+     * @param blog $blog
+     * 
+     * @return bool
+     */
+    public function LinkUserBlog(User $user, Blog $blog)
+    {
+        try {
+            $check = DB::table('blog_users')->insert([
+                'user_id' => $user->id,
+                'blog_id' => $blog->id,
+                'primary' => true,
+            ]);
+        } catch (\Throwable $th) {
+            return false;
+        }       
+        if(!$check)
+                return false;
+         return true;       
+
     }
 
     
