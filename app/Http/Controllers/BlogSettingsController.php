@@ -7,7 +7,6 @@ use App\Models\BlogSettings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
-
 class BlogSettingsController extends Controller
 {
   /**
