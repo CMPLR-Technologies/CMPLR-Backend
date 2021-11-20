@@ -12,7 +12,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UsersettingController;
 use Illuminate\Support\Facades\Route;
 
-
 /*
 |--------------------------------------------------------------------------
 | API Routes

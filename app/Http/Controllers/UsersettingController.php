@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Misc\Helpers\Errors;
 use App\Http\Resources\Auth\UserSettingResource;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use App\Services\User\UserSettingService;
 
 class UsersettingController extends Controller
