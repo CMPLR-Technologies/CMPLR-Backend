@@ -46,9 +46,10 @@ class UserRegisterTest extends TestCase
      */
     public function test_Successful_Create_Blog()
     {  
+        $user = User::take(1)->first();
         $blog_name = str::random(10);
         $blog_url = 'https' . $blog_name . 'tumblr.com';
-        $check = (new RegisterService())->CreateBlog($blog_name,$blog_url); 
+        $check = (new RegisterService())->CreateBlog($blog_name,$user->id); 
         $this->assertNotNull($check);
     }
 
