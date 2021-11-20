@@ -28,8 +28,13 @@ class Blog extends Model
         return $this->Followers->contains('user_id', $user->id);
     }
 
+    public function settings()
+    {
+        return $this->hasOne(BlogSettings::class, 'blog_id', 'id');
+    }
+
     public function users()
     {
-        return $this->hasMany(BlogUser::class);
+        return $this->belongsToMany(User::class, 'blog_users', 'blog_id', 'user_id');
     }
 }

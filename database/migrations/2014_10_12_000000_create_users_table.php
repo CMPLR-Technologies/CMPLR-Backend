@@ -28,7 +28,7 @@ class CreateUsersTable extends Migration
             $table->boolean('best_stuff_first')->default(true);
             $table->boolean('include_followed_tags')->default(true);
             $table->boolean('conversational_notification')->default(true);
-            $table->json('filtering_content')->nullable();
+            $table->json('filtered_content')->nullable();
             $table->string('google_id')->nullable();
             $table->rememberToken();
             $table->timestamps();

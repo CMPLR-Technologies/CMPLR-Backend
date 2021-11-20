@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Services\Auth;
+
 use App\Models\Blog;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class RegisterService{
+class RegisterService
+{
 
 
     /**
@@ -16,7 +18,7 @@ class RegisterService{
      * @param string $password
      * @return User
      */
-    public function CreateUser(string $email, int $age, string $password):User
+    public function CreateUser(string $email, int $age, string $password): User
     {
         $user = User::create([
             'email' => $email,
@@ -26,14 +28,14 @@ class RegisterService{
         return $user;
     }
 
-     /**
+    /**
      * Adds the primary blog of the registered user to DataBase.
      *
      * @param string $Blog_name
      * 
      * @return Blog
      */
-    public function CreateBlog(string $blog_name):Blog
+    public function CreateBlog(string $blog_name): Blog
     {
         $blog_url = 'https' . $blog_name . 'tumblr.com';
         $blog = Blog::create([
@@ -43,27 +45,23 @@ class RegisterService{
         return $blog;
     }
 
-    
-     /**
+
+    /**
      * Generate the Token to the user 
      *
      * @param user $user
      * 
      * @return Bool
      */
-    public function GenerateToken(User $user):Bool
+    public function GenerateToken(User $user): Bool
     {
-        if(!$user)
+        if (!$user)
             return false;
-        else
-        {
+        else {
             //Generate the access to the user 
             $token = $user->createToken('User_access_token')->accessToken;
             $user->withAccessToken($token);
             return true;
-        } 
+        }
     }
-
 }
-
-?>

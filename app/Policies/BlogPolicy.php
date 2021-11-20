@@ -12,11 +12,11 @@ class BlogPolicy
 {
     use HandlesAuthorization;
 
-    public function delete(User $user,Blog $blog,Request $request)
+    public function delete(User $user, Blog $blog, Request $request)
     {
-        return  $blog->users->contains('user_id',$user->id) &&
-                $user->email==$request->email && 
-                Hash::check($request->password,$user->password) &&
-                $blog->users->where('user_id',$user->id)->first()->full_privileges==true;
+        return  $blog->users->contains('user_id', $user->id) &&
+            $user->email == $request->email &&
+            Hash::check($request->password, $user->password) &&
+            $blog->users->where('user_id', $user->id)->first()->full_privileges == true;
     }
 }

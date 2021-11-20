@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Blog;
 use App\Models\BlogSettings;
 use Illuminate\Database\Seeder;
 
