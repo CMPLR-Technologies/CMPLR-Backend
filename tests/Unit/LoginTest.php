@@ -9,13 +9,11 @@ use Tests\TestCase;
 class LoginTest extends TestCase
 {
     /**
-     * testing wether the login user authorized to our system 
+     * testing Succesful authorized user
+     * Test CheckUserAuthorized which check wether the login user authorized to our system 
      *
      * @return void
-     */
-    protected $loginService;
-   
-
+     */   
     public function test_successful_user_authorized()
     {
 
@@ -28,6 +26,12 @@ class LoginTest extends TestCase
         $this->assertTrue($check);
     }
 
+    /**
+     * testing failure authorized user
+     * Test CheckUserAuthorized which check wether the login user authorized to our system 
+     *
+     * @return void
+     */   
     public function test_failure_user_authorized()
     {
         $loginCredenials =[
@@ -38,6 +42,12 @@ class LoginTest extends TestCase
         $this->assertFalse($check);
     }
 
+    /**
+     * testing successful create user token
+     * Test CreateUserToken which create token for the user
+     *
+     * @return void
+     */ 
     public function test_successful_creat_token()
     {
         $user = User::take(1)->first();

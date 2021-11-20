@@ -36,7 +36,8 @@ class EmailVerificationService {
      */
      public function SendingEmailVerification (User $user)
      {
-         $user->sendEmailVerificationNotification(); 
+         $user->sendEmailVerificationNotification() ;
+
      }
 
      /**
@@ -47,12 +48,14 @@ class EmailVerificationService {
       * @return Bool
       * @author Yousif Ahmed 
       */
-      public function VerifyEmail (User $user)
+      public function VerifyEmail (User $user):Bool
       { 
          if ($user->markEmailAsVerified())
          {
             event(new Verified($user));
+            return true ;
          }
+         return false ;
 
       }
 

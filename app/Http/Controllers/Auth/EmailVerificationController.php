@@ -49,6 +49,7 @@ class EmailVerificationController extends Controller
         // making the email as verified and creat event verified for the user
         $this->emailVerificationService->VerifyEmail($request->user());
         
+        
         return response()->json(['message'=>'Email has been Verified'],200);
     }
 }
