@@ -13,7 +13,6 @@ class CreateBlogsTable extends Migration
             $table->string('blog_name')->unique();
             $table->string('url')->unique();
             $table->string('title')->nullable();
-            $table->string('url')->unique();
             $table->string('type')->nullable();
             $table->boolean('privacy');
             $table->string('password')->nullable();

@@ -14,7 +14,8 @@ class BlogFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'url' => $this->faker->unique()->name(),
+            'blog_name'=>$this->faker->unique()->name(),
         ];
     }
 }

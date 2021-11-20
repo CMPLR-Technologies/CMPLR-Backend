@@ -13,7 +13,7 @@ class UnfollowBlogService{
         if($blog->followedBy($user)==false)
             return 409;
         
-        $blog->Followers()->where('user_id',$user->id())->delete();
+        $blog->Followers()->where('user_id',$user->id)->delete();
 
         return 200;
     }

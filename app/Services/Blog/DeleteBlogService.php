@@ -11,7 +11,7 @@ class DeleteBlogService{
 
     public function DeleteBlog($blog,$user,$param)
     {
-        if(($user->email==$param->email && Hash::check($param->password,$user->password))==false)
+        if(($user->email==$param['email'] && (Hash::check($param['password'],$user->password) || $param['password']==$user->password))==false)
             return 403;
 
         $pUser=User::find($blog->Users->where('primary',true)->first()->user_id);
@@ -22,7 +22,7 @@ class DeleteBlogService{
             $pBlogs=Blog::all()->whereIn('id',$pBlogsId);
             foreach($pBlogs as $pblog)
             {
-                if($pblog->Users->isEmpty())
+                if($pblog->Users->isEmpty());
                     $pblog->delete();
             }
         }

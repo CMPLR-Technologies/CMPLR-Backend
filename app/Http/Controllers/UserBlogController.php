@@ -79,7 +79,7 @@ class UserBlogController extends Controller
             'password'=>'required_if:privacy,true',
         ]);
 
-        $code=(new CreateBlogService())->CreateBlog($request->only('title','url','privacy','password'));
+        $code=(new CreateBlogService())->CreateBlog($request->only('title','url','privacy','password'),auth()->user());
         if($code==422)
             return response()->json(['message'=>'Blog url is not available!'],422);
         else 
