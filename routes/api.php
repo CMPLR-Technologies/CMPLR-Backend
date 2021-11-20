@@ -28,16 +28,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 //Follow/Unfollow blog
-Route::post('/user/follow','App\Http\Controllers\UserBlogConroller@follow');
-Route::delete('/user/follow','App\Http\Controllers\UserBlogConroller@unfollow');
+Route::post('user/follow','App\Http\Controllers\UserBlogConroller@follow');
+Route::delete('user/follow','App\Http\Controllers\UserBlogConroller@unfollow');
 
 
 
-Route::post('/register/insert', [RegisterController::class, 'Register'])->name('Register');
-Route::post('/register/validate', [RegisterController::class, 'ValidateRegister'])->name('ValidateRegister');
-Route::post('/forgot_password', [ForgetPasswordController::class, 'ForgetPassword'])->name('password.email');
-Route::post('/reset-password', [ResetPasswordController::class, 'ResetPassword'])->name('password.reset');
-Route::get('/reset-password/{token}', [ResetPasswordController::class, 'GetResetPassword'])->name('password.reset');
+Route::post('register/insert', [RegisterController::class, 'Register'])->name('Register');
+Route::post('register/validate', [RegisterController::class, 'ValidateRegister'])->name('ValidateRegister');
+Route::post('forgot_password', [ForgetPasswordController::class, 'ForgetPassword'])->name('password.email');
+Route::post('reset-password', [ResetPasswordController::class, 'ResetPassword'])->name('password.reset');
+Route::get('reset-password/{token}', [ResetPasswordController::class, 'GetResetPassword'])->name('password.reset');
 
 Route::post('login' , [LoginController::class , 'Login']);
 Route::post('logout' , [LoginController::class , 'Logout'])->middleware('auth:api');
@@ -47,8 +47,8 @@ Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'Ver
 
 // setting routes
 Route::middleware('auth:api')->group(function () {
-    Route::get('/settings/account',[UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
-    Route::get('/settings/dashboard',[UsersettingController::class, 'DashboardSetting'])->name('GetDashboardSetting');
+    Route::get('settings/account',[UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
+    Route::get('settings/dashboard',[UsersettingController::class, 'DashboardSetting'])->name('GetDashboardSetting');
 });
 
 
@@ -58,6 +58,6 @@ Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallba
 
 
 // Create/Delete blog
-Route::post('/blog',[UserBlogController::class,'create']);
-Route::delete('/blog/{url}',[UserBlogController::class,'destroy']);
+Route::post('blog',[UserBlogController::class,'create']);
+Route::delete('blog/{url}',[UserBlogController::class,'destroy']);
 
