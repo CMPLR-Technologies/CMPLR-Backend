@@ -28,8 +28,13 @@ use App\Http\Controllers\UserController;
 
 
 //Follow/Unfollow blog
-Route::post('/user/follow', 'App\Http\Controllers\UserBlogConroller@follow');
-Route::delete('/user/follow', 'App\Http\Controllers\UserBlogConroller@unfollow');
+Route::post('/user/follow', 'App\Http\Controllers\UserBlogConroller@follow')->middleware('auth:api');
+Route::delete('/user/follow', 'App\Http\Controllers\UserBlogConroller@unfollow')->middleware('auth:api');
+
+// Create/Delete blog
+Route::post('/blog', [UserBlogController::class, 'create'])->middleware('auth:api');
+Route::delete('/blog/{url}', [UserBlogController::class, 'destroy'])->middleware('auth:api');
+
 
 Route::get('blog/{id}/settings', [BlogSettingController::class, 'getBlogSettings'])->name('getBlogSettings')->middleware('auth:api');
 
@@ -60,6 +65,3 @@ Route::get('auth/google', [GoogleController::class, 'Googlelogin']);
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
 
-// Create/Delete blog
-Route::post('/blog', [UserBlogController::class, 'create']);
-Route::delete('/blog/{url}', [UserBlogController::class, 'destroy']);
