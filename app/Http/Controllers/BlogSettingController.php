@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BlogSettings;
+use App\Models\BlogUser;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class BlogSettingController extends Controller
 {
@@ -11,7 +16,7 @@ class BlogSettingController extends Controller
    * 		path="/blog/{Blog identifier}/settings/",
    * 		summary="Blog setting",
    * 		description="Retrieve Blog Setting for User.",
-   * 		operationId="getBlogSetting",
+   * 		operationId="getBlogSettings",
    * 		tags={"BlogSetting"},
    *
    * @OA\Response(
@@ -159,8 +164,41 @@ class BlogSettingController extends Controller
    *  security ={{"bearer":{}}}
    * )
    */
-  public function getBlogSetting()
+  public function getBlogSettings($id, Request $request)
   {
+    if (!Auth::guard('api')->check()) {
+      return response([
+        'meta' => [
+          'status' => 401,
+          'msg' => 'Forbidden'
+        ]
+      ]);
+    }
+
+    $blogUsers = BlogUser::where('user_id', $request->user()->id)->get();
+
+    foreach ($blogUsers as $blogUser) {
+      if ($blogUser->blog_id != $id) {
+        return response([
+          'meta' => [
+            'status' => 401,
+            'msg' => 'Forbidden'
+          ]
+        ]);
+      }
+    }
+
+    $settings = BlogSettings::where('blog_id', $id)->get();
+
+    return response([
+      'meta' => [
+        'status' => 200,
+        'msg' => 'Success'
+      ],
+      'response' => [
+        $settings
+      ]
+    ]);
   }
   /**
    * @OA\Put(

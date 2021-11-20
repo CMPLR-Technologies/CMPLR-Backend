@@ -3,8 +3,9 @@
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\ForgetPasswordController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\BlogSettingController;
 use App\Http\Controllers\UserBlogController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,7 +30,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/user/follow', 'App\Http\Controllers\UserBlogConroller@follow');
 Route::delete('/user/follow', 'App\Http\Controllers\UserBlogConroller@unfollow');
 
-
+Route::get('blog/{id}/settings', [BlogSettingController::class, 'getBlogSettings'])->name('getBlogSettings')->middleware('auth:api');
 
 Route::post('/register/insert', [RegisterController::class, 'Register'])->name('Register');
 Route::post('/register/validate', [RegisterController::class, 'ValidateRegister'])->name('ValidateRegister');

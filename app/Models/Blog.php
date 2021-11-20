@@ -9,7 +9,7 @@ class Blog extends Model
 {
     use HasFactory;
 
-    protected $fillable =[
+    protected $fillable = [
         'blog_name',
         'url',
         'title',
@@ -18,19 +18,18 @@ class Blog extends Model
         'password'
     ];
 
-    public function Followers()
+    public function followers()
     {
         return $this->hasMany(Follow::class);
     }
 
-    public function FollowedBy(User $user)
+    public function followedBy(User $user)
     {
-        return $this->Followers->contains('user_id',$user->id);
+        return $this->Followers->contains('user_id', $user->id);
     }
 
-    public function Users()
+    public function users()
     {
         return $this->hasMany(BlogUser::class);
     }
-
 }

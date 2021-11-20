@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class blog_setting extends Model
+class BlogSettings extends Model
 {
     use HasFactory;
 }

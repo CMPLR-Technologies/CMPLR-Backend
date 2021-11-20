@@ -9,12 +9,11 @@ class BlogUser extends Model
 {
     use HasFactory;
 
-    protected $fillable=[
+    protected $fillable = [
         'user_id',
         'blog_id',
         'primary',
         'full_privileges',
         'contributor_privileges'
     ];
-
 }

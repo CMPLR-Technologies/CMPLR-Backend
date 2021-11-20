@@ -10,6 +10,7 @@ class CreateBlogSettingsTable extends Migration
     {
         Schema::create('blog_settings', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('blog_id')->constrained()->onDelete('cascade');
             $table->boolean('repiles')->nullable();
             $table->boolean('allow_ask')->nullable();
             $table->boolean('ask_page_title')->nullable();

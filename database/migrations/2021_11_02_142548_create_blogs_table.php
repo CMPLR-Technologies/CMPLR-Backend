@@ -12,10 +12,10 @@ class CreateBlogsTable extends Migration
             $table->id();
             $table->string('blog_name')->unique();
             $table->string('url')->unique();
-            $table->string('title')->nullable();
-            $table->string('url')->unique();
-            $table->string('type')->nullable();
-            $table->boolean('privacy');
+            $table->string('title')->default('untitled');
+            $table->boolean('public')->default(true);
+            $table->boolean('privacy')->default(false);
+            $table->bigInteger('followers')->default(0);
             $table->string('password')->nullable();
             $table->timestamps();
         });

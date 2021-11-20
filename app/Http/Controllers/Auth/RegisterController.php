@@ -22,22 +22,22 @@ class RegisterController extends Controller
     | validation and creation.
     |
    */
-  protected $RegisterService;
+   protected $RegisterService;
 
-  /**
-   * Instantiate a new controller instance.
-   *
-   * @return void
-   */
-  public function __construct(RegisterService $RegisterService)
-  {
+   /**
+    * Instantiate a new controller instance.
+    *
+    * @return void
+    */
+   public function __construct(RegisterService $RegisterService)
+   {
       $this->RegisterService = $RegisterService;
-  }
+   }
 
    public function ValidateRegister(RegisterRequest $request)
    {
-      return $this->success_response((['email'=> $request->email]));
-   } 
+      return $this->success_response((['email' => $request->email]));
+   }
 
 
    /**
@@ -88,22 +88,22 @@ class RegisterController extends Controller
     */
    public function Register(RegisterRequest $request)
    {
-    
-      $user = $this->RegisterService->CreateUser($request->email, $request->age,$request->password);
-      
-      if(!$user)
-         return $this->error_response('Error While creating',500);
-         
+
+      $user = $this->RegisterService->CreateUser($request->email, $request->age, $request->password);
+
+      if (!$user)
+         return $this->error_response('Error While creating', 500);
+
 
       $blog = $this->RegisterService->CreateBlog($request->blog_name);
 
-      if(!$blog)
-         return $this->error_response('Error While creating',500);
+      if (!$blog)
+         return $this->error_response('Error While creating', 500);
 
       $generate_token = $this->RegisterService->GenerateToken($user);
-      
-      if(!$generate_token)
-         return $this->error_response('Error Generating Token',500);
+
+      if (!$generate_token)
+         return $this->error_response('Error Generating Token', 500);
 
       $request['blog_name'] = $blog->blog_name;
       $request['token'] = $user->token();
@@ -114,6 +114,6 @@ class RegisterController extends Controller
          return $resource->response()->setStatusCode(201);
       }
 
-      return $this->error_response('Error While creating',500);
+      return $this->error_response('Error While creating', 500);
    }
 }

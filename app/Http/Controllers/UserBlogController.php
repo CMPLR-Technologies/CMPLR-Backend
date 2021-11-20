@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Blog;
-use App\Models\BlogUser;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserBlogController extends Controller
 {
@@ -69,35 +67,34 @@ class UserBlogController extends Controller
 
     //this function creates a new blog and 
     public function create(Request $request)
-    {        
+    {
         Auth::attempt(['email' => $request->email, 'password' => $request->pass]);
 
-        $this->validate($request,[
-            'title'=>'required',
-            'url'=>'required',
-            'privacy'=>'required',
-            'password'=>'required_if:privacy,true',
+        $this->validate($request, [
+            'title' => 'required',
+            'url' => 'required',
+            'privacy' => 'required',
+            'password' => 'required_if:privacy,true',
         ]);
 
-        $primary=false;
-        if(auth()->user()->Blogs->isEmpty())
-            $primary=true;
+        $primary = false;
+        if (auth()->user()->Blogs->isEmpty())
+            $primary = true;
 
-        
-        $blog=Blog::create([
-            'title'=>$request->title,
-            'url'=>$request->url,
-            'privacy'=>$request->privacy,
-            'password'=>$request->password,
+
+        $blog = Blog::create([
+            'title' => $request->title,
+            'url' => $request->url,
+            'privacy' => $request->privacy,
+            'password' => $request->password,
         ]);
 
         $blog->Users()->create([
-            'user_id'=>auth()->id(),
-            'primary'=>$primary,
-            'full_privileges'=>'true',
-            'contributor_privileges'=>'false'
+            'user_id' => auth()->id(),
+            'primary' => $primary,
+            'full_privileges' => 'true',
+            'contributor_privileges' => 'false'
         ]);
-
     }
 
     /**
@@ -154,11 +151,11 @@ class UserBlogController extends Controller
      */
     public function follow(Request $request)
     {
-        $blog=Blog::where('url',$request->url)->first();
-        if($blog->followedBy(auth()->user()))
-            return response(null,409);
+        $blog = Blog::where('url', $request->url)->first();
+        if ($blog->followedBy(auth()->user()))
+            return response(null, 409);
         $blog->Followers()->create([
-            'user_id'=>auth()->id()
+            'user_id' => auth()->id()
         ]);
     }
 
@@ -206,10 +203,10 @@ class UserBlogController extends Controller
      */
     public function unfollow(Request $request)
     {
-        $blog=Blog::where('url',$request->url)->first();
-        if(!$blog->FollowedBy(auth()->user()))
-            return response(null,409);
-        $blog->Followers()->where('user_id',auth()->id())->delete();
+        $blog = Blog::where('url', $request->url)->first();
+        if (!$blog->FollowedBy(auth()->user()))
+            return response(null, 409);
+        $blog->Followers()->where('user_id', auth()->id())->delete();
     }
 
 
@@ -259,29 +256,27 @@ class UserBlogController extends Controller
      */
 
     //this method deletes a specific blog 
-    public function destroy($url,Request $request)
+    public function destroy($url, Request $request)
     {
         Auth::attempt(['email' => $request->email, 'password' => $request->pass]);
 
-        $this->validate($request,[
-            'email'=>'required|email',
-            'password'=>'required'
+        $this->validate($request, [
+            'email' => 'required|email',
+            'password' => 'required'
         ]);
 
 
-        $blog=Blog::where('url',$url)->first();
-        
-        $this->authorize('delete',[$blog,$request]);
-        
-        $pUser=User::find($blog->Users->where('primary',true)->first()->user_id);
-        if($pUser!=null)
-        {
-            $pBlogsId=$pUser->Blogs()->get('blog_id')->pluck('blog_id')->toArray();
+        $blog = Blog::where('url', $url)->first();
+
+        $this->authorize('delete', [$blog, $request]);
+
+        $pUser = User::find($blog->Users->where('primary', true)->first()->user_id);
+        if ($pUser != null) {
+            $pBlogsId = $pUser->Blogs()->get('blog_id')->pluck('blog_id')->toArray();
             $pUser->delete();
-            $pBlogs=Blog::all()->whereIn('id',$pBlogsId);
-            foreach($pBlogs as $pblog)
-            {
-                if($pblog->Users->isEmpty())
+            $pBlogs = Blog::all()->whereIn('id', $pBlogsId);
+            foreach ($pBlogs as $pblog) {
+                if ($pblog->Users->isEmpty())
                     $pblog->delete();
             }
         }
