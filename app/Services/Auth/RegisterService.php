@@ -42,7 +42,7 @@ class RegisterService{
      * 
      * @return Blog
      */
-    public function CreateBlog(string $blog_name)
+    public function CreateBlog(string $blog_name,int $user_id)
     {
         try {
             $blog_url = 'https://www' . $blog_name . 'tumblr.com';
@@ -50,10 +50,13 @@ class RegisterService{
                 'blog_name' => $blog_name,
                 'url' => $blog_url,
             ]);
-            $check = DB::table('blog_')->insert([
-                
+            DB::table('blog_settings')->insert([
+                'blog_id'=>$blog->id,
             ]);
         } catch (\Throwable $th) {
+            //if blog creation failed so we should delete the user 
+            // to make all processes as package(ensure that all are done or all failed)
+            User::find($user_id)->delete();
             return null;
         }
         if(!$blog)

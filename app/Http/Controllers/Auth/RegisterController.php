@@ -107,7 +107,7 @@ class RegisterController extends Controller
          return $this->error_response(Errors::ERROR_MSGS_500,Errors::CREATE_ERROR,500);
 
       // create blog with given parameters
-      $blog = $this->RegisterService->CreateBlog($request->blog_name);
+      $blog = $this->RegisterService->CreateBlog($request->blog_name,$user->id);
 
       if (!$blog)
          return $this->error_response(Errors::ERROR_MSGS_500,Errors::CREATE_ERROR,500);
