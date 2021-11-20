@@ -10,8 +10,6 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\validation\Rules\Password;
 
-
-
 class RegisterRequest extends FormRequest
 {
     /*

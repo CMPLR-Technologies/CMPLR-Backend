@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://my-default-host.com",
+            "url": "http://localhost:8000",
             "description": "CMPLR API Server"
         }
     ],
@@ -1527,7 +1527,7 @@
         "/blog/{Blog identifier}/settings/": {
             "get": {
                 "tags": [
-                    "BlogSetting"
+                    "Blog Settings"
                 ],
                 "summary": "Blog setting",
                 "description": "Retrieve Blog Setting for User.",
@@ -1682,11 +1682,11 @@
         "/blog/{blog-identifier}/settings/save": {
             "put": {
                 "tags": [
-                    "BlogSetting"
+                    "Blog Settings"
                 ],
                 "summary": "save specific blog setting",
                 "description": "user can save changes in one of its blogs",
-                "operationId": "blogSettingSave",
+                "operationId": "saveBlogSettings",
                 "parameters": [
                     {
                         "name": "Username",
@@ -1944,11 +1944,11 @@
         "/blog/{blog-identifier}/settings/theme": {
             "put": {
                 "tags": [
-                    "BlogSetting"
+                    "Blog Settings"
                 ],
                 "summary": "Edit blog theme",
-                "description": "used to change the theme of a certain blog",
-                "operationId": "EditBlogTheme",
+                "description": "Used to change the theme of a certain blog",
+                "operationId": "editBlogTheme",
                 "parameters": [
                     {
                         "name": "header_image",
@@ -2169,7 +2169,12 @@
                     "200": {
                         "description": "success"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         },
         "/blog/{blog-identifier}/submit": {
@@ -4547,13 +4552,55 @@
                 },
                 "responses": {
                     "404": {
-                        "description": "Not Found"
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Blog url is not available!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "Unauthenticated"
                     },
                     "200": {
-                        "description": "success"
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "conflict",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "already follwing"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -4600,13 +4647,55 @@
                 },
                 "responses": {
                     "404": {
-                        "description": "Not Found"
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Blog url is not available!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "Unauthenticated"
                     },
                     "200": {
-                        "description": "success"
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "conflict",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "already not follwing"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -4671,13 +4760,13 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "msg": {
+                                        "status": {
                                             "type": "integer",
                                             "example": 403
                                         },
-                                        "status": {
+                                        "message": {
                                             "type": "string",
-                                            "example": "That password is incorrect. Please try again"
+                                            "example": "email or password is incorrect. Please try again"
                                         }
                                     },
                                     "type": "object"

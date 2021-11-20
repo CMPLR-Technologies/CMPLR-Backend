@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
-use App\Services\Blog\FollowBlogService;
 use App\Models\Blog;
 use App\Models\Follow;
 use App\Models\User;
+use App\Services\Blog\FollowBlogService;
 use Tests\TestCase;
 
 class FollowBlogTest extends TestCase

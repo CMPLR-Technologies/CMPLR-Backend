@@ -3,13 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
-use App\Models\BlogUser;
 use App\Models\BlogSettings;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
-
-class BlogSettingController extends Controller
+class BlogSettingsController extends Controller
 {
   /**
    *	@OA\Get
@@ -165,31 +163,18 @@ class BlogSettingController extends Controller
    *  security ={{"bearer":{}}}
    * )
    */
-  public function getBlogSettings($id, Request $request)
+  public function getBlogSettings(Request $request, Blog $blog)
   {
-    if (!Auth::guard('api')->check()) {
+    if (Gate::denies('control-settings', $blog)) {
       return response([
         'meta' => [
-          'status' => 401,
+          'status' => 403,
           'msg' => 'Forbidden'
         ]
-      ]);
+      ], 403);
     }
 
-    $blogUsers = BlogUser::where('user_id', $request->user()->id)->get();
-
-    foreach ($blogUsers as $blogUser) {
-      if ($blogUser->blog_id != $id) {
-        return response([
-          'meta' => [
-            'status' => 401,
-            'msg' => 'Forbidden'
-          ]
-        ]);
-      }
-    }
-
-    $settings = BlogSettings::where('blog_id', $id)->get();
+    $settings = BlogSettings::where('blog_id', $blog->id)->get();
 
     return response([
       'meta' => [
@@ -207,8 +192,8 @@ class BlogSettingController extends Controller
    * path="/blog/{blog-identifier}/settings/save",
    * summary="save specific blog setting",
    * description="user can save changes in one of its blogs",
-   * operationId="blogSettingSave",
-   * tags={"Blog Setting"},
+   * operationId="saveBlogSettings",
+   * tags={"Blog Settings"},
    *  @OA\Parameter(
    *         name="Username",
    *         in="query",
@@ -430,8 +415,34 @@ class BlogSettingController extends Controller
    *   security ={{"bearer":{}}},
    * )
    */
-  public function BlogSettingSave()
+  public function saveBlogSettings(Request $request, Blog $blog)
   {
+    if (Gate::denies('control-settings', $blog)) {
+      return response([
+        'meta' => [
+          'status' => 403,
+          'msg' => 'Forbidden'
+        ]
+      ], 403);
+    }
+
+    $success = BlogSettings::where('blog_id', $blog->id)->update($request->all());
+
+    if (!$success) {
+      return response([
+        'meta' => [
+          'status' => 500,
+          'msg' => 'Error while saving blog settings'
+        ]
+      ], 500);
+    }
+
+    return response([
+      'meta' => [
+        'status' => 200,
+        'msg' => 'Success'
+      ]
+    ]);
   }
 
 
@@ -440,7 +451,7 @@ class BlogSettingController extends Controller
    *	(
    * 		path="/blog/{blog-identifier}/settings/theme",
    * 		summary="Edit blog theme",
-   * 		description="used to change the theme of a certain blog",
+   * 		description="Used to change the theme of a certain blog",
    * 		operationId="editBlogTheme",
    * 		tags={"Blog Settings"},
    *
@@ -649,11 +660,38 @@ class BlogSettingController extends Controller
    *		(
    *	    	response=200,
    *    		description="success",
-   *   )
-   * )
+   *   ),
+   * security ={{"bearer":{}}},
+   * ),
    */
 
-  public function BlogSettingEditTheme()
+  public function editBlogTheme(Request $request, Blog $blog)
   {
+    if (Gate::denies('control-settings', $blog)) {
+      return response([
+        'meta' => [
+          'status' => 403,
+          'msg' => 'Forbidden'
+        ]
+      ], 403);
+    }
+
+    $success = BlogSettings::where('blog_id', $blog->id)->update($request->all());
+
+    if (!$success) {
+      return response([
+        'meta' => [
+          'status' => 500,
+          'msg' => 'Error while saving blog settings'
+        ]
+      ], 500);
+    }
+
+    return response([
+      'meta' => [
+        'status' => 200,
+        'msg' => 'Success'
+      ]
+    ]);
   }
 }

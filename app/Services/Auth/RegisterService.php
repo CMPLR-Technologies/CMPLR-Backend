@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Services\Auth;
-use App\Models\User;
 use App\Models\Blog;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 

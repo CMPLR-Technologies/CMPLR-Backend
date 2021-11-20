@@ -6,11 +6,12 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\BlogSettingsController;
 use App\Http\Controllers\UserBlogController;
-use App\Http\Controllers\UsersettingController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UsersettingController;
+use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -23,10 +24,7 @@ use App\Http\Controllers\UserController;
 |
 */
 
-
-
-
-//Follow/Unfollow blog
+// Follow/Unfollow blog
 Route::post('/user/follow', 'App\Http\Controllers\UserBlogConroller@follow')->middleware('auth:api');
 Route::delete('/user/follow', 'App\Http\Controllers\UserBlogConroller@unfollow')->middleware('auth:api');
 
@@ -34,8 +32,6 @@ Route::delete('/user/follow', 'App\Http\Controllers\UserBlogConroller@unfollow')
 Route::post('/blog', [UserBlogController::class, 'create'])->middleware('auth:api');
 Route::delete('/blog/{url}', [UserBlogController::class, 'destroy'])->middleware('auth:api');
 
-
-Route::get('blog/{id}/settings', [BlogSettingController::class, 'getBlogSettings'])->name('getBlogSettings')->middleware('auth:api');
 
 Route::post('/register/insert', [RegisterController::class, 'Register'])->name('Register');
 Route::post('/register/validate', [RegisterController::class, 'ValidateRegister'])->name('ValidateRegister');
@@ -49,18 +45,18 @@ Route::post('logout', [LoginController::class, 'Logout'])->middleware('auth:api'
 Route::post('email/verification-notification', [EmailVerificationController::class, 'SendVerificationEmail'])->name('verification.send')->middleware('auth:api');
 Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'Verify'])->name('verification.verify')->middleware('auth:api');
 
-// setting routes
+// Settings routes
 Route::middleware('auth:api')->group(function () {
+    Route::get('blog/{blog}/settings', [BlogSettingsController::class, 'getBlogSettings'])->name('getBlogSettings');
+    Route::put('blog/{blog}/settings/save', [BlogSettingsController::class, 'saveBlogSettings'])->name('saveBlogSettings');
+    Route::put('blog/{blog}/settings/theme', [BlogSettingsController::class, 'editBlogTheme'])->name('editBlogTheme');
+
     Route::get('/settings/account', [UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
     Route::get('/settings/dashboard', [UsersettingController::class, 'DashboardSetting'])->name('GetDashboardSetting');
-    Route::get('/settings',[UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
-    Route::get('/info',[UserController::class, 'GetUserInfo'])->name('GetUser_Info');
-
+    Route::get('/settings', [UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
+    Route::get('/info', [UserController::class, 'GetUserInfo'])->name('GetUser_Info');
 });
 
-
-// google
+// Google
 Route::get('auth/google', [GoogleController::class, 'Googlelogin']);
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
-
-
