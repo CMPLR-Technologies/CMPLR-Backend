@@ -10,11 +10,19 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\validation\Rules\Password;
 
+
+
 class RegisterRequest extends FormRequest
 {
-
+    /*
+    |--------------------------------------------------------------------------
+    | Register Request
+    |--------------------------------------------------------------------------|
+    | This class handles the Insert Registration request : validate and filtering 
+    | the request , and handle a proper error messages
+    |
+   */
     use SanitizesInput, WebServiceResponse;
-
 
 
     /**
@@ -55,6 +63,7 @@ class RegisterRequest extends FormRequest
                 ->numbers()
                 ->symbols()
                 ->uncompromised()],
+            'age' => ['required','integer','between: 15,120']
         ];
     }
 

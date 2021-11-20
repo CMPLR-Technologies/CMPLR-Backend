@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Blog;
+use App\Models\BlogUser;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -96,7 +99,15 @@ class UserController extends Controller
      */
     public function GetUserInfo()
     {
-        //
+        // get authenticated user
+        // $user = Auth::user();
+        // $data = User::where('id', $user->id)->get()->first()->only([
+        //     'following_count', 'likes_count',
+        //     'default_post_format', 'firstname', 'lastname'
+        // ]);
+        // $blogs = BlogUser::where('user_id',$user->id)->get();
+        
+        // return $this->success_response($blogs);
     }
 
     /**
