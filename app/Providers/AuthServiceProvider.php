@@ -34,7 +34,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         // Only authorize the authenticated user to control his own blog settings 
-        Gate::define('control-settings', function ($user, $blog) {
+        Gate::define('control-blog-settings', function ($user, $blog) {
             $blogUsers = BlogUser::where('user_id', $user->id)->get();
 
             foreach ($blogUsers as $blogUser) {
