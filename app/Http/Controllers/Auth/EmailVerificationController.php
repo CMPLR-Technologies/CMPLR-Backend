@@ -34,7 +34,7 @@ class EmailVerificationController extends Controller
             if ($this->emailVerificationService->IsEmailVerified($request->user())) {
                 return response()->json(['message'=>'Email Already Verified'],200);
             }
-            // send enmail verification user
+            // send email verification user
             $this->emailVerificationService->SendingEmailVerification($request->user());
 
             return response()->json(['message'=>'Email Verification sent'],200);
