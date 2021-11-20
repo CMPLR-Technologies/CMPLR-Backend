@@ -25,8 +25,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Follow/Unfollow blog
-Route::post('/user/follow', 'App\Http\Controllers\UserBlogConroller@follow')->middleware('auth:api');
-Route::delete('/user/follow', 'App\Http\Controllers\UserBlogConroller@unfollow')->middleware('auth:api');
+Route::post('/user/follow', [UserBlogController::class, 'follow'])->middleware('auth:api');
+
+Route::delete('/user/follow', [UserBlogController::class, 'unfollow'])->middleware('auth:api');
 
 // Create/Delete blog
 Route::post('/blog', [UserBlogController::class, 'create'])->middleware('auth:api');

@@ -149,10 +149,9 @@ class UserBlogController extends Controller
 
         //getting the blog
         $blog = Blog::where('url', $url)->first();
-
         //checking if this authorized through policy
-        $this->authorize('delete', [$blog, $request]);
-
+        $this->authorize('delete', $blog);
+     
         //calling the service , responsible for deleting a blog        
         $code = (new DeleteBlogService())->DeleteBlog($blog, auth()->user(), $request->only('email', 'password'));
 

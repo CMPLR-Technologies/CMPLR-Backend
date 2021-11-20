@@ -13,7 +13,7 @@ class CreateBlogUsersTable extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('restrict');
             $table->foreignId('blog_id')->constrained()->onDelete('restrict');
             $table->boolean('primary')->default(false);
-            $table->boolean('full_privileges')->nullable();
+            $table->boolean('full_privileges')->default(true);
             $table->boolean('contributor_privileges')->nullable();
             $table->timestamps();
         });
