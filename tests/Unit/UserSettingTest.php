@@ -9,7 +9,7 @@ use Tests\TestCase;
 class UserSettingTest extends TestCase
 {
     /**
-     * A basic Punit test example.
+     * test user settings
      *
      * @return void
      */
