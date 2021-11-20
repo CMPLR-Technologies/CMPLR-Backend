@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\Services\Auth\EmailVerificationService; 
-use App\Models\User;
+use App\Models\User; 
+use App\Services\Auth\EmailVerificationService;
 use Tests\TestCase;
 
 class EmailVerificationTest extends TestCase

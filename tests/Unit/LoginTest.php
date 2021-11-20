@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\Services\Auth\LoginService; 
-use App\Models\User;
+use App\Models\User; 
+use App\Services\Auth\LoginService;
 use Tests\TestCase;
 
 class LoginTest extends TestCase
@@ -19,7 +19,7 @@ class LoginTest extends TestCase
 
         $loginCredenials =[
             'email' =>   User::take(1)->first()->value('email'),
-            'password'=> '$2y$10$92IXUNpkjO0rOQ5by'
+            'password'=> '$2y$10$92IXUNpkjO0rOQ5by',
         ];
         
         $check =(new LoginService())->CheckUserAuthorized($loginCredenials);
@@ -36,7 +36,7 @@ class LoginTest extends TestCase
     {
         $loginCredenials =[
             'email' =>  'leland97@example.com',
-            'password'=> '$2XUNpkjO0rOQ5by'
+            'password'=> '$2XUNpkjO0rOQ5by',
         ];
         $check =(new LoginService())->CheckUserAuthorized($loginCredenials);
         $this->assertFalse($check);
