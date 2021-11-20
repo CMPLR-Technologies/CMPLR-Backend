@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\User; 
+use Illuminate\Support\Str;
 use App\Services\Auth\ForgetPasswordService;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -14,7 +15,7 @@ class ForgetPasswordTest extends TestCase
      *
      * @return void
      */
-    public function test_Successfull_CheckIfUserExist()
+    public function test_Successful_CheckIfUserExist()
     {
         $user = User::take(1)->first();
         $check = (new ForgetPasswordService())->CheckIfUserExist($user->email);
