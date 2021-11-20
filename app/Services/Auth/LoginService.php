@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class LoginService {
 
@@ -23,7 +24,7 @@ class LoginService {
       */
      public function CheckUserAuthorized(array $loginCredenials):Bool
      {
-          return auth()->attempt($loginCredenials) ;
+          return Auth::attempt($loginCredenials) ;
      }
 
      /**
@@ -51,7 +52,7 @@ class LoginService {
       */ 
      public function CheckUserAuthenticated():Bool
      {
-          return auth()->check() ;
+          return Auth::check() ;
      }
 
      
