@@ -20,6 +20,7 @@ class UnfollowBlogTest extends TestCase
         $this->assertEquals(404,$code);
     }
 
+    //testing if the user is already unfollowing the blog
     public function test_Conflict()
     {
         $follow=Follow::take(1)->first();
@@ -32,6 +33,7 @@ class UnfollowBlogTest extends TestCase
         $this->assertEquals(409,$code);
     }
 
+    //testing if the request is valid
     public function test_Success()
     {
         $follow=Follow::take(1)->first();

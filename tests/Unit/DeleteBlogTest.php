@@ -9,9 +9,12 @@ use Tests\TestCase;
 
 class DeleteBlogTest extends TestCase
 {
+    //testing if wrong parameters were sent
     public function test_InvalidData()
     {
         $blog=Blog::take(1)->first();
+
+        //getting a user with a full privileges 
         $user=User::find($blog->Users->where('full_privileges',true)->first()->user_id);
         $param=['email'=>'00','password'=>'00'];
 
@@ -20,9 +23,12 @@ class DeleteBlogTest extends TestCase
         $this->assertEquals(403,$code);
     }
 
+    //testing if the request is valid
     public function test_Success()
     {
         $blog=Blog::take(1)->first();
+
+        //getting a user with a full privileges 
         $user=User::find($blog->Users->where('full_privileges',true)->first()->user_id);
         $param=['email'=>$user->email,'password'=>$user->password];
 

@@ -9,6 +9,7 @@ use Tests\TestCase;
 
 class CreateBlogTest extends TestCase
 {
+    //testing if wrong parameters were sent
     public function test_InvalidData()
     {
         $blog=Blog::take(1)->first();
@@ -19,6 +20,7 @@ class CreateBlogTest extends TestCase
         $this->assertEquals(422,$code);
     }
 
+    //testing if the request is valid
     public function test_Success()
     {
         $user=User::take(1)->first();        

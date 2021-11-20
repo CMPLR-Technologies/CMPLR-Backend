@@ -67,11 +67,13 @@ class UserBlogController extends Controller
      * )
      */
 
-    //this function creates a new blog and 
+    
+    //this function creates a new blog
     public function create(Request $request)
     {
         // Auth::attempt(['email' => $request->email, 'password' => $request->pass]);
 
+        //validate the request parameters
         $this->validate($request, [
             'title' => 'required',
             'url' => 'required',
@@ -79,11 +81,86 @@ class UserBlogController extends Controller
             'password' => 'required_if:privacy,true',
         ]);
 
+        //calling the service , responsible for creating a blog
         $code = (new CreateBlogService())->CreateBlog($request->only('title', 'url', 'privacy', 'password'), auth()->user());
+
+        //response with the appropriate response
         if ($code == 422)
             return response()->json(['message' => 'Blog url is not available!'], 422);
         else
             return response()->json(['message' => 'Created Successfully'], 201);
+    }
+
+        /**
+     * @OA\Delete(
+     * path="/blog/{url}",
+     * summary="Delete Specific Blog",
+     * description="User Delete Specific Blog ",
+     * operationId="Delete",
+     * tags={"Blogs"},
+     *  @OA\Parameter(
+     *         name="email",
+     *         in="query",
+     *         required=true,
+     *      ),
+     *  @OA\Parameter(
+     *         name="password",
+     *         in="query",
+     *         required=true,
+     *      ),
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass user credentials",
+     *    @OA\JsonContent(
+     *       required={"email","password"},
+     *       @OA\Property(property="email", type="string", format="email", example="Email@gmail.com"),
+     *       @OA\Property(property="password", type="string", format="Password", example="Password123"),
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=200,
+     *    description="successful",
+     * ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     * @OA\Response(
+     *    response=403,
+     *    description="Forbidden",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="status", type="integer", example=403),
+     *       @OA\Property(property="message", type="string", example="email or password is incorrect. Please try again")
+     *        )
+     *     )
+     * )
+     */
+
+    //this method deletes a specific blog 
+    public function destroy($url, Request $request)
+    {
+        // Auth::attempt(['email' => $request->email, 'password' => $request->pass]);
+
+        //validate the request parameters
+        $this->validate($request, [
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        //getting the blog
+        $blog = Blog::where('url', $url)->first();
+
+        //checking if this authorized through policy
+        $this->authorize('delete', [$blog, $request]);
+
+        //calling the service , responsible for deleting a blog        
+        $code = (new DeleteBlogService())->DeleteBlog($blog, auth()->user(), $request->only('email', 'password'));
+
+        //response with the appropriate response        
+        if ($code == 403)
+            return response()->json(['message' => 'email or password is incorrect. Please try again'], 403);
+        else
+            return response()->json(['message' => 'successful'], 200);
     }
 
     /**
@@ -153,13 +230,18 @@ class UserBlogController extends Controller
      */
     public function follow(Request $request)
     {
+        //validate the request parameters
         $this->validate($request, [
             'url' => 'required'
         ]);
 
+        //get the blog to follow
         $blog = Blog::where('url', $request->url)->first();
 
+        //calling the service , responsible for deleting a blog        
         $code = (new FollowBlogService())->FollowBlog($blog, auth()->user());
+
+        //response with the appropriate response        
         if ($code == 409)
             return response()->json(['message' => 'already following'], 409);
         else if ($code == 404)
@@ -167,6 +249,8 @@ class UserBlogController extends Controller
         else
             return response()->json(['message' => 'success'], 200);
     }
+
+
 
     /**
      * @OA\POST(
@@ -224,13 +308,18 @@ class UserBlogController extends Controller
      */
     public function unfollow(Request $request)
     {
+        //validate the request parameters
         $this->validate($request, [
             'url' => 'required'
         ]);
 
+        //get the blog to follow
         $blog = Blog::where('url', $request->url)->first();
 
+        //calling the service , responsible for deleting a blog        
         $code = (new UnfollowBlogService())->UnfollowBlog($blog, auth()->user());
+
+        //response with the appropriate response        
         if ($code == 409)
             return response()->json(['message' => 'already not following'], 409);
         else if ($code == 404)
@@ -239,71 +328,4 @@ class UserBlogController extends Controller
             return response()->json(['message' => 'success'], 200);
     }
 
-
-    /**
-     * @OA\Delete(
-     * path="/blog/{url}",
-     * summary="Delete Specific Blog",
-     * description="User Delete Specific Blog ",
-     * operationId="Delete",
-     * tags={"Blogs"},
-     *  @OA\Parameter(
-     *         name="email",
-     *         in="query",
-     *         required=true,
-     *      ),
-     *  @OA\Parameter(
-     *         name="password",
-     *         in="query",
-     *         required=true,
-     *      ),
-     * @OA\RequestBody(
-     *    required=true,
-     *    description="Pass user credentials",
-     *    @OA\JsonContent(
-     *       required={"email","password"},
-     *       @OA\Property(property="email", type="string", format="email", example="Email@gmail.com"),
-     *       @OA\Property(property="password", type="string", format="Password", example="Password123"),
-     *    ),
-     * ),
-     * @OA\Response(
-     *    response=200,
-     *    description="successful",
-     * ),
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
-     * @OA\Response(
-     *    response=403,
-     *    description="Forbidden",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="status", type="integer", example=403),
-     *       @OA\Property(property="message", type="string", example="email or password is incorrect. Please try again")
-     *        )
-     *     )
-     * )
-     */
-
-    //this method deletes a specific blog 
-    public function destroy($url, Request $request)
-    {
-        // Auth::attempt(['email' => $request->email, 'password' => $request->pass]);
-
-        $this->validate($request, [
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
-
-        $blog = Blog::where('url', $url)->first();
-
-        $this->authorize('delete', [$blog, $request]);
-
-        $code = (new DeleteBlogService())->DeleteBlog($blog, auth()->user(), $request->only('email', 'password'));
-
-        if ($code == 403)
-            return response()->json(['message' => 'email or password is incorrect. Please try again'], 403);
-        else
-            return response()->json(['message' => 'successful'], 200);
-    }
 }
