@@ -9,7 +9,15 @@ use Illuminate\validation\Rules\Password;
 
 class ValidateRegisterRequest extends FormRequest
 {
-    use SanitizesInput,WebServiceResponse;
+    /*
+    |--------------------------------------------------------------------------
+    | Validate Register Request
+    |--------------------------------------------------------------------------|
+    | This class handles the Validation Registration request : validate and filtering 
+    | the request , and handle a proper error messages
+    |
+   */
+    use SanitizesInput, WebServiceResponse;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -22,6 +30,7 @@ class ValidateRegisterRequest extends FormRequest
 
     /**
      * filtering that apply to the request
+     * @return array
      */
     public function filters()
     {
@@ -39,7 +48,7 @@ class ValidateRegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'blog_name' => ['required', 'unique:blogs', 'max:255'],
+            'blog_name' => ['required', 'unique:blogs', 'max:255','alpha_dash'],
             'email' => ['required', 'email', 'unique:users', 'max:255'],
             'password' => ['required', 'string', Password::min(8)
                 ->mixedCase()

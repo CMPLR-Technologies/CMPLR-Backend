@@ -35,7 +35,7 @@ class Errors
     const Code422 = "Invalid Data";
 
     // generate token
-    const GENERATE_TOKEN = "Error while ResetPassword";
+    const GENERATE_TOKEN_ERROR = "Error while Create Token";
     const TOKEN_ERROR = "Invalid Token";
 
     // SentMail
@@ -49,5 +49,9 @@ class Errors
 
     //Duplicate Password
     const DUPLICATE_PASSWORD = "New Password Cannot be Equal Old Password";
+
+    //Creation Errors
+    const CREATE_ERROR = "Error While creating";
+
 }
 

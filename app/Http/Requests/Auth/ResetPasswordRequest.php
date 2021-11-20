@@ -7,6 +7,16 @@ use Illuminate\validation\Rules\Password;
 
 class ResetPasswordRequest extends FormRequest
 {
+
+    /*
+    |--------------------------------------------------------------------------
+    | ResetPassword Request
+    |--------------------------------------------------------------------------|
+    | This class handles the ResetPassword request : validate and filtering 
+    | the request , and handle a proper error messages
+    |
+   */
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -23,7 +33,7 @@ class ResetPasswordRequest extends FormRequest
     public function filters()
     {
         return [
-            'email' => ['trim','lowercase'],
+            'email' => ['trim', 'lowercase'],
         ];
     }
 
@@ -35,15 +45,15 @@ class ResetPasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'token'=>['required'],
-            'email'=> ['required','exists:users','max:255'],
-            'password' => ['required', 'string','confirmed', Password::min(8)
-                                                        ->mixedCase()
-                                                        ->letters()
-                                                        ->numbers()
-                                                        ->symbols()
-                                                        ->uncompromised()],
-            'password_confirmation' => ['required','same:password']
+            'token' => ['required'],
+            'email' => ['required', 'exists:users', 'max:255'],
+            'password' => ['required', 'string', 'confirmed', Password::min(8)
+                                                            ->mixedCase()
+                                                            ->letters()
+                                                            ->numbers()
+                                                            ->symbols()
+                                                            ->uncompromised()],
+            'password_confirmation' => ['required', 'same:password']
         ];
     }
 }

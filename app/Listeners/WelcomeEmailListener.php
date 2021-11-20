@@ -25,6 +25,10 @@ class WelcomeEmailListener
      */
     public function handle(Registered $event)
     {
-        $event->user->each->notify(new WelcomeEmailNotification());  
+        //$event->user->each->notify(new WelcomeEmailNotification());  
+        foreach ($event as $user) {
+            $user->notify(new WelcomeEmailNotification($user->email));
+            break;
+        }
     }
 }

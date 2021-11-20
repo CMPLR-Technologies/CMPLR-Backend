@@ -6,7 +6,14 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class RegisterResource extends JsonResource
 {
-    
+    /*
+    |--------------------------------------------------------------------------
+    | Register Resource
+    |--------------------------------------------------------------------------|
+    | This class handles the json response structure for register response
+    |
+   */
+
     /**
      * Transform the resource into an array.
      *

@@ -10,6 +10,8 @@ use App\Http\Controllers\UserBlogController;
 use App\Http\Controllers\UsersettingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,9 +24,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
 
 
 //Follow/Unfollow blog
@@ -49,11 +49,14 @@ Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'Ver
 Route::middleware('auth:api')->group(function () {
     Route::get('/settings/account', [UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
     Route::get('/settings/dashboard', [UsersettingController::class, 'DashboardSetting'])->name('GetDashboardSetting');
+    Route::get('/settings',[UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
+    Route::get('/info',[UserController::class, 'GetUserInfo'])->name('GetUser_Info');
+
 });
 
 
-
-Route::get('auth/google', [GoogleController::class, 'redirectToGoogle']);
+// google
+Route::get('auth/google', [GoogleController::class, 'Googlelogin']);
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
 

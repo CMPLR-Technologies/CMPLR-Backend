@@ -6,14 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Misc\Helpers\Errors;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Auth\ValidateRegisterRequest;
 use App\Http\Resources\Auth\RegisterResource;
-use App\Notifications\WelcomeEmailNotification;
 use App\Services\Auth\RegisterService;
 use Illuminate\Auth\Events\Registered;
 
 class RegisterController extends Controller
 {
-      /*
+   /*
     |--------------------------------------------------------------------------
     | Register Controller
     |--------------------------------------------------------------------------|
@@ -21,103 +21,121 @@ class RegisterController extends Controller
     | validation and creation.
     |
    */
-      protected $RegisterService;
+   protected $RegisterService;
 
-      /**
-       * Instantiate a new controller instance.
-       *
-       * @return void
-       */
-      public function __construct(RegisterService $RegisterService)
+   /**
+    * Instantiate a new controller instance.
+    *
+    * @return void
+    */
+   public function __construct(RegisterService $RegisterService)
+   {
+      $this->RegisterService = $RegisterService;
+   }
+
+   /**
+   * This Function used to validate the Registertion request
+   * @param  RegisterRequest
+   * 
+   * @return response
+   */
+   public function ValidateRegister(ValidateRegisterRequest $request)
+   {
+      return $this->success_response((['email' => $request->email]));
+   }
+
+
+   /**
+    * @OA\Post(
+    * path="/signup",
+    * summary="Register to tumblr",
+    * description="User register to the website",
+    * operationId="Signup",
+    * tags={"Auth"},
+    *  @OA\Parameter(
+    *         name="Email",
+    *         in="query",
+    *         required=true,
+    *      ),
+    *  @OA\Parameter(
+    *         name="Password",
+    *         in="query",
+    *         required=true,
+    *      ),
+    *   @OA\Parameter(
+    *         name="Blogname",
+    *         in="query",
+    *         required=true,
+    *      ),
+    *  
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Pass user credentials",
+    *    @OA\JsonContent(
+    *       required={"Email"},
+    *       required={"Password"},
+    *       required={"Blogname"},
+    *       @OA\Property(property="Email", type="email", format="email", example="tumblr.email@gmail.com"),
+    *       @OA\Property(property="Password", type="string",format="Password", example="pass123"),
+    *      @OA\Property(property="Blogname", type="string",format="Password", example="Winter-is-comming"),
+    *    ),
+    * ),
+    *      @OA\Response(
+    *           response=200,
+    *            description="Registered Successfully",
+    *          ),
+    *       @OA\Response(
+    *              response=422,
+    *              description="Invalid Data",
+    *          ),
+    *    
+    *     )   
+    */
+
+   /**
+    * Register function use to hanle the Registertion process of user
+    * @param RegisterRequest $request (holds the validated request)
+    *
+    * @return response
+    */
+   public function Register(RegisterRequest $request)
+   {
+      // create user with given parameters
+      $user = $this->RegisterService->CreateUser($request->email, $request->age, $request->password);
+
+      if (!$user)
+         return $this->error_response(Errors::ERROR_MSGS_500,Errors::CREATE_ERROR,500);
+
+      // create blog with given parameters
+      $blog = $this->RegisterService->CreateBlog($request->blog_name);
+
+      if (!$blog)
+         return $this->error_response(Errors::ERROR_MSGS_500,Errors::CREATE_ERROR,500);
+
+      // link user with blog
+      $link_user_blog = $this->RegisterService->LinkUserBlog($user,$blog);
+      
+      if(!$link_user_blog)
+         return $this->error_response(Errors::ERROR_MSGS_500,'link error',500);
+      
+      //create the access token to the user   
+      $generate_token = $this->RegisterService->GenerateToken($user);
+
+      if (!$generate_token)
+         return $this->error_response(Errors::ERROR_MSGS_500,ERRORS::GENERATE_TOKEN_ERROR,500);
+
+      $request['blog_name'] = $blog->blog_name;
+      $request['token'] = $user->token();
+
+      // this method will return true if authentication was successful
+      if (Auth::attempt($request->only('email', 'age', 'password'))) 
       {
-            $this->RegisterService = $RegisterService;
+        // Fire Registered event
+        event(new Registered($user)); 
+        $resource =  new RegisterResource($request);
+        return $this->success_response($resource,201);
       }
 
-      /**
-       * This Function used to validate  
-       */
-      public function ValidateRegister(RegisterRequest $request)
-      {
-            return $this->success_response((['email' => $request->email]));
-      }
-
-
-      /**
-       * @OA\Post(
-       * path="/signup",
-       * summary="Register to tumblr",
-       * description="User register to the website",
-       * operationId="Signup",
-       * tags={"Auth"},
-       *  @OA\Parameter(
-       *         name="Email",
-       *         in="query",
-       *         required=true,
-       *      ),
-       *  @OA\Parameter(
-       *         name="Password",
-       *         in="query",
-       *         required=true,
-       *      ),
-       *   @OA\Parameter(
-       *         name="Blogname",
-       *         in="query",
-       *         required=true,
-       *      ),
-       *  
-       * @OA\RequestBody(
-       *    required=true,
-       *    description="Pass user credentials",
-       *    @OA\JsonContent(
-       *       required={"Email"},
-       *       required={"Password"},
-       *       required={"Blogname"},
-       *       @OA\Property(property="Email", type="email", format="email", example="tumblr.email@gmail.com"),
-       *       @OA\Property(property="Password", type="string",format="Password", example="pass123"),
-       *      @OA\Property(property="Blogname", type="string",format="Password", example="Winter-is-comming"),
-       *    ),
-       * ),
-       *      @OA\Response(
-       *           response=200,
-       *            description="Registered Successfully",
-       *          ),
-       *       @OA\Response(
-       *              response=422,
-       *              description="Invalid Data",
-       *          ),
-       *    
-       *     )   
-       */
-      public function Register(RegisterRequest $request)
-      {
-
-            $user = $this->RegisterService->CreateUser($request->email, $request->age, $request->password);
-
-            if (!$user)
-                  return $this->error_response(Errors::ERROR_MSGS_500, 'Error While creating', 500);
-
-
-            $blog = $this->RegisterService->CreateBlog($request->blog_name);
-
-            if (!$blog)
-                  return $this->error_response(Errors::ERROR_MSGS_500, 'Error While creating', 500);
-
-            $generate_token = $this->RegisterService->GenerateToken($user);
-
-            if (!$generate_token)
-                  return $this->error_response(Errors::ERROR_MSGS_500, 'Error Generating Token', 500);
-
-            $request['blog_name'] = $blog->blog_name;
-            $request['token'] = $user->token();
-
-            // check if user is created
-            if (Auth::attempt($request->only('email', 'age', 'password'))) {
-                  // $user->notify(new WelcomeEmailNotification());
-                  event(new Registered($user));
-                  $resource =  new RegisterResource($request);
-                  return $this->success_response($resource, 201);
-            }
-
-            return $this->error_response(Errors::ERROR_MSGS_500, 'Error While creating', $code = 500);
-      }
+      return $this->error_response(Errors::ERROR_MSGS_500,Errors::CREATE_ERROR,$code= 500);
+   }
 }

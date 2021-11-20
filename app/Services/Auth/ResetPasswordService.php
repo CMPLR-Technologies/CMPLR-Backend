@@ -25,7 +25,9 @@ class ResetPasswordService
 
     /**
      * Check if email and token both related to same user
-     *
+     *  
+     * @param string $email
+     * @param string $token
      * 
      * @return Bool
      */
@@ -40,7 +42,7 @@ class ResetPasswordService
             return true;    
     }
 
-      /**
+    /**
      *  set the new password for user and delete the token  
      *
      * if new password matches old password return false
@@ -60,8 +62,8 @@ class ResetPasswordService
     /**
      *  set the new password for user and delete the token  
      *
-     * @param string $email
-     * @param string $token
+     * @param User $user
+     * @param string $new_password
      * 
      * @return bool
      */
