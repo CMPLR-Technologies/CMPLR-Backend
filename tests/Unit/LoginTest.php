@@ -19,7 +19,7 @@ class LoginTest extends TestCase
 
         $loginCredenials =[
             'email' =>   User::take(1)->first()->value('email'),
-            'password'=> '$2y$10$92IXUNpkjO0rOQ5by',
+            'password'=> 'Ahmed_123',
         ];
         
         $check =(new LoginService())->CheckUserAuthorized($loginCredenials);
