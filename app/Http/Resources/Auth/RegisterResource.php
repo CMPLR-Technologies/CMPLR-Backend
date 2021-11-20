@@ -16,16 +16,10 @@ class RegisterResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'meta'=>[
-                'status'=>'201',
-                'msg'=>'successfully created'
-            ],
-            "response"=>[
                 'email' => $this->email,
                 'blog_name' => $this->blog_name,
                 'age' => $this->age,
                 'token' => $this->token,
-            ],
         ];
     }
 }

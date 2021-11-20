@@ -2,21 +2,14 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\Http\Misc\Helpers\Errors;
 use App\Http\Misc\Traits\WebServiceResponse;
 use Elegant\Sanitizer\Laravel\SanitizesInput;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\validation\Rules\Password;
 
-class RegisterRequest extends FormRequest
+class ValidateRegisterRequest extends FormRequest
 {
-
-    use SanitizesInput, WebServiceResponse;
-
-
-
+    use SanitizesInput,WebServiceResponse;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -26,7 +19,6 @@ class RegisterRequest extends FormRequest
     {
         return true;
     }
-
 
     /**
      * filtering that apply to the request
@@ -47,7 +39,7 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'blog_name' => ['required', 'unique:blogs', 'max:255', 'alpha_dash'],
+            'blog_name' => ['required', 'unique:blogs', 'max:255'],
             'email' => ['required', 'email', 'unique:users', 'max:255'],
             'password' => ['required', 'string', Password::min(8)
                 ->mixedCase()
@@ -56,21 +48,5 @@ class RegisterRequest extends FormRequest
                 ->symbols()
                 ->uncompromised()],
         ];
-    }
-
-
-
-
-    /** 
-     * 
-     * this function overrides the failedValidation in validator class 
-     *  to return the desired failed response
-     * @return json
-     */
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(
-            $this->error_response(Errors::ERROR_MSGS_400, $validator->errors()->all(), 400)
-        );
     }
 }

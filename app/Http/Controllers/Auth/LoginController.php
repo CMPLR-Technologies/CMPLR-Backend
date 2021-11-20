@@ -1,13 +1,31 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Services\Auth\LoginService;
+use App\Http\Requests\Auth\LoginRequest;
 
 class LoginController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Login Controller
+    |--------------------------------------------------------------------------|
+    | This controller handles Login and Logout of existing users 
+    |
+   */
+    protected $loginService;
+
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(LoginService $loginService)
+    {
+        $this->loginService = $loginService;
+    }
     /**
      * @OA\Post(
      * path="/login",
@@ -52,18 +70,18 @@ class LoginController extends Controller
      * ),
      * )
      */
-    public function Login(Request $request)
+    public function Login(LoginRequest $request)
     {
-        $login_credenials =$request->validate([
-            'email' =>  'email|required',
-            'password'=> 'required'
-        ]);
-        if (auth()->attempt($login_credenials)){
+        $loginCredenials =[
+            'email' =>  $request->email,
+            'password'=>  $request->password
+        ];
+        if ($this->loginService->CheckUserAuthorized($loginCredenials)){
             //generate the token for the user 
-            $user_login_token = auth()->user()->CreateToken('authToken')->accessToken;
+            $userLoginToken = $this->loginService->CreateUserToken(auth()->user());
 
             //now return this token on success login attempt
-            return response()->json(['user'=>auth()->user(), 'token'=>$user_login_token] ,200);
+            return response()->json(['user'=>auth()->user(), 'token'=>$userLoginToken] ,200);
         }else{
             // wrong login user not authorized to our system error code 401
             return response()->json(['error' => 'UnAuthorized Access'],401);
@@ -90,10 +108,11 @@ class LoginController extends Controller
     public function Logout()
     {
         // checking wether the user is authenticated
-        if (auth()->check()) {
+        if ($this->loginService->CheckUserAuthenticated()) {
+
             //getting user token the revoke it
-            $user_token = auth()->user()->token();
-            $user_token->revoke();
+            $this->loginService->RevokeUserToken(auth()->user());
+            
             return response()->json(['message'=>'Logout Successfully'], 200);
 
         }else {

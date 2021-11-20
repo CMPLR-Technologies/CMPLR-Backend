@@ -1,20 +1,16 @@
 <?php
 
 namespace App\Http\Requests\Auth;
-
-use App\Http\Misc\Helpers\Errors;
-use App\Http\Misc\Traits\WebServiceResponse;
 use Elegant\Sanitizer\Laravel\SanitizesInput;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\validation\Rules\Password;
 
-class RegisterRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
 
-    use SanitizesInput, WebServiceResponse;
-
+    use SanitizesInput;
+    
 
 
     /**
@@ -27,15 +23,14 @@ class RegisterRequest extends FormRequest
         return true;
     }
 
-
+    
     /**
      * filtering that apply to the request
      */
     public function filters()
     {
         return [
-            'email' => ['trim', 'lowercase'],
-            'blog_name' => ['trim', 'lowercase']
+            'email' => ['trim','lowercase'],
         ];
     }
 
@@ -47,19 +42,13 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'blog_name' => ['required', 'unique:blogs', 'max:255', 'alpha_dash'],
-            'email' => ['required', 'email', 'unique:users', 'max:255'],
-            'password' => ['required', 'string', Password::min(8)
-                ->mixedCase()
-                ->letters()
-                ->numbers()
-                ->symbols()
-                ->uncompromised()],
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string'],
         ];
     }
 
 
-
+   
 
     /** 
      * 
@@ -69,8 +58,15 @@ class RegisterRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(
-            $this->error_response(Errors::ERROR_MSGS_400, $validator->errors()->all(), 400)
-        );
+        throw new HttpResponseException(response()->json([
+            'meta'=>[
+                'status'=>422,
+                'msg' => '',
+            ],
+            'error' => $validator->errors()->all(),
+        ], 422));
+        
     }
+
+
 }

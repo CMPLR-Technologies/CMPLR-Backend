@@ -20,9 +20,10 @@ class ForgetPasswordService
      * 
      * @return Bool
      */
-    public function CheckIfExist(string $email): Bool
+    public function CheckIfUserExist(string $email): Bool
     {
-        if (User::where('email', $email)->doesntExist())
+        $email = strtolower(trim($email));
+        if (User::where('email',$email )->doesntExist())
             return false;
         return true;
     }
@@ -47,17 +48,19 @@ class ForgetPasswordService
      * 
      * @return string
      */
-    public function AddToken(string $email): string
+    public function AddToken(string $email)
     {
-        $token = $this->GenerateToken();
-        $reset_password = DB::table('password_resets')->insert([
-            'email' => $email,
-            'token' => $token,
-            'created_at' => Carbon::now()
-        ]);
-        if (!$reset_password)
-            return null;
 
+        $token = $this->GenerateToken();
+        try {
+            DB::table('password_resets')->insert([
+                'email' => $email,
+                'token' => $token,
+                'created_at' => Carbon::now()
+            ]);
+        } catch (\Throwable $th) {
+           return null;
+        }       
         return $token;
     }
 
@@ -73,7 +76,6 @@ class ForgetPasswordService
     public function SendResetPasswordMail(string $email, string $token): bool
     {
         try {
-            // Mail::send return Void so it needs try and catch
             Mail::to($email)->send(new ResetPasswordMail($token));
         } catch (\Throwable $th) {
             return false;

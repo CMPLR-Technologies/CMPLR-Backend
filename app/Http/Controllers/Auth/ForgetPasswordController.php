@@ -3,10 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Mail\ResetPasswordMail;
 use Illuminate\Http\Request;
-
-use Illuminate\Support\Facades\Mail;
 use App\Services\Auth\ForgetPasswordService;
 use App\Http\Misc\Helpers\Errors;
 
@@ -35,7 +32,7 @@ class ForgetPasswordController extends Controller
         $this->ForgetPasswordService = $ForgetPasswordService;
     }
   
-     /**
+    /**
      * @OA\Get(
      * path="/forgot_password",
      * summary="forget password for existing user",
@@ -55,8 +52,8 @@ class ForgetPasswordController extends Controller
     public function ForgetPassword(Request $request)
     {
        
-        if (!$this->ForgetPasswordService->CheckIfExist($request->email)) 
-            return $this->error_response(Errors::NOT_FOUND_USER,404);
+        if (!$this->ForgetPasswordService->CheckIfUserExist($request->email)) 
+            return $this->error_response($msg = Errors::NOT_FOUND_USER,$code = 404);
         
         $token = $this->ForgetPasswordService->AddToken($request->email);
 

@@ -94,7 +94,7 @@ class UserController extends Controller
      * security ={{"bearer":{}}}
      * )
      */
-    public function index()
+    public function GetUserInfo()
     {
         //
     }
