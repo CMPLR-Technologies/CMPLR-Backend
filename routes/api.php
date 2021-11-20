@@ -1,16 +1,17 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\UserBlogController;
-use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\Auth\ForgetPasswordController;
 use App\Http\Controllers\Auth\GoogleController;
-use App\Http\Controllers\UsersettingController;
-use App\Http\Controllers\BlogSettingsController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
-use App\Http\Controllers\Auth\ForgetPasswordController;
-use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\BlogSettingsController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\UserBlogController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\UsersettingController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,9 @@ use App\Http\Controllers\Auth\EmailVerificationController;
 |
 */
 
+// Search
+Route::get('search/{query}', [SearchController::class, 'search']);
+
 // Follow/Unfollow blog
 Route::post('/user/follow', 'App\Http\Controllers\UserBlogConroller@follow')->middleware('auth:api');
 Route::delete('/user/follow', 'App\Http\Controllers\UserBlogConroller@unfollow')->middleware('auth:api');
@@ -30,7 +34,6 @@ Route::delete('/user/follow', 'App\Http\Controllers\UserBlogConroller@unfollow')
 // Create/Delete blog
 Route::post('/blog', [UserBlogController::class, 'create'])->middleware('auth:api');
 Route::delete('/blog/{url}', [UserBlogController::class, 'destroy'])->middleware('auth:api');
-
 
 Route::post('/register/insert', [RegisterController::class, 'Register'])->name('Register');
 Route::post('/register/validate', [RegisterController::class, 'ValidateRegister'])->name('ValidateRegister');

@@ -5,11 +5,11 @@ namespace App\Providers;
 use app\Models\Blog;
 use App\Models\BlogUser;
 use app\Policies\BlogPolicy;
-use Laravel\Passport\Passport;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\Notifications\VerifyEmail;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Gate;
+use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -34,7 +34,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         // Only authorize the authenticated user to control his own blog settings 
-        Gate::define('control-settings', function ($user, $blog) {
+        Gate::define('control-blog-settings', function ($user, $blog) {
             $blogUsers = BlogUser::where('user_id', $user->id)->get();
 
             foreach ($blogUsers as $blogUser) {

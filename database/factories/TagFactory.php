@@ -3,8 +3,9 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
-class BlogUserFactory extends Factory
+class TagFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -13,9 +14,11 @@ class BlogUserFactory extends Factory
      */
     public function definition()
     {
+        $tag_name = $this->faker->name();
+
         return [
-            'user_id' => $this->faker->numberBetween(1, 10),
-            'blog_id' => $this->faker->numberBetween(1, 10),
+            'name' => $tag_name,
+            'slug' => Str::slug($tag_name, '-'),
         ];
     }
 }

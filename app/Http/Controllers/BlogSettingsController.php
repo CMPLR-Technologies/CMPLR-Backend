@@ -7,7 +7,6 @@ use App\Models\BlogSettings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
-
 class BlogSettingsController extends Controller
 {
   /**
@@ -166,7 +165,7 @@ class BlogSettingsController extends Controller
    */
   public function getBlogSettings(Request $request, Blog $blog)
   {
-    if (Gate::denies('control-settings', $blog)) {
+    if (Gate::denies('control-blog-settings', $blog)) {
       return response([
         'meta' => [
           'status' => 403,
@@ -418,7 +417,7 @@ class BlogSettingsController extends Controller
    */
   public function saveBlogSettings(Request $request, Blog $blog)
   {
-    if (Gate::denies('control-settings', $blog)) {
+    if (Gate::denies('control-blog-settings', $blog)) {
       return response([
         'meta' => [
           'status' => 403,
@@ -668,7 +667,7 @@ class BlogSettingsController extends Controller
 
   public function editBlogTheme(Request $request, Blog $blog)
   {
-    if (Gate::denies('control-settings', $blog)) {
+    if (Gate::denies('control-blog-settings', $blog)) {
       return response([
         'meta' => [
           'status' => 403,

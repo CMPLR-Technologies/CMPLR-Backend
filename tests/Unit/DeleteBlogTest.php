@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use App\Services\Blog\DeleteBlogService;
 use App\Models\Blog;
 use App\Models\User;
+use App\Services\Blog\DeleteBlogService;
 use Tests\TestCase;
 
 class DeleteBlogTest extends TestCase

@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class BlogUserFactory extends Factory
+class TagUserFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -14,8 +14,8 @@ class BlogUserFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => $this->faker->numberBetween(1, 10),
-            'blog_id' => $this->faker->numberBetween(1, 10),
+            'tag_id' => rand(1, 100),
+            'user_id' => rand(1, 11),
         ];
     }
 }

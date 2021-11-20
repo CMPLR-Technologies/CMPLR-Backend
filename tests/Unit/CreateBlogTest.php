@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use App\Services\Blog\CreateBlogService;
 use App\Models\Blog;
 use App\Models\User;
+use App\Services\Blog\CreateBlogService;
 use Tests\TestCase;
 
 class CreateBlogTest extends TestCase

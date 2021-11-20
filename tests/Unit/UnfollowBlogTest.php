@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
-use App\Services\Blog\UnfollowBlogService;
 use App\Models\Blog;
 use App\Models\Follow;
 use App\Models\User;
+use App\Services\Blog\UnfollowBlogService;
 use Tests\TestCase;
 
 class UnfollowBlogTest extends TestCase

@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Auth\UserSettingResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\Auth\UserSettingResource;
-
 
 class UsersettingController extends Controller
 {

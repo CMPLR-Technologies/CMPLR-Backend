@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\BlogUser;
+use App\Models\Follow;
+use App\Models\Tag;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -52,5 +55,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function blogs()
     {
         return $this->hasMany(BlogUser::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'tag_users', 'user_id', 'tag_id');
     }
 }
