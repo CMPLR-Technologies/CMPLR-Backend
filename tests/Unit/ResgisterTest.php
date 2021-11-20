@@ -1,7 +1,7 @@
 <?php
 
 namespace Tests\Unit;
-
+use App\Models\User;
 use Tests\TestCase;
 
 class ResgisterTest extends TestCase
@@ -15,7 +15,7 @@ class ResgisterTest extends TestCase
      *
      * @return void
      */
-    /*
+    
     public function test_Successful_Registration()
     {
         $response = $this->post('api/register/insert',[
@@ -38,7 +38,7 @@ class ResgisterTest extends TestCase
           ]);
 
           $this->assertAuthenticated();
-    }*/
+    }
 
     /**
      * Function to test Registertion process with an email or blog_name or both that 
@@ -47,7 +47,7 @@ class ResgisterTest extends TestCase
      *
      * @return void
      */
-    /*
+    
     public function test_Registration_with_existEmailandBlogname()
     {
        $randomuser =  User::get()->first();
@@ -68,14 +68,14 @@ class ResgisterTest extends TestCase
             ]
           ]);
 
-    }*/
+    }
 
     /**
      * Function to test Registertion process with an invalid age
      * 
      * @return void
      */
-    /*
+    
     public function test_Registration_with_invalid_age()
     {
        $randomuser =  User::get()->first();
@@ -95,7 +95,7 @@ class ResgisterTest extends TestCase
             ]
           ]);
 
-    }*/
+    }
 
     /**
      * Function to test Registertion process with a weak password
@@ -103,7 +103,7 @@ class ResgisterTest extends TestCase
      * @return void
      */
 
-    /*
+    
     public function test_Registration_with_weak_password()
     {
         $response = $this->post('api/register/insert',[
@@ -122,5 +122,5 @@ class ResgisterTest extends TestCase
             ]
           ]);
     }
-    */
+    
 }

@@ -13,57 +13,24 @@ use Laravel\Socialite\Facades\Socialite;
 
 class GoogleController extends Controller
 {
-    // /**
-    //  * Create a new controller instance.
-    //  *
-    //  * @return void
-    //  */
-    // public function redirectToGoogle()
-    // {
-    //     return Socialite::driver('google')->redirect();
-    // }
+    public function GoogleLogin()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+    public function handleGoogleCallback()
+    {
+        try {
+            $user = Socialite::driver('google')->user();
+            $token = $user->token;
+            //$user2 = Socialite::driver('google')->userFromToken($token);
+            dd($user);
 
-    // /**
-    //  * Create a new controller instance.
-    //  *
-    //  * @return void
-    //  */
-    // public function handleCallback(Request $request)
-    // {
-    //     try {
-    //         $adwords_api_response = Socialite::with('google')->getAccessTokenResponse($request->code);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 
-    //         $user = Socialite::driver('google')->user();
-
-    //         $finduser = User::where('google_id', $user->id)->first();
-
-    //         // if there is already a user with this Google id => login 
-    //         // else create a new user with this google_id
-    //         if ($finduser) {
-
-    //             Auth::login($finduser);
-
-    //             return (new RegisterResource($finduser));
-    //         } else {
-    //             $newUser = User::create([
-    //                 'firstName' => $user['given_name'],
-    //                 'lastName' => $user['family_name'],
-    //                 'email' => $user['email'],
-    //                 'google_id' => $user['id'],
-    //                 'email_verified_at' => Carbon::now()->timestamp,
-    //                 'password' => 'N/A',
-    //             ]);
-
-    //             //Auth::login($newUser);
-
-    //             return (new RegisterResource($newUser));
-    //         }
-    //     } catch (Exception $e) {
-    //         dd($e->getMessage());
-    //     }
-    // }
-
-    public function Googlelogin( Request $request ) { 
+  //  public function Googlelogin( Request $request ) { 
         // $provider = "google";
         // $token = $request->input('access_token');
          
@@ -75,5 +42,5 @@ class GoogleController extends Controller
         // $tokenType=$accessTokenResponse["token_type"];
         // $user = Socialite::driver('google')->userFromToken($accessToken);
      
-    }
+   // }
 }

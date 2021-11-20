@@ -4,7 +4,9 @@ namespace Tests\Unit;
 
 use App\Models\Blog;
 use App\Models\User;
-use App\Services\Auth\RegisterService; 
+use Illuminate\Support\Str;
+use App\Services\Auth\RegisterService;
+ 
 use Tests\TestCase;
 
 class UserRegisterTest extends TestCase
@@ -15,7 +17,7 @@ class UserRegisterTest extends TestCase
      *
      * @return void
      */
-    public function test_Successfull_Create_User()
+    public function test_Successful_Create_User()
     {  
         $email = str::random(10).'@gmail.com';
         $age =  rand(16,119);
@@ -42,7 +44,7 @@ class UserRegisterTest extends TestCase
      *
      * @return void
      */
-    public function test_Successfull_Create_Blog()
+    public function test_Successful_Create_Blog()
     {  
         $blog_name = str::random(10);
         $blog_url = 'https' . $blog_name . 'tumblr.com';
@@ -60,25 +62,8 @@ class UserRegisterTest extends TestCase
     public function test_Failure_Create_Blog()
     {  
         $blog = Blog::take(1)->first();
-        $check = (new RegisterService())->CreateBlog($blog->blog_name); 
+        $user = User::take(1)->first();
+        $check = (new RegisterService())->CreateBlog($blog->blog_name,$user->id); 
         $this->assertNull($check);
     }
-
-
-     /**
-     * =====> Generate User Token <========== 
-     * check successful create of Blog
-     * Enter 
-     *
-     * @return void
-     */
-
-
-
-
-
-
-
-
-
 }

@@ -59,5 +59,5 @@ Route::middleware('auth:api')->group(function () {
 });
 
 // Google
-Route::get('auth/google', [GoogleController::class, 'Googlelogin']);
-Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+Route::get('auth/google', [GoogleController::class, 'GoogleLogin'])->middleware('web');
+Route::any('auth/callback', [GoogleController::class, 'handleGoogleCallback'])->middleware('web');
