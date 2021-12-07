@@ -4,9 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\Blog;
 use App\Models\User;
-use Illuminate\Support\Str;
 use App\Services\Auth\RegisterService;
- 
 use Tests\TestCase;
 
 class UserRegisterTest extends TestCase
