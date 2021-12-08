@@ -39,13 +39,14 @@ class RegisterService{
      * Adds the primary blog of the registered user to DataBase.
      *
      * @param string $Blog_name
+     * @param User $user
      * 
      * @return Blog
      */
-    public function CreateBlog(string $blog_name,int $user_id)
+    public function CreateBlog(string $blog_name,User $user)
     {
         try {
-            $blog_url = 'https://www' . $blog_name . 'tumblr.com';
+            $blog_url = 'https://www.' . $blog_name . 'tumblr.com';
             $blog = Blog::create([
                 'blog_name' => $blog_name,
                 'url' => $blog_url,
@@ -53,10 +54,12 @@ class RegisterService{
             DB::table('blog_settings')->insert([
                 'blog_id'=>$blog->id,
             ]);
+            $user->primary_blog_id = $blog->id;
+            $user->save();
         } catch (\Throwable $th) {
             //if blog creation failed so we should delete the user 
             // to make all processes as package(ensure that all are done or all failed)
-            User::find($user_id)->delete();
+            User::find($user->id)->delete();
             return null;
         }
         if(!$blog)

@@ -2,9 +2,12 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Http\Misc\Helpers\Errors;
 use App\Http\Misc\Traits\WebServiceResponse;
 use Elegant\Sanitizer\Laravel\SanitizesInput;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\validation\Rules\Password;
 
 class ValidateRegisterRequest extends FormRequest
@@ -57,5 +60,18 @@ class ValidateRegisterRequest extends FormRequest
                 ->symbols()
                 ->uncompromised()],
         ];
+    }
+
+    /** 
+     * 
+     * this function overrides the failedValidation in validator class 
+     *  to return the desired failed response
+     * @return json
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            $this->error_response(Errors::ERROR_MSGS_400, $validator->errors()->all(), 422)
+        );
     }
 }

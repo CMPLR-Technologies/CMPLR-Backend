@@ -3,7 +3,7 @@
 
 Tap this Link to Reset your Password.
 
-@component('mail::button', ['url' => "http://127.0.0.1:8000/api/reset-password/$token"])
+@component('mail::button', ['url' => "https://www.tumblr.com/forgot_password/$token"])
 ResetPassWord
 @endcomponent
 

@@ -3,8 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Misc\Helpers\Errors;
+use App\Http\Requests\Auth\ChangeEmailRequest;
+use App\Http\Requests\Auth\ChangePasswordRequest;
 use App\Http\Resources\Auth\UserSettingResource;
+use App\Models\User;
 use App\Services\User\UserSettingService;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\SettingsRequest;
 
 class UsersettingController extends Controller
 {
@@ -95,6 +100,83 @@ class UsersettingController extends Controller
 
         return $this->success_response(new UserSettingResource($data));
     }
+
+    /**
+     * Update all User Settings
+     * 
+     * @param SettingsRequest $request
+     * 
+     * @return response
+     */
+    public function UpdateSettings(SettingsRequest $request)
+    {
+        // get Auth User
+        $user = $this->UserSettingService->GetAuthUser();
+        if(!$user)
+            return  $this->error_response(Errors::ERROR_MSGS_401, '', 401);
+        $data = $request->all();
+        //Update User Settings
+        $is_updated = $this->UserSettingService->UpdateSettings($user->id,$data);
+        if(!$is_updated)
+            return $this->error_response(Errors::ERROR_MSGS_500, 'Failed to Update user settings', 500);
+
+        return $this->success_response('');
+    }
+
+    /**
+     * update Email of Account
+     * 
+     * @param ChangeEmailRequest
+     *
+     * @return response
+     */
+    public function ChangeEmail(ChangeEmailRequest $request)
+    {
+        $user = Auth::user();
+
+        $check = $this->UserSettingService->ConfirmPassword($request->password, $user->password);
+        if (!$check)
+            return $this->error_response(Errors::ERROR_MSGS_400, 'Invalid password entered', 400);
+
+        if ($request->email == $user->email)
+            return $this->success_response($request->email);
+
+        // update User Email
+        $is_updated = $this->UserSettingService->UpdateEmail($user, $request->email);
+        if (!$is_updated)
+            return $this->error_response(Errors::ERROR_MSGS_500, 'Failed to update email', 500);
+
+        return $this->success_response($request->email);
+    }
+
+    /**
+     * change Password of Account
+     * @param ChangeEmailRequest
+     *
+     * @return response
+     *
+     */
+    public function ChangePassword(ChangePasswordRequest $request)
+    {
+        $user = Auth::user();
+
+        $check = $this->UserSettingService->ConfirmPassword($request->password, $user->password);
+        if (!$check)
+            return $this->error_response(Errors::ERROR_MSGS_400, 'Invalid password entered', 400);
+
+
+        if (strcmp($request->new_password, $request->confirm_new_password) !== 0)
+            return  $this->error_response(Errors::ERROR_MSGS_400, 'Passwords don\'t match', 400);
+
+        // update User Password
+        $is_updated = $this->UserSettingService->UpdatePassword($user, $request->new_password);
+        if (!$is_updated)
+            return $this->error_response(Errors::ERROR_MSGS_500, 'Failed to update Password', 500);
+
+        return $this->success_response('Password Change Successfully');
+    }
+
+
 
     /**
      * @OA\Delete(
