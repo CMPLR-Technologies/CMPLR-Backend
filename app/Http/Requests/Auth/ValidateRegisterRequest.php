@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Http\Misc\Helpers\Errors;
+use Illuminate\validation\Rules\Password;
+use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Misc\Traits\WebServiceResponse;
 use Elegant\Sanitizer\Laravel\SanitizesInput;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\validation\Rules\Password;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ValidateRegisterRequest extends FormRequest
 {
@@ -48,7 +51,7 @@ class ValidateRegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'blog_name' => ['required', 'unique:blogs', 'max:255','alpha_dash'],
+            'blog_name' => ['required', 'unique:blogs', 'max:255', 'alpha_dash'],
             'email' => ['required', 'email', 'unique:users', 'max:255'],
             'password' => ['required', 'string', Password::min(8)
                 ->mixedCase()
@@ -57,5 +60,12 @@ class ValidateRegisterRequest extends FormRequest
                 ->symbols()
                 ->uncompromised()],
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            $this->error_response(Errors::ERROR_MSGS_400, $validator->errors()->all(), 400)
+        );
     }
 }

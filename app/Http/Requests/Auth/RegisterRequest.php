@@ -61,12 +61,9 @@ class RegisterRequest extends FormRequest
                 ->numbers()
                 ->symbols()
                 ->uncompromised()],
-            'age' => ['required','integer','between: 15,120']
+            'age' => ['required', 'integer', 'between: 15,120']
         ];
     }
-
-
-
 
     /** 
      * 
