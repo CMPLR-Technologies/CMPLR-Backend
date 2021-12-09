@@ -2,10 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Blog;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use App\Models\BlogUser; 
 use Illuminate\Http\Request;
+use App\Services\User\UserService;
+use App\Http\Misc\Helpers\Errors;
+
 
 class UserController extends Controller
 {
+    protected $UserService;
+
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(UserService $UserService)
+    {
+        $this->UserService = $UserService;
+    }
     /**
      * @OA\Get(
      * path="/user/info",
@@ -94,17 +112,31 @@ class UserController extends Controller
      * security ={{"bearer":{}}}
      * )
      */
+    
+     /**
+      * Get 
+      */
     public function GetUserInfo()
     {
-        // get authenticated user
-        // $user = Auth::user();
-        // $data = User::where('id', $user->id)->get()->first()->only([
-        //     'following_count', 'likes_count',
-        //     'default_post_format', 'firstname', 'lastname'
-        // ]);
-        // $blogs = BlogUser::where('user_id',$user->id)->get();
+        //Get authenticated user
+        $user  = $this->UserService->GetAuthUser();
+        if (!$user)
+            return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
         
-        // return $this->success_response($blogs);
+        //Get User Data 
+        $user_data = $this->UserService->GetUserData($user);
+        if(!$user_data)
+            return $this->error_response(Errors::ERROR_MSGS_500, 'Failed to get User data', 500);
+        
+        //Get Blog Data 
+        $blogs_data = $this->UserService->GetBlogsData($user->id);
+        if(!$blogs_data)
+            return $this->error_response(Errors::ERROR_MSGS_500, 'Failed to get Blogs data', 500);
+
+        // set the response
+        $response = $user_data;
+        $response['blogs'] = $blogs_data;
+        return $this->success_response($response);
     }
 
     /**

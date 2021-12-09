@@ -62,10 +62,16 @@ class ValidateRegisterRequest extends FormRequest
         ];
     }
 
+    /** 
+     * 
+     * This function overrides the failedValidation in validator class 
+     *  to return the desired failed response
+     * @return json
+     */
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(
-            $this->error_response(Errors::ERROR_MSGS_400, $validator->errors()->all(), 400)
+            $this->error_response(Errors::ERROR_MSGS_400, $validator->errors()->all(), 422)
         );
     }
 }

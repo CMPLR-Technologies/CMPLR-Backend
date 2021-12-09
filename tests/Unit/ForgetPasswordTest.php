@@ -3,7 +3,6 @@
 namespace Tests\Unit;
 
 use App\Models\User; 
-use Illuminate\Support\Str;
 use App\Services\Auth\ForgetPasswordService;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;

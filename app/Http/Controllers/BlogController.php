@@ -3,11 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use App\Models\BlogSettings;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Services\Blog\FollowBlogService;
+use App\Http\Misc\Helpers\Errors;
+
 
 class BlogController extends Controller
 {
 
+
+    protected $FollowBlogService;
+
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(FollowBlogService $FollowBlogService)
+    {
+        $this->FollowBlogService = $FollowBlogService;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -29,16 +48,7 @@ class BlogController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Blog  $blog
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Blog $blog)
-    {
-        //
-    }
+
 
 
 
@@ -192,8 +202,37 @@ class BlogController extends Controller
      * security ={{"bearer":{}}}
      * )
      */
-    public function getFollowers(Request $request, Blog $blog)
+    /**
+     * Get Blog Followers
+     * 
+     * @param 
+     * 
+     */
+    public function GetFollowers (Request $request,Blog $blog)
     {
+        // get blog_name
+        $blog_name = $request->route('blog_name');
+        // Get Blog using blog_name
+        $blog = $this->FollowBlogService->GetBlog($blog_name);
+        if(!$blog)
+            return $this->error_response(Errors::ERROR_MSGS_404,'Blog Not Found ',404);
+
+        // Check if This USer is Authorize to do this action
+        try {
+            $this->authorize('ViewFollowers',$blog);
+        } catch (\Throwable $th) {
+            return $this->error_response(Errors::ERROR_MSGS_403,'This action is unauthorized.',403);
+        }
+        // Get followers'sid that follow this blog
+        $followers_id = $this->FollowBlogService->GetFollowersID($blog->id);
+
+        // Get Followers Information
+        $followers_info = $this->FollowBlogService->GetFollowersInfo($followers_id);
+        
+        $response['number_of_followers'] = count($followers_id);
+        $response['followers'] = $followers_info;
+        
+        return $this->success_response($response);
     }
 
     /**
