@@ -1,0 +1,51 @@
+version: "3.1"
+services:
+  app:
+    build:
+      args:
+        user: cmplr
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: cmplr
+    container_name: cmplr-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    networks:
+      - cmplr
+
+  db:
+    image: postgres
+    container_name: cmplr-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DATABASE: ${DB_DATABASE}
+      POSTGRES_ROOT_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: pgsql
+    ports:
+      - 3306:5432
+    volumes:
+      - ./docker-compose/pgsql:/docker-entrypoint-initdb.d
+    networks:
+      - cmplr
+
+  nginx:
+    image: nginx:alpine
+    container_name: cmplr-nginx
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d/
+    networks:
+      - cmplr
+
+networks:
+  cmplr:
+    driver: bridge
