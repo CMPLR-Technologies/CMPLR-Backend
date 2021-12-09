@@ -33,13 +33,17 @@ class ForgetPasswordController extends Controller
     }
   
     /**
-     * @OA\Get(
+     * @OA\post(
      * path="/forgot_password",
      * summary="forget password for existing user",
      * description="User can reset password for existing email",
      * operationId="forgetPassword",
      * tags={"Auth"},
-     * 
+     *  @OA\Parameter(
+     *         name="email",
+     *         in="query",
+     *         required=true,
+     *      ),
      * @OA\RequestBody(
      *    required=true,
      *    description="Pass user credentials",

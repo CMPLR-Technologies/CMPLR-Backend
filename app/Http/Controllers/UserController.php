@@ -1125,7 +1125,7 @@ class UserController extends Controller
     {
     }
 
-    // public function GetUserTheme(Request $request)
+    // public function GetUserTheme()
     // {
     //     $user = Auth::user();
     //     $theme = $user->theme;

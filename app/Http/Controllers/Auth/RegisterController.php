@@ -134,10 +134,23 @@ class RegisterController extends Controller
     *      @OA\Property(property="age", type="integer", example=26),
     *    ),
     * ),
-    *      @OA\Response(
-    *           response=201,
-    *            description="Registered Successfully",
-    *          ),
+     * @OA\Response(
+     *    response=201,
+     *    description="Successfully",
+     *  @OA\JsonContent(
+     *           type="object",
+     *           @OA\Property(property="Meta", type="object",
+     *           @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="success"),
+     *           ),
+     *           @OA\Property(property="response", type="object",
+     *              @OA\Property(property="email", type="string",format="text", example="ahmed.mohamed.abdelhamed2@gmail.com"),
+     *              @OA\Property(property="blog_name", type="string", format="text", example="ahmed123"),
+     *              @OA\Property(property="age", type="integer", example=26),
+     *              @OA\Property(property="token", type="string", format="text", example="4Y9ZEJqWEABGHkzEXAqNI1F9UZKtKeZVdIChNXBapp9w7XP6mwQZeBXEebMU"),
+     *           ),
+     * ),
+     * ),
     *       @OA\Response(
     *              response=422,
     *              description="Invalid Data",

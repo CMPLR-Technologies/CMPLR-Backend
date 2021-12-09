@@ -40,7 +40,7 @@ class ResetPasswordController extends Controller
      * @return Response
      */
     /**
-     * @OA\Get(
+     * @OA\post(
      * path="/reset_password",
      * summary="reset password for existing user",
      * description="User can reset password for existing email",
@@ -82,7 +82,14 @@ class ResetPasswordController extends Controller
      * ),
      * @OA\Response(
      *    response=200,
-     *    description="Successfully",
+     *    description="Success",
+     *      @OA\JsonContent(
+     *           @OA\Property(property="Meta", type="object",
+     *           @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="OK"),
+     *           ),
+     *       @OA\Property(property="user", type="string", format="text", example="{user data}"),
+     *    ),
      * ),
      *   @OA\Response(
      *      response=404,
@@ -122,6 +129,43 @@ class ResetPasswordController extends Controller
     }
 
 
+     /**
+     * @OA\get(
+     * path="/reset_password/{token}",
+     * summary="get email for reset password for  user",
+     * description="User can reset password for existing email",
+     * operationId="GetResestPassword",
+     * tags={"Auth"},
+     *  @OA\Parameter(
+     *         name="token",
+     *         in="query",
+     *         required=true,
+     *      ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Successfully",
+     *  @OA\JsonContent(
+     *           type="object",
+     *           @OA\Property(property="Meta", type="object",
+     *           @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="success"),
+     *           ),
+     *           @OA\Property(property="response", type="object",
+     *              @OA\Property(property="token", type="string", format="text", example="4Y9ZEJqWEABGHkzEXAqNI1F9UZKtKeZVdIChNXBapp9w7XP6mwQZeBXEebMU"),
+     *             @OA\Property(property="email", type="string",format="text", example="ahmed.mohamed.abdelhamed2@gmail.com"),
+     *           ),
+     * ),
+     * ),
+     *   @OA\Response(
+     *      response=404,
+     *       description="Not Found",
+     *   ),
+     *   @OA\Response(
+     *      response=422,
+     *       description="invalid Data",
+     *   ),
+     * )
+     */
     /**
      * this function get the token and email of user 
      */

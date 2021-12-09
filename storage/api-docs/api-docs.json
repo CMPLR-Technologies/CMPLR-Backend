@@ -284,13 +284,20 @@
             }
         },
         "/forgot_password": {
-            "get": {
+            "post": {
                 "tags": [
                     "Auth"
                 ],
                 "summary": "forget password for existing user",
                 "description": "User can reset password for existing email",
                 "operationId": "forgetPassword",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "requestBody": {
                     "description": "Pass user credentials",
                     "required": true,
@@ -554,7 +561,53 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Registered Successfully"
+                        "description": "Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "success"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "text",
+                                                    "example": "ahmed.mohamed.abdelhamed2@gmail.com"
+                                                },
+                                                "blog_name": {
+                                                    "type": "string",
+                                                    "format": "text",
+                                                    "example": "ahmed123"
+                                                },
+                                                "age": {
+                                                    "type": "integer",
+                                                    "example": 26
+                                                },
+                                                "token": {
+                                                    "type": "string",
+                                                    "format": "text",
+                                                    "example": "4Y9ZEJqWEABGHkzEXAqNI1F9UZKtKeZVdIChNXBapp9w7XP6mwQZeBXEebMU"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "422": {
                         "description": "Invalid Data"
@@ -563,7 +616,7 @@
             }
         },
         "/reset_password": {
-            "get": {
+            "post": {
                 "tags": [
                     "Auth"
                 ],
@@ -628,7 +681,99 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Successfully"
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "user": {
+                                            "type": "string",
+                                            "format": "text",
+                                            "example": "{user data}"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "422": {
+                        "description": "invalid Data"
+                    }
+                }
+            }
+        },
+        "/reset_password/{token}": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "get email for reset password for  user",
+                "description": "User can reset password for existing email",
+                "operationId": "GetResestPassword",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "success"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string",
+                                                    "format": "text",
+                                                    "example": "4Y9ZEJqWEABGHkzEXAqNI1F9UZKtKeZVdIChNXBapp9w7XP6mwQZeBXEebMU"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "text",
+                                                    "example": "ahmed.mohamed.abdelhamed2@gmail.com"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "Not Found"
