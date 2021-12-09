@@ -3,12 +3,12 @@
 namespace App\Http\Requests\Auth;
 
 use App\Http\Misc\Helpers\Errors;
+use Illuminate\validation\Rules\Password;
+use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Misc\Traits\WebServiceResponse;
 use Elegant\Sanitizer\Laravel\SanitizesInput;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\validation\Rules\Password;
 
 class ValidateRegisterRequest extends FormRequest
 {
@@ -51,7 +51,7 @@ class ValidateRegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'blog_name' => ['required', 'unique:blogs', 'max:255','alpha_dash'],
+            'blog_name' => ['required', 'unique:blogs', 'max:255', 'alpha_dash'],
             'email' => ['required', 'email', 'unique:users', 'max:255'],
             'password' => ['required', 'string', Password::min(8)
                 ->mixedCase()
@@ -64,7 +64,7 @@ class ValidateRegisterRequest extends FormRequest
 
     /** 
      * 
-     * this function overrides the failedValidation in validator class 
+     * This function overrides the failedValidation in validator class 
      *  to return the desired failed response
      * @return json
      */
