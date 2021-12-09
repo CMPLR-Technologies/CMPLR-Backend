@@ -62,19 +62,18 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/settings', [UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
     Route::put('/settings', [UsersettingController::class, 'UpdateSettings'])->name('UpdateAccountSetting');
     Route::put('/settings/change-email', [UsersettingController::class, 'ChangeEmail'])->name('Change Email');
-    Route::put('/settings/change-password',[UsersettingController::class, 'ChangePassword'])->name('Change Password');
+    Route::put('/settings/change-password', [UsersettingController::class, 'ChangePassword'])->name('Change Password');
 });
 //blogs
 Route::middleware(['auth:api'])->group(function () {
     Route::get('/blog/{blog_name}/followers', [BlogController::class, 'GetFollowers'])->name('GetBlogFollowers');
 });
 
-Route::middleware(['auth:api'])->get('/user_theme',[UserController::class, 'GetUserTheme'])->name('Getuser_theme');
-Route::middleware(['auth:api'])->put('/user_theme',[UserController::class, 'UpdateUserTheme'])->name('updateuser_theme');
+Route::middleware(['auth:api'])->get('/user_theme', [UserController::class, 'GetUserTheme'])->name('Getuser_theme');
+Route::middleware(['auth:api'])->put('/user_theme', [UserController::class, 'UpdateUserTheme'])->name('updateuser_theme');
 
 // Google
 Route::get('auth/google', [GoogleController::class, 'GoogleLogin'])->middleware('web');
 Route::any('auth/callback', [GoogleController::class, 'handleGoogleCallback'])->middleware('web');
 
 Route::get('auth/googles/{token}', [GoogleController::class, 'GetUserFromGoogle'])->middleware('web');
-

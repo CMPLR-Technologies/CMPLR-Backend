@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Auth;
 
 use App\Http\Misc\Helpers\Errors;
-use Illuminate\validation\Rules\Password;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Misc\Traits\WebServiceResponse;
 use Elegant\Sanitizer\Laravel\SanitizesInput;
