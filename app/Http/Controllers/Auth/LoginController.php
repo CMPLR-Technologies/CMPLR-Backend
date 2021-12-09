@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Misc\Helpers\Errors;
 use App\Services\Auth\LoginService;
 use App\Http\Requests\Auth\LoginRequest;
 
@@ -84,7 +85,8 @@ class LoginController extends Controller
             return response()->json(['user'=>auth()->user(), 'token'=>$userLoginToken] ,200);
         }else{
             // wrong login user not authorized to our system error code 401
-            return response()->json(['error' => 'UnAuthorized Access'],401);
+            return $this->error_response(Errors::ERROR_MSGS_401,['UnAuthorized Access'],401);
+           // return response()->json(['error' => ['UnAuthorized Access']],401);
         }
     }
 

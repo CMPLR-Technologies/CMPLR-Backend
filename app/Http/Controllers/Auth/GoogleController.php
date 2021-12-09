@@ -15,12 +15,13 @@ class GoogleController extends Controller
 {
     public function GoogleLogin()
     {
+        
         return Socialite::driver('google')->redirect();
     }
     public function handleGoogleCallback()
     {
         try {
-            $user = Socialite::driver('google')->user();
+            $user = Socialite::driver('google')->stateless()->user();
             $token = $user->token;
             //$user2 = Socialite::driver('google')->userFromToken($token);
             dd($user);
@@ -43,4 +44,13 @@ class GoogleController extends Controller
         // $user = Socialite::driver('google')->userFromToken($accessToken);
      
    // }
+
+   public function GetUserFromGoogle(Request $request)
+   {
+        $token = $request->route('token');
+        //dd($token);
+        $user = Socialite::driver('google')->userFromToken($token);
+        
+        dd($user);
+   }
 }
