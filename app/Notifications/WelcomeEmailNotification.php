@@ -38,11 +38,10 @@ class WelcomeEmailNotification extends Notification
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
-    {
-        
+    {   
         return (new MailMessage)
                     ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
+                    ->action('Notification Action', url('https://www.google.com'))
                     ->line('Thank you for using our application!');
     }
 

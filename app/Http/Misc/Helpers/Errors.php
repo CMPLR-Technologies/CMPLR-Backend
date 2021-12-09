@@ -45,6 +45,8 @@ class Errors
     const ERROR_MSGS_422 = "Unprocessable Entity";
     const ERROR_MSGS_401 = "UNAUTHORIZED USER";
     const ERROR_MSGS_400 = "Invalid Data";
+    const ERROR_MSGS_403 = "Forbidden";
+    const ERROR_MSGS_404 = "Not Found";
     const ERROR_MSGS_500 = "Internal Server Error";
 
     //Duplicate Password

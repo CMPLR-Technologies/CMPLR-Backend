@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BlogSettingsController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserBlogController;
@@ -37,7 +38,7 @@ Route::post('/blog', [UserBlogController::class, 'create'])->middleware('auth:ap
 Route::delete('/blog/{url}', [UserBlogController::class, 'destroy'])->middleware('auth:api');
 
 Route::post('/register/insert', [RegisterController::class, 'Register'])->name('Register');
-Route::post('/register/validate', [RegisterController::class, 'ValidateRegister'])->name('ValidateRegister');
+Route::post('/register/validate', [RegisterController::class, 'ValidateRegister'])->name('ValidateRegister')->middleware('cors:api');
 Route::post('/forgot_password', [ForgetPasswordController::class, 'ForgetPassword'])->name('password.email');
 Route::post('/reset-password', [ResetPasswordController::class, 'ResetPassword'])->name('password.reset');
 Route::get('/reset-password/{token}', [ResetPasswordController::class, 'GetResetPassword'])->name('password.reset');
@@ -54,11 +55,20 @@ Route::middleware('auth:api')->group(function () {
     Route::put('blog/{blog}/settings/save', [BlogSettingsController::class, 'saveBlogSettings'])->name('saveBlogSettings');
     Route::put('blog/{blog}/settings/theme', [BlogSettingsController::class, 'editBlogTheme'])->name('editBlogTheme');
 
-    Route::get('/settings/account', [UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
-    Route::get('/settings/dashboard', [UsersettingController::class, 'DashboardSetting'])->name('GetDashboardSetting');
+
     Route::get('/settings', [UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
-    Route::get('/info', [UserController::class, 'GetUserInfo'])->name('GetUser_Info');
+    Route::get('info', [UserController::class, 'GetUserInfo'])->name('GetUser_Info');
+
+    Route::get('/settings', [UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
+    Route::put('/settings', [UsersettingController::class, 'UpdateSettings'])->name('UpdateAccountSetting');
+    Route::put('/settings/change-email', [UsersettingController::class, 'ChangeEmail'])->name('Change Email');
+    Route::put('/settings/change-password',[UsersettingController::class, 'ChangePassword'])->name('Change Password');
 });
+//blogs
+Route::middleware(['auth:api'])->group(function () {
+    Route::get('/blog/{blog_name}/followers', [BlogController::class, 'GetFollowers'])->name('GetBlogFollowers');
+});
+
 
 // Google
 Route::get('auth/google', [GoogleController::class, 'GoogleLogin'])->middleware('web');

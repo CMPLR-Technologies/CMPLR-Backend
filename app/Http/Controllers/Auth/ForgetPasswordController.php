@@ -59,6 +59,9 @@ class ForgetPasswordController extends Controller
      */
     public function ForgetPassword(Request $request)
     {
+        $request->validate([
+            'email' => ['required','email','max:255'],
+        ]);
        // check if user is exist in DB
         if (!$this->ForgetPasswordService->CheckIfUserExist($request->email)) 
             return $this->error_response($msg = Errors::NOT_FOUND_USER,$code = 404);
