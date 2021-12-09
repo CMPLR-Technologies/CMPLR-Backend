@@ -291,12 +291,36 @@
                 "summary": "forget password for existing user",
                 "description": "User can reset password for existing email",
                 "operationId": "forgetPassword",
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "Email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "email",
+                                        "format": "email",
+                                        "example": "tumblr.email@gmail.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
-                        "description": "Successfully redirect"
+                        "description": "Successfully"
                     },
                     "404": {
                         "description": "Not Found"
+                    },
+                    "422": {
+                        "description": "invalid Data"
                     }
                 }
             }
@@ -397,7 +421,73 @@
                 }
             }
         },
-        "/signup": {
+        "/register/validate": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register to tumblr",
+                "description": "For web only",
+                "operationId": "Signup validate",
+                "parameters": [
+                    {
+                        "name": "Email",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "Password",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "blog_name",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "Blogname"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "email",
+                                        "format": "email",
+                                        "example": "tumblr.email@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "Password",
+                                        "example": "pass123"
+                                    },
+                                    "Blog_name": {
+                                        "type": "string",
+                                        "format": "Password",
+                                        "example": "Winter-is-comming"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful"
+                    },
+                    "422": {
+                        "description": "Invalid Data"
+                    }
+                }
+            }
+        },
+        "/register/insert": {
             "post": {
                 "tags": [
                     "Auth"
@@ -417,7 +507,12 @@
                         "required": true
                     },
                     {
-                        "name": "Blogname",
+                        "name": "blog_name",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "age",
                         "in": "query",
                         "required": true
                     }
@@ -429,23 +524,101 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "Blogname"
+                                    "age"
                                 ],
                                 "properties": {
-                                    "Email": {
+                                    "email": {
                                         "type": "email",
                                         "format": "email",
                                         "example": "tumblr.email@gmail.com"
                                     },
-                                    "Password": {
+                                    "password": {
                                         "type": "string",
                                         "format": "Password",
                                         "example": "pass123"
                                     },
-                                    "Blogname": {
+                                    "Blog_name": {
                                         "type": "string",
                                         "format": "Password",
                                         "example": "Winter-is-comming"
+                                    },
+                                    "age": {
+                                        "type": "integer",
+                                        "example": 26
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Registered Successfully"
+                    },
+                    "422": {
+                        "description": "Invalid Data"
+                    }
+                }
+            }
+        },
+        "/reset_password": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "reset password for existing user",
+                "description": "User can reset password for existing email",
+                "operationId": "forgetPassword",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "Password",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "password_confirmation",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "email",
+                                        "format": "email",
+                                        "example": "tumblr.email@gmail.com"
+                                    },
+                                    "token": {
+                                        "type": "string",
+                                        "example": "XTz5MunRlmR9k3IHYnme4oVyryPN20lnSgq8UjfX97WudDesfpyF98bhoHV6"
+                                    },
+                                    "password": {
+                                        "type": "password",
+                                        "format": "password",
+                                        "example": "*************"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "password",
+                                        "example": "*************"
                                     }
                                 },
                                 "type": "object"
@@ -455,10 +628,13 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Registered Successfully"
+                        "description": "Successfully"
+                    },
+                    "404": {
+                        "description": "Not Found"
                     },
                     "422": {
-                        "description": "Invalid Data"
+                        "description": "invalid Data"
                     }
                 }
             }

@@ -40,8 +40,8 @@ Route::delete('/blog/{url}', [UserBlogController::class, 'destroy'])->middleware
 Route::post('/register/insert', [RegisterController::class, 'Register'])->name('Register');
 Route::post('/register/validate', [RegisterController::class, 'ValidateRegister'])->name('ValidateRegister')->middleware('cors:api');
 Route::post('/forgot_password', [ForgetPasswordController::class, 'ForgetPassword'])->name('password.email');
-Route::post('/reset-password', [ResetPasswordController::class, 'ResetPassword'])->name('password.reset');
-Route::get('/reset-password/{token}', [ResetPasswordController::class, 'GetResetPassword'])->name('password.reset');
+Route::post('/reset_password', [ResetPasswordController::class, 'ResetPassword'])->name('password.reset');
+Route::get('/reset_password/{token}', [ResetPasswordController::class, 'GetResetPassword'])->name('password.reset');
 
 Route::post('/login', [LoginController::class, 'Login']);
 Route::post('/logout', [LoginController::class, 'Logout'])->middleware('auth:api');
@@ -69,7 +69,12 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/blog/{blog_name}/followers', [BlogController::class, 'GetFollowers'])->name('GetBlogFollowers');
 });
 
+Route::middleware(['auth:api'])->get('/user_theme',[UserController::class, 'GetUserTheme'])->name('Getuser_theme');
+Route::middleware(['auth:api'])->put('/user_theme',[UserController::class, 'UpdateUserTheme'])->name('updateuser_theme');
 
 // Google
 Route::get('auth/google', [GoogleController::class, 'GoogleLogin'])->middleware('web');
 Route::any('auth/callback', [GoogleController::class, 'handleGoogleCallback'])->middleware('web');
+
+Route::get('auth/googles/{token}', [GoogleController::class, 'GetUserFromGoogle'])->middleware('web');
+
