@@ -2,14 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Blog;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use App\Models\BlogUser; 
-use Illuminate\Http\Request;
-use App\Services\User\UserService;
 use App\Http\Misc\Helpers\Errors;
-
+use App\Services\User\UserService;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -1125,23 +1120,21 @@ class UserController extends Controller
     {
     }
 
-    // public function GetUserTheme()
-    // {
-    //     $user = Auth::user();
-    //     $theme = $user->theme;
-    //     $response['theme']=$theme;
-    //     return $this->success_response($response,200);
-    // }
+    public function GetUserTheme()
+    {
+        $user = Auth::user();
+        $theme = $user->theme;
+        $response['theme']=$theme;
+        return $this->success_response($response,200);
+    }
 
-    // public function UpdateUserTheme (Request $request)
-    // {
-    //     $user = Auth::user();
-    //     $theme = $request->theme;
-    //     $check = User::where('id',$user->id)->theme =$theme;
-    //     $user->theme = $theme;
-    //     $user->save();
-    //     if(!$check)
-    //         return $this->error_response(Errors::ERROR_MSGS_500,[''],500);
-    //     return $this->success_response(['successfully update theme'],200);
-    // }
+    public function UpdateUserTheme (Request $request)
+    {
+        $user = Auth::user();
+        $theme = $request->theme;
+        $check = User::where('id',$user->id)->update(array('theme'=> $theme));
+        if(!$check)
+            return $this->error_response(Errors::ERROR_MSGS_500,[''],500);
+        return $this->success_response(['successfully update theme'],200);
+    }
 }

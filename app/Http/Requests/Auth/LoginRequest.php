@@ -61,9 +61,9 @@ class LoginRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'meta'=>[
                 'status'=>422,
-                'msg' => '',
+                'msg' => 'Unprocessable Content',
             ],
-            'error' => $validator->errors()->all(),
+            'error' => $validator->errors(),
         ], 422));
         
     }
