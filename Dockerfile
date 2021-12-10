@@ -34,3 +34,5 @@ RUN mkdir -p /home/$user/.composer && \
 WORKDIR /var/www
 
 USER $user
+
+#CMD composer update ; php artisan key:generate ; php artisan migrate ; php artisan db:seed ; php artisan passport:install;

@@ -1124,4 +1124,24 @@ class UserController extends Controller
     public function remove_tags_from_posts()
     {
     }
+
+    // public function GetUserTheme()
+    // {
+    //     $user = Auth::user();
+    //     $theme = $user->theme;
+    //     $response['theme']=$theme;
+    //     return $this->success_response($response,200);
+    // }
+
+    // public function UpdateUserTheme (Request $request)
+    // {
+    //     $user = Auth::user();
+    //     $theme = $request->theme;
+    //     $check = User::where('id',$user->id)->theme =$theme;
+    //     $user->theme = $theme;
+    //     $user->save();
+    //     if(!$check)
+    //         return $this->error_response(Errors::ERROR_MSGS_500,[''],500);
+    //     return $this->success_response(['successfully update theme'],200);
+    // }
 }

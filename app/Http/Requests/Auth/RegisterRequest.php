@@ -8,7 +8,7 @@ use Elegant\Sanitizer\Laravel\SanitizesInput;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\validation\Rules\Password;
+use Illuminate\Validation\Rules\Password;
 
 class RegisterRequest extends FormRequest
 {
@@ -61,12 +61,9 @@ class RegisterRequest extends FormRequest
                 ->numbers()
                 ->symbols()
                 ->uncompromised()],
-            'age' => ['required','integer','between: 15,120']
+            'age' => ['required', 'integer', 'between: 15,120']
         ];
     }
-
-
-
 
     /** 
      * 

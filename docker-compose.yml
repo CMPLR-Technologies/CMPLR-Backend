@@ -9,7 +9,6 @@ services:
       dockerfile: Dockerfile
     image: cmplr
     container_name: cmplr-app
-    restart: unless-stopped
     working_dir: /var/www/
     volumes:
       - ./:/var/www
@@ -17,6 +16,7 @@ services:
       - cmplr
     depends_on:
       - db
+    restart: on-failure
 
   db:
     image: postgres

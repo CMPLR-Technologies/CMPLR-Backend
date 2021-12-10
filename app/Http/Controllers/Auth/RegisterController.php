@@ -33,6 +33,52 @@ class RegisterController extends Controller
       $this->RegisterService = $RegisterService;
    }
 
+  /**
+    * @OA\Post(
+    * path="/register/validate",
+    * summary="Register to tumblr",
+    * description="For web only",
+    * operationId="Signup validate",
+    * tags={"Auth"},
+    *  @OA\Parameter(
+    *         name="Email",
+    *         in="query",
+    *         required=true,
+    *      ),
+    *  @OA\Parameter(
+    *         name="Password",
+    *         in="query",
+    *         required=true,
+    *      ),
+    *   @OA\Parameter(
+    *         name="blog_name",
+    *         in="query",
+    *         required=true,
+    *      ),
+    *  
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Pass user credentials",
+    *    @OA\JsonContent(
+    *       required={"Email"},
+    *       required={"Password"},
+    *       required={"Blogname"},
+    *       @OA\Property(property="email", type="email", format="email", example="tumblr.email@gmail.com"),
+    *       @OA\Property(property="password", type="string",format="Password", example="pass123"),
+    *      @OA\Property(property="Blog_name", type="string",format="Password", example="Winter-is-comming"),
+    *    ),
+    * ),
+    *      @OA\Response(
+    *           response=200,
+    *            description="successful",
+    *          ),
+    *       @OA\Response(
+    *              response=422,
+    *              description="Invalid Data",
+    *          ),
+    *    
+    *     )   
+    */
    /**
    * This Function used to validate the Registertion request
    * @param  RegisterRequest
@@ -47,7 +93,7 @@ class RegisterController extends Controller
 
    /**
     * @OA\Post(
-    * path="/signup",
+    * path="/register/insert",
     * summary="Register to tumblr",
     * description="User register to the website",
     * operationId="Signup",
@@ -63,8 +109,14 @@ class RegisterController extends Controller
     *         required=true,
     *      ),
     *   @OA\Parameter(
-    *         name="Blogname",
+    *         name="blog_name",
     *         in="query",
+    *         required=true,
+    *      ),
+    *   @OA\Parameter(
+    *         name="age",
+    *         in="query",
+    *           
     *         required=true,
     *      ),
     *  
@@ -74,16 +126,31 @@ class RegisterController extends Controller
     *    @OA\JsonContent(
     *       required={"Email"},
     *       required={"Password"},
-    *       required={"Blogname"},
-    *       @OA\Property(property="Email", type="email", format="email", example="tumblr.email@gmail.com"),
-    *       @OA\Property(property="Password", type="string",format="Password", example="pass123"),
-    *      @OA\Property(property="Blogname", type="string",format="Password", example="Winter-is-comming"),
+    *       required={"blog_name"},
+    *       required={"age"},
+    *       @OA\Property(property="email", type="email", format="email", example="tumblr.email@gmail.com"),
+    *       @OA\Property(property="password", type="string",format="Password", example="pass123"),
+    *      @OA\Property(property="Blog_name", type="string",format="Password", example="Winter-is-comming"),
+    *      @OA\Property(property="age", type="integer", example=26),
     *    ),
     * ),
-    *      @OA\Response(
-    *           response=200,
-    *            description="Registered Successfully",
-    *          ),
+     * @OA\Response(
+     *    response=201,
+     *    description="Successfully",
+     *  @OA\JsonContent(
+     *           type="object",
+     *           @OA\Property(property="Meta", type="object",
+     *           @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="success"),
+     *           ),
+     *           @OA\Property(property="response", type="object",
+     *              @OA\Property(property="email", type="string",format="text", example="ahmed.mohamed.abdelhamed2@gmail.com"),
+     *              @OA\Property(property="blog_name", type="string", format="text", example="ahmed123"),
+     *              @OA\Property(property="age", type="integer", example=26),
+     *              @OA\Property(property="token", type="string", format="text", example="4Y9ZEJqWEABGHkzEXAqNI1F9UZKtKeZVdIChNXBapp9w7XP6mwQZeBXEebMU"),
+     *           ),
+     * ),
+     * ),
     *       @OA\Response(
     *              response=422,
     *              description="Invalid Data",

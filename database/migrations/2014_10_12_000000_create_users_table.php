@@ -30,6 +30,7 @@ class CreateUsersTable extends Migration
             $table->boolean('conversational_notification')->default(true);
             $table->json('filtered_content')->nullable();
             $table->string('google_id')->nullable();
+            $table->string('theme')->default('trueBlue');
             $table->integer('primary_blog_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
