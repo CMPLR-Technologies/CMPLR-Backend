@@ -3,12 +3,12 @@
 namespace App\Http\Requests\Auth;
 
 use App\Http\Misc\Helpers\Errors;
-use Illuminate\Validation\Rules\Password;
-use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Misc\Traits\WebServiceResponse;
 use Elegant\Sanitizer\Laravel\SanitizesInput;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rules\Password;
 
 class ValidateRegisterRequest extends FormRequest
 {
