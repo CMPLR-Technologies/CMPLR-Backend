@@ -109,23 +109,40 @@ class ResetPasswordController extends Controller
      */
     public function ResetPassword(ResetPasswordRequest $request)
     {
+        // check if the token is coresponding to request email
         if (!$this->ResetPasswordService->CheckEmailToken($request->email, $request->token))
-            return $this->error_response(Errors::TOKEN_ERROR, 400);
+            return $this->error_response(Errors::TOKEN_ERROR,'',400);
 
+        //get User
         $user = $this->ResetPasswordService->GetUser($request->email);
         if (!$user)
-            return  $this->error_response(Errors::NOT_FOUND_USER, 404);
+            return  $this->error_response(Errors::NOT_FOUND_USER,'',404);
 
+        // check that new password is same as the old one
         $check_password = $this->ResetPasswordService->CheckPassword($user->password, $request->password);
         if (!$check_password)
-            return  $this->error_response(Errors::NOT_FOUND_USER, 404);
+        {
+            $error['password']= [Errors::DUPLICATE_PASSWORD];
+            return  $this->error_response(Errors::ERROR_MSGS_400,$error,400);
+        }
 
+        // Set the new password
         if (!$this->ResetPasswordService->SetNewPassword($user, $request->password))
-            return  $this->error_response(Errors::DUPLICATE_PASSWORD, 400);
+            return  $this->error_response(Errors::ERROR_MSGS_500,'',500);
 
+        // login after reset 
+        // Create access token to user
+        $userLoginToken = $user->CreateToken('authToken')->accessToken;
+
+        // set the response
+        $response['user'] = $user;
+        $response['token'] = $userLoginToken;
+
+        // Fire PasswordReset event
         event(new PasswordReset($user));
 
-        return  $this->success_response($user, 200);
+        // return proper response
+        return  $this->success_response($response, 200);
     }
 
 
@@ -168,17 +185,16 @@ class ResetPasswordController extends Controller
      */
     /**
      * this function get the token and email of user 
+     * @param string $token
+     * @return response
      */
     public function GetResetPassword(string $token)
     {
         if (!$passwordResets = DB::table('password_resets')->where('token', $token)->first()) {
-            // return response([
-            //     'message' => 'Invalid token'
-            // ], 400);
             return $this->error_response(Errors::ERROR_MSGS_400, ['Invalid token'], 400);
         }
         $response['email'] = $passwordResets->email;
         $response['token'] = $passwordResets->token;
-        return $this->success_response($response);
+        return $this->success_response($response,200);
     }
 }
