@@ -33,7 +33,7 @@ class ForgetPasswordController extends Controller
     }
   
     /**
-     * @OA\post(
+     * @OA\Get(
      * path="/forgot_password",
      * summary="forget password for existing user",
      * description="User can reset password for existing email",
@@ -81,8 +81,10 @@ class ForgetPasswordController extends Controller
             'email' => ['required','email','max:255'],
         ]);
        // check if user is exist in DB
-        if (!$this->ForgetPasswordService->CheckIfUserExist($request->email)) 
-            return $this->error_response($msg = Errors::ERROR_MSGS_404,['There is no account associated with this email'],404);
+        if (!$this->ForgetPasswordService->CheckIfUserExist($request->email)) {
+            $error['email'] = ['There is no account associated with this email'];
+            return $this->error_response($msg = Errors::ERROR_MSGS_404,$error,404);
+        }
         
         //create reset password token to user
         $token = $this->ForgetPasswordService->AddToken($request->email);
@@ -92,7 +94,7 @@ class ForgetPasswordController extends Controller
 
         // send ResetPasswordMail
         if(!$this->ForgetPasswordService->SendResetPasswordMail($request->email , $token))
-            return $this->error_response(Errors::ERROR_MAIL,500);
+            return $this->error_response(Errors::ERROR_MAIL,'',500);
 
         return $this->success_response(['Check your email'],200);
     }

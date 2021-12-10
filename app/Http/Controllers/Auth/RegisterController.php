@@ -193,10 +193,12 @@ class RegisterController extends Controller
 
       $request['blog_name'] = $blog->blog_name;
       $request['token'] = $user->token();
+      
 
       // this method will return true if authentication was successful
       if (Auth::attempt($request->only('email', 'age', 'password'))) 
       {
+         $request['user'] = Auth::user();
         // Fire Registered event
         event(new Registered($user)); 
         $resource =  new RegisterResource($request);
