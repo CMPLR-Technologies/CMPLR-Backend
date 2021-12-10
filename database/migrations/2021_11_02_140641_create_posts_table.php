@@ -11,18 +11,17 @@ class CreatePostsTable extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->string("blog_name");                    // post owner | target in case of ask/submit
-            $table->string("type");                         // post type
+            $table->string("type")->nullable();             // post type
             $table->jsonb("content");                       // post content
-            $table->json("layout")->nullable();
+            $table->json("layout");                         // structured arrangement of items 
             $table->string("url")->nullable();
-            $table->date("date")->nullable();
-            $table->string("format")->nullable();
+            $table->string("format");                       // style of the post's format
             $table->string("source_url")->nullable();
             $table->string("reblog_key")->nullable();
             $table->integer("blog_id")->nullable();
             $table->boolean("mobile");                      // was the post created through a mobile
             $table->string("source_title")->nullable();
-            $table->string("state");                        // published,draft,queue,private
+            $table->string("state")->nullable();            // published,draft,queue,private
             $table->integer("parent_post_id")->nullable();
             $table->string("parent_blog_id")->nullable();
             $table->string("post_ask_submit")->nullable();  // is it ask or submit

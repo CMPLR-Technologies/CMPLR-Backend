@@ -2,9 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Misc\Helpers\Success;
+use App\Http\Requests\Ask\CreateAsk;
+use App\Http\Requests\Ask\CreateAskRequest;
+use App\Models\Blog;
+use App\Models\Post;
+use App\Providers\AuthServiceProvider;
+use App\Services\Ask\CreateAskService;
+use App\Http\Misc\Helpers\Errors;
+
 
 class AskController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Ask Controller
+    |--------------------------------------------------------------------------|
+    | This controller handles Asks
+    |
+   */
+
     /**
      *	@OA\Post
      *	(
@@ -21,7 +38,7 @@ class AskController extends Controller
      *      		in="path",
      *      		required=false,
      *      		@OA\Schema
-     *			(
+     *			    (
      *           		type="Boolean"
      *      	 	)
      *   	),
@@ -69,8 +86,25 @@ class AskController extends Controller
      *     	)
      * )
      */
-    public function CreateAsk()
-    {
+
+
+    /**
+     * creates an Ask send by a user to a blog
+     * 
+     * @return response
+     */
+
+    public function CreateAsk(CreateAskRequest $request,$blogName)
+    {   
+        //call the service
+        $code=(new CreateAskService())->CreateAsk($request,$blogName);        
+
+        //return the response
+        if($code==201)
+            return $this->success_response(Success::CREATED,201);
+        else if($code==404)
+            return $this->error_response(Errors::ERROR_MSGS_404,'wrong target blog',404);
+
     }
 
     /**

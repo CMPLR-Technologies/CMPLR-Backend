@@ -12,6 +12,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserBlogController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UsersettingController;
+use App\Http\Controllers\AskController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -77,3 +78,6 @@ Route::get('auth/google', [GoogleController::class, 'GoogleLogin'])->middleware(
 Route::any('auth/callback', [GoogleController::class, 'handleGoogleCallback'])->middleware('web');
 
 Route::get('auth/googles/{token}', [GoogleController::class, 'GetUserFromGoogle'])->middleware('web');
+
+// Ask
+Route::post('/blog/{blogName}/ask', [AskController::class, 'CreateAsk'])->middleware('auth:api');
