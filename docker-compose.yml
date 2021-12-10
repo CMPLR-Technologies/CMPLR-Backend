@@ -33,6 +33,7 @@ services:
       - 3306:5432
     volumes:
       - ./docker-compose/pgsql:/docker-entrypoint-initdb.d
+      - postgres-data:/var/lib/postgresql/data
     networks:
       - cmplr
 
@@ -51,3 +52,5 @@ services:
 networks:
   cmplr:
     driver: bridge
+volumes:
+  postgres-data:
