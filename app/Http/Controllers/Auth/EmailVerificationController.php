@@ -74,6 +74,7 @@ class EmailVerificationController extends Controller
      */
     public function Verify(EmailVerificationRequest $request)
     {
+        
         // checking wether the email is already verified 
         if ($this->emailVerificationService->IsEmailVerified($request->user())) {
             return response()->json(['message'=>'Email Already Verified'],422);
