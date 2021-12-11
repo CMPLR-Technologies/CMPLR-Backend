@@ -138,8 +138,8 @@ class ResetPasswordController extends Controller
         $response['user'] = $user;
         $response['token'] = $userLoginToken;
 
-        // Fire PasswordReset event
-        event(new PasswordReset($user));
+        // // Fire PasswordReset event
+        // event(new PasswordReset($user));
 
         // return proper response
         return  $this->success_response($response, 200);

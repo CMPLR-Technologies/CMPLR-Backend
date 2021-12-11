@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\Auth\ForgetPasswordService;
 use App\Http\Misc\Helpers\Errors;
+use Illuminate\Auth\Events\PasswordReset;
 
 class ForgetPasswordController extends Controller
 {
@@ -93,8 +94,10 @@ class ForgetPasswordController extends Controller
             return $this->error_response(Errors::ERROR_MSGS_400,['Invalid Token'],400);
 
         // send ResetPasswordMail
-        if(!$this->ForgetPasswordService->SendResetPasswordMail($request->email , $token))
-            return $this->error_response(Errors::ERROR_MAIL,'',500);
+        // if(!$this->ForgetPasswordService->SendResetPasswordMail($request->email , $token))
+        //     return $this->error_response(Errors::ERROR_MAIL,'',500);
+        // Fire PasswordReset event
+        event(new PasswordReset($request->email,$token));
 
         return $this->success_response(['Check your email'],200);
     }
