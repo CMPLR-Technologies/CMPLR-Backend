@@ -26,8 +26,8 @@ class SendPasswordResetEmail
      */
     public function handle(PasswordReset $event)
     {
-        $email = $event->email;
-        Mail::to($email)
-            ->send(new PasswordResetEmail($email,$event->token));
+        $user = $event->user;
+        Mail::to($user->email)
+            ->send(new PasswordResetEmail($user));
     }
 }

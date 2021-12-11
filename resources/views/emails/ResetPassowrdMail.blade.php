@@ -3,7 +3,7 @@
 
 Tap this Link to Reset your Password.
 
-@component('mail::button', ['url' => env('APP_URL') . "/reset_password/$token"])
+@component('mail::button', ['url' => env('APP_URL') . "/forgot_password/$token"])
 ResetPassWord
 @endcomponent
 
