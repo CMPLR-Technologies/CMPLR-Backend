@@ -10,7 +10,7 @@ class CreatePostsTable extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->string("blog_name");                    // post owner | target in case of ask/submit
+            $table->integer("blog_id");                     // post owner | target in case of ask/submit
             $table->string("type")->nullable();             // post type
             $table->jsonb("content");                       // post content
             $table->json("layout");                         // structured arrangement of items 
@@ -18,7 +18,6 @@ class CreatePostsTable extends Migration
             $table->string("format");                       // style of the post's format
             $table->string("source_url")->nullable();
             $table->string("reblog_key")->nullable();
-            $table->integer("blog_id")->nullable();
             $table->boolean("mobile");                      // was the post created through a mobile
             $table->string("source_title")->nullable();
             $table->string("state")->nullable();            // published,draft,queue,private

@@ -31,7 +31,6 @@ Route::get('search/{query}', [SearchController::class, 'search']);
 
 // Follow/Unfollow blog
 Route::post('/user/follow', [UserBlogController::class, 'follow'])->middleware('auth:api');
-
 Route::delete('/user/follow', [UserBlogController::class, 'unfollow'])->middleware('auth:api');
 
 // Create/Delete blog
@@ -81,3 +80,5 @@ Route::get('auth/googles/{token}', [GoogleController::class, 'GetUserFromGoogle'
 
 // Ask
 Route::post('/blog/{blogName}/ask', [AskController::class, 'CreateAsk'])->middleware('auth:api');
+Route::get('/user/inbox', [AskController::class, 'GetInbox'])->middleware('auth:api');
+Route::get('/user/inbox/{blogName}', [AskController::class, 'GetBlogInbox'])->middleware('auth:api');

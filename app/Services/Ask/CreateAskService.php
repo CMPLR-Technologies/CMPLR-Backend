@@ -38,7 +38,7 @@ class CreateAskService{
  
          //create ask
          Post::create([
-             'blog_name'=>$blogName,
+             'blog_id'=>$blog->id,
              'content'=>$request->content,
              'layout'=>$request->layout,
              'format'=>$request->format,

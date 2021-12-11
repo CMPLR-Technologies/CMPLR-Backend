@@ -16,4 +16,5 @@ class BlogUser extends Model
         'full_privileges',
         'contributor_privileges'
     ];
+
 }

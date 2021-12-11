@@ -10,6 +10,8 @@ use App\Models\Post;
 use App\Providers\AuthServiceProvider;
 use App\Services\Ask\CreateAskService;
 use App\Http\Misc\Helpers\Errors;
+use App\Services\Inbox\GetBlogInboxService;
+use App\Services\Inbox\GetInboxService;
 
 
 class AskController extends Controller
@@ -122,12 +124,6 @@ class AskController extends Controller
      *      		description="Pass user credentials",
      *    	),
      *
-     * 		@OA\Response
-     *		(
-     *    		response=404,
-     *    		description="Not Found",
-     * 		),
-     *
      *	   	@OA\Response
      *		(
      *		      response=401,
@@ -181,6 +177,12 @@ class AskController extends Controller
      */
     public function GetInbox()
     {
+        $ret=(new GetInboxService())->GetInbox();
+
+        $code=$ret[0];
+        $asks=$ret[1];
+
+        return $this->success_response($asks,$code);
     }
 
     /**
@@ -255,8 +257,15 @@ class AskController extends Controller
      *     	)
      * )
      */
-    public function GetBlogInbox()
+    public function GetBlogInbox($blogName)
     {
+
+        $ret =(new GetBlogInboxService())->GetBlogInbox($blogName);
+
+        $code=$ret[0];
+        $asks=$ret[1];
+
+        return $this->success_response($asks,$code);
     }
 }
 
