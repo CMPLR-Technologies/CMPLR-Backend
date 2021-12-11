@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost",
+            "url": "http://localhost:8000",
             "description": "CMPLR API Server"
         }
     ],
@@ -320,7 +320,7 @@
             }
         },
         "/forgot_password": {
-            "post": {
+            "get": {
                 "tags": [
                     "Auth"
                 ],
