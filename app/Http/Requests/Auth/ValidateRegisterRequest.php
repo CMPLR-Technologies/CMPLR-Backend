@@ -51,7 +51,7 @@ class ValidateRegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'blog_name' => ['required', 'unique:blogs', 'max:255', 'alpha_dash'],
+            'blog_name' => ['required', 'unique:blogs', 'max:22', 'alpha_dash'],
             'email' => ['required', 'email', 'unique:users', 'max:255'],
             'password' => ['required', 'string', Password::min(8)
                 ->mixedCase()

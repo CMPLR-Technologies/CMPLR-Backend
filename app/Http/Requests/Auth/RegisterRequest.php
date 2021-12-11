@@ -54,7 +54,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'blog_name' => ['required', 'unique:blogs', 'max:22', 'alpha_dash'],
-            'email' => ['required', 'email', 'unique:users', 'max:22'],
+            'email' => ['required', 'email', 'unique:users', 'max:255'],
             'password' => ['required', 'string', Password::min(8)
                 ->mixedCase()
                 ->letters()
