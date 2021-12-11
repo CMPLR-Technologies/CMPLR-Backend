@@ -53,15 +53,15 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'blog_name' => ['required', 'unique:blogs', 'max:255', 'alpha_dash'],
-            'email' => ['required', 'email', 'unique:users', 'max:255'],
+            'blog_name' => ['required', 'unique:blogs', 'max:22', 'alpha_dash'],
+            'email' => ['required', 'email', 'unique:users', 'max:22'],
             'password' => ['required', 'string', Password::min(8)
                 ->mixedCase()
                 ->letters()
                 ->numbers()
                 ->symbols()
                 ->uncompromised()],
-            'age' => ['required', 'integer', 'between: 15,120']
+            'age' => ['required', 'integer', 'between: 18,80']
         ];
     }
 
