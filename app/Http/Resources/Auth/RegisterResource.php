@@ -23,9 +23,8 @@ class RegisterResource extends JsonResource
     public function toArray($request)
     {
         return [
-                'email' => $this->email,
+                'user'=>$this->user,
                 'blog_name' => $this->blog_name,
-                'age' => $this->age,
                 'token' => $this->token,
         ];
     }
