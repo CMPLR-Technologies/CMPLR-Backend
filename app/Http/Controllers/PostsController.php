@@ -224,7 +224,7 @@ class PostsController extends Controller
         if(!$post)
         {
             $error['post'] = 'error while creating post';
-            $this->error_response(Errors::ERROR_MSGS_500,$error,500);
+            return $this->error_response(Errors::ERROR_MSGS_500,$error,500);
         }
         $response['posts'] = $post;
         return $this->success_response($response,201);
