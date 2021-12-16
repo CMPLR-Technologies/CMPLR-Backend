@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Misc\Helpers\Errors;
 use App\Models\PostNotes;
+use App\Services\User\UserPostService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -15,7 +17,17 @@ class UserPostConroller extends Controller
     | This controller handles interactions of the user with posts  
     |
    */
+    protected $userPostService;
 
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(UserPostService $userPostService)
+    {
+        $this->userPostService = $userPostService;
+    }
     /**
      * @OA\POST(
      * path="/user/like",
@@ -61,17 +73,27 @@ class UserPostConroller extends Controller
      */
     public function Like(Request $request)
     {
+        //getting data 
         $postId = $request->id;
         $userId = auth()->user()->id;
-        if ($postId && $userId) {
-            PostNotes::create([
-                'user_id' =>  $userId,
-                'post_id' => $postId,
-                'type' => 'like',
-            ]);
-            return response()->json(['msg' => 'OK'], 200);
 
+        if (!$userId)
+        {
+            return $this->error_response(Errors::ERROR_MSGS_401,401);
         }
+        if (!$postId)
+        {
+            return $this->error_response(Errors::ERROR_MSGS_404,404);
+        }
+
+        if (!$this->userPostService->UserLikePost($userId , $postId))
+        {
+            return $this->error_response(Errors::ERROR_MSGS_404,404);
+        }
+
+        return response()->json( ['message'=>'Success'], 200);
+
+       
     }
 
     /**
@@ -117,11 +139,16 @@ class UserPostConroller extends Controller
      */
     public function UnLike(Request $request)
     {
-
         $postId = $request->id;
         $userId = auth()->user()->id;
-        DB::table('user_like_posts')->where('user_id', $userId, 'post_id', $postId)->delete();
-        return response()->json(['msg' => 'OK'], 200);
+        if (!$userId)
+        {
+            return $this->error_response(Errors::ERROR_MSGS_401,401);
+        }
+        if (!$this->userPostService->UserUnlikePost($userId, $postId)){
+            return $this->error_response(Errors::ERROR_MSGS_404,404);
+        }
+        return response()->json(['message' => 'success'], 200);
     }
     /**
      * @OA\Post(
