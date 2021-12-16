@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PostNotes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -60,18 +61,17 @@ class UserPostConroller extends Controller
      */
     public function Like(Request $request)
     {
-        $postId = $request->id ;
+        $postId = $request->id;
         $userId = auth()->user()->id;
-        
-        DB::table('post_notes')->insert([
-            'user_id'=>  $userId,
-            'post_id'=>$postId ,
-            'type'=> 'like',
+        if ($postId && $userId) {
+            PostNotes::create([
+                'user_id' =>  $userId,
+                'post_id' => $postId,
+                'type' => 'like',
+            ]);
+            return response()->json(['msg' => 'OK'], 200);
 
-        ]);
-        return response()->json(['msg'=>'OK'],200);
-       
-        
+        }
     }
 
     /**
@@ -117,11 +117,11 @@ class UserPostConroller extends Controller
      */
     public function UnLike(Request $request)
     {
-        
-        $postId = $request->id ;
+
+        $postId = $request->id;
         $userId = auth()->user()->id;
-        DB::table('user_like_posts')->where('user_id', $userId , 'post_id' , $postId)->delete();
-        return response()->json(['msg'=>'OK'],200);
+        DB::table('user_like_posts')->where('user_id', $userId, 'post_id', $postId)->delete();
+        return response()->json(['msg' => 'OK'], 200);
     }
     /**
      * @OA\Post(
