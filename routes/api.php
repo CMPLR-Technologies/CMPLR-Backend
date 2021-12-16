@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BlogSettingsController;
+use App\Http\Controllers\PostsController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserBlogController;
 use App\Http\Controllers\UserController;
@@ -56,8 +57,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('blog/{blog}/settings/theme', [BlogSettingsController::class, 'editBlogTheme'])->name('editBlogTheme');
 
 
-    Route::get('/settings', [UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
-    Route::get('info', [UserController::class, 'GetUserInfo'])->name('GetUser_Info');
+    Route::get('/info', [UserController::class, 'GetUserInfo'])->name('GetUser_Info');
 
     Route::get('/settings', [UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
     Route::put('/settings', [UsersettingController::class, 'UpdateSettings'])->name('UpdateAccountSetting');
@@ -77,3 +77,11 @@ Route::get('auth/google', [GoogleController::class, 'GoogleLogin'])->middleware(
 Route::any('auth/callback', [GoogleController::class, 'handleGoogleCallback'])->middleware('web');
 
 Route::get('auth/googles/{token}', [GoogleController::class, 'GetUserFromGoogle'])->middleware('web');
+
+
+//Posts
+Route::middleware('auth:api')->group(function () {
+    Route::post('/posts', [PostsController::class, 'create'])->name('CreatePost');
+    Route::get('edit/{blog_name}/{post_id}',[PostsController::class,'edit'])->name('EditPost');
+    Route::put('update/{blog_name}/{post_id}',[PostsController::class,'update'])->name('UpdatePost');
+});

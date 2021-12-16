@@ -23,7 +23,7 @@ class UserController extends Controller
     }
     /**
      * @OA\Get(
-     * path="/user/info",
+     * path="/info",
      * summary=" retrieving the user’s account information ",
      * description="This method can be used to  retrieve the user’s account information that matches the OAuth credentials submitted with the request",
      * operationId="index",

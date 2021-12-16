@@ -2,11 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Misc\Helpers\Errors;
+use App\Http\Requests\PostRequest;
+use App\Http\Requests\UpdatePostRequest;
+use App\Models\Blog;
+use App\Models\BlogSettings;
 use App\Models\Posts;
+use App\Services\Posts\PostsService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use OpenApi\Annotations\Post;
 
 class PostsController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Posts Controller
+    |--------------------------------------------------------------------------|
+    | This controller handles the processes of Posts :
+    | Create ,update Posts
+    |
+   */
+  protected $PostsService;
+
+  /**
+   * Instantiate a new controller instance.
+   *
+   * @return void
+   */
+  public function __construct(PostsService $PostsService)
+  {
+     $this->PostsService = $PostsService;
+  }
+
     /**
      * Display a listing of the resource.
      *
@@ -171,9 +200,34 @@ class PostsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(PostRequest $request)
     {
-        //
+        $user = Auth::user();
+        // get the blog from blogname
+        $blog = $this->PostsService->GetBlogData($request->blog_name);
+        if(!$blog)
+            return $this->error_response(Errors::ERROR_MSGS_404,'',404);
+
+        // check that the user can create post from this Blog
+        try {
+            $this->authorize('CreatePost', $blog);
+        } catch (\Throwable $th) {
+            return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
+        }
+        
+        $request['blog_id'] = $blog->id; 
+        // create the date of the post
+        $request['date'] = Carbon::now()->toRfc850String();
+        
+        // create post
+        $post = $this->PostsService->createPost($request->all());
+        if(!$post)
+        {
+            $error['post'] = 'error while creating post';
+            $this->error_response(Errors::ERROR_MSGS_500,$error,500);
+        }
+        $response['posts'] = $post;
+        return $this->success_response($response,201);
     }
 
     /**
@@ -300,10 +354,36 @@ class PostsController extends Controller
      *)
      **/
 
-    public function edit(Posts $posts)
+    public function edit(Request $request)
     {
-        //
+        $user = Auth::user();
+
+        $blog_name = $request->route('blog_name');
+        $post_id = $request->route('post_id');
+
+        $blog = $this->PostsService->GetBlogData($blog_name);
+        if(!$blog)
+            return $this->error_response(Errors::ERROR_MSGS_404,'',404);
+
+        $post = $this->PostsService->GetPostData($post_id);
+        if(!$post)
+            return $this->error_response(Errors::ERROR_MSGS_404,'',404);
+
+
+        try {
+            $this->authorize('EditPost',[$blog,$post]);
+        } catch (\Throwable $th) {
+            return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
+        }
+
+        $response['avatar'] = BlogSettings::find($blog->id)->first()->avatar;
+        $response['blog_name']=$blog_name;
+        $post_data = $post->only(['id','type','state','content','date','source_content','tags']);
+        $response['post'] = $post_data;
+
+        return $this->success_response($response);
     }
+
     /**
      * @OA\PUT(
      ** path="/post/{post-id}",
@@ -354,9 +434,16 @@ class PostsController extends Controller
      * @param  \App\Models\Posts  $posts
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Posts $posts)
+    public function update(UpdatePostRequest $request)
     {
-        //
+        $user = Auth::user();
+        $blog_name = $request->route('blog_name');
+        $blog = Blog::where('blog_name',$blog_name)->first();
+        $post_id = $request->route('post_id');
+        $post = Posts::where('id',$post_id)->first();
+        $this->authorize('EditPost',[$blog,$post]);
+        $post->update($request->all());
+        return $this->success_response('');
     }
 
 
@@ -717,7 +804,7 @@ class PostsController extends Controller
      *      response=401,
      *       description="Unauthenticated"
      *   ),
-   * @OA\Response(
+     * @OA\Response(
      *    response=200,
      *    description="sucess",
      *    @OA\JsonContent(
@@ -1188,7 +1275,7 @@ class PostsController extends Controller
      *      response=401,
      *       description="Unauthenticated"
      *   ),
-    * @OA\Response(
+     * @OA\Response(
      *    response=200,
      *    description="sucess",
      *    @OA\JsonContent(
@@ -1657,127 +1744,125 @@ class PostsController extends Controller
         //
     }
 
-        /**
-    *	@OA\Get
-    *	(
-    * 		path="/tagged",
-    * 		summary="Get Posts with Tag",
-    * 		description="retrieve the posts with specific tag",
-    * 		operationId="getTaggedPosts",
-    * 		tags={"Posts"},
-    *
-    *    	@OA\Parameter
-    *		(
-    *      		name="tag",
-    *      		description="The tag on the posts you'd like to retrieve",
-    *      		in="path",
-    *      		required=true,
-    *      		@OA\Schema
-    *			(
-    *           		type="String"
-    *      		)
-    *   	),
-    *
-    *    	@OA\Parameter
-    *		(
-    *			name="before",
-    *			description="The timestamp of when you'd like to see posts before.",
-    *			in="query",
-    *			required=false,
-    *		    @OA\Schema
-    *		 	(
-    *		           type="integer"
-    *			)
-    *   	),
-    *
-    *   	@OA\Parameter
-    *		(
-    *      		name="limit",
-    *      		description="the number of posts to return",
-    *      		in="query",
-    *      		required=false,
-    *      		@OA\Schema
-    *			(
-    *           		type="Number"
-    *      		)
-    *   	),
-    *
-    *    	@OA\Parameter
-    *		(
-    *			name="filter",
-    *			description="Specifies the post format to return, other than HTML: text – Plain text, no HTML; raw – As entered by the user (no post-processing)",
-    *			in="query",
-    *			required=false,
-    *		    @OA\Schema
-    *		 	(
-    *		           type="String"
-    *			)
-    *   	),
-    *    
-    *    	@OA\RequestBody
-    *		(
-    *      		required=true,
-    *      		description="Pass user credentials",
-    *      		@OA\JsonContent
-    *			(
-    *	    		required={"tag"},
-    *      			@OA\Property(property="tag", type="String", format="text", example="anime"),
-    *      			@OA\Property(property="before", type="integer", format="integer", example=10),
-    *      			@OA\Property(property="limit", type="integer", format="integer", example=1),
-    *      			@OA\Property(property="filter", type="String", format="text", example="HTML"),
-    *      		),
-    *    	),
-    *
-    * 		@OA\Response
-    *		(
-    *    		response=404,
-    *    		description="Not Found",
-    * 		),
-    *
-    *	   	@OA\Response
-    *		(
-    *		      response=401,
-    *		      description="Unauthenticated"
-    *	   	),
-    *
-    *		@OA\Response
-    *		(
-    *	    	response=200,
-    *    		description="success",
-    *    		@OA\JsonContent
-    *			(
-    *       			type="object",
-    *       			@OA\Property
-    *				    (
-    *					    property="Meta", type="object",
-    *					    @OA\Property(property="Status", type="integer", example=200),
-    *					    @OA\Property(property="msg", type="string", example="OK"),
-    *        			),
-    *
-    *       			@OA\Property
-    *				    (
-    *					    property="response", type="object",
-    *             			@OA\Property(property="blog", type="object"),
-    *             			@OA\Property
-    *					    (
-    *						    property="posts", type="array",
-    *                			@OA\Items
-    *						    (
-    *			        	        @OA\Property(property="post1",description="the first post",type="object"),
-    *			        	        @OA\Property(property="post2",description="the second post",type="object"),
-    *			        	        @OA\Property(property="post3",description="the third post",type="object"),
-    *			        	    ),
-    *       
-    *               		),
-    *					    @OA\Property(property="total_posts", type="integer", example=3),
-    *           		),
-    *        		),
-    *     	)
-    * )
-    */
+    /**
+     *	@OA\Get
+     *	(
+     * 		path="/tagged",
+     * 		summary="Get Posts with Tag",
+     * 		description="retrieve the posts with specific tag",
+     * 		operationId="getTaggedPosts",
+     * 		tags={"Posts"},
+     *
+     *    	@OA\Parameter
+     *		(
+     *      		name="tag",
+     *      		description="The tag on the posts you'd like to retrieve",
+     *      		in="path",
+     *      		required=true,
+     *      		@OA\Schema
+     *			(
+     *           		type="String"
+     *      		)
+     *   	),
+     *
+     *    	@OA\Parameter
+     *		(
+     *			name="before",
+     *			description="The timestamp of when you'd like to see posts before.",
+     *			in="query",
+     *			required=false,
+     *		    @OA\Schema
+     *		 	(
+     *		           type="integer"
+     *			)
+     *   	),
+     *
+     *   	@OA\Parameter
+     *		(
+     *      		name="limit",
+     *      		description="the number of posts to return",
+     *      		in="query",
+     *      		required=false,
+     *      		@OA\Schema
+     *			(
+     *           		type="Number"
+     *      		)
+     *   	),
+     *
+     *    	@OA\Parameter
+     *		(
+     *			name="filter",
+     *			description="Specifies the post format to return, other than HTML: text – Plain text, no HTML; raw – As entered by the user (no post-processing)",
+     *			in="query",
+     *			required=false,
+     *		    @OA\Schema
+     *		 	(
+     *		           type="String"
+     *			)
+     *   	),
+     *    
+     *    	@OA\RequestBody
+     *		(
+     *      		required=true,
+     *      		description="Pass user credentials",
+     *      		@OA\JsonContent
+     *			(
+     *	    		required={"tag"},
+     *      			@OA\Property(property="tag", type="String", format="text", example="anime"),
+     *      			@OA\Property(property="before", type="integer", format="integer", example=10),
+     *      			@OA\Property(property="limit", type="integer", format="integer", example=1),
+     *      			@OA\Property(property="filter", type="String", format="text", example="HTML"),
+     *      		),
+     *    	),
+     *
+     * 		@OA\Response
+     *		(
+     *    		response=404,
+     *    		description="Not Found",
+     * 		),
+     *
+     *	   	@OA\Response
+     *		(
+     *		      response=401,
+     *		      description="Unauthenticated"
+     *	   	),
+     *
+     *		@OA\Response
+     *		(
+     *	    	response=200,
+     *    		description="success",
+     *    		@OA\JsonContent
+     *			(
+     *       			type="object",
+     *       			@OA\Property
+     *				    (
+     *					    property="Meta", type="object",
+     *					    @OA\Property(property="Status", type="integer", example=200),
+     *					    @OA\Property(property="msg", type="string", example="OK"),
+     *        			),
+     *
+     *       			@OA\Property
+     *				    (
+     *					    property="response", type="object",
+     *             			@OA\Property(property="blog", type="object"),
+     *             			@OA\Property
+     *					    (
+     *						    property="posts", type="array",
+     *                			@OA\Items
+     *						    (
+     *			        	        @OA\Property(property="post1",description="the first post",type="object"),
+     *			        	        @OA\Property(property="post2",description="the second post",type="object"),
+     *			        	        @OA\Property(property="post3",description="the third post",type="object"),
+     *			        	    ),
+     *       
+     *               		),
+     *					    @OA\Property(property="total_posts", type="integer", example=3),
+     *           		),
+     *        		),
+     *     	)
+     * )
+     */
     public function getTaggedPosts()
     {
-
     }
-
 }
