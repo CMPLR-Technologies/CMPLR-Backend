@@ -11,6 +11,7 @@ use App\Http\Controllers\BlogSettingsController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserBlogController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserPostConroller;
 use App\Http\Controllers\UsersettingController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,8 +31,10 @@ Route::get('search/{query}', [SearchController::class, 'search']);
 
 // Follow/Unfollow blog
 Route::post('/user/follow', [UserBlogController::class, 'follow'])->middleware('auth:api');
-
 Route::delete('/user/follow', [UserBlogController::class, 'unfollow'])->middleware('auth:api');
+
+//Like /unlike post
+Route::post('user/like', [UserPostConroller::class ,'Like'])->middleware('auth:api');
 
 // Create/Delete blog
 Route::post('/blog', [UserBlogController::class, 'create'])->middleware('auth:api');

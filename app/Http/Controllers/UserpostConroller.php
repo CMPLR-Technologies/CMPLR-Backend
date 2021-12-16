@@ -2,9 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
-class UserpostConroller extends Controller
+class UserPostConroller extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Userpost Controller
+    |--------------------------------------------------------------------------|
+    | This controller handles interactions of the user with posts  
+    |
+   */
+
     /**
      * @OA\POST(
      * path="/user/like",
@@ -22,23 +32,14 @@ class UserpostConroller extends Controller
      *           type="Number"
      *      )
      *   ),
-     *   @OA\Parameter(
-     *      name="reblog_key",
-     *      description="The reblog key for the post id",
-     *      in="query",
-     *      required=true,
-     *      @OA\Schema(
-     *           type="string"
-     *      )
-     *   ),
+     *  
      *    
      *    @OA\RequestBody(
      *      required=true,
      *      description="Pass user credentials",
      *      @OA\JsonContent(
-     *      required={"id","reblog_key"},
+     *      required={"id"},
      *      @OA\Property(property="id", type="integer", format="integer", example=1),
-     *      @OA\Property(property="reblog_key", type="string", format="text", example="hello123"),
      *      ),
      *    ),
      *
@@ -57,13 +58,24 @@ class UserpostConroller extends Controller
      * security ={{"bearer":{}}}
      * )
      */
-    public function like()
+    public function Like(Request $request)
     {
-        //
+        $postId = $request->id ;
+        $userId = auth()->user()->id;
+        
+        DB::table('post_notes')->insert([
+            'user_id'=>  $userId,
+            'post_id'=>$postId ,
+            'type'=> 'like',
+
+        ]);
+        return response()->json(['msg'=>'OK'],200);
+       
+        
     }
 
     /**
-     * @OA\POST(
+     * @OA\Delete(
      * path="/user/unlike",
      * summary="Unlike a Post",
      * description="enables the user to unlike a post through the post id",
@@ -79,23 +91,12 @@ class UserpostConroller extends Controller
      *           type="Number"
      *      )
      *   ),
-     *   @OA\Parameter(
-     *      name="reblog_key",
-     *      description="The reblog key for the post id",
-     *      in="query",
-     *      required=true,
-     *      @OA\Schema(
-     *           type="string"
-     *      )
-     *   ),
-     *    
      *    @OA\RequestBody(
      *      required=true,
      *      description="Pass user credentials",
      *      @OA\JsonContent(
-     *      required={"id","reblog_key"},
+     *      required={"id"},
      *      @OA\Property(property="id", type="integer", format="integer", example=1),
-     *      @OA\Property(property="reblog_key", type="string", format="text", example="hello123"),
      *      ),
      *    ),
      *
@@ -114,9 +115,13 @@ class UserpostConroller extends Controller
      * security ={{"bearer":{}}}
      * )
      */
-    public function unlike()
+    public function UnLike(Request $request)
     {
-        //
+        
+        $postId = $request->id ;
+        $userId = auth()->user()->id;
+        DB::table('user_like_posts')->where('user_id', $userId , 'post_id' , $postId)->delete();
+        return response()->json(['msg'=>'OK'],200);
     }
     /**
      * @OA\Post(
