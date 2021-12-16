@@ -26,7 +26,7 @@ class UserPostService
     public function UserLikePost(int $userId, int $postId):bool
     {
         try {
-            DB::table('user_like_posts')->insert([
+            PostNotes::create([
                 'user_id' =>  $userId,
                 'post_id' => $postId,
                 'type' => 'like',
@@ -48,14 +48,14 @@ class UserPostService
      */
     public function UserUnlikePost(int $userId, int $postId):bool
     {
+        $result = false ;
         try {
-            DB::table('user_like_posts')->where(
-                'user_id', $userId,
-                'post_id', $postId)->delete();
+           $result= DB::table('post_notes')->where(['user_id'=> $userId,'post_id'=> $postId])->delete();
+                
         } catch (\Throwable $th) {
             return false;
         }
-        return true ;
+        return $result ;
     }
    
 }

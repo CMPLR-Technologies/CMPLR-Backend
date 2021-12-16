@@ -79,16 +79,18 @@ class UserPostConroller extends Controller
 
         if (!$userId)
         {
-            return $this->error_response(Errors::ERROR_MSGS_401,401);
+            return $this->error_response(Errors::ERROR_MSGS_401,'Unauthenticated',401);
+
         }
         if (!$postId)
         {
-            return $this->error_response(Errors::ERROR_MSGS_404,404);
+            return $this->error_response(Errors::ERROR_MSGS_404,'Post Id Is required',404);
         }
 
         if (!$this->userPostService->UserLikePost($userId , $postId))
         {
-            return $this->error_response(Errors::ERROR_MSGS_404,404);
+            return $this->error_response(Errors::ERROR_MSGS_404,'Note Not Found',404);
+
         }
 
         return response()->json( ['message'=>'Success'], 200);
@@ -139,14 +141,19 @@ class UserPostConroller extends Controller
      */
     public function UnLike(Request $request)
     {
-        $postId = $request->id;
+        $postId = $request->input('id');
         $userId = auth()->user()->id;
         if (!$userId)
         {
-            return $this->error_response(Errors::ERROR_MSGS_401,401);
+            return $this->error_response(Errors::ERROR_MSGS_401,'Unauthenticated',401);
+
+        }
+        if (!$postId)
+        {
+            return $this->error_response(Errors::ERROR_MSGS_404,'Post Id Is required',404);
         }
         if (!$this->userPostService->UserUnlikePost($userId, $postId)){
-            return $this->error_response(Errors::ERROR_MSGS_404,404);
+            return $this->error_response(Errors::ERROR_MSGS_404,'note Not Found',404);
         }
         return response()->json(['message' => 'success'], 200);
     }
