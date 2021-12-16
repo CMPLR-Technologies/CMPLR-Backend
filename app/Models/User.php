@@ -61,4 +61,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Tag::class, 'tag_users', 'user_id', 'tag_id');
     }
+
+    public function notes()
+    {
+        return $this->hasMany(PostNotes::class);
+    }
 }
