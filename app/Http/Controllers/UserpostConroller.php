@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Misc\Helpers\Errors;
-use App\Models\PostNotes;
 use App\Services\User\UserPostService;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class UserPostConroller extends Controller
