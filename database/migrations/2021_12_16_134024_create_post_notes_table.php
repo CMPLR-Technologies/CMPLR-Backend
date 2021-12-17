@@ -17,7 +17,7 @@ class CreatePostNotesTable extends Migration
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users')->constrained()->onDelete('cascade');
             $table->foreignId('post_id')->references('id')->on('posts')->constrained()->onDelete('cascade');
-            $table->text('type'); // like - reply - reblog -comment
+            $table->text('type'); // like - reply - reblog - reblogwithcontent
             $table->text('content')->nullable();
 
             $table->timestamps();
