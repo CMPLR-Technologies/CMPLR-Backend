@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Blog;
+use App\Models\BlogSettings;
 use App\Models\PostNotes;
 use Illuminate\Http\Request;
+
+use function GuzzleHttp\Promise\each;
 
 class PostNotesController extends Controller
 {
@@ -94,8 +98,39 @@ class PostNotesController extends Controller
         $post_id = (int)$request->post_id;
 
         $notes = PostNotes::where('post_id' , $post_id)->with('user')->get();
+        $blogs_id =array();
+        foreach($notes as $note)
+        {
+            $blogs_id[] = $note->user->primary_blog_id ;
+        }
 
-        return response()->json([$notes[0]->user->primary_blog_id] , 200);
+        $blogs_data = Blog::whereIn('id', $blogs_id)->with(['settings' => function($query){
+            $query->select('blog_id','avatar' ,'avatar_shape');
+        }])->get();
+
+        // result 
+        $bloghashdata=[];
+        foreach ($blogs_data as $data)
+        {
+            $bloghashdata[$data->id]= $data ;
+        }
+       
+        $result = [] ;
+        for ($i=0; $i<count($notes); $i++) 
+        {
+            $result[] =[
+                'post_id'=>$notes[$i]->post_id,
+                'type' => $notes[$i]->type,
+                'content'=> $notes[$i]->content,
+                'timestamp'=>$notes[$i]->created_at,
+                'blog_name'=>$bloghashdata[$notes[$i]->user_id]->blog_name,
+                'blog_url'=>$bloghashdata[$notes[$i]->user_id]->url,
+                'avatar'=>$bloghashdata[$notes[$i]->user_id]->settings->avatar ,
+                'avatar_shape'=>$bloghashdata[$notes[$i]->user_id]->settings->avatar_shape,
+
+            ];
+        }
+        return response()->json([ $result] , 200);
 
     }
 
