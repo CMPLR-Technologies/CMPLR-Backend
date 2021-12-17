@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BlogSettingsController;
+use App\Http\Controllers\PostNotesController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserBlogController;
 use App\Http\Controllers\UserController;
@@ -24,6 +25,8 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+//post 
+Route::get('post/notes', [PostNotesController::class, 'getNotes'])->middleware('auth:api');
 
 // Search
 Route::get('search/{query}', [SearchController::class, 'search']);

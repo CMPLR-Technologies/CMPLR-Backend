@@ -4487,27 +4487,9 @@
                 "operationId": "getNotes",
                 "parameters": [
                     {
-                        "name": "blog-identifier",
+                        "name": "post_id",
                         "in": "query",
                         "required": true
-                    },
-                    {
-                        "name": "before_timestamp",
-                        "in": "query",
-                        "description": "Fetch notes created before this timestamp",
-                        "required": false,
-                        "schema": {
-                            "type": "Number"
-                        }
-                    },
-                    {
-                        "name": "mode",
-                        "in": "query",
-                        "description": "The response formatting mode {all , likes , conversation , rollup ,reblogs_with_tags }",
-                        "required": false,
-                        "schema": {
-                            "type": "String"
-                        }
                     }
                 ],
                 "requestBody": {
@@ -4524,16 +4506,6 @@
                                         "type": "Number",
                                         "format": "text",
                                         "example": "1234567890000"
-                                    },
-                                    "before_timestamp": {
-                                        "type": "Number",
-                                        "format": "text",
-                                        "example": "1234567890"
-                                    },
-                                    "mode": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "all"
                                     }
                                 },
                                 "type": "object"

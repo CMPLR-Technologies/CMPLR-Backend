@@ -46,7 +46,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-
     public function followings()
     {
         return $this->HasMany(Follow::class);
@@ -62,6 +61,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Tag::class, 'tag_users', 'user_id', 'tag_id');
     }
 
+    
     public function notes()
     {
         return $this->hasMany(PostNotes::class);

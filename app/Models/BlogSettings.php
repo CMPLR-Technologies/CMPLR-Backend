@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class BlogSettings extends Model
 {
     use HasFactory;
+
+    
 }
