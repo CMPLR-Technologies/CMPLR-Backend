@@ -1647,12 +1647,11 @@ class PostsController extends Controller
      */
 
     /**
-     * Reblog existing post 
+     * get post notes 
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function getNotes(Request $request)
+    public function getNotes()
     {
         //
     }
