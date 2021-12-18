@@ -3,7 +3,7 @@ pipeline {
         stage("fetch"){
             steps{
                 echo "========executing fetch========"
-                git branch: "main", url: "https://CMPLR-Technologies@dev.azure.com/CMPLR-Technologies/CMPLR-Technologies.Backend/_git/CMPLR-Technologies.Backend"
+                git branch: "prod", url: "https://CMPLR-Technologies@dev.azure.com/CMPLR-Technologies/CMPLR-Technologies.Backend/_git/CMPLR-Technologies.Backend"
                 echo "===========Copy .env=========="
             }
             post{
