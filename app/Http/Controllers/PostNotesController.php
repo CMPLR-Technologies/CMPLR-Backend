@@ -114,13 +114,13 @@ class PostNotesController extends Controller
     {
         $postId = (int)$request->post_id;
         $notes = $this->postNotesService->GetPostNotes($postId);
+        $counts =  $this->postNotesService->GetNotesCount($postId);
         $blogsId =  $this->postNotesService->GetBlogsId($notes);
         $blogsData = $this->postNotesService->GetBlogsData($blogsId);
         $blogHashData= $this->postNotesService->HashBlogData($blogsData);
-        $result = $this->postNotesService->GetNotesResult($notes , $blogHashData);
-       
-        $counts =PostNotes::where('post_id', $postId)->select('type', DB::raw('count(*) as total_notes'))->groupBy('type')->get();
-        return response()->json([$counts] , 200);
+        $result = $this->postNotesService->GetNotesResult($notes , $blogHashData , $counts);
+        
+        return response()->json([$result] , 200);
 
     }
 

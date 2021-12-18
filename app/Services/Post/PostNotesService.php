@@ -4,6 +4,7 @@ namespace App\Services\Post;
 
 use App\Models\Blog;
 use App\Models\PostNotes;
+use Illuminate\Support\Facades\DB;
 
 class PostNotesService
 {
@@ -17,6 +18,28 @@ class PostNotesService
     public function GetPostNotes($postId)
     {
         return PostNotes::where('post_id', $postId)->with('user')->get();
+
+    }
+    /**
+     * geting notes count for specific post.
+     * 
+     * @param integer $postId
+     * 
+     * @return array $notes
+     */
+    public function GetNotesCount($postId)
+    {
+        $result  =PostNotes::where('post_id', $postId)->select('type', DB::raw('count(*) as total'))->groupBy('type')->get();
+        $counts =array('like'=> 0,
+                       'reply'=> 0,
+                       'reblog'=>0);
+        foreach ($result as $count)
+        {
+            $counts[$count->type] = $count->total ;
+        }
+
+        return $counts ;
+
     }
 
     /**
@@ -65,7 +88,7 @@ class PostNotesService
      * 
      * @return arrayofjson
      */
-    public function GetNotesResult($notes , $blogsHashData)
+    public function GetNotesResult($notes , $blogsHashData ,$counts)
     {
         $result = [] ;
         for ($i=0; $i<count($notes); $i++) 
@@ -82,7 +105,12 @@ class PostNotesService
 
             ];
         }
-      
-        return $result ;
+       
+        $result[] =[
+            'total_likes'=> $counts['like'],
+            'total_reblogs'=> $counts['reblog'],
+            'total_replys' => $counts['reply']
+        ];
+        return ($result) ;
     }
 }
