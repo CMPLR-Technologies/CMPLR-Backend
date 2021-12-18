@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\Auth\EmailVerificationService;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -72,14 +73,16 @@ class EmailVerificationController extends Controller
      * ),
      * )
      */
-    public function Verify(EmailVerificationRequest $request)
+    public function Verify(Request $request)
     {
+        $user = User::findOrFail($request->id);
+
         // checking wether the email is already verified 
-        if ($this->emailVerificationService->IsEmailVerified($request->user())) {
+        if ($this->emailVerificationService->IsEmailVerified($user)) {
             return response()->json(['message'=>'Email Already Verified'],422);
         }
         // making the email as verified and creat event verified for the user
-        $this->emailVerificationService->VerifyEmail($request->user());
+        $this->emailVerificationService->VerifyEmail($user);
         
         
         return response()->json(['message'=>'Email has been Verified'],200);

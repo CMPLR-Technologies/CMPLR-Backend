@@ -53,7 +53,7 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'blog_name' => ['required', 'unique:blogs', 'max:255', 'alpha_dash'],
+            'blog_name' => ['required', 'unique:blogs', 'max:22', 'alpha_dash'],
             'email' => ['required', 'email', 'unique:users', 'max:255'],
             'password' => ['required', 'string', Password::min(8)
                 ->mixedCase()
@@ -61,7 +61,7 @@ class RegisterRequest extends FormRequest
                 ->numbers()
                 ->symbols()
                 ->uncompromised()],
-            'age' => ['required','integer','between: 15,120']
+            'age' => ['required', 'integer', 'between: 18,80']
         ];
     }
 
@@ -77,7 +77,7 @@ class RegisterRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(
-            $this->error_response(Errors::ERROR_MSGS_400, $validator->errors()->all(), 400)
+            $this->error_response(Errors::ERROR_MSGS_400, $validator->errors(), 400)
         );
     }
 }

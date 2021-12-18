@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Requests\Auth;
+
 use Elegant\Sanitizer\Laravel\SanitizesInput;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -10,7 +11,7 @@ class LoginRequest extends FormRequest
 {
 
     use SanitizesInput;
-    
+
 
 
     /**
@@ -23,14 +24,14 @@ class LoginRequest extends FormRequest
         return true;
     }
 
-    
+
     /**
      * filtering that apply to the request
      */
     public function filters()
     {
         return [
-            'email' => ['trim','lowercase'],
+            'email' => ['trim', 'lowercase'],
         ];
     }
 
@@ -47,9 +48,6 @@ class LoginRequest extends FormRequest
         ];
     }
 
-
-   
-
     /** 
      * 
      * this function overrides the failedValidation in validator class 
@@ -59,14 +57,11 @@ class LoginRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
-            'meta'=>[
-                'status'=>422,
-                'msg' => '',
+            'meta' => [
+                'status_code' => 422,
+                'msg' => 'Unprocessable Content',
             ],
-            'error' => $validator->errors()->all(),
+            'error' => $validator->errors(),
         ], 422));
-        
     }
-
-
 }

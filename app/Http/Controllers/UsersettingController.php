@@ -5,11 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Misc\Helpers\Errors;
 use App\Http\Requests\Auth\ChangeEmailRequest;
 use App\Http\Requests\Auth\ChangePasswordRequest;
+use App\Http\Requests\SettingsRequest;
 use App\Http\Resources\Auth\UserSettingResource;
-use App\Models\User;
 use App\Services\User\UserSettingService;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\SettingsRequest;
 
 class UsersettingController extends Controller
 {

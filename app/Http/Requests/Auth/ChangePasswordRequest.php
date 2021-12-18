@@ -3,9 +3,7 @@
 namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\validation\Rules\Password;
-
 
 class ChangePasswordRequest extends FormRequest
 {

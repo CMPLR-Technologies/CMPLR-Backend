@@ -3,7 +3,6 @@
 namespace Tests\Unit;
 
 use App\Models\User;
-use Illuminate\Support\Str;
 use App\Services\Auth\ResetPasswordService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;

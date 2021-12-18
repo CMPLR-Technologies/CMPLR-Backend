@@ -84,9 +84,10 @@ class LoginController extends Controller
             //now return this token on success login attempt
             return response()->json(['user'=>auth()->user(), 'token'=>$userLoginToken] ,200);
         }else{
+            $error['email'] = ['email or password is not valid'];
             // wrong login user not authorized to our system error code 401
-            return $this->error_response(Errors::ERROR_MSGS_401,['UnAuthorized Access'],401);
-           // return response()->json(['error' => ['UnAuthorized Access']],401);
+            return $this->error_response(Errors::ERROR_MSGS_401,$error,401);
+           
         }
     }
 
