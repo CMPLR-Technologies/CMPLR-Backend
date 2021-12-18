@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 //post 
-Route::get('post/notes', [PostNotesController::class, 'getNotes'])->middleware('auth:api');
+Route::get('post/notes', [PostNotesController::class, 'getNotes']);
 
 // Search
 Route::get('search/{query}', [SearchController::class, 'search']);

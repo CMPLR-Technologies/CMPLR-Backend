@@ -6,6 +6,7 @@ use App\Models\Blog;
 use App\Models\PostNotes;
 use App\Services\Post\PostNotesService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PostNotesController extends Controller
 {
@@ -118,8 +119,8 @@ class PostNotesController extends Controller
         $blogHashData= $this->postNotesService->HashBlogData($blogsData);
         $result = $this->postNotesService->GetNotesResult($notes , $blogHashData);
        
-    
-        return response()->json([$result] , 200);
+        $counts =PostNotes::where('post_id', $postId)->select('type', DB::raw('count(*) as total_notes'))->groupBy('type')->get();
+        return response()->json([$counts] , 200);
 
     }
 
