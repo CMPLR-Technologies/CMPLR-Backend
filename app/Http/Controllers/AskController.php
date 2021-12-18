@@ -247,7 +247,7 @@ class AskController extends Controller
 
 
     /**
-     *	@OA\delete
+     *	@OA\Delete
      *	(
      * 		path="/ask/{askId}",
      * 		summary="delete an Ask",
