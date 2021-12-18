@@ -10,6 +10,8 @@ use App\Models\Post;
 use App\Providers\AuthServiceProvider;
 use App\Services\Ask\CreateAskService;
 use App\Http\Misc\Helpers\Errors;
+use App\Http\Requests\Ask\AnswerAskRequest;
+use App\Services\Ask\AnswerAskService;
 use App\Services\Ask\DeleteAskService;
 use App\Services\Inbox\GetBlogInboxService;
 use App\Services\Inbox\GetInboxService;
@@ -137,15 +139,115 @@ class AskController extends Controller
 
 
 
+    /**
+     *	@OA\Post
+     *	(
+     * 		path="/ask/{askId}",
+     * 		summary="answer an ask",
+     * 		description="used to answer an aks send to a blog",
+     * 		operationId="AnswerAsk",
+     * 		tags={"Posts"},
+     * 
+     *   	@OA\Parameter
+     *		(
+     *      		name="content",
+     *      		description="the content of the answer",
+     *      		in="query",
+     *      		required=true,
+     *      		@OA\Schema
+     *			    (
+     *           		type="jsonb"
+     *      	 	)
+     *   	),
+     *
+     *    	@OA\Parameter
+     *		(
+     *      		name="layout",
+     *      		description="structured arrangement of items",
+     *      		in="query",
+     *      		required=true,
+     *      		@OA\Schema
+     *			    (
+     *           		type="json"
+     *      	 	)
+     *   	),
+     * 
+     *      @OA\Parameter
+     *		(
+     *      		name="format",
+     *      		description="style of the post's format",
+     *      		in="query",
+     *      		required=true,
+     *      		@OA\Schema
+     *			    (
+     *           		type="string"
+     *      	 	)
+     *   	),
+     * 
+     *      @OA\Parameter
+     *		(
+     *      		name="mobile",
+     *      		description="was it send using a mobile",
+     *      		in="query",
+     *      		required=true,
+     *      		@OA\Schema
+     *			    (
+     *           		type="boolean"
+     *      	 	)
+     *   	),
+     * 
+     * 		@OA\Response
+     *		(
+     *    		response=404,
+     *    		description="Not Found",
+     * 		),
+     *
+     *	   	@OA\Response
+     *		(
+     *		      response=401,
+     *		      description="Unauthenticated"
+     *	   	),
+     *
+     *	   	@OA\Response
+     *		(
+     *		      response=403,
+     *		      description="forbidden"
+     *	   	),
+     *
+     *		@OA\Response
+     *		(
+     *	    	response=200,
+     *    		description="answered successfully",
+     *     	)
+     * )
+     */
 
-    public function AnswerAsk()
+
+    /**
+     * answer an Ask send by a user to a blog
+     * 
+     * @return response
+     */
+    public function AnswerAsk(CreatePostRequest $request,$askId)
     {
+
+        //call the service
+        $code=(new DeleteAskService())->DeleteAsk($askId,auth()->user());
+
+        //return the response
+        if($code==404)
+            return $this->error_response(Errors::ERROR_MSGS_404,'wrong targets',404);
+        else if($code==403)
+            return $this->error_response(Errors::ERROR_MSGS_403,'user not a member of the blog',403);
+ 
+        //create an answer (which is just a post)
         
+
     }
 
 
     /**
-     *	@OA\Post
+     *	@OA\delete
      *	(
      * 		path="/ask/{askId}",
      * 		summary="delete an Ask",
