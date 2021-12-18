@@ -32,11 +32,11 @@ pipeline {
             }
             post {
                 success {
-                    echo "========docker-compose build success ========"
-                    slackSend (color:"#00FF00", message: "Master: Building Image success")
+                    echo "========docker build success ========"
+                    //slackSend (color:"#00FF00", message: "Master: Building Image success")
                 }
                 failure {
-                    echo "========docker-compose build failed========"
+                    echo "========docker build failed========"
                     //slackSend (color:"#FF0000", message: "Master: Building Image failure")
                 }
            }
