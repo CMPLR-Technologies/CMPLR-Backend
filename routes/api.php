@@ -80,5 +80,9 @@ Route::get('auth/googles/{token}', [GoogleController::class, 'GetUserFromGoogle'
 
 // Ask
 Route::post('/blog/{blogName}/ask', [AskController::class, 'CreateAsk'])->middleware('auth:api');
+Route::post('/ask/{askId}/answer', [AskController::class, 'CreateAsk'])->middleware('auth:api');
+Route::delete('/ask/{askId}', [AskController::class, 'DeleteAsk'])->middleware('auth:api');
+
+
 Route::get('/user/inbox', [AskController::class, 'GetInbox'])->middleware('auth:api');
 Route::get('/user/inbox/{blogName}', [AskController::class, 'GetBlogInbox'])->middleware('auth:api');

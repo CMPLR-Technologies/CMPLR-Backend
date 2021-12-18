@@ -10,9 +10,11 @@ use App\Models\Post;
 use App\Providers\AuthServiceProvider;
 use App\Services\Ask\CreateAskService;
 use App\Http\Misc\Helpers\Errors;
+use App\Services\Ask\DeleteAskService;
 use App\Services\Inbox\GetBlogInboxService;
 use App\Services\Inbox\GetInboxService;
-
+use Error;
+use Illuminate\Http\Request;
 
 class AskController extends Controller
 {
@@ -27,7 +29,7 @@ class AskController extends Controller
     /**
      *	@OA\Post
      *	(
-     * 		path="/blog/{blog-identifier}/ask",
+     * 		path="/blog/{blogname}/ask",
      * 		summary="Ask A Blog",
      * 		description="used to send a question to a blog",
      * 		operationId="CreateAsk",
@@ -35,39 +37,63 @@ class AskController extends Controller
      *
      *   	@OA\Parameter
      *		(
-     *      		name="anonymously",
-     *      		description="whether to ask the question anonymously or to use the user info",
-     *      		in="path",
-     *      		required=false,
+     *      		name="content",
+     *      		description="the content of the ask",
+     *      		in="query",
+     *      		required=true,
      *      		@OA\Schema
      *			    (
-     *           		type="Boolean"
+     *           		type="jsonb"
      *      	 	)
      *   	),
      *
      *    	@OA\Parameter
      *		(
-     *      		name="question",
-     *      		description="the content of the question",
+     *      		name="layout",
+     *      		description="structured arrangement of items",
      *      		in="query",
      *      		required=true,
      *      		@OA\Schema
-     *			(
-     *           		type="String"
+     *			    (
+     *           		type="json"
      *      	 	)
      *   	),
-     *    
-     *    	@OA\RequestBody
+     * 
+     *      @OA\Parameter
      *		(
+     *      		name="format",
+     *      		description="style of the post's format",
+     *      		in="query",
      *      		required=true,
-     *      		@OA\JsonContent
-     *			(
-     *      		    description="Pass user credentials",
-     *	    		required={"question"},
-     *      			@OA\Property(property="anonymously", type="Boolean", format="Boolean", example="true"),
-     *      			@OA\Property(property="question", type="String", format="text", example="how are you?"),
-     *      		),
-     *    	),
+     *      		@OA\Schema
+     *			    (
+     *           		type="string"
+     *      	 	)
+     *   	),
+     * 
+     *      @OA\Parameter
+     *		(
+     *      		name="mobile",
+     *      		description="was it send using a mobile",
+     *      		in="query",
+     *      		required=true,
+     *      		@OA\Schema
+     *			    (
+     *           		type="boolean"
+     *      	 	)
+     *   	),
+     * 
+     *      @OA\Parameter
+     *		(
+     *      		name="is_anonymous",
+     *      		description="was it asked anonymously or not",
+     *      		in="query",
+     *      		required=true,
+     *      		@OA\Schema
+     *			    (
+     *           		type="boolean"
+     *      	 	)
+     *   	),
      *
      * 		@OA\Response
      *		(
@@ -83,8 +109,8 @@ class AskController extends Controller
      *
      *		@OA\Response
      *		(
-     *	    	response=200,
-     *    		description="success",
+     *	    	response=201,
+     *    		description="created successfully",
      *     	)
      * )
      */
@@ -99,7 +125,7 @@ class AskController extends Controller
     public function CreateAsk(CreateAskRequest $request,$blogName)
     {   
         //call the service
-        $code=(new CreateAskService())->CreateAsk($request,$blogName);        
+        $code=(new CreateAskService())->CreateAsk($request->only('content','layout','format','mobile','is_anonymous'),$blogName);        
 
         //return the response
         if($code==201)
@@ -108,6 +134,71 @@ class AskController extends Controller
             return $this->error_response(Errors::ERROR_MSGS_404,'wrong target blog',404);
 
     }
+
+
+
+
+    public function AnswerAsk()
+    {
+        
+    }
+
+
+    /**
+     *	@OA\Post
+     *	(
+     * 		path="/ask/{askId}",
+     * 		summary="delete an Ask",
+     * 		description="user can choose not to answer an ask",
+     * 		operationId="DeleteAsk",
+     * 		tags={"Posts"},
+     *
+     * 		@OA\Response
+     *		(
+     *    		response=404,
+     *    		description="Not Found",
+     * 		),
+     *
+     *	   	@OA\Response
+     *		(
+     *		      response=401,
+     *		      description="Unauthenticated"
+     *	   	),
+     *
+     *	   	@OA\Response
+     *		(
+     *		      response=403,
+     *		      description="forbidden"
+     *	   	),
+     *
+     *		@OA\Response
+     *		(
+     *	    	response=202,
+     *    		description="deleted successfully",
+     *     	)
+     * )
+     */
+
+    /**
+    * delete an Ask send by a user to a blog
+    * 
+    * @return response
+    */
+    public function DeleteAsk($askId)
+    {
+        //call the service
+        $code=(new DeleteAskService())->DeleteAsk($askId,auth()->user());
+
+        //return the response
+        if($code==404)
+            return $this->error_response(Errors::ERROR_MSGS_404,'wrong targets',404);
+        else if($code==403)
+            return $this->error_response(Errors::ERROR_MSGS_403,'user not a member of the blog',403);
+        else
+            return $this->success_response(Success::DELETED,202);
+
+    }
+
 
     /**
      *	@OA\Get

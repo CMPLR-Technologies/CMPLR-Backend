@@ -32,20 +32,20 @@ class CreateAskService{
 
          //get user who asked
          $source_user_id=null;
-         if($request->is_anonymous==false)
+         if($request['is_anonymous']==false)
             $source_user_id=auth()->id();
          
  
          //create ask
          Post::create([
              'blog_id'=>$blog->id,
-             'content'=>$request->content,
-             'layout'=>$request->layout,
-             'format'=>$request->format,
-             'mobile'=>$request->mobile,
+             'content'=>$request['content'],
+             'layout'=>$request['layout'],
+             'format'=>$request['format'],
+             'mobile'=>$request['mobile'],
              'post_ask_submit'=>'ask',
              'source_user_id'=>$source_user_id,
-             'is_anonymous'=>$request->is_anonymous
+             'is_anonymous'=>$request['is_anonymous']
          ]);    
 
         return 201;

@@ -7,12 +7,12 @@
     },
     "servers": [
         {
-            "url": "http://localhost",
+            "url": "http://127.0.0.1:8000",
             "description": "CMPLR API Server"
         }
     ],
     "paths": {
-        "/blog/{blog-identifier}/ask": {
+        "/blog/{blogname}/ask": {
             "post": {
                 "tags": [
                     "Blogs"
@@ -22,50 +22,51 @@
                 "operationId": "CreateAsk",
                 "parameters": [
                     {
-                        "name": "anonymously",
-                        "in": "path",
-                        "description": "whether to ask the question anonymously or to use the user info",
-                        "required": false,
+                        "name": "content",
+                        "in": "query",
+                        "description": "the content of the ask",
+                        "required": true,
                         "schema": {
-                            "type": "Boolean"
+                            "type": "jsonb"
                         }
                     },
                     {
-                        "name": "question",
+                        "name": "layout",
                         "in": "query",
-                        "description": "the content of the question",
+                        "description": "structured arrangement of items",
                         "required": true,
                         "schema": {
-                            "type": "String"
+                            "type": "json"
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "description": "style of the post's format",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "mobile",
+                        "in": "query",
+                        "description": "was it send using a mobile",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "is_anonymous",
+                        "in": "query",
+                        "description": "was it asked anonymously or not",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean"
                         }
                     }
                 ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "description": "Pass user credentials",
-                                "required": [
-                                    "question"
-                                ],
-                                "properties": {
-                                    "anonymously": {
-                                        "type": "Boolean",
-                                        "format": "Boolean",
-                                        "example": "true"
-                                    },
-                                    "question": {
-                                        "type": "String",
-                                        "format": "text",
-                                        "example": "how are you?"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "404": {
                         "description": "Not Found"
@@ -73,8 +74,8 @@
                     "401": {
                         "description": "Unauthenticated"
                     },
-                    "200": {
-                        "description": "success"
+                    "201": {
+                        "description": "created successfully"
                     }
                 }
             }
@@ -92,9 +93,6 @@
                     "required": true
                 },
                 "responses": {
-                    "404": {
-                        "description": "Not Found"
-                    },
                     "401": {
                         "description": "Unauthenticated"
                     },
