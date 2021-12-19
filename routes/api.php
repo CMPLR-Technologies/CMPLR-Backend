@@ -35,7 +35,7 @@ Route::delete('/user/follow', [UserBlogController::class, 'unfollow'])->middlewa
 
 // Create/Delete blog
 Route::post('/blog', [UserBlogController::class, 'create'])->middleware('auth:api');
-Route::delete('/blog/{url}', [UserBlogController::class, 'destroy'])->middleware('auth:api');
+Route::post('/blog/{blogName}', [UserBlogController::class, 'destroy'])->middleware('auth:api');
 
 Route::post('/register/insert', [RegisterController::class, 'Register'])->name('Register');
 Route::post('/register/validate', [RegisterController::class, 'ValidateRegister'])->name('ValidateRegister')->middleware('cors:api');

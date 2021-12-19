@@ -32,7 +32,7 @@ class BlogPolicy
 
     public function delete(User $user, Blog $blog)
     {
-        return  $blog->users->contains('user_id', $user->id) &&
-            $blog->users->where('user_id', $user->id)->first()->full_privileges == true;
+        return  $blog->users->contains('id', $user->id) &&
+                $blog->users()->where('user_id', $user->id)->where('full_privileges','true')->first() != null;
     }
 }

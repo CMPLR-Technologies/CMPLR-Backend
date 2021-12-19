@@ -2731,7 +2731,7 @@
                     }
                 ],
                 "requestBody": {
-                    "description": "Api Example : api.tumblr.com/v1/blog/{blog-identifier}/notifications <br/>\r\n     *    Available types include:\\n <br/>\r\n     *      all : get all notifications  <br/>\r\n     *      like:\tA like on your post <br/>\r\n     *      reply:\tA reply on your post <br/>\r\n     *      follow:\tA new follower <br/>\r\n     *      mention_in_reply:\tA mention of your blog in a reply <br/>\r\n     *      mention_in_post:\tA mention of your blog in a post <br/>\r\n     *      reblog_naked:\tA reblog of your post, without commentary <br/>\r\n     *      reblog_with_content:\tA reblog of your post, with commentary <br/>\r\n     *      ask:\tA new ask received <br/>\r\n     *      answered_ask:\tAn answered ask that you had sent <br/>\r\n     *      new_group_blog_member:\tA new member of your group blog <br/>\r\n     *      post_flagged:\tA post of yours being flagged <br/>\r\n     *      conversational_note\tA conversational note (reply, reblog with comment) on a post you're watching",
+                    "description": "Api Example : api.tumblr.com/v1/blog/{blog-identifier}/notifications <br/>\n     *    Available types include:\\n <br/>\n     *      all : get all notifications  <br/>\n     *      like:\tA like on your post <br/>\n     *      reply:\tA reply on your post <br/>\n     *      follow:\tA new follower <br/>\n     *      mention_in_reply:\tA mention of your blog in a reply <br/>\n     *      mention_in_post:\tA mention of your blog in a post <br/>\n     *      reblog_naked:\tA reblog of your post, without commentary <br/>\n     *      reblog_with_content:\tA reblog of your post, with commentary <br/>\n     *      ask:\tA new ask received <br/>\n     *      answered_ask:\tAn answered ask that you had sent <br/>\n     *      new_group_blog_member:\tA new member of your group blog <br/>\n     *      post_flagged:\tA post of yours being flagged <br/>\n     *      conversational_note\tA conversational note (reply, reblog with comment) on a post you're watching",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -4857,7 +4857,7 @@
                         "required": true
                     },
                     {
-                        "name": "url",
+                        "name": "blogName",
                         "in": "query",
                         "required": true
                     },
@@ -4880,7 +4880,7 @@
                             "schema": {
                                 "required": [
                                     "title",
-                                    "url"
+                                    "blogName"
                                 ],
                                 "properties": {
                                     "title": {
@@ -4888,9 +4888,9 @@
                                         "format": "text",
                                         "example": "Summer_Blog"
                                     },
-                                    "url": {
+                                    "blogName": {
                                         "type": "string",
-                                        "format": "url",
+                                        "format": "blogName",
                                         "example": "example.tumblr.com"
                                     },
                                     "privacy": {
@@ -4923,7 +4923,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Blog url is not available!"
+                                            "example": "Blog name is not available!"
                                         }
                                     },
                                     "type": "object"
@@ -4934,13 +4934,13 @@
                 }
             }
         },
-        "/blog/{url}": {
-            "delete": {
+        "/blog/{blogName}": {
+            "post": {
                 "tags": [
                     "Blogs"
                 ],
                 "summary": "Delete Specific Blog",
-                "description": "User Delete Specific Blog ",
+                "description": "User Delete Specific Blog, note this is a post request cause you need to send your password",
                 "operationId": "Delete",
                 "parameters": [
                     {
@@ -5017,22 +5017,13 @@
                     "Users"
                 ],
                 "summary": "Follow a blog",
-                "description": "enable the user to follow a blog using the blog Email or URL",
+                "description": "enable the user to follow a blog using the blogName",
                 "operationId": "UserFollow",
                 "parameters": [
                     {
-                        "name": "url",
+                        "name": "blogName",
                         "in": "query",
-                        "description": "the url of the blog to follow",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "The email of the blog to follow",
+                        "description": "the blogName of the blog to follow",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -5045,20 +5036,11 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "url",
-                                    "email"
-                                ],
                                 "properties": {
-                                    "url": {
+                                    "blogName": {
                                         "type": "string",
-                                        "format": "url",
-                                        "example": "http://wwww.something.com"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "name@something.com"
+                                        "format": "text",
+                                        "example": "myblog"
                                     }
                                 },
                                 "type": "object"
@@ -5075,7 +5057,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Blog url is not available!"
+                                            "example": "Blog name is not available!"
                                         }
                                     },
                                     "type": "object"
@@ -5119,21 +5101,19 @@
                         }
                     }
                 }
-            }
-        },
-        "/user/unfollow": {
-            "post": {
+            },
+            "delete": {
                 "tags": [
                     "Users"
                 ],
                 "summary": "Unfollow a blog",
-                "description": "enable the user to Unfollow a blog using the blog URL",
+                "description": "enable the user to Unfollow a blog using the blog name",
                 "operationId": "UserUnfollow",
                 "parameters": [
                     {
-                        "name": "url",
-                        "in": "query",
-                        "description": "the url of the blog to unfollow",
+                        "name": "blogName",
+                        "in": "path",
+                        "description": "the name of the blog to unfollow",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -5147,13 +5127,13 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "url"
+                                    "blogName"
                                 ],
                                 "properties": {
-                                    "url": {
+                                    "blogName": {
                                         "type": "string",
-                                        "format": "url",
-                                        "example": "http://wwww.something.com"
+                                        "format": "blogName",
+                                        "example": "myblog"
                                     }
                                 },
                                 "type": "object"
@@ -5170,7 +5150,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Blog url is not available!"
+                                            "example": "Blog name is not available!"
                                         }
                                     },
                                     "type": "object"

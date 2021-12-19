@@ -48,6 +48,7 @@ class Errors
     const ERROR_MSGS_403 = "Forbidden";
     const ERROR_MSGS_404 = "Not Found";
     const ERROR_MSGS_500 = "Internal Server Error";
+    const ERROR_MSGS_409 = "Conflict";
 
     //Duplicate Password
     const DUPLICATE_PASSWORD = "New Password Cannot be Equal Old Password";
