@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BlogSettingsController;
 use App\Http\Controllers\PostsController;
+use App\Http\Controllers\PostNotesController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UploadMediaController;
 use App\Http\Controllers\UserBlogController;
@@ -28,6 +29,8 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+//post 
+Route::get('post/notes', [PostNotesController::class, 'getNotes']);
 
 // Search
 Route::get('search/{query}', [SearchController::class, 'search']);
