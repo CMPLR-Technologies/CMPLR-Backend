@@ -188,7 +188,9 @@ class PostsController extends Controller
         $post = $this->PostsService->createPost($request->all());
         if (!$post) {
             $error['post'] = 'error while creating post';
+
             return $this->error_response(Errors::ERROR_MSGS_500, $error, 500);
+
         }
         $response['posts'] = $post;
         return $this->success_response($response, 201);
