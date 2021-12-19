@@ -3132,33 +3132,25 @@
                     {
                         "name": "content",
                         "in": "query",
+                        "description": "written in HTML",
                         "required": true,
                         "schema": {
-                            "type": "Array"
+                            "type": "string"
                         }
                     },
                     {
-                        "name": "layout",
+                        "name": "blog_name",
                         "in": "query",
-                        "description": "there are different types of layout for posts",
-                        "required": false,
+                        "required": true,
                         "schema": {
-                            "type": "Array"
+                            "type": "string"
                         }
                     },
                     {
                         "name": "state",
                         "in": "query",
-                        "description": "the state of the post. Specify one of the following: published, draft, queue, private",
-                        "required": false,
-                        "schema": {
-                            "type": "String"
-                        }
-                    },
-                    {
-                        "name": "publish_on",
-                        "in": "query",
-                        "required": false,
+                        "description": "the state of the post. Specify one of the following: publish, draft, private",
+                        "required": true,
                         "schema": {
                             "type": "String"
                         }
@@ -3166,82 +3158,175 @@
                     {
                         "name": "tags",
                         "in": "query",
-                        "description": "Comma-separated tags for this post",
-                        "required": false,
+                        "description": "array of tags ['tag1','tag2']",
+                        "required": false
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "type of post (text,photos,videos,audios,quotes",
+                        "required": true,
                         "schema": {
                             "type": "String"
                         }
                     },
                     {
-                        "name": "date",
+                        "name": "source_content",
                         "in": "query",
-                        "description": "The GMT date and time of the post, as a string",
+                        "description": "A source for the post content",
                         "required": false,
                         "schema": {
                             "type": "String"
                         }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "content,blog_name,state,type"
+                                ],
+                                "properties": {
+                                    "content": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "<h1> hello all</h1><br/> <div><p>my name is <span>Ahmed</span></p></div>"
+                                    },
+                                    "blog_name": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "Ahmed_1"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "text"
+                                    },
+                                    "state": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "private"
+                                    },
+                                    "source_content": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "www.geeksforgeeks.com"
+                                    },
+                                    "tags": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "['DFS','BFS']"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
                     },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "201": {
+                        "description": "Successfully Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 201
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "Created"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "post": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 123
+                                                        },
+                                                        "content": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "<h1> hello all</h1><br/> <div><p>my name is <span>Ahmed</span></p></div>"
+                                                        },
+                                                        "type": {
+                                                            "type": "string",
+                                                            "example": "text"
+                                                        },
+                                                        "state": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "private"
+                                                        },
+                                                        "source_content": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "www.geeksforgeeks.com"
+                                                        },
+                                                        "tags": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "['DFS','BFS']"
+                                                        },
+                                                        "blog_name": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "Ahmed_1"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/posts/edit/{blog_name}/{post_id}": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Edit existing Post",
+                "operationId": "edit",
+                "parameters": [
                     {
-                        "name": "source_url",
+                        "name": "post_id",
                         "in": "query",
-                        "description": "A source attribution for the post content",
-                        "required": false,
+                        "description": "the ID of the post to edit",
+                        "required": true,
                         "schema": {
-                            "type": "String"
+                            "type": "Number"
                         }
                     },
                     {
-                        "name": "slug",
+                        "name": "blog_name",
                         "in": "query",
-                        "description": "Add a short text summary to the end of the post URL",
-                        "required": false,
+                        "description": "the blog_name of the post to edit",
+                        "required": true,
                         "schema": {
-                            "type": "String"
-                        }
-                    },
-                    {
-                        "name": "is_private",
-                        "in": "query",
-                        "description": "Whether this should be a private answer, if this is an answer.",
-                        "required": false,
-                        "schema": {
-                            "type": "Boolean"
-                        }
-                    },
-                    {
-                        "name": "parent_tumnlrlog_uuid ",
-                        "in": "query",
-                        "description": "the unique public identifier of the tumblelog that’s being reblogged from",
-                        "required": false,
-                        "schema": {
-                            "type": "String"
-                        }
-                    },
-                    {
-                        "name": "parent_post_id",
-                        "in": "query",
-                        "description": " the unique public post Id bing reblogged",
-                        "required": false,
-                        "schema": {
-                            "type": "Integer"
-                        }
-                    },
-                    {
-                        "name": "hide_trail",
-                        "in": "query",
-                        "description": "whether or not to hide the reblog trail with this new post",
-                        "required": false,
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "name": "exclide_tral_items",
-                        "in": "query",
-                        "description": "reblog trail items",
-                        "required": false,
-                        "schema": {
-                            "type": "Array"
+                            "type": "string"
                         }
                     }
                 ],
@@ -3273,83 +3358,48 @@
                                         },
                                         "response": {
                                             "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1234567891234567
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/posts/edit": {
-            "put": {
-                "tags": [
-                    "Posts"
-                ],
-                "summary": "Edit existing Post",
-                "operationId": "edit",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "query",
-                        "description": "the ID of the post to edit",
-                        "required": true,
-                        "schema": {
-                            "type": "Number"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "id"
-                                ],
-                                "properties": {
-                                    "id": {
-                                        "type": "number",
-                                        "format": "text",
-                                        "example": "12546899"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "200": {
-                        "description": "Successfully edited",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "Meta": {
-                                            "properties": {
-                                                "Status": {
-                                                    "type": "integer",
-                                                    "example": 200
+                                                "post": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 123
+                                                        },
+                                                        "content": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "<h1> hello all</h1><br/> <div><p>my name is <span>Ahmed</span></p></div>"
+                                                        },
+                                                        "type": {
+                                                            "type": "string",
+                                                            "example": "text"
+                                                        },
+                                                        "state": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "private"
+                                                        },
+                                                        "source_content": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "www.geeksforgeeks.com"
+                                                        },
+                                                        "tags": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "['DFS','BFS']"
+                                                        }
+                                                    },
+                                                    "type": "object"
                                                 },
-                                                "msg": {
+                                                "blog_name": {
                                                     "type": "string",
-                                                    "example": "OK"
+                                                    "format": "text",
+                                                    "example": "Ahmed_1"
+                                                },
+                                                "avatar": {
+                                                    "type": "string",
+                                                    "format": "text",
+                                                    "example": "https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"
                                                 }
                                             },
                                             "type": "object"
@@ -3372,9 +3422,51 @@
                 "operationId": "edit",
                 "parameters": [
                     {
-                        "name": "post_fromat",
+                        "name": "content",
+                        "in": "query",
+                        "description": "written in HTML",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "blog_name",
                         "in": "query",
                         "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "description": "the state of the post. Specify one of the following: publish, draft, private",
+                        "required": true,
+                        "schema": {
+                            "type": "String"
+                        }
+                    },
+                    {
+                        "name": "tags",
+                        "in": "query",
+                        "description": "array of tags ['tag1','tag2']",
+                        "required": false
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "type of post (text,photos,videos,audios,quotes",
+                        "required": true,
+                        "schema": {
+                            "type": "String"
+                        }
+                    },
+                    {
+                        "name": "source_content",
+                        "in": "query",
+                        "description": "A source for the post content",
+                        "required": false,
                         "schema": {
                             "type": "String"
                         }
@@ -3453,8 +3545,15 @@
                             }
                         }
                     }
-                }
-            },
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/update/{blog_name}/{post-id}": {
             "put": {
                 "tags": [
                     "Posts"
@@ -4392,6 +4491,71 @@
                         "bearer": []
                     }
                 ]
+            }
+        },
+        "/radar": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "get email for reset password for  user",
+                "description": "User can reset password for existing email",
+                "operationId": "GetResestPassword",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "success"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string",
+                                                    "format": "text",
+                                                    "example": "4Y9ZEJqWEABGHkzEXAqNI1F9UZKtKeZVdIChNXBapp9w7XP6mwQZeBXEebMU"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "text",
+                                                    "example": "ahmed.mohamed.abdelhamed2@gmail.com"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "422": {
+                        "description": "invalid Data"
+                    }
+                }
             }
         },
         "/posts/reblog": {

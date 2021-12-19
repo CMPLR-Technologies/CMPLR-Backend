@@ -10,7 +10,8 @@ class CreatePostsTable extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->integer("blog_id")->constrained()->onDelete('cascade');
+            $table->integer("blog_id");
+            $table ->foreign('blog_id')->references('id')->on('blogs')->onDelete('cascade'); 
             $table->string("blog_name")->nullable();                    // post owner | target in case of ask/submit
             $table->string("type");                         // post type
             $table->text("content");                       // post content

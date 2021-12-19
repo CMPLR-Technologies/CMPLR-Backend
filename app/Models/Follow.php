@@ -14,4 +14,10 @@ class Follow extends Model
         'blog_id'
     ];
 
+    // public function FBlogs()
+    // {
+    //     return $this->belongsTo(Blog::class,'blog_id');
+    // }
+    
+
 }

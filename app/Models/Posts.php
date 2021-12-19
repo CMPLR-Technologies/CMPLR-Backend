@@ -22,11 +22,12 @@ class Posts extends Model
     protected $casts = [
         'tags' => 'json'
     ];
+    
 
     // post belong to one blog
-    public function BLog()
+    public function BLogs()
     {
-        return $this->belongsTo(Blog::class);
+        return $this->belongsTo(Blog::class,'blog_id');
     }
 
 }

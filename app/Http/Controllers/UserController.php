@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Misc\Helpers\Config;
 use App\Http\Misc\Helpers\Errors;
+use App\Http\Resources\PostsCollection;
+use App\Models\Blog;
+use App\Models\Posts;
 use App\Models\User;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -245,9 +250,13 @@ class UserController extends Controller
      * 
      * )
      */
-    public function getDashboard()
+    public function GetDashboard(Request $request)
     {
-        //
+        $user = Auth::user();
+        //get all followed blogs
+        $followed_blogs_id = $user->FollowedBlogs->pluck('id');
+        $Posts = Posts::whereIn('blog_id', $followed_blogs_id)->paginate(Config::PAGINATION_LIMIT);
+        return $this->success_response(new PostsCollection($Posts));
     }
 
     /**
