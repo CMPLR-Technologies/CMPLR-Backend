@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Blog extends Model
 {
@@ -18,6 +19,7 @@ class Blog extends Model
         'password'
     ];
 
+    
     public function followers()
     {
         return $this->hasMany(Follow::class);
@@ -38,9 +40,23 @@ class Blog extends Model
         return $this->belongsToMany(User::class, 'blog_users', 'blog_id', 'user_id');
     }
 
-    public function posts()
+    public function Posts()
     {
-        return $this->hasMany(Post::class);
+        return $this->hasMany(Posts::class,'blog_id');
     }
+
+    public function UserFollowers()
+    {
+        return $this->belongsToMany(User::class ,'user_follow_blog', 'user_id', 'blog_id');
+    }
+
+    public function isfollower(User $user)
+    {
+        return !! DB::table('user_follow_blog')->where('user_id',$user->id)->where('blog_id',$this->id)->first();
+    }
+    // public function Follows()
+    // {
+    //     return $this->hasMany(Follow::class,'blog_id');
+    // }
 
 }

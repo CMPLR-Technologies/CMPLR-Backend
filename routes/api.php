@@ -8,12 +8,15 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BlogSettingsController;
+use App\Http\Controllers\PostsController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\UploadMediaController;
 use App\Http\Controllers\UserBlogController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UsersettingController;
 use App\Http\Controllers\AskController;
 use Illuminate\Support\Facades\Route;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,7 +44,7 @@ Route::post('/register/insert', [RegisterController::class, 'Register'])->name('
 Route::post('/register/validate', [RegisterController::class, 'ValidateRegister'])->name('ValidateRegister')->middleware('cors:api');
 Route::post('/forgot_password', [ForgetPasswordController::class, 'ForgetPassword'])->name('password.email');
 Route::post('/reset_password', [ResetPasswordController::class, 'ResetPassword'])->name('password.reset');
-Route::get('/reset_password/{token}', [ResetPasswordController::class, 'GetResetPassword'])->name('password.reset');
+Route::get('/reset_password/{token}', [ResetPasswordController::class, 'GetResetPassword'])->name('password.reset.get');
 
 Route::post('/login', [LoginController::class, 'Login']);
 Route::post('/logout', [LoginController::class, 'Logout'])->middleware('auth:api');
@@ -56,10 +59,9 @@ Route::middleware('auth:api')->group(function () {
     Route::put('blog/{blog}/settings/theme', [BlogSettingsController::class, 'editBlogTheme'])->name('editBlogTheme');
 
 
-    Route::get('/settings', [UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
-    Route::get('info', [UserController::class, 'GetUserInfo'])->name('GetUser_Info');
+    Route::get('/info', [UserController::class, 'GetUserInfo'])->name('GetUser_Info');
 
-    Route::get('/settings', [UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
+    Route::get('/user/settings', [UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
     Route::put('/settings', [UsersettingController::class, 'UpdateSettings'])->name('UpdateAccountSetting');
     Route::put('/settings/change-email', [UsersettingController::class, 'ChangeEmail'])->name('Change Email');
     Route::put('/settings/change-password', [UsersettingController::class, 'ChangePassword'])->name('Change Password');
@@ -86,3 +88,15 @@ Route::delete('/ask/{askId}', [AskController::class, 'DeleteAsk'])->middleware('
 
 Route::get('/user/inbox', [AskController::class, 'GetInbox'])->middleware('auth:api');
 Route::get('/user/inbox/{blogName}', [AskController::class, 'GetBlogInbox'])->middleware('auth:api');
+
+//Posts
+Route::middleware('auth:api')->group(function () {
+    Route::post('/posts', [PostsController::class, 'create'])->name('CreatePost');
+    Route::get('edit/{blog_name}/{post_id}',[PostsController::class,'edit'])->name('EditPost');
+    Route::put('update/{blog_name}/{post_id}',[PostsController::class,'update'])->name('UpdatePost');
+    Route::get('user/dashboard/',[UserController::class,'GetDashboard'])->name('Get.Dashboard');
+    Route::get('posts/radar/', [ PostsController::class, 'GetRadar' ])->name('post.get.radar');
+});
+Route::middleware('guest')->get('posts/view/{blog_name}', [ PostsController::class, 'GetBlogPosts' ])->name('post.get.blogs');
+Route::middleware('auth:api')->post('image_upload', [ UploadMediaController::class, 'UploadImages' ])->name('image.upload.post');
+Route::middleware('auth:api')->post('video_upload', [ UploadMediaController::class, 'UploadVideos' ])->name('Videos.upload.post');
