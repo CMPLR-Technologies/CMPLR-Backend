@@ -4,13 +4,10 @@ namespace App\Http\Requests\Auth;
 
 use App\Http\Misc\Helpers\Errors;
 use App\Http\Misc\Traits\WebServiceResponse;
-use Illuminate\validation\Rules\Password;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Foundation\Http\FormRequest;
-use Elegant\Sanitizer\Laravel\SanitizesInput;
-
-
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\validation\Rules\Password;
 
 class ResetPasswordRequest extends FormRequest
 {

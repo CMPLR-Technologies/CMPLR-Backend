@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreatePostNotesTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('post_notes', function (Blueprint $table) {
@@ -19,16 +14,10 @@ class CreatePostNotesTable extends Migration
             $table->foreignId('post_id')->references('id')->on('posts')->constrained()->onDelete('cascade');
             $table->text('type'); // like - reply - reblog - reblogwithcontent
             $table->text('content')->nullable();
-
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('post_notes');
