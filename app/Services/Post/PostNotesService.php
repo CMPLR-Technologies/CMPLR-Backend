@@ -90,10 +90,10 @@ class PostNotesService
      */
     public function GetNotesResult($notes , $blogsHashData ,$counts)
     {
-        $result = [] ;
+        $collection = [] ;
         for ($i=0; $i<count($notes); $i++) 
         {
-            $result[] =[
+            $collection[] =[
                 'post_id'=>$notes[$i]->post_id,
                 'type' => $notes[$i]->type,
                 'content'=> $notes[$i]->content,
@@ -107,6 +107,7 @@ class PostNotesService
         }
        
         $result[] =[
+            'notes' => $collection ,
             'total_likes'=> $counts['like'],
             'total_reblogs'=> $counts['reblog'],
             'total_replys' => $counts['reply']
