@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\InboxCollection;
+use App\Services\Inbox\DeleteInboxService;
 use App\Services\Inbox\GetBlogInboxService;
 use App\Services\Inbox\GetInboxService;
 use Illuminate\Http\Request;
@@ -178,4 +179,34 @@ class InboxController extends Controller
 
         return $this->success_response(new InboxCollection($inbox),$code);
     }
+
+    /**
+     *	@OA\Delete
+     *	(
+     * 		path="/user/inbox",
+     * 		summary="delelte user's inbox",
+     * 		description="delete all messages inside the inbox",
+     * 		operationId="DeleteInbox",
+     * 		tags={"Users"},
+     *
+     *	   	@OA\Response
+     *		(
+     *		      response=401,
+     *		      description="Unauthenticated"
+     *	   	),
+     *
+     *		@OA\Response
+     *		(
+     *	    	response=200,
+     *    		description="success",
+     *     	)
+     * )
+     */
+    public function DeleteInbox()
+    {
+        $code=(new DeleteInboxService())->DeleteInbox(auth()->user());
+    
+        return $this->success_response('all messages are delete',$code);
+    }
+
 }
