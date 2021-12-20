@@ -8,11 +8,17 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BlogSettingsController;
+use App\Http\Controllers\PostsController;
+use App\Http\Controllers\PostNotesController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\UploadMediaController;
 use App\Http\Controllers\UserBlogController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserPostConroller;
 use App\Http\Controllers\UsersettingController;
+use App\Http\Controllers\AskController;
 use Illuminate\Support\Facades\Route;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,30 +30,35 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+//post 
+Route::get('post/notes', [PostNotesController::class, 'getNotes']);
 
 // Search
 Route::get('search/{query}', [SearchController::class, 'search']);
 
 // Follow/Unfollow blog
 Route::post('/user/follow', [UserBlogController::class, 'follow'])->middleware('auth:api');
-
 Route::delete('/user/follow', [UserBlogController::class, 'unfollow'])->middleware('auth:api');
+
+//Like /unlike post
+Route::post('user/like', [UserPostConroller::class ,'Like'])->middleware('auth:api');
+Route::delete('user/unlike', [UserPostConroller::class ,'UnLike'])->middleware('auth:api');
 
 // Create/Delete blog
 Route::post('/blog', [UserBlogController::class, 'create'])->middleware('auth:api');
-Route::delete('/blog/{url}', [UserBlogController::class, 'destroy'])->middleware('auth:api');
+Route::post('/blog/{blogName}', [UserBlogController::class, 'destroy'])->middleware('auth:api');
 
 Route::post('/register/insert', [RegisterController::class, 'Register'])->name('Register');
 Route::post('/register/validate', [RegisterController::class, 'ValidateRegister'])->name('ValidateRegister')->middleware('cors:api');
 Route::post('/forgot_password', [ForgetPasswordController::class, 'ForgetPassword'])->name('password.email');
 Route::post('/reset_password', [ResetPasswordController::class, 'ResetPassword'])->name('password.reset');
-Route::get('/reset_password/{token}', [ResetPasswordController::class, 'GetResetPassword'])->name('password.reset');
+Route::get('/reset_password/{token}', [ResetPasswordController::class, 'GetResetPassword'])->name('password.reset.get');
 
 Route::post('/login', [LoginController::class, 'Login']);
 Route::post('/logout', [LoginController::class, 'Logout'])->middleware('auth:api');
 
 Route::post('email/verification-notification', [EmailVerificationController::class, 'SendVerificationEmail'])->name('verification.send')->middleware('auth:api');
-Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'Verify'])->name('verification.verify')->middleware('auth:api');
+Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'Verify'])->name('verification.verify')->middleware('signed');
 
 // Settings routes
 Route::middleware('auth:api')->group(function () {
@@ -56,10 +67,9 @@ Route::middleware('auth:api')->group(function () {
     Route::put('blog/{blog}/settings/theme', [BlogSettingsController::class, 'editBlogTheme'])->name('editBlogTheme');
 
 
-    Route::get('/settings', [UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
-    Route::get('info', [UserController::class, 'GetUserInfo'])->name('GetUser_Info');
+    Route::get('/info', [UserController::class, 'GetUserInfo'])->name('GetUser_Info');
 
-    Route::get('/settings', [UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
+    Route::get('/user/settings', [UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
     Route::put('/settings', [UsersettingController::class, 'UpdateSettings'])->name('UpdateAccountSetting');
     Route::put('/settings/change-email', [UsersettingController::class, 'ChangeEmail'])->name('Change Email');
     Route::put('/settings/change-password', [UsersettingController::class, 'ChangePassword'])->name('Change Password');
@@ -77,3 +87,24 @@ Route::get('auth/google', [GoogleController::class, 'GoogleLogin'])->middleware(
 Route::any('auth/callback', [GoogleController::class, 'handleGoogleCallback'])->middleware('web');
 
 Route::get('auth/googles/{token}', [GoogleController::class, 'GetUserFromGoogle'])->middleware('web');
+
+// Ask
+Route::post('/blog/{blogName}/ask', [AskController::class, 'CreateAsk'])->middleware('auth:api');
+Route::post('/ask/{askId}', [AskController::class, 'AnswerAsk'])->middleware('auth:api');
+Route::delete('/ask/{askId}', [AskController::class, 'DeleteAsk'])->middleware('auth:api');
+
+
+Route::get('/user/inbox', [AskController::class, 'GetInbox'])->middleware('auth:api');
+Route::get('/user/inbox/{blogName}', [AskController::class, 'GetBlogInbox'])->middleware('auth:api');
+
+//Posts
+Route::middleware('auth:api')->group(function () {
+    Route::post('/posts', [PostsController::class, 'create'])->name('CreatePost');
+    Route::get('edit/{blog_name}/{post_id}',[PostsController::class,'edit'])->name('EditPost');
+    Route::put('update/{blog_name}/{post_id}',[PostsController::class,'update'])->name('UpdatePost');
+    Route::get('user/dashboard/',[UserController::class,'GetDashboard'])->name('Get.Dashboard');
+    Route::get('posts/radar/', [ PostsController::class, 'GetRadar' ])->name('post.get.radar');
+});
+Route::middleware('guest')->get('posts/view/{blog_name}', [ PostsController::class, 'GetBlogPosts' ])->name('post.get.blogs');
+Route::middleware('auth:api')->post('image_upload', [ UploadMediaController::class, 'UploadImages' ])->name('image.upload.post');
+Route::middleware('auth:api')->post('video_upload', [ UploadMediaController::class, 'UploadVideos' ])->name('Videos.upload.post');

@@ -52,6 +52,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->HasMany(Follow::class);
     }
 
+    // returns the BlogUser rows related to this user
     public function blogs()
     {
         return $this->hasMany(BlogUser::class);
@@ -60,5 +61,21 @@ class User extends Authenticatable implements MustVerifyEmail
     public function tags()
     {
         return $this->belongsToMany(Tag::class, 'tag_users', 'user_id', 'tag_id');
+    }
+
+    // returns the blogs belong to this user
+    public function realBlogs()
+    {
+        return $this->belongsToMany(Blog::class,'blog_users');
+    }
+
+    public function notes()
+    {
+        return $this->hasMany(PostNotes::class);
+    }
+
+    public function FollowedBlogs()
+    {
+        return $this->belongsToMany(Blog::class ,'user_follow_blog', 'user_id', 'blog_id');
     }
 }

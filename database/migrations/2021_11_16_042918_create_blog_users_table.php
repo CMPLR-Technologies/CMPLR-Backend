@@ -10,8 +10,8 @@ class CreateBlogUsersTable extends Migration
     {
         Schema::create('blog_users', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('restrict');
-            $table->foreignId('blog_id')->constrained()->onDelete('restrict');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('blog_id')->constrained()->onDelete('cascade');
             $table->boolean('primary')->default(false);
             $table->boolean('full_privileges')->default(true);
             $table->boolean('contributor_privileges')->nullable();

@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Blog;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use App\Models\BlogUser; 
-use Illuminate\Http\Request;
-use App\Services\User\UserService;
+use App\Http\Misc\Helpers\Config;
 use App\Http\Misc\Helpers\Errors;
-
+use App\Http\Resources\PostsCollection;
+use App\Models\Blog;
+use App\Models\Posts;
+use App\Models\User;
+use App\Services\User\UserService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -26,7 +28,7 @@ class UserController extends Controller
     }
     /**
      * @OA\Get(
-     * path="/user/info",
+     * path="/info",
      * summary=" retrieving the user’s account information ",
      * description="This method can be used to  retrieve the user’s account information that matches the OAuth credentials submitted with the request",
      * operationId="index",
@@ -248,9 +250,13 @@ class UserController extends Controller
      * 
      * )
      */
-    public function getDashboard()
+    public function GetDashboard(Request $request)
     {
-        //
+        $user = Auth::user();
+        //get all followed blogs
+        $followed_blogs_id = $user->FollowedBlogs->pluck('id');
+        $Posts = Posts::whereIn('blog_id', $followed_blogs_id)->paginate(Config::PAGINATION_LIMIT);
+        return $this->success_response(new PostsCollection($Posts));
     }
 
     /**
@@ -1125,23 +1131,21 @@ class UserController extends Controller
     {
     }
 
-    // public function GetUserTheme()
-    // {
-    //     $user = Auth::user();
-    //     $theme = $user->theme;
-    //     $response['theme']=$theme;
-    //     return $this->success_response($response,200);
-    // }
+    public function GetUserTheme()
+    {
+        $user = Auth::user();
+        $theme = $user->theme;
+        $response['theme']=$theme;
+        return $this->success_response($response,200);
+    }
 
-    // public function UpdateUserTheme (Request $request)
-    // {
-    //     $user = Auth::user();
-    //     $theme = $request->theme;
-    //     $check = User::where('id',$user->id)->theme =$theme;
-    //     $user->theme = $theme;
-    //     $user->save();
-    //     if(!$check)
-    //         return $this->error_response(Errors::ERROR_MSGS_500,[''],500);
-    //     return $this->success_response(['successfully update theme'],200);
-    // }
+    public function UpdateUserTheme (Request $request)
+    {
+        $user = Auth::user();
+        $theme = $request->theme;
+        $check = User::where('id',$user->id)->update(array('theme'=> $theme));
+        if(!$check)
+            return $this->error_response(Errors::ERROR_MSGS_500,[''],500);
+        return $this->success_response(['successfully update theme'],200);
+    }
 }

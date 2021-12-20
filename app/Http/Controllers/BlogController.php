@@ -2,15 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Blog;
-use App\Models\BlogSettings;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use App\Services\Blog\FollowBlogService;
 use App\Http\Misc\Helpers\Errors;
-
+use App\Models\Blog;
+use App\Services\Blog\FollowBlogService;
+use Illuminate\Http\Request;
 
 class BlogController extends Controller
 {

@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Http\Misc\Helpers\Errors;
+use App\Http\Misc\Traits\WebServiceResponse;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\validation\Rules\Password;
 
 class ResetPasswordRequest extends FormRequest
@@ -16,7 +20,7 @@ class ResetPasswordRequest extends FormRequest
     | the request , and handle a proper error messages
     |
    */
-
+    use  WebServiceResponse;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -55,5 +59,18 @@ class ResetPasswordRequest extends FormRequest
                                                             ->uncompromised()],
             'password_confirmation' => ['required', 'same:password']
         ];
+    }
+
+    /** 
+     * 
+     * this function overrides the failedValidation in validator class 
+     *  to return the desired failed response
+     * @return json
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            $this->error_response(Errors::ERROR_MSGS_400, $validator->errors(), 400)
+        );
     }
 }

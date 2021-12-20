@@ -6,26 +6,16 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateUserFollowBlog extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('user_follow_blog', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('restrict');
-            $table->foreignId('blog_id')->constrained()->onDelete('restrict');
+            $table->foreignId('blog_id')->references('id')->on('blogs')->onDelete('restrict');
+            $table->foreignId("user_id")->references('id')->on('users')->onDelete('restrict');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('user_follow_blog');
