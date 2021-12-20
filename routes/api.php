@@ -17,6 +17,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPostConroller;
 use App\Http\Controllers\UsersettingController;
 use App\Http\Controllers\AskController;
+use App\Http\Controllers\BlogChatController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -30,6 +31,12 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+//Chat 
+Route::get('blog/messaging', [BlogChatController::class, 'GetMessages'])->middleware('auth:api');
+Route::get('/messaging/conversation/{blogIdFrom}/{blogIdTo}', [BlogChatController::class, 'Conversation'])->middleware('auth:api');
+Route::post('/messaging/conversation/{blogIdFrom}/{blogIdTo}', [BlogChatController::class, 'SendMessage'])->middleware('auth:api');
+Route::delete('/messaging/conversation/{blogIdFrom}/{blogIdTo}', [BlogChatController::class, 'DeleteMessgaes'])->middleware('auth:api');
+
 //post 
 Route::get('post/notes', [PostNotesController::class, 'getNotes']);
 
@@ -108,3 +115,4 @@ Route::middleware('auth:api')->group(function () {
 Route::middleware('guest')->get('posts/view/{blog_name}', [ PostsController::class, 'GetBlogPosts' ])->name('post.get.blogs');
 Route::middleware('auth:api')->post('image_upload', [ UploadMediaController::class, 'UploadImages' ])->name('image.upload.post');
 Route::middleware('auth:api')->post('video_upload', [ UploadMediaController::class, 'UploadVideos' ])->name('Videos.upload.post');
+

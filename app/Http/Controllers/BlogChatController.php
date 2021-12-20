@@ -2,6 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Misc\Helpers\Config;
+use App\Models\Blog;
+use App\Models\Chat;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class BlogChatController extends Controller
 {
@@ -9,10 +15,10 @@ class BlogChatController extends Controller
 
     /**
      * @OA\Get(
-     * path="/messaging",
+     * path="/blog/messaging",
      * summary="getting all messages",
      * description="This method can be used to get all messages of authorized user",
-     * operationId="messaging",
+     * operationId="Messaging",
      * tags={"Chats"},
      *   @OA\Response(
      *      response=401,
@@ -38,9 +44,16 @@ class BlogChatController extends Controller
      * security ={{"bearer":{}}}
      * )
      */
-    public function messaging()
+    public function GetMessages()
     {
-        //
+        $blogId = Auth::User()->id ;
+        
+        $messages = Chat::where(function ($query) use ($blogId) {
+            $query->where('to_blog_id', '=', $blogId)->orwhere('from_blog_id' , '=' ,$blogId );
+        })->latest('created_at' ,'ASC')->get();
+        //paginate(Config::Message_PAGINATION_LIMIT);
+        
+        return response()->json([$messages],200);
     }
      /**
      * @OA\Get(
@@ -66,9 +79,21 @@ class BlogChatController extends Controller
      * security ={{"bearer":{}}}
      * )
      */
-    public function conversation()
+    public function Conversation($blogIdFrom ,$blogIdTo )
     {
-        //
+        
+        $messages = Chat::where([['from_blog_id' ,'=', $blogIdFrom ],['to_blog_id','=' ,$blogIdTo]])->
+        orwhere([['from_blog_id' ,'=',$blogIdTo],['to_blog_id','=',  $blogIdFrom ]])->orderBy('created_at')->get();
+        
+      
+        $un_readed_messages =  $messages->where('is_read', false);
+        foreach( $un_readed_messages as $message)
+        {
+            $message->is_read = true ;
+            $message->save();
+        }
+        
+        return response()->json([$messages],200);
     }
     /**
      * @OA\Post(
@@ -107,9 +132,25 @@ class BlogChatController extends Controller
      * security ={{"bearer":{}}}
      * )
      */
-    public function sendMessage()
+    public function SendMessage(Request $request ,$blogIdFrom ,$blogIdTo)
     {
-        //
+        $user_id =Auth::user()->id;
+
+        // cehck for valid blogfrom id
+
+        $user_blogs =DB::table('blog_users')->where([['user_id','=' ,$user_id] ,['blog_id','=' ,$blogIdFrom ] ] )->get();
+        if (!count($user_blogs))
+        {
+            return $this->error_response('Unauthenticated' ,'Invalid blog id', 401);
+        }
+
+        Chat::create([
+            'from_blog_id' => $blogIdFrom ,
+            'to_blog_id' =>$blogIdTo ,
+            'content' => $request->Content
+        ]);
+
+        return $this->success_response('Success' ,200);
     }
     /**
      * @OA\Delete(
@@ -141,9 +182,24 @@ class BlogChatController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function DeleteMessgaes(Request $request ,$blogIdFrom ,$blogIdTo)
     {
-        //
+        $user_id =Auth::user()->id;
+
+        // cehck for valid blogfrom id
+
+        $user_blogs =DB::table('blog_users')->where([['user_id','=' ,$user_id] ,['blog_id','=' ,$blogIdFrom ] ] )->get();
+        if (!count($user_blogs))
+        {
+            return $this->error_response('Unauthenticated' ,'Invalid blog id', 401);
+        }
+
+        Chat::where([['from_blog_id' ,'=', $blogIdFrom ],['to_blog_id','=' ,$blogIdTo]])->
+        orwhere([['from_blog_id' ,'=',$blogIdTo],['to_blog_id','=',  $blogIdFrom ]])->delete();
+        
+        return $this->success_response('Success' ,200);
+
+        
     }
 }
 

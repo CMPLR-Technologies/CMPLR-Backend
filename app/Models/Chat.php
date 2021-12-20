@@ -21,7 +21,7 @@ class Chat extends Model
     }
     public function receiver()
     {
-        return $this->belongsTo(User::class, 'to_blog_id');
+        return $this->belongsTo(Blog::class, 'to_blog_id');
     }
     public function ScopeBySender($q, $sender)
     {

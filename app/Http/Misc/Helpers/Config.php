@@ -9,4 +9,5 @@ class Config
 	const API_PAGINATION_LIMIT=10;
 	const CACHE_TTL=60*60; // 60seconds * 60 min (1hour)
     const EXPIRE =10;
+	const Message_PAGINATION_LIMIT =10 ;
 }
