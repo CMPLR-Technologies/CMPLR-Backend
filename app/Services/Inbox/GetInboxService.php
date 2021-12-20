@@ -2,8 +2,11 @@
 
 namespace App\Services\Inbox;
 
+use App\Http\Misc\Helpers\Config;
 use App\Models\Blog;
 use App\Models\Post;
+use App\Models\Posts;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class GetInboxService{
@@ -21,28 +24,22 @@ class GetInboxService{
      * 
      * @return array
      */
-    public function GetInbox()
+    public function GetInbox($user)
     {
-        // get blogs of the user
-        $blogs=auth()->user()->realBlogs;
+        // get ids of of the blogs in which the user is a member
+        $blogsIds=  $user
+                    ->realBlogs()
+                    ->pluck('blog_id')
+                    ->toArray();
 
-        // get asks of each blog
-        $asks=[];
+        // user entire inbox
+        $inbox= Posts::whereIn('blog_id',$blogsIds)
+                ->where('post_ask_submit','ask')
+                ->orwhere('post_ask_submit','submit')
+                ->orderBy('created_at',"DESC")
+                ->paginate(Config::PAGINATION_LIMIT);
 
-        // get asks of each blog
-        foreach($blogs as $blog)
-        {    
-            // get asks of $blog
-            $blogAsks=$blog->posts()->where('post_ask_submit','ask')->get();
-
-            // turn the collection into an array
-            $blogAsks=$blogAsks->toArray();
-
-            // push the blog asks into the total asks
-            $asks=array_merge($asks,$blogAsks);
-        }
-
-        return [200,$asks];
+        return [200,$inbox];
     }
 
 }

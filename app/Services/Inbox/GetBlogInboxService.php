@@ -2,6 +2,7 @@
 
 namespace App\Services\Inbox;
 
+use App\Http\Misc\Helpers\Config;
 use App\Models\Blog;
 use App\Models\Post;
 use Illuminate\Support\Facades\DB;
@@ -26,10 +27,17 @@ class GetBlogInboxService{
         //get target blog
         $blog=Blog::where('blog_name',$blogName)->first();
 
-        // get asks of the blog
-        $asks=$blog->posts()->where('post_ask_submit','ask')->get();
+        if($blog==null)
+            return [404,null];
 
-        return [200,$asks];
+        // get inbox of the blog
+        $inbox= $blog
+                ->posts()
+                ->where('post_ask_submit','ask')
+                ->orwhere('post_ask_submit','submit')
+                ->paginate(Config::PAGINATION_LIMIT);
+
+        return [200,$inbox];
     }
 
 }
