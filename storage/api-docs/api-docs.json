@@ -4983,7 +4983,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "successful"
+                        "description": "deleted"
                     },
                     "401": {
                         "description": "Unauthenticated"

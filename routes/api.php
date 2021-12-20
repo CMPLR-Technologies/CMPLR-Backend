@@ -13,6 +13,7 @@ use App\Http\Controllers\UserBlogController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UsersettingController;
 use App\Http\Controllers\AskController;
+use App\Http\Controllers\BlogSubmitController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -86,3 +87,8 @@ Route::delete('/ask/{askId}', [AskController::class, 'DeleteAsk'])->middleware('
 
 Route::get('/user/inbox', [AskController::class, 'GetInbox'])->middleware('auth:api');
 Route::get('/user/inbox/{blogName}', [AskController::class, 'GetBlogInbox'])->middleware('auth:api');
+
+// Submit
+Route::post('/blog/{blogName}/submit', [BlogSubmitController::class, 'CreateSubmit'])->middleware('auth:api');
+Route::post('/submit/{submId}', [AskController::class, 'PostSubmit'])->middleware('auth:api');
+Route::delete('/submit/{submitId}', [BlogSubmitController::class, 'DeleteSubmit'])->middleware('auth:api');

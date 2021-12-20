@@ -17,7 +17,10 @@ class Post extends Model
         'mobile',
         'post_ask_submit',
         'source_user_id',
-        'is_anonymous'
+        'is_anonymous',
+        'type',
+        'source_title',
+        'tags',
     ];
 
 }

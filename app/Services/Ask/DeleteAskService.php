@@ -36,7 +36,7 @@ class DeleteAskService{
         //get target blog
         $blog=Blog::find($ask->blog_id);
         
-        //check if the authenticated user is a member in this blog
+        //check if the authenticated user is a member of this blog
         if($blog->users()->where('user_id',$user->id)->first() == null)
             return 403;
 

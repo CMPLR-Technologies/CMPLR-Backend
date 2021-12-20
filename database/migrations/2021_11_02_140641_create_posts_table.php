@@ -13,13 +13,13 @@ class CreatePostsTable extends Migration
             $table->integer("blog_id");                     // post owner | target in case of ask/submit
             $table->string("type")->nullable();             // post type
             $table->jsonb("content");                       // post content
-            $table->json("layout");                         // structured arrangement of items 
+            $table->json("layout")->nullable();             // structured arrangement of items 
             $table->string("url")->nullable();
-            $table->string("format");                       // style of the post's format
+            $table->string("format")->nullable();           // style of the post's format
             $table->string("source_url")->nullable();
             $table->string("reblog_key")->nullable();
             $table->boolean("mobile");                      // was the post created through a mobile
-            $table->string("source_title")->nullable();
+            $table->string("source_title")->nullable();     // title of submission
             $table->string("state")->nullable();            // published,draft,queue,private
             $table->integer("parent_post_id")->nullable();
             $table->string("parent_blog_id")->nullable();
