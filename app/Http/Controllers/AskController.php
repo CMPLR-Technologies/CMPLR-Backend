@@ -32,7 +32,7 @@ class AskController extends Controller
     /**
      *	@OA\Post
      *	(
-     * 		path="/blog/{blogname}/ask",
+     * 		path="/blog/{blogName}/ask",
      * 		summary="Ask A Blog",
      * 		description="used to send a question to a blog",
      * 		operationId="CreateAsk",
@@ -303,7 +303,7 @@ class AskController extends Controller
         if($code==404)
             return $this->error_response(Errors::ERROR_MSGS_404,'wrong targets',404);
         else if($code==403)
-            return $this->error_response(Errors::ERROR_MSGS_403,'user not a member of the blog',403);
+            return $this->error_response(Errors::ERROR_MSGS_403,'user is not a member of the blog',403);
         else
             return $this->success_response(Success::DELETED,202);
 

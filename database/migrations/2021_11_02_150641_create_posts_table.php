@@ -24,7 +24,7 @@ class CreatePostsTable extends Migration
             $table->string("source_url")->nullable();
             $table->string("reblog_key")->nullable();
             $table->boolean("mobile")->nullable();          // was the post created through a mobile
-            $table->string("source_title")->nullable();
+            $table->string("source_title")->nullable();     // title of submission
             $table->integer("parent_post_id")->nullable();
             $table->string("parent_blog_id")->nullable();
             $table->string("post_ask_submit")->nullable();  // is it ask or submit

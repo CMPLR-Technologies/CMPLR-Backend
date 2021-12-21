@@ -17,6 +17,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPostConroller;
 use App\Http\Controllers\UsersettingController;
 use App\Http\Controllers\AskController;
+use App\Http\Controllers\BlogSubmitController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -108,3 +109,8 @@ Route::middleware('auth:api')->group(function () {
 Route::middleware('guest')->get('posts/view/{blog_name}', [ PostsController::class, 'GetBlogPosts' ])->name('post.get.blogs');
 Route::middleware('auth:api')->post('image_upload', [ UploadMediaController::class, 'UploadImages' ])->name('image.upload.post');
 Route::middleware('auth:api')->post('video_upload', [ UploadMediaController::class, 'UploadVideos' ])->name('Videos.upload.post');
+
+// Submit
+Route::post('/blog/{blogName}/submit', [BlogSubmitController::class, 'CreateSubmit'])->middleware('auth:api');
+Route::post('/submit/{submId}', [AskController::class, 'PostSubmit'])->middleware('auth:api');
+Route::delete('/submit/{submitId}', [BlogSubmitController::class, 'DeleteSubmit'])->middleware('auth:api');
