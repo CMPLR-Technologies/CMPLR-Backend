@@ -1,6 +1,7 @@
 pipeline {
     agent {
         label "azure"
+    
     }
     environment{
         LOGIN_SERVER = "cmplr.azurecr.io"
