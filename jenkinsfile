@@ -2,16 +2,19 @@ pipeline {
     agent {
         label "azure"
     }
+    environment{
+        LOGIN_SERVER = "cmplr.azurecr.io"
+    }
     stages {
         stage("fetch"){
             steps{
                 echo "========executing fetch========"
                 git branch: "prod", url: "https://CMPLR-Technologies@dev.azure.com/CMPLR-Technologies/CMPLR-Technologies.Backend/_git/CMPLR-Technologies.Backend"
-                echo "===========Copy .env=========="
             }
             post{
                 success{
                     echo "========fetch executed successfully========"
+                    echo "===========Copy .env=========="
                     sh"""
                     cp ~/env/backend.env ./.env
                     """
@@ -27,7 +30,7 @@ pipeline {
             steps {
                 echo "========docker build ========"
                 sh """
-                    docker build -t cmplr.azurecr.io/backend:latest .
+                    docker build -t $LOGIN_SERVER/backend:latest .
                 """    
             }
             post {
@@ -46,9 +49,14 @@ pipeline {
         stage('push image') {
             steps {
                 echo "======== Pushing image to registry ========="
-                sh """
-                docker push cmplr.azurecr.io/backend:latest
+                
+                withCredentials([usernamePassword(credentialsId: 'ACR', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) 
+                {
+                    sh """
+                docker login ${LOGIN_SERVER} -u ${USERNAME}  -p ${PASSWORD}
+                docker push ${LOGIN_SERVER}/backend:latest
                 """
+                }
             }
             post {
                 success {
