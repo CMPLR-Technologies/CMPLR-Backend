@@ -60,11 +60,11 @@ pipeline {
             }
             post {
                 success {
-                    echo "======== Failed to Pushing image to registry ========="
+                    echo "======== Pushing image to registry was successful ========="
                     //slackSend (color:"#00FF00", message: "Master: pushing image success")
                 }
                 failure {
-                    echo "======== Pushing image to registry was successful ========="
+                    echo "======== Failed to Pushing image to registry ========="
                     //slackSend (color:"#FF0000", message: "Master: pushing image failure")
                 }
            }
