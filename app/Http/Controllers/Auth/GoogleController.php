@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Misc\Helpers\Errors;
 use App\Http\Resources\Auth\RegisterResource;
 use App\Models\User;
 use Exception;
@@ -51,6 +52,16 @@ class GoogleController extends Controller
         //dd($token);
         $user = Socialite::driver('google')->userFromToken($token);
         
-        dd($user);
+        $check = User::where('email',$user->email)->first();
+        if($check)
+        {
+
+            return $this->success_response('login');
+        }
+        else
+        {
+            
+            return $this->error_response(Errors::ERROR_MSGS_401,'register',401);     
+        }
    }
 }

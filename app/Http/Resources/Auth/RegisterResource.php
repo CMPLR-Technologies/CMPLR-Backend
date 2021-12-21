@@ -25,6 +25,7 @@ class RegisterResource extends JsonResource
         return [
                 'user'=>$this->user,
                 'blog_name' => $this->blog_name,
+                'avatar' =>$this->avatar,
                 'token' => $this->token,
         ];
     }

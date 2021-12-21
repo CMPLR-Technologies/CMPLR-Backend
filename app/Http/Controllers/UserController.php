@@ -6,6 +6,7 @@ use App\Http\Misc\Helpers\Config;
 use App\Http\Misc\Helpers\Errors;
 use App\Http\Resources\PostsCollection;
 use App\Models\Blog;
+use App\Models\PostNotes;
 use App\Models\Posts;
 use App\Models\User;
 use App\Services\User\UserService;
@@ -359,9 +360,13 @@ class UserController extends Controller
      * security ={{"bearer":{}}}
      * )
      */
-    public function getLikes()
+    public function GetUserLikes(Request $request)
     {
-        //
+        $user = Auth::user();
+        $likes = PostNotes::where('user_id',$user->id)->where('type','=','like')->pluck('post_id');
+        // config::PAGINATION_LIMIT
+        $posts = Posts::whereIn('id',$likes)->paginate(3);
+        return $this->success_response(new PostsCollection($posts));
     }
 
     /**

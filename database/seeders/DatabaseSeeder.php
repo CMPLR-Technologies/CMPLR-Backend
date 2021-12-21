@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Posts;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -19,5 +20,6 @@ class DatabaseSeeder extends Seeder
         $this->call(BlogUserSeeder::class);
         $this->call(BlogSettingsSeeder::class);
         $this->call(TagSeeder::class);
+        $this->call(PostsSeeder::class);
     }
 }

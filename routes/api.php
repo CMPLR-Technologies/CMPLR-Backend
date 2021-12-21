@@ -68,7 +68,7 @@ Route::middleware('auth:api')->group(function () {
 
 
     Route::get('/info', [UserController::class, 'GetUserInfo'])->name('GetUser_Info');
-
+    
     Route::get('/user/settings', [UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
     Route::put('/settings', [UsersettingController::class, 'UpdateSettings'])->name('UpdateAccountSetting');
     Route::put('/settings/change-email', [UsersettingController::class, 'ChangeEmail'])->name('Change Email');
@@ -104,7 +104,16 @@ Route::middleware('auth:api')->group(function () {
     Route::put('update/{blog_name}/{post_id}',[PostsController::class,'update'])->name('UpdatePost');
     Route::get('user/dashboard/',[UserController::class,'GetDashboard'])->name('Get.Dashboard');
     Route::get('posts/radar/', [ PostsController::class, 'GetRadar' ])->name('post.get.radar');
+    Route::delete('posts/delete/{post_id}',[PostsController::class , 'destroy'])->name('post.delete');
+    Route::delete('user/likes',[PostsController::class , 'GetUserLikes'])->name('post.GetUserLikes');
 });
+Route::get('posts/{post_id}', [ PostsController::class, 'GetPostById' ])->name('post.get.id');
 Route::middleware('guest')->get('posts/view/{blog_name}', [ PostsController::class, 'GetBlogPosts' ])->name('post.get.blogs');
+
+
 Route::middleware('auth:api')->post('image_upload', [ UploadMediaController::class, 'UploadImages' ])->name('image.upload.post');
 Route::middleware('auth:api')->post('video_upload', [ UploadMediaController::class, 'UploadVideos' ])->name('Videos.upload.post');
+
+//user 
+Route::middleware('auth:api')->get('/user/likes', [UserController::class, 'GetUserLikes'])->name('GetUserLikes');
+    Route::middleware('auth:api')->get('/user/followings', [UserBlogController::class, 'GetUserFollowing'])->name('Get.User.Following');

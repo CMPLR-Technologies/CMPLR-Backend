@@ -2,9 +2,12 @@
 
 namespace App\Policies;
 
+use App\Models\Blog;
+use App\Models\BlogUser;
 use App\Models\Posts;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\DB;
 
 class PostsPolicy
 {
@@ -63,9 +66,9 @@ class PostsPolicy
      * @param  \App\Models\Posts  $posts
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Posts $posts)
+    public function delete(User $user, Posts $post, Blog $blog)
     {
-        //
+        return !! BlogUser::where('user_id',$user->id)->where('blog_id',$blog->id)->first();
     }
 
     /**
@@ -78,6 +81,19 @@ class PostsPolicy
     public function restore(User $user, Posts $posts)
     {
         //
+    }
+
+    public function EditPost(User $user,Posts $post,Blog $blog)
+    {
+        $check1 = BlogUser::where('user_id',  $user->id)
+            ->where('blog_id', $blog->id)->first();
+
+        $check2 = $blog->Posts()->where('id', $post->id)->first();
+     
+        if ($check1 && $check2)
+            return true;
+        else
+            false;
     }
 
     /**

@@ -19,6 +19,9 @@ class Blog extends Model
         'password'
     ];
 
+    protected $hidden = [
+        'password',
+    ];
     
     public function followers()
     {

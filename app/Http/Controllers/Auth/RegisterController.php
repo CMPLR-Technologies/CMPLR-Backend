@@ -179,6 +179,7 @@ class RegisterController extends Controller
       if (!$blog)
          return $this->error_response(Errors::ERROR_MSGS_500,Errors::CREATE_ERROR,500);
 
+      $avatar = $blog->settings->avatar;
       // link user with blog
       $link_user_blog = $this->RegisterService->LinkUserBlog($user,$blog);
       
@@ -191,6 +192,7 @@ class RegisterController extends Controller
       if (!$generate_token)
          return $this->error_response(Errors::ERROR_MSGS_500,ERRORS::GENERATE_TOKEN_ERROR,500);
 
+      $request['avatar'] = $avatar;
       $request['blog_name'] = $blog->blog_name;
       $request['token'] = $user->token();
       

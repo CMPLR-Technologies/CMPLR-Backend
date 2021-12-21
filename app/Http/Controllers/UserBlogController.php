@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Misc\Helpers\Errors;
 use App\Http\Misc\Helpers\Success;
+use App\Http\Resources\BlogCollection;
 use App\Models\Blog;
 use App\Services\Blog\CreateBlogService;
 use App\Services\Blog\DeleteBlogService;
@@ -334,5 +335,13 @@ class UserBlogController extends Controller
             return $this->success_response('Unfollowed',200);
 
     }
+
+    public function GetUserFollowing()
+    {
+        $user = auth('api')->user();
+        //TODO: config paginate limit
+        $blogs = $user->FollowedBlogs()->paginate(3);
+        return $this->success_response(new BlogCollection($blogs));
+    } 
 
 }

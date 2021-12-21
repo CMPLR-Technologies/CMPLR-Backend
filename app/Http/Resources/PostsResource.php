@@ -15,7 +15,7 @@ class PostsResource extends JsonResource
      */
     public function toArray($request)
     {
-       $user = Auth::user();
+       $user =  auth('api')->user();
         $blog = $this->BLogs;
         $blog_settings = $blog->settings;
        return [
@@ -27,6 +27,7 @@ class PostsResource extends JsonResource
                 'date' => $this->date,
                 'source_content' => $this->source_content,
                 'tags' => $this->tags,
+                'is_liked' => $this->is_liked($user),
             ],
             'blog' =>[
                 'blog_id' => $blog->id,
