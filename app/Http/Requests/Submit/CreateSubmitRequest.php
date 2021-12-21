@@ -7,6 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use App\Http\Misc\Helpers\Errors;
 use App\Http\Misc\Traits\WebServiceResponse;
+use Illuminate\Validation\Rule;
 
 class CreateSubmitRequest extends FormRequest
 {
@@ -41,9 +42,8 @@ class CreateSubmitRequest extends FormRequest
     {
         return [
             'content'=>'required',
-            'type'=>'required|string',
-            'title'=>'string',
-            'tags'=>'json',
+            'type'=>['required', 'string', Rule::in('text','photo','link','quote','video') ],
+            'submissionTag'=>'boolean',
             'mobile'=>'required|boolean',
         ];
     }

@@ -112,5 +112,5 @@ Route::middleware('auth:api')->post('video_upload', [ UploadMediaController::cla
 
 // Submit
 Route::post('/blog/{blogName}/submit', [BlogSubmitController::class, 'CreateSubmit'])->middleware('auth:api');
-Route::post('/submit/{submId}', [AskController::class, 'PostSubmit'])->middleware('auth:api');
+Route::post('/submit/{submId}', [BlogSubmitController::class, 'PostSubmit'])->middleware('auth:api');
 Route::delete('/submit/{submitId}', [BlogSubmitController::class, 'DeleteSubmit'])->middleware('auth:api');

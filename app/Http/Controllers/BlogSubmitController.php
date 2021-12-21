@@ -7,6 +7,7 @@ use App\Http\Misc\Helpers\Success;
 use App\Http\Requests\Submit\CreateSubmitRequest;
 use App\Services\Submit\SubmitService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class BlogSubmitController extends Controller
 {
@@ -23,31 +24,23 @@ class BlogSubmitController extends Controller
      *     description="sumbit content",
      *     in="query",
      *     required=true,
-     *     @OA\Schema(type="jsonb")
-     *   ),
-     * 
-     *   @OA\Parameter(
-     *     name="title",
-     *     description="Blog title",
-     *     in="query",
-     *     required=false,
-     *     @OA\Schema(type="string")
+     *     @OA\Schema(type="html")
      *   ),
      * 
      *     @OA\Parameter(
      *     name="type",
-     *     description="type of the submit 'photo,text,..etc'",
+     *     description="type of the submit ('text','photo','link','quote','video'),
      *     in="query",
      *     required=true,
      *     @OA\Schema(type="string")
      *   ),
      * 
      *     @OA\Parameter(
-     *     name="tags",
-     *     description="list of tags",
+     *     name="submissionTag",
+     *     description="add 'submission' tag or not",
      *     in="query",
      *     required=false,
-     *     @OA\Schema(type="json")
+     *     @OA\Schema(type="boolean")
      *   ),
      *      
      *     @OA\Parameter(
@@ -76,7 +69,7 @@ class BlogSubmitController extends Controller
     public function CreateSubmit(CreateSubmitRequest $request,$blogName)
     {
         //call the service
-        $code=(new SubmitService())->CreateSubmit($request->only('content','type','tags','mobile','title'),$blogName);        
+        $code=(new SubmitService())->CreateSubmit($request->all(),$blogName);        
 
         //return the response
         if($code==201)
@@ -151,12 +144,12 @@ class BlogSubmitController extends Controller
      *   	@OA\Parameter
      *		(
      *      		name="content",
-     *      		description="the content of the answer",
+     *      		description="the content of the edited submit",
      *      		in="query",
      *      		required=true,
      *      		@OA\Schema
      *			    (
-     *           		type="jsonb"
+     *           		type="html"
      *      	 	)
      *   	),
      *
@@ -169,6 +162,43 @@ class BlogSubmitController extends Controller
      *      		@OA\Schema
      *			    (
      *           		type="boolean"
+     *      	 	)
+     *   	),
+     * 
+     *      @OA\Parameter
+     *		(
+     *      		name="source_content",
+     *      		description="reference link",
+     *      		in="query",
+     *      		required=false,
+     *      		@OA\Schema
+     *			    (
+     *           		type="string"
+     *      	 	)
+     *   	),
+     * 
+     *      @OA\Parameter
+     *		(
+     *      		name="tags",
+     *      		description="tags of the submit",
+     *      		in="query",
+     *      		required=false,
+     *      		@OA\Schema
+     *			    (
+     *           		type="array"
+     *      	 	)
+     *   	),
+     * 
+     * 
+     *      @OA\Parameter
+     *		(
+     *      		name="state",
+     *      		description="state of the submit publish,private,draft",
+     *      		in="query",
+     *      		required=true,
+     *      		@OA\Schema
+     *			    (
+     *           		type="string"
      *      	 	)
      *   	),
      * 
@@ -204,20 +234,26 @@ class BlogSubmitController extends Controller
      * 
      * @return response
      */
-    public function PostSubmit(CreatePostRequest $request,$submitId)
+    public function PostSubmit(Request $request,$submitId)
     {
 
-        //call the service
-        $code=(new SubmitService())->DeleteSubmit($submitId,auth()->user());
+        $this->validate($request,[
+            'content'=>'required',
+            'mobile'=>'boolean',
+            'source_content'=>'string',
+            'tags'=>'array',
+            'state'=>['required','string',Rule::in('publish','private','draft')],
+        ]);
+
+        $code=(new SubmitService())->PostSubmit($request->all(),$submitId,auth()->user());
 
         //return the response
         if($code==404)
             return $this->error_response(Errors::ERROR_MSGS_404,'wrong targets',404);
         else if($code==403)
             return $this->error_response(Errors::ERROR_MSGS_403,'user not a member of the blog',403);
- 
-        //create an answer (which is just a post)
-        
+        else
+            return $this->success_response('Posted',200);
 
     }
 

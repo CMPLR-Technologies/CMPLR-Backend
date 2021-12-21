@@ -195,7 +195,7 @@ class AskController extends Controller
      *      		required=true,
      *      		@OA\Schema
      *			    (
-     *           		type="array"
+     *           		type="string"
      *      	 	)
      *   	),
      * 
