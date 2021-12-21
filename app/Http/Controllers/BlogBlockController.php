@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Block\BlockService;
 use Illuminate\Http\Request;
 
 class BlogBlockController extends Controller
@@ -64,24 +65,26 @@ class BlogBlockController extends Controller
      *   security ={{"bearer":{}}}
      * )
      */
-    public function getBlogBlocks()
+    public function GetBlogBlocks()
     {
         //
     }
 
     /**
      * @OA\Post(
-     *   path="/blog/{blog-identifier}/blocks",
+     *   path="/blog/{blogName}/blocks",
      *   summary="Block a Blog",
-     *   description="Block a blog by sending its identifier",
+     *   description="Block a blog by sending its blogName",
      *   operationId="blockBlog",
      *   tags={"Blogs"},
+     * 
      *   @OA\Parameter(
-     *     name="blog-identifier",
+     *     name="blockName",
      *     in="path",
      *     description="Your blog identifier",
      *     required=true,
      *   ),
+     * 
      *   @OA\RequestBody(
      *     required=true,
      *     @OA\JsonContent(
@@ -101,32 +104,16 @@ class BlogBlockController extends Controller
      *   security ={{"bearer":{}}}
      * )
      */
-    public function blockBlog(Request $request)
+    public function BlockBlog(Request $request,$blogName)
     {
-        //
-    }
+        $this->validate($request,[
+            'blockName'=>'required'
+        ]);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+        $code = (new BlockService())->block($request->blockName,$blogName,auth()->user());
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+
+
     }
 
     /**
@@ -161,7 +148,7 @@ class BlogBlockController extends Controller
      *   security ={{"bearer":{}}}
      * )
      */
-    public function unblockBlog($id)
+    public function UnblockBlog($id)
     {
         //
     }

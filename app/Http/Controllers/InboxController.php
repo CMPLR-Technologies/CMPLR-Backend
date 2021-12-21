@@ -45,43 +45,34 @@ class InboxController extends Controller
      *    		description="success",
      *    		@OA\JsonContent
      *			(
-     *       			type="object",
-     *       			@OA\Property
-     *				    (
+     *       		type="object",
+     *       		@OA\Property
+     *				(
      *					    property="Meta", type="object",
-     *					    @OA\Property(property="Status", type="integer", example=200),
+     *					    @OA\Property(property="Status_code", type="integer", example=200),
      *					    @OA\Property(property="msg", type="string", example="OK"),
-     *        			),
-     *
-     *       			@OA\Property
-     *				    (
-     *					    property="response", type="object",
-     *             			@OA\Property(property="total_asks", type="Number", example=263),
-     *             			@OA\Property(property="total_submissions", type="Number",example=214),     
-     *             			@OA\Property
-     *					    (
-     *						    property="asks",description="asks in user's inbox", type="array",
-     *                			@OA\Items
-     *						    (
-     *			        	        @OA\Property(property="ask_1",description="the first ask",type="object"),
-     *			        	        @OA\Property(property="ask_2",description="the second ask",type="object"),
-     *			        	        @OA\Property(property="ask_3",description="the third ask",type="object"),
-     *			        	    ),
-     *               		),
-     *
-     *             			@OA\Property
-     *					    (
-     *						    property="submissions",description="submissions in user's inbox", type="array",
-     *                			@OA\Items
-     *						    (
-     *			        	        @OA\Property(property="sub_1",description="the first submission",type="object"),
-     *			        	        @OA\Property(property="sub_2",description="the second submission",type="object"),
-     *			        	        @OA\Property(property="sub_3",description="the third submission",type="object"),
-     *			        	    ),
-     *               		),              
-     *           		),
      *        		),
-     *     	)
+     *
+     *       		@OA\Property
+     *				(
+     *					property="response", type="object",
+     *             		@OA\Property
+     *					(
+     *						property="messages", type="array",
+     *                		@OA\Items
+     *						(
+     *			        	    @OA\Property(property="message1",description="the first ask",type="object"),
+     *			        	    @OA\Property(property="message2",description="the second ask",type="object"),
+     *			        	    @OA\Property(property="message3",description="the third ask",type="object"),
+     *			        	),
+     *             	    ),
+     *			        @OA\Property(property="next_url",description="next page in pagination",type="url"),
+     *			        @OA\Property(property="total",description="total number of messages",type="integer"),
+     *			        @OA\Property(property="current_page",description="current page number",type="integer"),
+     *			        @OA\Property(property="messages_per_page",description="number of messages per page",type="integer"),
+     *           	),
+     *        	),
+     *      )
      * )
      */
     public function GetInbox()
@@ -130,43 +121,34 @@ class InboxController extends Controller
      *    		description="success",
      *    		@OA\JsonContent
      *			(
-     *       			type="object",
-     *       			@OA\Property
-     *				    (
+     *       		type="object",
+     *       		@OA\Property
+     *				(
      *					    property="Meta", type="object",
-     *					    @OA\Property(property="Status", type="integer", example=200),
+     *					    @OA\Property(property="Status_code", type="integer", example=200),
      *					    @OA\Property(property="msg", type="string", example="OK"),
-     *        			),
-     *
-     *       			@OA\Property
-     *				    (
-     *					    property="response", type="object",
-     *             			@OA\Property(property="total_asks", type="Number", example=263),
-     *             			@OA\Property(property="total_submissions", type="Number",example=214),     
-     *             			@OA\Property
-     *					    (
-     *						    property="asks",description="asks in user's inbox", type="array",
-     *                			@OA\Items
-     *						    (
-     *			        	        @OA\Property(property="ask_1",description="the first ask",type="object"),
-     *			        	        @OA\Property(property="ask_2",description="the second ask",type="object"),
-     *			        	        @OA\Property(property="ask_3",description="the third ask",type="object"),
-     *			        	    ),
-     *               		),
-     *
-     *             			@OA\Property
-     *					    (
-     *						    property="submissions",description="submissions in user's inbox", type="array",
-     *                			@OA\Items
-     *						    (
-     *			        	        @OA\Property(property="sub_1",description="the first submission",type="object"),
-     *			        	        @OA\Property(property="sub_2",description="the second submission",type="object"),
-     *			        	        @OA\Property(property="sub_3",description="the third submission",type="object"),
-     *			        	    ),
-     *               		),              
-     *           		),
      *        		),
-     *     	)
+     *
+     *       		@OA\Property
+     *				(
+     *					property="response", type="object",
+     *             		@OA\Property
+     *					(
+     *						property="messages", type="array",
+     *                		@OA\Items
+     *						(
+     *			        	    @OA\Property(property="message1",description="the first ask",type="object"),
+     *			        	    @OA\Property(property="message2",description="the second ask",type="object"),
+     *			        	    @OA\Property(property="message3",description="the third ask",type="object"),
+     *			        	),
+     *             	    ),
+     *			        @OA\Property(property="next_url",description="next page in pagination",type="url"),
+     *			        @OA\Property(property="total",description="total number of messages",type="integer"),
+     *			        @OA\Property(property="current_page",description="current page number",type="integer"),
+     *			        @OA\Property(property="messages_per_page",description="number of messages per page",type="integer"),
+     *           	),
+     *        	),
+     *      )
      * )
      */
     public function GetBlogInbox($blogName)

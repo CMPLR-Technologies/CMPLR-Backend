@@ -17,6 +17,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPostConroller;
 use App\Http\Controllers\UsersettingController;
 use App\Http\Controllers\AskController;
+use App\Http\Controllers\BlogBlockController;
 use App\Http\Controllers\InboxController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -111,3 +112,8 @@ Route::middleware('auth:api')->group(function () {
 Route::middleware('guest')->get('posts/view/{blog_name}', [ PostsController::class, 'GetBlogPosts' ])->name('post.get.blogs');
 Route::middleware('auth:api')->post('image_upload', [ UploadMediaController::class, 'UploadImages' ])->name('image.upload.post');
 Route::middleware('auth:api')->post('video_upload', [ UploadMediaController::class, 'UploadVideos' ])->name('Videos.upload.post');
+
+// // Block
+// Route::post('/blog/{blogName}/blocks', [BlogBlockController::class, 'BlockBlog'])->middleware('auth:api');
+// Route::delete('/blog/{blogName}/blocks', [BlogBlockController::class, 'UnblockBlog'])->middleware('auth:api');
+// Route::get('/blog/{blogName}/blocks', [BlogBlockController::class, 'GetBlogBlocks'])->middleware('auth:api');
