@@ -13,7 +13,7 @@ pipeline {
             }
             post{
                 success{
-                    echo "========Fetch executed successfully========"
+                    echo "========fetch executed successfully========"
                     echo "===========Copy .env=========="
                     sh"""
                     cp ~/env/backend.env ./.env
