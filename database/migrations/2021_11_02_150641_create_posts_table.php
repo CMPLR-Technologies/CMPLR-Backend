@@ -12,18 +12,18 @@ class CreatePostsTable extends Migration
             $table->id();
             $table->integer("blog_id");
             $table ->foreign('blog_id')->references('id')->on('blogs')->onDelete('cascade'); 
-            $table->string("blog_name")->nullable();                    // post owner | target in case of ask/submit
-            $table->string("type");                         // post type
+            $table->string("blog_name")->nullable();       // post owner | target in case of ask/submit
+            $table->string("type")->nullable();            // post type
             $table->text("content");                       // post content
             $table->string("url")->nullable();
             $table->string("date")->nullable();
             $table->json("tags")->nullable();
-            $table->string("state");                        // published,draft,queue,private
+            $table->string("state")->nullable();           // published,draft,queue,private
             $table->string("source_content")->nullable();
             $table->string("format")->nullable();
             $table->string("source_url")->nullable();
             $table->string("reblog_key")->nullable();
-            $table->boolean("mobile")->nullable();                      // was the post created through a mobile
+            $table->boolean("mobile")->nullable();          // was the post created through a mobile
             $table->string("source_title")->nullable();
             $table->integer("parent_post_id")->nullable();
             $table->string("parent_blog_id")->nullable();

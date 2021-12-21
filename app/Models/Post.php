@@ -9,15 +9,6 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'blog_id',
-        'content',
-        'layout',
-        'format',
-        'mobile',
-        'post_ask_submit',
-        'source_user_id',
-        'is_anonymous'
-    ];
+    protected $guarded = ['id'];
 
 }

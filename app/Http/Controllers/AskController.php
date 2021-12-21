@@ -16,6 +16,7 @@ use App\Services\Ask\DeleteAskService;
 use App\Services\Inbox\GetBlogInboxService;
 use App\Services\Inbox\GetInboxService;
 use Error;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
 class AskController extends Controller
@@ -45,40 +46,17 @@ class AskController extends Controller
      *      		required=true,
      *      		@OA\Schema
      *			    (
-     *           		type="jsonb"
+     *           		type="html"
      *      	 	)
      *   	),
      *
-     *    	@OA\Parameter
-     *		(
-     *      		name="layout",
-     *      		description="structured arrangement of items",
-     *      		in="query",
-     *      		required=true,
-     *      		@OA\Schema
-     *			    (
-     *           		type="json"
-     *      	 	)
-     *   	),
-     * 
-     *      @OA\Parameter
-     *		(
-     *      		name="format",
-     *      		description="style of the post's format",
-     *      		in="query",
-     *      		required=true,
-     *      		@OA\Schema
-     *			    (
-     *           		type="string"
-     *      	 	)
-     *   	),
      * 
      *      @OA\Parameter
      *		(
      *      		name="mobile",
      *      		description="was it send using a mobile",
      *      		in="query",
-     *      		required=true,
+     *      		required=false,
      *      		@OA\Schema
      *			    (
      *           		type="boolean"
@@ -94,6 +72,18 @@ class AskController extends Controller
      *      		@OA\Schema
      *			    (
      *           		type="boolean"
+     *      	 	)
+     *   	),
+     * 
+     *      @OA\Parameter
+     *		(
+     *      		name="source_content",
+     *      		description="reference link",
+     *      		in="query",
+     *      		required=false,
+     *      		@OA\Schema
+     *			    (
+     *           		type="string"
      *      	 	)
      *   	),
      *
@@ -127,7 +117,7 @@ class AskController extends Controller
     public function CreateAsk(CreateAskRequest $request,$blogName)
     {   
         //call the service
-        $code=(new CreateAskService())->CreateAsk($request->only('content','layout','format','mobile','is_anonymous'),$blogName);        
+        $code=(new CreateAskService())->CreateAsk($request->all(),$blogName);        
 
         //return the response
         if($code==201)
@@ -156,28 +146,16 @@ class AskController extends Controller
      *      		required=true,
      *      		@OA\Schema
      *			    (
-     *           		type="jsonb"
-     *      	 	)
-     *   	),
-     *
-     *    	@OA\Parameter
-     *		(
-     *      		name="layout",
-     *      		description="structured arrangement of items",
-     *      		in="query",
-     *      		required=true,
-     *      		@OA\Schema
-     *			    (
-     *           		type="json"
+     *           		type="html"
      *      	 	)
      *   	),
      * 
      *      @OA\Parameter
      *		(
-     *      		name="format",
-     *      		description="style of the post's format",
+     *      		name="source_content",
+     *      		description="reference link",
      *      		in="query",
-     *      		required=true,
+     *      		required=false,
      *      		@OA\Schema
      *			    (
      *           		type="string"
@@ -189,10 +167,35 @@ class AskController extends Controller
      *      		name="mobile",
      *      		description="was it send using a mobile",
      *      		in="query",
-     *      		required=true,
+     *      		required=false,
      *      		@OA\Schema
      *			    (
      *           		type="boolean"
+     *      	 	)
+     *   	),
+     * 
+     *      @OA\Parameter
+     *		(
+     *      		name="tags",
+     *      		description="tags of the answer",
+     *      		in="query",
+     *      		required=false,
+     *      		@OA\Schema
+     *			    (
+     *           		type="array"
+     *      	 	)
+     *   	),
+     * 
+     * 
+     *      @OA\Parameter
+     *		(
+     *      		name="state",
+     *      		description="state of the answer publish,private,draft",
+     *      		in="query",
+     *      		required=true,
+     *      		@OA\Schema
+     *			    (
+     *           		type="array"
      *      	 	)
      *   	),
      * 
@@ -228,20 +231,25 @@ class AskController extends Controller
      * 
      * @return response
      */
-    public function AnswerAsk(CreatePostRequest $request,$askId)
+    public function AnswerAsk(Request $request,$askId)
     {
+        $this->validate($request,[
+            'content'=>'required',
+            'mobile'=>'boolean',
+            'source_content'=>'string',
+            'tags'=>'array',
+            'state'=>['required','string',Rule::in('publish','private','draft')],
+        ]);
 
-        //call the service
-        $code=(new DeleteAskService())->DeleteAsk($askId,auth()->user());
+        $code=(new AnswerAskService())->AnswerAsk($request->all(),$askId,auth()->user());
 
         //return the response
         if($code==404)
             return $this->error_response(Errors::ERROR_MSGS_404,'wrong targets',404);
         else if($code==403)
             return $this->error_response(Errors::ERROR_MSGS_403,'user not a member of the blog',403);
- 
-        //create an answer (which is just a post)
-        
+        else
+            return $this->success_response('Answered',200);
 
     }
 

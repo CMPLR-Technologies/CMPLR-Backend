@@ -41,10 +41,9 @@ class CreateAskRequest extends FormRequest
     {
         return [
             'content'=>'required',
-            'layout'=>'required|json',
-            'format'=>'required|string',
-            'mobile'=>'required|boolean',
-            'is_anonymous'=>'required|boolean'
+            'mobile'=>'boolean',
+            'is_anonymous'=>'required|boolean',
+            'source_content'=>'string'
         ];
     }
 

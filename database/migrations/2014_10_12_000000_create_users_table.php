@@ -31,7 +31,7 @@ class CreateUsersTable extends Migration
             $table->json('filtered_content')->nullable();
             $table->string('google_id')->nullable();
             $table->string('theme')->default('trueBlue');
-            $table->foreignId('primary_blog_id')->references('blog_id')->on('blog_settings')->constrained()->onDelete('cascade')->nullable();
+            $table->foreignId('primary_blog_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
