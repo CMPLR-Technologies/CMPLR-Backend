@@ -14,6 +14,14 @@ class BlockResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        $blogSettings=$this->settings;
+
+        return [
+            'blocked_id'=>$this->id,
+            'blocked_name'=>$this->blog_name,
+            'avatar'=>$blogSettings->avatar,
+            'avatar_shape'=>$blogSettings->avatar_shape,
+        ];
+
     }
 }

@@ -119,7 +119,7 @@ Route::post('/blog/{blogName}/submit', [BlogSubmitController::class, 'CreateSubm
 Route::post('/submit/{submId}', [BlogSubmitController::class, 'PostSubmit'])->middleware('auth:api');
 Route::delete('/submit/{submitId}', [BlogSubmitController::class, 'DeleteSubmit'])->middleware('auth:api');
 
-// // Block
-// Route::post('/blog/{blogName}/blocks', [BlogBlockController::class, 'BlockBlog'])->middleware('auth:api');
-// Route::delete('/blog/{blogName}/blocks', [BlogBlockController::class, 'UnblockBlog'])->middleware('auth:api');
-// Route::get('/blog/{blogName}/blocks', [BlogBlockController::class, 'GetBlogBlocks'])->middleware('auth:api');
+// Block
+Route::post('/blog/{blogName}/blocks', [BlogBlockController::class, 'BlockBlog'])->middleware('auth:api');
+Route::delete('/blog/{blogName}/blocks', [BlogBlockController::class, 'UnblockBlog'])->middleware('auth:api');
+Route::get('/blog/{blogName}/blocks', [BlogBlockController::class, 'GetBlogBlocks'])->middleware('auth:api');

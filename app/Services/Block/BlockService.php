@@ -2,7 +2,9 @@
 
 namespace App\Services\Block;
 
+use App\Http\Misc\Helpers\Config;
 use App\Models\Block;
+use App\Models\Blog;
 
 class BlockService{
 
@@ -21,28 +23,34 @@ class BlockService{
      */
     public function BlockBlog($blockName,$blogName,$user)
     {
-        $block=Blog::where('name',$blockName);
-        $blog=Blog::where('name',$blogName);
+        //get the blogs
+        $block=Blog::where('blog_name',$blockName)->first();
+        $blog=Blog::where('blog_name',$blogName)->first();
 
+        //check if the blogs exist
         if($blog==null || $block==null)
             return 404;
 
-        $notAuthorized=$blog
-                    ->users()
-                    ->where('user_id',$user->id)
-                    ->where('full_priveledges', 1)
-                    ->isEmpty();
+        //check if the authenticated user is authorized to block a blog
+        $notAuthorized= $blog
+                        ->users()
+                        ->where('user_id',$user->id)
+                        ->where('full_privileges', 1)
+                        ->get()
+                        ->isEmpty();
 
         if($notAuthorized)
             return 403;
 
-        if($blog->blocks->contains('blocked_blog_id',$block->id))
+        //check if the blog is already blocked
+        if($blog->Blocks->contains('blocked_blog_id',$block->id))
             return 409;
         
-        $blog->blocks()->create([
+        //create the block record
+        $blog->Blocks()->create([
             'blocked_blog_id'=>$block->id
         ]);
-        
+
         return 200;
     }
 
@@ -53,25 +61,31 @@ class BlockService{
      */
     public function UnblockBlog($unblockName,$blogName,$user)
     {
-        $unblock=Blog::where('name',$unblockName);
-        $blog=Blog::where('name',$blogName);
+        //get blogs
+        $unblock=Blog::where('blog_name',$unblockName)->first();
+        $blog=Blog::where('blog_name',$blogName)->first();
 
+        //check if blogs exist
         if($blog==null || $unblock==null)
             return 404;
 
-        $notAuthorized=$blog
-                    ->users()
-                    ->where('user_id',$user->id)
-                    ->where('full_priveledges', 1)
-                    ->isEmpty();
+        //check if user is authorized to unblock a blog
+        $notAuthorized= $blog
+                        ->users()
+                        ->where('user_id',$user->id)
+                        ->where('full_privileges', 1)
+                        ->get()
+                        ->isEmpty();
 
         if($notAuthorized)
             return 403;
 
-        if($blog->blocks->contains('blocked_blog_id',$unblock->id)==false)
+        //check if blog is already not blocked
+        if($blog->Blocks->contains('blocked_blog_id',$unblock->id)==false)
             return 409;
 
-        $blog->blocks()->where('blocked_blog_id')->delete();
+        //delete block record
+        $blog->Blocks()->where('blocked_blog_id',$unblock->id)->delete();
         
         return 200;
     }
@@ -83,12 +97,26 @@ class BlockService{
      */
     public function GetBlogBlocks($blogName,$user)
     {
-        $blog=Blog::where('name',$blogName);
+        //get blog
+        $blog=Blog::where('blog_name',$blogName)->first()   ;
 
+        //check if blog exists
         if($blog==null)
             return 404;
 
-        $blocks=$blog->blocks;
+        //check if user is authorized to get blocks
+        $notAuthorized= $blog
+                        ->users()
+                        ->where('user_id',$user->id)
+                        ->where('full_privileges', 1)
+                        ->get()
+                        ->isEmpty();
+
+        if($notAuthorized)
+            return 403;
+        
+        //get the blocked blogs
+        $blocks=$blog->BlockedBlogs()->paginate(Config::PAGINATION_LIMIT);
 
         return [200,$blocks];
     }

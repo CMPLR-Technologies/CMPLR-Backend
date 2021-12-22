@@ -14,6 +14,12 @@ class BlockCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'blocks'=>$this->collection,
+            'next_url'=>$this->nextPageUrl(),
+            'total'=>$this->total(),
+            'current_page'=>$this->currentPage(),
+            'blocks_per_page'=>$this->perPage()   
+        ];
     }
 }

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Misc\Helpers\Errors;
+use App\Http\Misc\Helpers\Success;
+use App\Http\Resources\BlockCollection;
 use App\Services\Block\BlockService;
 use Illuminate\Http\Request;
 
@@ -65,9 +68,18 @@ class BlogBlockController extends Controller
      *   security ={{"bearer":{}}}
      * )
      */
-    public function GetBlogBlocks()
+    public function GetBlogBlocks($blogName)
     {
-        //
+        //call service to do the logic
+        [$code,$blocks] = (new BlockService())->GetBlogBlocks($blogName,auth()->user());
+
+        //response with the appropriate response        
+        if ($code == 404)
+            return $this->error_response(Errors::ERROR_MSGS_404,'Blog name is not available!',404);
+        else if ($code==403)
+            return $this->error_response(Errors::ERROR_MSGS_403,'user is not authorized to get the blocks',403);
+        else
+            return $this->success_response(new BlockCollection($blocks),200);
     }
 
     /**
@@ -81,7 +93,7 @@ class BlogBlockController extends Controller
      *   @OA\Parameter(
      *     name="blockName",
      *     in="path",
-     *     description="Your blog identifier",
+     *     description="the name of the blog to block",
      *     required=true,
      *   ),
      * 
@@ -106,13 +118,23 @@ class BlogBlockController extends Controller
      */
     public function BlockBlog(Request $request,$blogName)
     {
+        //validate input parameters
         $this->validate($request,[
-            'blockName'=>'required'
+            'blockName'=>'required | String'
         ]);
+        
+        //call service to do the logic
+        $code = (new BlockService())->BlockBlog($request->blockName,$blogName,auth()->user());
 
-        $code = (new BlockService())->block($request->blockName,$blogName,auth()->user());
-
-
+        //response with the appropriate response        
+        if ($code == 409)
+            return $this->error_response(Errors::ERROR_MSGS_409,'Already blocked',409);
+        else if ($code == 404)
+            return $this->error_response(Errors::ERROR_MSGS_404,'Blog name is not available!',404);
+        else if ($code==403)
+            return $this->error_response(Errors::ERROR_MSGS_403,'user is not authorized to block a blog',403);
+        else
+            return $this->success_response('Blocked',200);
 
     }
 
@@ -148,8 +170,25 @@ class BlogBlockController extends Controller
      *   security ={{"bearer":{}}}
      * )
      */
-    public function UnblockBlog($id)
+    public function UnblockBlog(Request $request,$blogName)
     {
-        //
+        //validate input parameters
+        $this->validate($request,[
+            'blockName'=>'required | string'
+        ]);
+
+        //call service to do the logic
+        $code = (new BlockService())->Unblockblog($request->blockName,$blogName,auth()->user());
+
+
+        //response with the appropriate response        
+        if ($code == 409)
+            return $this->error_response(Errors::ERROR_MSGS_409,'Already unblocked',409);
+        else if ($code == 404)
+            return $this->error_response(Errors::ERROR_MSGS_404,'Blog name is not available!',404);
+        else if ($code==403)
+            return $this->error_response(Errors::ERROR_MSGS_403,'user is not authorized to unblock a blog',403);
+        else
+            return $this->success_response('Unblocked',200);
     }
 }
