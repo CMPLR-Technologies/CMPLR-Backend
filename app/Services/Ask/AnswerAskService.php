@@ -41,7 +41,7 @@ class AnswerAskService{
             return 403;
 
         //turn ask into a normal post
-        $ask->content=$ask->content.$request['content'];
+        $ask->content=$request['content'];
         $ask->mobile=array_key_exists('mobile',$request )?$request['mobile']:null;
         $ask->post_ask_submit='post';
         $ask->source_content=array_key_exists('source_content',$request )?$request['source_content']:null;

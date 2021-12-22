@@ -24,7 +24,6 @@ class InboxResource extends JsonResource
             'message'=> [
                 'id'=>$this->id,
                 'type'=>$this->type,
-                'title'=>$this->source_title,
                 'content'=>$this->content,
                 'ask_submit'=>$this->post_ask_submit,
                 'created_at'=>$this->created_at,
