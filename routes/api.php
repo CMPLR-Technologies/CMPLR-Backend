@@ -32,7 +32,7 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 |
 */
 //Chat 
-Route::get('blog/messaging', [BlogChatController::class, 'GetMessages'])->middleware('auth:api');
+Route::get('blog/messaging/{blogId}', [BlogChatController::class, 'GetMessages'])->middleware('auth:api');
 Route::get('/messaging/conversation/{blogIdFrom}/{blogIdTo}', [BlogChatController::class, 'Conversation'])->middleware('auth:api');
 Route::post('/messaging/conversation/{blogIdFrom}/{blogIdTo}', [BlogChatController::class, 'SendMessage'])->middleware('auth:api');
 Route::delete('/messaging/conversation/{blogIdFrom}/{blogIdTo}', [BlogChatController::class, 'DeleteMessgaes'])->middleware('auth:api');
