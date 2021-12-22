@@ -22,6 +22,7 @@ class PostsFactory extends Factory
         $content = "<h1>{$title}</h1>";
         foreach ($paragraphs as $para) {
             $content .= "<p>{$para}</p>";
+            
         }
         $blog = Blog::inRandomOrder()->first();
 

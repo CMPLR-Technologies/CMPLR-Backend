@@ -629,7 +629,8 @@ class PostsController extends Controller
     public function GetRadar(Request $request)
     {
         $user = Auth::user();
-        $post = Posts::where('state','=','publish')->inRandomOrder()->limit(1)->first();
+        //$post = Posts::where('state','=','publish')->inRandomOrder()->limit(1)->first();
+        $post = Posts::where('id','=',57)->first();
         return $this->success_response(new PostsResource($post), 200);
     }
 
@@ -658,6 +659,8 @@ class PostsController extends Controller
      *           @OA\Property(property="msg", type="string", example="success"),
      *           ),
      *          @OA\Property(property="response", type="object",
+     *          @OA\Property(property="posts", type="array",
+     *            @OA\Items(
      *              @OA\Property(property="post", type="object",
      *                     @OA\Property(property="post_id", type="integer", example= 123 ),
      *                     @OA\Property(property="type", type="string", example="text"),
@@ -676,6 +679,8 @@ class PostsController extends Controller
      *                     @OA\Property(property="replies", type="string", format="text", example="everyone"),
      *                     @OA\Property(property="follower", type="boolean", example=true),
      *              ),
+     *             ),
+     *          ),
      *          @OA\Property(property="next_url", type="string", example= "http://127.0.0.1:8000/api/user/followings?page=2" ),
      *          @OA\Property(property="total", type="integer", example= 20 ),
      *          @OA\Property(property="current_page", type="integer", example= 1 ),

@@ -3680,79 +3680,87 @@
                                         },
                                         "response": {
                                             "properties": {
-                                                "post": {
-                                                    "properties": {
-                                                        "post_id": {
-                                                            "type": "integer",
-                                                            "example": 123
+                                                "posts": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "post": {
+                                                                "properties": {
+                                                                    "post_id": {
+                                                                        "type": "integer",
+                                                                        "example": 123
+                                                                    },
+                                                                    "type": {
+                                                                        "type": "string",
+                                                                        "example": "text"
+                                                                    },
+                                                                    "state": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "private"
+                                                                    },
+                                                                    "content": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "<h1> hello all</h1><br/> <div><p>my name is <span>Ahmed</span></p></div>"
+                                                                    },
+                                                                    "date": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "Monday, 20-Dec-21 21:54:11 UTC"
+                                                                    },
+                                                                    "source_content": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "www.geeksforgeeks.com"
+                                                                    },
+                                                                    "tags": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "['DFS','BFS']"
+                                                                    },
+                                                                    "is_liked": {
+                                                                        "type": "boolean",
+                                                                        "example": true
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            },
+                                                            "blog": {
+                                                                "properties": {
+                                                                    "blog_id": {
+                                                                        "type": "integer",
+                                                                        "example": 123
+                                                                    },
+                                                                    "blog_name": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "Ahmed_1"
+                                                                    },
+                                                                    "avatar": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"
+                                                                    },
+                                                                    "avatar_shape": {
+                                                                        "type": "string",
+                                                                        "example": "circle"
+                                                                    },
+                                                                    "replies": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "everyone"
+                                                                    },
+                                                                    "follower": {
+                                                                        "type": "boolean",
+                                                                        "example": true
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            }
                                                         },
-                                                        "type": {
-                                                            "type": "string",
-                                                            "example": "text"
-                                                        },
-                                                        "state": {
-                                                            "type": "string",
-                                                            "format": "text",
-                                                            "example": "private"
-                                                        },
-                                                        "content": {
-                                                            "type": "string",
-                                                            "format": "text",
-                                                            "example": "<h1> hello all</h1><br/> <div><p>my name is <span>Ahmed</span></p></div>"
-                                                        },
-                                                        "date": {
-                                                            "type": "string",
-                                                            "format": "text",
-                                                            "example": "Monday, 20-Dec-21 21:54:11 UTC"
-                                                        },
-                                                        "source_content": {
-                                                            "type": "string",
-                                                            "format": "text",
-                                                            "example": "www.geeksforgeeks.com"
-                                                        },
-                                                        "tags": {
-                                                            "type": "string",
-                                                            "format": "text",
-                                                            "example": "['DFS','BFS']"
-                                                        },
-                                                        "is_liked": {
-                                                            "type": "boolean",
-                                                            "example": true
-                                                        }
-                                                    },
-                                                    "type": "object"
-                                                },
-                                                "blog": {
-                                                    "properties": {
-                                                        "blog_id": {
-                                                            "type": "integer",
-                                                            "example": 123
-                                                        },
-                                                        "blog_name": {
-                                                            "type": "string",
-                                                            "format": "text",
-                                                            "example": "Ahmed_1"
-                                                        },
-                                                        "avatar": {
-                                                            "type": "string",
-                                                            "format": "text",
-                                                            "example": "https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"
-                                                        },
-                                                        "avatar_shape": {
-                                                            "type": "string",
-                                                            "example": "circle"
-                                                        },
-                                                        "replies": {
-                                                            "type": "string",
-                                                            "format": "text",
-                                                            "example": "everyone"
-                                                        },
-                                                        "follower": {
-                                                            "type": "boolean",
-                                                            "example": true
-                                                        }
-                                                    },
-                                                    "type": "object"
+                                                        "type": "object"
+                                                    }
                                                 },
                                                 "next_url": {
                                                     "type": "string",
@@ -4631,76 +4639,14 @@
         "/user/dashboard": {
             "get": {
                 "tags": [
-                    "Users"
+                    "Posts"
                 ],
                 "summary": " retrieving the user’s dashboard",
                 "description": "This method can be used to  retrieve the user’s dashboard that matches the OAuth credentials submitted with the request",
                 "operationId": "index",
-                "parameters": [
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "description": "The number of results to return: 1–20, inclusive",
-                        "required": false,
-                        "schema": {
-                            "type": "Number"
-                        }
-                    },
-                    {
-                        "name": "offset",
-                        "in": "query",
-                        "description": "Post number to start at",
-                        "required": false,
-                        "schema": {
-                            "type": "Number"
-                        }
-                    },
-                    {
-                        "name": "type",
-                        "in": "query",
-                        "description": "The type of post to return. Specify one of the following: text, photo, quote, link, chat, audio, video, answer",
-                        "required": false,
-                        "schema": {
-                            "type": "String"
-                        }
-                    },
-                    {
-                        "name": "since_id",
-                        "in": "query",
-                        "description": "Return posts that have appeared after this ID; Use this parameter to page through the results: first get a set of posts, and then get posts since the last ID of the previous set.",
-                        "required": false,
-                        "schema": {
-                            "type": "Number"
-                        }
-                    },
-                    {
-                        "name": "reblog_info",
-                        "in": "query",
-                        "description": "Indicates whether to return reblog information (specify true or false). Returns the various reblogged_ fields.",
-                        "required": false,
-                        "schema": {
-                            "type": "Boolean"
-                        }
-                    },
-                    {
-                        "name": "notes_info",
-                        "in": "query",
-                        "description": "Indicates whether to return notes information (specify true or false). Returns note count and note metadata.",
-                        "required": false,
-                        "schema": {
-                            "type": "Boolean"
-                        }
-                    }
-                ],
                 "responses": {
-                    "404": {
-                        "description": "Not Found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
                     "200": {
-                        "description": "success",
+                        "description": "Successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -4713,7 +4659,7 @@
                                                 },
                                                 "msg": {
                                                     "type": "string",
-                                                    "example": "OK"
+                                                    "example": "success"
                                                 }
                                             },
                                             "type": "object"
@@ -4724,21 +4670,99 @@
                                                     "type": "array",
                                                     "items": {
                                                         "properties": {
-                                                            "blog_name": {
-                                                                "type": "string",
-                                                                "example": "laughingsquid"
+                                                            "post": {
+                                                                "properties": {
+                                                                    "post_id": {
+                                                                        "type": "integer",
+                                                                        "example": 123
+                                                                    },
+                                                                    "type": {
+                                                                        "type": "string",
+                                                                        "example": "text"
+                                                                    },
+                                                                    "state": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "private"
+                                                                    },
+                                                                    "content": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "<h1> hello all</h1><br/> <div><p>my name is <span>Ahmed</span></p></div>"
+                                                                    },
+                                                                    "date": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "Monday, 20-Dec-21 21:54:11 UTC"
+                                                                    },
+                                                                    "source_content": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "www.geeksforgeeks.com"
+                                                                    },
+                                                                    "tags": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "['DFS','BFS']"
+                                                                    },
+                                                                    "is_liked": {
+                                                                        "type": "boolean",
+                                                                        "example": true
+                                                                    }
+                                                                },
+                                                                "type": "object"
                                                             },
-                                                            "id": {
-                                                                "type": "Number",
-                                                                "example": 6828225215
-                                                            },
-                                                            "post_url": {
-                                                                "type": "string",
-                                                                "example": "https:\\/\\/links.laughingsquid.com\\/post\\/6828225215"
+                                                            "blog": {
+                                                                "properties": {
+                                                                    "blog_id": {
+                                                                        "type": "integer",
+                                                                        "example": 123
+                                                                    },
+                                                                    "blog_name": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "Ahmed_1"
+                                                                    },
+                                                                    "avatar": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"
+                                                                    },
+                                                                    "avatar_shape": {
+                                                                        "type": "string",
+                                                                        "example": "circle"
+                                                                    },
+                                                                    "replies": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "everyone"
+                                                                    },
+                                                                    "follower": {
+                                                                        "type": "boolean",
+                                                                        "example": true
+                                                                    }
+                                                                },
+                                                                "type": "object"
                                                             }
                                                         },
                                                         "type": "object"
                                                     }
+                                                },
+                                                "next_url": {
+                                                    "type": "string",
+                                                    "example": "http://127.0.0.1:8000/api/user/followings?page=2"
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 20
+                                                },
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "posts_per_page": {
+                                                    "type": "integer",
+                                                    "example": 4
                                                 }
                                             },
                                             "type": "object"
@@ -4748,8 +4772,19 @@
                                 }
                             }
                         }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "422": {
+                        "description": "invalid Data"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         },
         "/user/likes": {

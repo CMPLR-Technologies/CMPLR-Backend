@@ -21,6 +21,7 @@ class BlogCollection extends ResourceCollection
             'total_following' => $this->total(),
             'next_url' => $this->nextPageUrl(),
             'current_page' => $this->currentPage(),
+            'next_page' =>$this->currentPage()+1,
             'posts_per_page' => $this->perPage(),
         ];
     }

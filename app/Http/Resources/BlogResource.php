@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class BlogResource extends JsonResource
@@ -20,6 +21,7 @@ class BlogResource extends JsonResource
             'blog_name'=>$this->blog_name,
             'title' => $this->title,
             'avatar' => $blog_settings->avatar,
+            'last_update'=>Carbon::now()
         ];
     }
 }

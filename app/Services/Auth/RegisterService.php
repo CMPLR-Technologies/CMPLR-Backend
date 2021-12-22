@@ -4,6 +4,7 @@ namespace App\Services\Auth;
 
 use App\Models\Blog;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -28,6 +29,24 @@ class RegisterService
                 'password' => Hash::make($password)
             ]);
         } catch (\Throwable $th) {
+            return null;
+        }
+        if (!$user)
+            return null;
+        return $user;
+    }
+
+    public function CreateUserGoogle(string $email,int $age,string $google_id)
+    {
+       try {
+            $user = User::create([
+                'email' => $email,
+                'age' => $age,
+                'google_id' =>$google_id,
+                'email_verified_at' => Carbon::now(),
+                'password' => Hash::make('N/A')
+            ]);
+       } catch (\Throwable $th) {
             return null;
         }
         if (!$user)

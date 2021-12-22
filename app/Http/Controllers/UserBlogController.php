@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Misc\Helpers\Config;
 use App\Http\Misc\Helpers\Errors;
 use App\Http\Misc\Helpers\Success;
 use App\Http\Resources\BlogCollection;
@@ -339,8 +340,9 @@ class UserBlogController extends Controller
     public function GetUserFollowing()
     {
         $user = auth('api')->user();
-        //TODO: config paginate limit
-        $blogs = $user->FollowedBlogs()->paginate(3);
+        //TODO: config paginate limit Config::PAGINATION_BLOGS_LIMIT
+        
+        $blogs = $user->FollowedBlogs()->paginate(15);
         return $this->success_response(new BlogCollection($blogs));
     } 
 

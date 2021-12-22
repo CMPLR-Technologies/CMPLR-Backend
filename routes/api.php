@@ -70,7 +70,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/info', [UserController::class, 'GetUserInfo'])->name('GetUser_Info');
     
     Route::get('/user/settings', [UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
-    Route::put('/settings', [UsersettingController::class, 'UpdateSettings'])->name('UpdateAccountSetting');
+    Route::put('user/settings', [UsersettingController::class, 'UpdateSettings'])->name('UpdateAccountSetting');
     Route::put('/settings/change-email', [UsersettingController::class, 'ChangeEmail'])->name('Change Email');
     Route::put('/settings/change-password', [UsersettingController::class, 'ChangePassword'])->name('Change Password');
 });
@@ -86,7 +86,8 @@ Route::middleware(['auth:api'])->put('/user_theme', [UserController::class, 'Upd
 Route::get('auth/google', [GoogleController::class, 'GoogleLogin'])->middleware('web');
 Route::any('auth/callback', [GoogleController::class, 'handleGoogleCallback'])->middleware('web');
 
-Route::get('auth/googles/{token}', [GoogleController::class, 'GetUserFromGoogle'])->middleware('web');
+Route::post('auth/googles/signup', [GoogleController::class, 'SignUpWithGoogle']);
+Route::get('auth/googles/{token}', [GoogleController::class, 'GetUserFromGoogle']);
 
 // Ask
 Route::post('/blog/{blogName}/ask', [AskController::class, 'CreateAsk'])->middleware('auth:api');
@@ -111,9 +112,9 @@ Route::get('posts/{post_id}', [ PostsController::class, 'GetPostById' ])->name('
 Route::middleware('guest')->get('posts/view/{blog_name}', [ PostsController::class, 'GetBlogPosts' ])->name('post.get.blogs');
 
 
-Route::middleware('auth:api')->post('image_upload', [ UploadMediaController::class, 'UploadImages' ])->name('image.upload.post');
+Route::middleware('auth:api')->post('/image_upload', [ UploadMediaController::class, 'UploadImagesaa' ])->name('image.upload.post');
 Route::middleware('auth:api')->post('video_upload', [ UploadMediaController::class, 'UploadVideos' ])->name('Videos.upload.post');
 
 //user 
 Route::middleware('auth:api')->get('/user/likes', [UserController::class, 'GetUserLikes'])->name('GetUserLikes');
-    Route::middleware('auth:api')->get('/user/followings', [UserBlogController::class, 'GetUserFollowing'])->name('Get.User.Following');
+Route::middleware('auth:api')->get('/user/followings', [UserBlogController::class, 'GetUserFollowing'])->name('Get.User.Following');
