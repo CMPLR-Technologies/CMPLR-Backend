@@ -17,12 +17,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPostConroller;
 use App\Http\Controllers\UsersettingController;
 use App\Http\Controllers\AskController;
-<<<<<<< HEAD
 use App\Http\Controllers\BlogSubmitController;
-=======
 use App\Http\Controllers\BlogBlockController;
 use App\Http\Controllers\InboxController;
->>>>>>> Inbox
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
