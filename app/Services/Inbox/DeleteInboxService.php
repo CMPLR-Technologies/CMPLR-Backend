@@ -9,22 +9,22 @@ use App\Models\Posts;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
-class GetInboxService{
+class DeleteInboxService{
 
     /*
     |--------------------------------------------------------------------------
-    | GetInbox Service
+    | DeleteInbox Service
     |--------------------------------------------------------------------------
-    | This class handles the logic of GetInbox function
+    | This class handles the logic of DeleteInbox function
     |
    */
 
     /**
-     * implements the logic of getting inbox
+     * implements the logic of Deleting inbox
      * 
      * @return array
      */
-    public function GetInbox($user)
+    public function DeleteInbox($user)
     {
         // get ids of of the blogs in which the user is a member
         $blogsIds=  $user
@@ -32,14 +32,13 @@ class GetInboxService{
                     ->pluck('blog_id')
                     ->toArray();
 
-        // user entire inbox
-        $inbox= Posts::whereIn('blog_id',$blogsIds)
+        // delete entire inbox
+        Posts:: whereIn('blog_id',$blogsIds)
                 ->where('post_ask_submit','ask')
                 ->orwhere('post_ask_submit','submit')
-                ->orderBy('created_at',"DESC")
-                ->paginate(Config::PAGINATION_LIMIT);
+                ->delete();
 
-        return [200,$inbox];
+        return 200;
     }
 
 }

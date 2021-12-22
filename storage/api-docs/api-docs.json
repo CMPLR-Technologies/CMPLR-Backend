@@ -164,207 +164,6 @@
                 }
             }
         },
-        "/user/inbox": {
-            "get": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "the user's inbox",
-                "description": "Retrieve the all asks and  submissions",
-                "operationId": "GetUserInbox",
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true
-                },
-                "responses": {
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "200": {
-                        "description": "success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "Meta": {
-                                            "properties": {
-                                                "Status": {
-                                                    "type": "integer",
-                                                    "example": 200
-                                                },
-                                                "msg": {
-                                                    "type": "string",
-                                                    "example": "OK"
-                                                }
-                                            },
-                                            "type": "object"
-                                        },
-                                        "response": {
-                                            "properties": {
-                                                "total_asks": {
-                                                    "type": "Number",
-                                                    "example": 263
-                                                },
-                                                "total_submissions": {
-                                                    "type": "Number",
-                                                    "example": 214
-                                                },
-                                                "asks": {
-                                                    "description": "asks in user's inbox",
-                                                    "type": "array",
-                                                    "items": {
-                                                        "properties": {
-                                                            "ask_1": {
-                                                                "description": "the first ask",
-                                                                "type": "object"
-                                                            },
-                                                            "ask_2": {
-                                                                "description": "the second ask",
-                                                                "type": "object"
-                                                            },
-                                                            "ask_3": {
-                                                                "description": "the third ask",
-                                                                "type": "object"
-                                                            }
-                                                        },
-                                                        "type": "object"
-                                                    }
-                                                },
-                                                "submissions": {
-                                                    "description": "submissions in user's inbox",
-                                                    "type": "array",
-                                                    "items": {
-                                                        "properties": {
-                                                            "sub_1": {
-                                                                "description": "the first submission",
-                                                                "type": "object"
-                                                            },
-                                                            "sub_2": {
-                                                                "description": "the second submission",
-                                                                "type": "object"
-                                                            },
-                                                            "sub_3": {
-                                                                "description": "the third submission",
-                                                                "type": "object"
-                                                            }
-                                                        },
-                                                        "type": "object"
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/user/inbox/{blog-identifier}": {
-            "get": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "blog's inbox",
-                "description": "Retrieve the all asks and  submissions of a certain blog",
-                "operationId": "GetBlogInbox",
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true
-                },
-                "responses": {
-                    "404": {
-                        "description": "Not Found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "200": {
-                        "description": "success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "Meta": {
-                                            "properties": {
-                                                "Status": {
-                                                    "type": "integer",
-                                                    "example": 200
-                                                },
-                                                "msg": {
-                                                    "type": "string",
-                                                    "example": "OK"
-                                                }
-                                            },
-                                            "type": "object"
-                                        },
-                                        "response": {
-                                            "properties": {
-                                                "total_asks": {
-                                                    "type": "Number",
-                                                    "example": 263
-                                                },
-                                                "total_submissions": {
-                                                    "type": "Number",
-                                                    "example": 214
-                                                },
-                                                "asks": {
-                                                    "description": "asks in user's inbox",
-                                                    "type": "array",
-                                                    "items": {
-                                                        "properties": {
-                                                            "ask_1": {
-                                                                "description": "the first ask",
-                                                                "type": "object"
-                                                            },
-                                                            "ask_2": {
-                                                                "description": "the second ask",
-                                                                "type": "object"
-                                                            },
-                                                            "ask_3": {
-                                                                "description": "the third ask",
-                                                                "type": "object"
-                                                            }
-                                                        },
-                                                        "type": "object"
-                                                    }
-                                                },
-                                                "submissions": {
-                                                    "description": "submissions in user's inbox",
-                                                    "type": "array",
-                                                    "items": {
-                                                        "properties": {
-                                                            "sub_1": {
-                                                                "description": "the first submission",
-                                                                "type": "object"
-                                                            },
-                                                            "sub_2": {
-                                                                "description": "the second submission",
-                                                                "type": "object"
-                                                            },
-                                                            "sub_3": {
-                                                                "description": "the third submission",
-                                                                "type": "object"
-                                                            }
-                                                        },
-                                                        "type": "object"
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "email/verification-notification": {
             "post": {
                 "tags": [
@@ -2698,6 +2497,195 @@
                         "bearer": []
                     }
                 ]
+            }
+        },
+        "/user/inbox": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "the user's inbox",
+                "description": "Retrieve the all asks and  submissions",
+                "operationId": "GetUserInbox",
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true
+                },
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status_code": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "messages": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "message1": {
+                                                                "description": "the first ask",
+                                                                "type": "object"
+                                                            },
+                                                            "message2": {
+                                                                "description": "the second ask",
+                                                                "type": "object"
+                                                            },
+                                                            "message3": {
+                                                                "description": "the third ask",
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "next_url": {
+                                                    "description": "next page in pagination",
+                                                    "type": "url"
+                                                },
+                                                "total": {
+                                                    "description": "total number of messages",
+                                                    "type": "integer"
+                                                },
+                                                "current_page": {
+                                                    "description": "current page number",
+                                                    "type": "integer"
+                                                },
+                                                "messages_per_page": {
+                                                    "description": "number of messages per page",
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "delelte user's inbox",
+                "description": "delete all messages inside the inbox",
+                "operationId": "DeleteInbox",
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
+        },
+        "/user/inbox/{blog-identifier}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "blog's inbox",
+                "description": "Retrieve the all asks and  submissions of a certain blog",
+                "operationId": "GetBlogInbox",
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true
+                },
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status_code": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "messages": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "message1": {
+                                                                "description": "the first ask",
+                                                                "type": "object"
+                                                            },
+                                                            "message2": {
+                                                                "description": "the second ask",
+                                                                "type": "object"
+                                                            },
+                                                            "message3": {
+                                                                "description": "the third ask",
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "next_url": {
+                                                    "description": "next page in pagination",
+                                                    "type": "url"
+                                                },
+                                                "total": {
+                                                    "description": "total number of messages",
+                                                    "type": "integer"
+                                                },
+                                                "current_page": {
+                                                    "description": "current page number",
+                                                    "type": "integer"
+                                                },
+                                                "messages_per_page": {
+                                                    "description": "number of messages per page",
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/notifications": {

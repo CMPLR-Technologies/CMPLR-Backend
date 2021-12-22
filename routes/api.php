@@ -17,7 +17,12 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPostConroller;
 use App\Http\Controllers\UsersettingController;
 use App\Http\Controllers\AskController;
+<<<<<<< HEAD
 use App\Http\Controllers\BlogSubmitController;
+=======
+use App\Http\Controllers\BlogBlockController;
+use App\Http\Controllers\InboxController;
+>>>>>>> Inbox
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -94,9 +99,11 @@ Route::post('/blog/{blogName}/ask', [AskController::class, 'CreateAsk'])->middle
 Route::post('/ask/{askId}', [AskController::class, 'AnswerAsk'])->middleware('auth:api');
 Route::delete('/ask/{askId}', [AskController::class, 'DeleteAsk'])->middleware('auth:api');
 
+// Inbox
+Route::get('/user/inbox', [InboxController::class, 'GetInbox'])->middleware('auth:api');
+Route::get('/user/inbox/{blogName}', [InboxController::class, 'GetBlogInbox'])->middleware('auth:api');
+Route::delete('/user/inbox/', [InboxController::class, 'DeleteInbox'])->middleware('auth:api');
 
-Route::get('/user/inbox', [AskController::class, 'GetInbox'])->middleware('auth:api');
-Route::get('/user/inbox/{blogName}', [AskController::class, 'GetBlogInbox'])->middleware('auth:api');
 
 //Posts
 Route::middleware('auth:api')->group(function () {
@@ -114,3 +121,8 @@ Route::middleware('auth:api')->post('video_upload', [ UploadMediaController::cla
 Route::post('/blog/{blogName}/submit', [BlogSubmitController::class, 'CreateSubmit'])->middleware('auth:api');
 Route::post('/submit/{submId}', [BlogSubmitController::class, 'PostSubmit'])->middleware('auth:api');
 Route::delete('/submit/{submitId}', [BlogSubmitController::class, 'DeleteSubmit'])->middleware('auth:api');
+
+// // Block
+// Route::post('/blog/{blogName}/blocks', [BlogBlockController::class, 'BlockBlog'])->middleware('auth:api');
+// Route::delete('/blog/{blogName}/blocks', [BlogBlockController::class, 'UnblockBlog'])->middleware('auth:api');
+// Route::get('/blog/{blogName}/blocks', [BlogBlockController::class, 'GetBlogBlocks'])->middleware('auth:api');

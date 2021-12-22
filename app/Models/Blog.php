@@ -59,4 +59,10 @@ class Blog extends Model
     //     return $this->hasMany(Follow::class,'blog_id');
     // }
 
+    public function Blocks()
+    {
+        return $this->belongsToMany(Blog::class,'blocks','blog_id','blocked_blog_id');
+    }
+
+
 }
