@@ -24,7 +24,7 @@ class CreateBlogService{
             'title'=>$param['title'],
             'blog_name'=>$param['blogName'],
             'privacy'=>$param['privacy'],
-            'password'=>$param['password'],
+            'password'=>array_key_exists('password',$param )?$param['password']:null,
             'url'=>'http://localhost/blogs/'.$param['blogName']
         ]);
 
@@ -36,6 +36,11 @@ class CreateBlogService{
             'full_privileges'=>'true',
             'contributor_privileges'=>'false'
         ]);
+
+        DB::table('blog_settings')->insert([
+            'blog_id' => $blog->id,
+        ]);
+
        
         return 201;
     }
