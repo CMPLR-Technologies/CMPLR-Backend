@@ -124,7 +124,7 @@ class BlogChatService
      */
     public function GetConversationMessages($blogIdFrom, $blogIdTo)
     {
-        return Chat::where([['from_blog_id', '=', $blogIdFrom], ['to_blog_id', '=', $blogIdTo]])->orwhere([['from_blog_id', '=', $blogIdTo], ['to_blog_id', '=',  $blogIdFrom]])->orderBy('created_at')->paginate(Config::Message_PAGINATION_LIMIT);
+        return Chat::where([['from_blog_id', '=', $blogIdFrom], ['to_blog_id', '=', $blogIdTo]])->orwhere([['from_blog_id', '=', $blogIdTo], ['to_blog_id', '=',  $blogIdFrom]])->orderBy('created_at' ,'ASC')->paginate(Config::Message_PAGINATION_LIMIT);
     }
 
     /**

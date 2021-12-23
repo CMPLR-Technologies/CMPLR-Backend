@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Misc\Helpers\Config;
+use App\Http\Resources\BlogChatCollection;
 use App\Models\Blog;
 use App\Models\Chat;
 use App\Services\Blog\BlogChatService;
@@ -110,14 +111,10 @@ class BlogChatController extends Controller
     {
 
         $messages = $this->blogChatService->GetConversationMessages($blogIdFrom ,$blogIdTo);
-    
-        $recieverBlogData = $this->blogChatService->GetBlogData($blogIdTo);
-
         $this->blogChatService->MarkAsRead($messages);
-
-        $conversationResult = $this->blogChatService->ConversationDataResult($recieverBlogData , $messages);
+        $messages = new BlogChatCollection($messages);       
         
-        return response()->json($conversationResult, 200);
+        return response()->json( ($messages), 200);
     }
     /**
      * @OA\Post(
@@ -199,7 +196,7 @@ class BlogChatController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function DeleteMessgaes(Request $request, $blogIdFrom, $blogIdTo)
+    public function DeleteMessgaes( $blogIdFrom, $blogIdTo)
     {
         $userId = Auth::user()->id;
 
