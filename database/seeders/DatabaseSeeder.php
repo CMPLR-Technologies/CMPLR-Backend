@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TagSeeder::class);
         $this->call(PostsSeeder::class);
         $this->call(ChatSeeder::class);
+        $this->call(PostNotesSeeder::class);
 
     }
 }
