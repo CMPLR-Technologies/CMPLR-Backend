@@ -109,7 +109,7 @@ class BlogChatService
                 ->on(DB::raw('GREATEST(t1.from_blog_id, t1.to_blog_id)'), '=', 't2.receiver_id')
                 ->on('t1.id', '=', 't2.max_id'))
             ->where('t1.from_blog_id', $blogId)
-            ->orWhere('t1.to_blog_id', $blogId)->latest('created_at', 'ASC')->get();
+            ->orWhere('t1.to_blog_id', $blogId)->latest('created_at', 'DESC')->get();
 
         return $messages;
     }
@@ -124,7 +124,7 @@ class BlogChatService
      */
     public function GetConversationMessages($blogIdFrom, $blogIdTo)
     {
-        return Chat::where([['from_blog_id', '=', $blogIdFrom], ['to_blog_id', '=', $blogIdTo]])->orwhere([['from_blog_id', '=', $blogIdTo], ['to_blog_id', '=',  $blogIdFrom]])->orderBy('created_at' ,'ASC')->paginate(Config::Message_PAGINATION_LIMIT);
+        return Chat::where([['from_blog_id', '=', $blogIdFrom], ['to_blog_id', '=', $blogIdTo]])->orwhere([['from_blog_id', '=', $blogIdTo], ['to_blog_id', '=',  $blogIdFrom]])->orderBy('created_at' ,'DESC')->paginate(Config::Message_PAGINATION_LIMIT);
     }
 
     /**
