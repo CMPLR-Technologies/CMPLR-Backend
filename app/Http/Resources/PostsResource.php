@@ -38,7 +38,6 @@ class PostsResource extends JsonResource
                 'replies' => $blog_settings->replies,
                 'follower' => $blog->isfollower($user)
             ]
-
        ];
     }
 }
