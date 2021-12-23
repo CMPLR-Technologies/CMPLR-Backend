@@ -199,7 +199,8 @@ class RegisterController extends Controller
       // this method will return true if authentication was successful
       if (Auth::attempt($request->only('email', 'age', 'password'))) 
       {
-         $request['user'] = Auth::user();
+         $user = Auth::user();
+         $request['user'] = $user;
         // Fire Registered event
         event(new Registered($user)); 
         $resource =  new RegisterResource($request);

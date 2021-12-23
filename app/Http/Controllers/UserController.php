@@ -124,7 +124,7 @@ class UserController extends Controller
     * This function Get User Info
     *
     */
-    public function GetUserInfo(Request $request)
+    public function GetUserInfo(Request $request) 
     {
         //Get authenticated user
         $user  = $this->UserService->GetAuthUser();
