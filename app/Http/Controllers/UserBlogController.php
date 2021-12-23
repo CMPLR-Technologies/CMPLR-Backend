@@ -94,7 +94,7 @@ class UserBlogController extends Controller
 
         //response with the appropriate response 
         if ($code == 422)
-            return $this->error_response(Errors::ERROR_MSGS_422,'Blog name is not available!',409);
+            return $this->error_response(Errors::ERROR_MSGS_422,'Blog name is not available!',422);
         else
             return $this->success_response('Created Successfully',201);
 
@@ -161,6 +161,9 @@ class UserBlogController extends Controller
 
         //getting the blog
         $blog = Blog::where('blog_name', $blogName)->first();
+
+        if($blog==null)
+            return $this->error_response(Errors::ERROR_MSGS_404,'Blog name is not available!',404);
 
         //checking if this authorized through policy
         $this->authorize('delete', $blog);

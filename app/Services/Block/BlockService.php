@@ -102,7 +102,7 @@ class BlockService{
 
         //check if blog exists
         if($blog==null)
-            return 404;
+            return [404,null];
 
         //check if user is authorized to get blocks
         $notAuthorized= $blog
@@ -113,7 +113,7 @@ class BlockService{
                         ->isEmpty();
 
         if($notAuthorized)
-            return 403;
+            return [403,null];
         
         //get the blocked blogs
         $blocks=$blog->BlockedBlogs()->paginate(Config::PAGINATION_LIMIT);

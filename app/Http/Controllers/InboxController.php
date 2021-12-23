@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Misc\Helpers\Errors;
 use App\Http\Resources\InboxCollection;
 use App\Services\Inbox\DeleteInboxService;
 use App\Services\Inbox\GetBlogInboxService;
@@ -154,12 +155,17 @@ class InboxController extends Controller
     public function GetBlogInbox($blogName)
     {
 
-        $ret =(new GetBlogInboxService())->GetBlogInbox($blogName);
+        $ret =(new GetBlogInboxService())->GetBlogInbox($blogName,auth()->user());
 
         $code=$ret[0];
         $inbox=$ret[1];
 
-        return $this->success_response(new InboxCollection($inbox),$code);
+        if($code==403)
+            return $this->error_response(Errors::ERROR_MSGS_403,'user not a member of the blog',403);
+        else if ($code == 404)
+            return $this->error_response(Errors::ERROR_MSGS_404,'Blog name is not available!',404);
+        else
+            return $this->success_response(new InboxCollection($inbox),$code);
     }
 
     /**

@@ -22,13 +22,17 @@ class GetBlogInboxService{
      * 
      * @return array
      */
-    public function GetBlogInbox($blogName)
+    public function GetBlogInbox($blogName,$user)
     {
         //get target blog
         $blog=Blog::where('blog_name',$blogName)->first();
 
         if($blog==null)
             return [404,null];
+
+        //check if the authenticated user is a member in this blog
+        if($blog->users->contains('id',$user->id) == false)
+            return [403,null];
 
         // get inbox of the blog
         $inbox= $blog
