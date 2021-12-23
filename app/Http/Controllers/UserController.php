@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Misc\Helpers\Config;
 use App\Http\Misc\Helpers\Errors;
 use App\Http\Resources\PostsCollection;
+use App\Http\Resources\UserInfoCollection;
+use App\Http\Resources\UserInfoResource;
+use App\Http\Resources\UserResource;
 use App\Models\Blog;
+use App\Models\BlogUser;
 use App\Models\PostNotes;
 use App\Models\Posts;
 use App\Models\User;
@@ -116,10 +120,11 @@ class UserController extends Controller
      * )
      */
     
-     /**
-      * Get 
-      */
-    public function GetUserInfo()
+    /**
+    * This function Get User Info
+    *
+    */
+    public function GetUserInfo(Request $request)
     {
         //Get authenticated user
         $user  = $this->UserService->GetAuthUser();
@@ -130,16 +135,24 @@ class UserController extends Controller
         $user_data = $this->UserService->GetUserData($user);
         if(!$user_data)
             return $this->error_response(Errors::ERROR_MSGS_500, 'Failed to get User data', 500);
-        
+       
+        // get number of followers of user
+        $following_count = $this->UserService->GetUserFollowing($user->id);
+        $user_data['following_counts']=  $following_count;
+        // get number of posts of user
+        $user_posts = $this->UserService->GetUserPosts($user);
+        $user_data['posts_count']=  $user_posts;
         //Get Blog Data 
         $blogs_data = $this->UserService->GetBlogsData($user->id);
         if(!$blogs_data)
             return $this->error_response(Errors::ERROR_MSGS_500, 'Failed to get Blogs data', 500);
-
         // set the response
-        $response = $user_data;
-        $response['blogs'] = $blogs_data;
-        return $this->success_response($response);
+        // $response['user'] = $user_data;
+        $response = $blogs_data;
+        // $response = (object) array_merge(
+        //     (array) $user_data, (array) $blogs_data);
+        //$response = array_merge($user_data->toArray(), array($blogs_data));
+        return $this->success_response(new UserInfoCollection($response));
     }
 
     /**
@@ -204,8 +217,10 @@ class UserController extends Controller
     {
         $user = Auth::user();
         //get all followed blogs
+        $user_blogs = $user->blogs()->pluck('blog_id');
         $followed_blogs_id = $user->FollowedBlogs->pluck('id');
-        $Posts = Posts::whereIn('blog_id', $followed_blogs_id)->paginate(Config::PAGINATION_LIMIT);
+        // get posts of blogs that user follow or posts of user himself
+        $Posts = Posts::whereIn('blog_id', $followed_blogs_id)->orWhereIn('blog_id', $user_blogs)->paginate(Config::PAGINATION_LIMIT);
         return $this->success_response(new PostsCollection($Posts));
     }
 
@@ -311,10 +326,15 @@ class UserController extends Controller
      */
     public function GetUserLikes(Request $request)
     {
+        //get auth user
         $user = Auth::user();
-        $likes = PostNotes::where('user_id',$user->id)->where('type','=','like')->pluck('post_id');
-        // config::PAGINATION_LIMIT
-        $posts = Posts::whereIn('id',$likes)->paginate(3);
+        // get id of all posts liked by user
+        $likes = $this->UserService->GetLikes($user->id);
+        //$likes = PostNotes::where('user_id',$user->id)->where('type','=','like')->pluck('post_id');
+
+        //get liked posts
+        $posts = Posts::whereIn('id',$likes)->paginate(config::PAGINATION_LIMIT);
+        
         return $this->success_response(new PostsCollection($posts));
     }
 

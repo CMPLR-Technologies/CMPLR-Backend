@@ -6,6 +6,7 @@ use App\Http\Misc\Helpers\Config;
 use App\Http\Misc\Helpers\Errors;
 use App\Http\Requests\PostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\PostEditViewResource;
 use App\Http\Resources\PostsCollection;
 use App\Http\Resources\PostsResource;
 use App\Models\Blog;
@@ -25,9 +26,11 @@ class PostsController extends Controller
     | Posts Controller
     |--------------------------------------------------------------------------|
     | This controller handles the processes of Posts :
-    | Create ,update Posts
+    | Create ,edit and update Posts
+    | retrieve posts (dashboard , by blogname , post_id)
     |
    */
+
     protected $PostsService;
 
     /**
@@ -40,16 +43,6 @@ class PostsController extends Controller
         $this->PostsService = $PostsService;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function index()
-    {
-        //
-    }
 
     /**
      * @OA\Post(
@@ -176,7 +169,7 @@ class PostsController extends Controller
         } catch (\Throwable $th) {
             return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
         }
-
+        // set blog_id
         $request['blog_id'] = $blog->id;
         // create the date of the post
         $request['date'] = Carbon::now()->toRfc850String();
@@ -185,35 +178,14 @@ class PostsController extends Controller
         $post = $this->PostsService->createPost($request->all());
         if (!$post) {
             $error['post'] = 'error while creating post';
-
             return $this->error_response(Errors::ERROR_MSGS_500, $error, 500);
-
         }
-        $response['posts'] = $post;
-        return $this->success_response($response, 201);
+
+        // return post resource
+        return $this->success_response(new PostsResource($post), 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Posts  $posts
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Posts $posts)
-    {
-        //
-    }
 
     /**
      * @OA\get(
@@ -276,12 +248,7 @@ class PostsController extends Controller
      *)
      **/
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Posts  $posts
-     * @return \Illuminate\Http\Response
-     */
+
 
     /**
      * @OA\GET(
@@ -374,44 +341,44 @@ class PostsController extends Controller
      *security ={{"bearer":{}}},
      *)
      **/
-   /**
-     * edit the specified post.
+    /**
+     * this fuction responsible for edit the specified post.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-   public function edit(Request $request)
+    public function edit(Request $request)
     {
+        // get the authenticated user
         $user = Auth::user();
 
+        // get the blog_name and post_id
         $blog_name = $request->route('blog_name');
         $post_id = $request->route('post_id');
 
+        // get the blog data by blog_name  
         $blog = $this->PostsService->GetBlogData($blog_name);
-        if (!$blog){
+        if (!$blog) {
             $error['blog'] = 'there is no blog with this blog_name';
             return $this->error_response(Errors::ERROR_MSGS_404, $error, 404);
         }
 
+        // get the post data by post_id 
         $post = $this->PostsService->GetPostData($post_id);
-        if (!$post){
+        if (!$post) {
             $error['post'] = 'there is no post with this id';
             return $this->error_response(Errors::ERROR_MSGS_404, $error, 404);
         }
 
-
+        // check if this user(blog_name) is authorized to edit this post
         try {
-            $this->authorize('EditPost', [$post,$blog]);
+            $this->authorize('EditPost', [$post, $blog]);
         } catch (\Throwable $th) {
-            return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
+            $error['user'] = Errors::AUTHRIZED;
+            return $this->error_response(Errors::ERROR_MSGS_401, $error, 401);
         }
-
-        $response['avatar'] = BlogSettings::find($blog->id)->first()->avatar;
-        $response['blog_name'] = $blog_name;
-        $post_data = $post->only(['id', 'type', 'state', 'content', 'date', 'source_content', 'tags']);
-        $response['post'] = $post_data;
-
-        return $this->success_response($response);
+        // set up the response        
+        return $this->success_response(new PostEditViewResource($post));
     }
 
     /**
@@ -467,25 +434,33 @@ class PostsController extends Controller
     public function update(UpdatePostRequest $request)
     {
         $user = Auth::user();
+        // get blog_name and post_id parameters
         $blog_name = $request->route('blog_name');
         $post_id = $request->route('post_id');
-        
-        
+
+        // get the blog data by blog_name  
         $blog = $this->PostsService->GetBlogData($blog_name);
-        if (!$blog){
+        if (!$blog) {
             $error['blog'] = 'there is no blog with this blog_name';
             return $this->error_response(Errors::ERROR_MSGS_404, $error, 404);
         }
 
+        // get the post data by post_id 
         $post = $this->PostsService->GetPostData($post_id);
-        if (!$post){
+        if (!$post) {
             $error['post'] = 'there is no post with this id';
             return $this->error_response(Errors::ERROR_MSGS_404, $error, 404);
         }
-
-        $this->authorize('EditPost', [$post,$blog]);
+        // check if this user(blog_name) is authorized to edit this post
+        try {
+            $this->authorize('EditPost', [$post, $blog]);
+        } catch (\Throwable $th) {
+            $error['user'] = Errors::AUTHRIZED;
+            return $this->error_response(Errors::ERROR_MSGS_401, $error, 401);
+        }
+        // update post with all data
         $post->update($request->all());
-        return $this->success_response('');
+        return $this->success_response('', 200);
     }
 
 
@@ -539,13 +514,13 @@ class PostsController extends Controller
      *)
      **/
 
-    public function GetPostById(Posts $posts,int $post_id)
+    public function GetPostById(Posts $posts, int $post_id)
     {
         $post = Posts::find($post_id);
-        if(!$post)
-            return $this->error_response(Errors::ERROR_MSGS_404,'',404);
+        if (!$post)
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
         // a3mlo post resource bs handle el hta bta3t el auth
-        return $this->success_response($post,200);
+        return $this->success_response($post, 200);
     }
 
 
@@ -555,23 +530,30 @@ class PostsController extends Controller
      * @param  \App\Models\Posts  $posts
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Posts $posts,int $post_id)
+    public function destroy(Posts $posts, int $post_id)
     {
+        // get post from id
         $post = Posts::find($post_id);
-        if(!$post)
-            return $this->error_response(Errors::ERROR_MSGS_404,'',404);
+        if (!$post)
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
 
+        // get blog of this post
         $blog = $post->BLogs;
+
+        // check if this user(blog_name) is authorized to delete this post
         try {
-            $this->authorize('delete',[$post,$blog]);
+            $this->authorize('delete', [$post, $blog]);
         } catch (\Throwable $th) {
             return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
         }
+        // delte post
         $is_deleted = $post->delete();
-        if(!$is_deleted)
-            return $this->error_response(Errors::ERROR_MSGS_500,'error while deleting post',500);
-        
-        return $this->success_response('',200);
+        if (!$is_deleted){
+            $error['post']= 'error while deleting post';
+            return $this->error_response(Errors::ERROR_MSGS_500,$error, 500);
+        }
+
+        return $this->success_response('', 200);
     }
 
     /**
@@ -628,9 +610,13 @@ class PostsController extends Controller
      */
     public function GetRadar(Request $request)
     {
+        //get auth user
         $user = Auth::user();
-        //$post = Posts::where('state','=','publish')->inRandomOrder()->limit(1)->first();
-        $post = Posts::where('id','=',57)->first();
+        // get random post
+        $post =  $this->PostsService->GetRandomPost();
+        if(!$post)
+            return $this->error_response(Errors::ERROR_MSGS_500,'error get post',500);
+        //retrieve post resource
         return $this->success_response(new PostsResource($post), 200);
     }
 
@@ -701,17 +687,15 @@ class PostsController extends Controller
     public function GetBlogPosts(Request $request, $blog_name)
     {
         //TODO:  retrive only published posts
-        $blog = Blog::where('blog_name',$blog_name)->first();
-        $posts = Posts::where('blog_id',$blog->id)->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
+        $blog = Blog::where('blog_name', $blog_name)->first();
+        $posts = Posts::where('blog_id', $blog->id)->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
 
         // check if user auth or not
-        if (auth('api')->check()) 
-        {
+        if (auth('api')->check()) {
             $user = auth('api')->user();
-            $is_follow = DB::table('user_follow_blog')->where('user_id',$user->id)->get();
+            $is_follow = DB::table('user_follow_blog')->where('user_id', $user->id)->get();
         }
-        
-        //new PostsResource($posts->getCollection()) is called inside PostsCollection
+
         return $this->success_response(new PostsCollection($posts));
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Misc\Helpers\Errors;
+use App\Http\Requests\Auth\GoogleRequest;
 use App\Http\Resources\Auth\RegisterResource;
 use App\Models\User;
 use Exception;
@@ -49,16 +50,15 @@ class GoogleController extends Controller
 
     public function GetUserFromGoogle(Request $request)
     {
-        $token = $request->route('token');
+        $token = $request->token;
         try {
             $user = Socialite::driver('google')->userFromToken($token);
         } catch (\Throwable $th) {
             $error['token'] = Errors::TOKEN_ERROR;
             return $this->error_response(Errors::ERROR_MSGS_422, $error, 422);
         }
-
-        $check = User::where('email', $user->email)->first();
-        $finduser = User::where('google_id', $user->id)->first();
+       // $check = User::where('email', $user->email)->first();
+        $check = User::where('google_id', $user->id)->first();
         if ($check) {
             $user = Auth::loginUsingId($check->id);
             try {
@@ -69,11 +69,12 @@ class GoogleController extends Controller
             }
             return response()->json(['user' => auth()->user(), 'token' => $userLoginToken], 200);
         } else {
-            return $this->error_response(Errors::ERROR_MSGS_401, 'register', 401);
+            $error['user'] = 'you should register first';
+            return $this->error_response(Errors::ERROR_MSGS_401, $error, 401);
         }
     }
 
-    public function SignUpWithGoogle(Request $request)
+    public function SignUpWithGoogle(GoogleRequest $request)
     {
         $request->validate([
             'blog_name' => ['required', 'unique:blogs', 'max:22', 'alpha_dash'],
@@ -88,10 +89,15 @@ class GoogleController extends Controller
         }
         if (User::where('google_id', $user->id)->first()) 
         {
-            dd("dah user");
+            $user = Auth::loginUsingId($user->id);
+            try {
+                $userLoginToken = $user->CreateToken('authToken')->accessToken;
+            } catch (\Throwable $th) {
+                $error['token'] = Errors::GENERATE_TOKEN_ERROR;
+                return $this->error_response(Errors::ERROR_MSGS_500, $error, 500);
+            }
+            return response()->json(['user' => auth()->user(), 'token' => $userLoginToken], 200);
         }
-
-
 
         $user = $this->RegisterService->CreateUserGoogle($user->email, $request->age, $user->id);
         if (!$user) {
@@ -117,8 +123,7 @@ class GoogleController extends Controller
         if (!$generate_token)
             return $this->error_response(Errors::ERROR_MSGS_500, ERRORS::GENERATE_TOKEN_ERROR, 500);
 
-        $request['avatar'] = $avatar;
-        $request['blog_name'] = $blog->blog_name;
+        $request['blog']=$blog;
         $request['token'] = $user->token();
 
 

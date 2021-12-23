@@ -22,10 +22,13 @@ class RegisterResource extends JsonResource
      */
     public function toArray($request)
     {
+        $blog_settings = $this->blog->settings;
         return [
                 'user'=>$this->user,
-                'blog_name' => $this->blog_name,
-                'avatar' =>$this->avatar,
+                'blog_id' =>$this->blog->id,
+                'blog_name' => $this->blog->blog_name,
+                'avatar' =>$blog_settings->avatar,
+                'avatar_shape' => $blog_settings->avatar_shape,
                 'token' => $this->token,
         ];
     }

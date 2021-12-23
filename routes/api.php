@@ -67,7 +67,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('blog/{blog}/settings/theme', [BlogSettingsController::class, 'editBlogTheme'])->name('editBlogTheme');
 
 
-    Route::get('/info', [UserController::class, 'GetUserInfo'])->name('GetUser_Info');
+    Route::get('user/info', [UserController::class, 'GetUserInfo'])->name('GetUser_Info');
     
     Route::get('/user/settings', [UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
     Route::put('user/settings', [UsersettingController::class, 'UpdateSettings'])->name('UpdateAccountSetting');
@@ -86,8 +86,8 @@ Route::middleware(['auth:api'])->put('/user_theme', [UserController::class, 'Upd
 Route::get('auth/google', [GoogleController::class, 'GoogleLogin'])->middleware('web');
 Route::any('auth/callback', [GoogleController::class, 'handleGoogleCallback'])->middleware('web');
 
-Route::post('auth/googles/signup', [GoogleController::class, 'SignUpWithGoogle']);
-Route::get('auth/googles/{token}', [GoogleController::class, 'GetUserFromGoogle']);
+Route::post('google/signup', [GoogleController::class, 'SignUpWithGoogle']);
+Route::post('google/login', [GoogleController::class, 'GetUserFromGoogle']);
 
 // Ask
 Route::post('/blog/{blogName}/ask', [AskController::class, 'CreateAsk'])->middleware('auth:api');
@@ -105,7 +105,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('update/{blog_name}/{post_id}',[PostsController::class,'update'])->name('UpdatePost');
     Route::get('user/dashboard/',[UserController::class,'GetDashboard'])->name('Get.Dashboard');
     Route::get('posts/radar/', [ PostsController::class, 'GetRadar' ])->name('post.get.radar');
-    Route::delete('posts/delete/{post_id}',[PostsController::class , 'destroy'])->name('post.delete');
+    Route::delete('post/delete/{post_id}',[PostsController::class , 'destroy'])->name('post.delete');
     Route::delete('user/likes',[PostsController::class , 'GetUserLikes'])->name('post.GetUserLikes');
 });
 Route::get('posts/{post_id}', [ PostsController::class, 'GetPostById' ])->name('post.get.id');
