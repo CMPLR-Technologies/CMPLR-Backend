@@ -24,12 +24,13 @@ class UploadMediaController extends Controller
      * @return response
      */
 
-    public function UploadImages(request $request)
+    public function UploadImagesaa(request $request)
     {
+        
         $request->validate([
             'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:5048',
         ]);
-        $user = Auth::user();
+        $user = auth('api')->user();
         // get image
         $image = $request->file('image');
         // remove spaces from image name

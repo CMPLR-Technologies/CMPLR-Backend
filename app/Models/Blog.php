@@ -19,6 +19,9 @@ class Blog extends Model
         'password'
     ];
 
+    protected $hidden = [
+        'password',
+    ];
     
     public function followers()
     {
@@ -54,10 +57,21 @@ class Blog extends Model
     {
         return !! DB::table('user_follow_blog')->where('user_id',$user->id)->where('blog_id',$this->id)->first();
     }
-    // public function Follows()
-    // {
-    //     return $this->hasMany(Follow::class,'blog_id');
-    // }
+  
+    public function user_blogs()
+    {
+        return $this->hasMany(BlogUser::class);
+    }
+
+    public function count_posts()
+    {
+        return Posts::where('blog_id',$this->id)->count();
+    }
+
+    public function count_followers()
+    {
+        return DB::table('user_follow_blog')->where('blog_id',$this->id)->count();
+    }
 
     public function BlockedBlogs()
     {

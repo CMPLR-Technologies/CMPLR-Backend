@@ -25,10 +25,10 @@ class UpdatePostRequest extends FormRequest
     public function rules()
     {
         return [
-            'content' =>['string'],
-            'type' => ['string',Rule::in(['text', 'photos','quotes','chats','audio','videos'])],
-            'post_date'=> ['date'],
-            'state' => ['string',Rule::in(['publish', 'private','draft'])],
+            //TODO: add title
+            'content' =>['required','string'],
+            'type' => ['required','string',Rule::in(['text', 'photos','quotes','chats','audio','videos'])],
+            'state' => ['required','string',Rule::in(['publish', 'private','draft'])],
             'source_content' =>['string']
         ];
     }

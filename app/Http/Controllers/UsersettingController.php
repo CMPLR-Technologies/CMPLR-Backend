@@ -12,6 +12,14 @@ use Illuminate\Support\Facades\Auth;
 
 class UsersettingController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | UsersettingController Controller
+    |--------------------------------------------------------------------------|
+    | This controller handles all about user settings 
+    | view , update ,change email and password
+    |
+   */
     protected $UserSettingService;
 
     /**
@@ -92,18 +100,18 @@ class UsersettingController extends Controller
         $user = $this->UserSettingService->GetAuthUser();
         if (!$user)
             return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
-        // get data    
+        // get user settings data    
         $data = $this->UserSettingService->GetSettings($user->id);
         if (!$user)
             return $this->error_response(Errors::ERROR_MSGS_500, '', 500);
-
+        // return user settings resource
         return $this->success_response(new UserSettingResource($data));
     }
 
     /**
      * Update all User Settings
      * 
-     * @param SettingsRequest $request
+     * @param App\Http\Requests\SettingsRequest $request
      * 
      * @return response
      */
@@ -113,39 +121,44 @@ class UsersettingController extends Controller
         $user = $this->UserSettingService->GetAuthUser();
         if(!$user)
             return  $this->error_response(Errors::ERROR_MSGS_401, '', 401);
+        // get all the settings needed to be updated 
         $data = $request->all();
         //Update User Settings
         $is_updated = $this->UserSettingService->UpdateSettings($user->id,$data);
         if(!$is_updated)
             return $this->error_response(Errors::ERROR_MSGS_500, 'Failed to Update user settings', 500);
 
-        return $this->success_response('');
+        return $this->success_response('',200);
     }
 
     /**
      * update Email of Account
      * 
-     * @param ChangeEmailRequest
+     * @param App\Http\Requests\Auth\ChangeEmailRequest $request
      *
      * @return response
      */
     public function ChangeEmail(ChangeEmailRequest $request)
     {
+        //get Authenticated user
         $user = Auth::user();
 
+        // check if the user want to change email enters correct password
         $check = $this->UserSettingService->ConfirmPassword($request->password, $user->password);
         if (!$check)
             return $this->error_response(Errors::ERROR_MSGS_400, 'Invalid password entered', 400);
 
+        // if the user enters its previous email no need to futher work :)
         if ($request->email == $user->email)
-            return $this->success_response($request->email);
+            return $this->success_response($request->email,200);
 
         // update User Email
         $is_updated = $this->UserSettingService->UpdateEmail($user, $request->email);
         if (!$is_updated)
             return $this->error_response(Errors::ERROR_MSGS_500, 'Failed to update email', 500);
 
-        return $this->success_response($request->email);
+        $response['email'] = $request->email;
+        return $this->success_response($response,200);
     }
 
     /**
@@ -157,16 +170,20 @@ class UsersettingController extends Controller
      */
     public function ChangePassword(ChangePasswordRequest $request)
     {
+        // get the authenticated user
         $user = Auth::user();
 
+        // check if the user want to change password enters correct password
         $check = $this->UserSettingService->ConfirmPassword($request->password, $user->password);
         if (!$check)
             return $this->error_response(Errors::ERROR_MSGS_400, 'Invalid password entered', 400);
 
-
+        //check if the password not match
         if (strcmp($request->new_password, $request->confirm_new_password) !== 0)
             return  $this->error_response(Errors::ERROR_MSGS_400, 'Passwords don\'t match', 400);
 
+        // TODO:check if new pass = old pass
+        
         // update User Password
         $is_updated = $this->UserSettingService->UpdatePassword($user, $request->new_password);
         if (!$is_updated)

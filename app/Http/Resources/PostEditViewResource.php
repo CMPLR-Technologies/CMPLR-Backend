@@ -3,9 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Auth;
 
-class PostsResource extends JsonResource
+class PostEditViewResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,10 +14,9 @@ class PostsResource extends JsonResource
      */
     public function toArray($request)
     {
-       $user =  auth('api')->user();
         $blog = $this->BLogs;
         $blog_settings = $blog->settings;
-       return [
+        return [
             'post'=>[
                 'post_id' => $this->id,
                 'type' => $this->type,
@@ -27,8 +25,6 @@ class PostsResource extends JsonResource
                 'date' => $this->date,
                 'source_content' => $this->source_content,
                 'tags' => $this->tags,
-                'is_liked' => $this->is_liked($user),
-                'notes_count'=>$this->count_notes(),
             ],
             'blog' =>[
                 'blog_id' => $blog->id,
@@ -36,8 +32,9 @@ class PostsResource extends JsonResource
                 'avatar' => $blog_settings->avatar,
                 'avatar_shape' => $blog_settings->avatar_shape,
                 'replies' => $blog_settings->replies,
-                'follower' => $blog->isfollower($user)
             ]
+
        ];
+        
     }
 }
