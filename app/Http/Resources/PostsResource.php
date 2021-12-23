@@ -28,6 +28,7 @@ class PostsResource extends JsonResource
                 'source_content' => $this->source_content,
                 'tags' => $this->tags,
                 'is_liked' => $this->is_liked($user),
+                'notes_count'=>$this->count_notes(),
             ],
             'blog' =>[
                 'blog_id' => $blog->id,
