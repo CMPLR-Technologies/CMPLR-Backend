@@ -69,7 +69,7 @@ class PostNotesService
     {
         return Blog::whereIn('id', $blogsId)->with(['settings' => function($query){
             $query->select('blog_id','avatar' ,'avatar_shape');
-        }])->get();;
+        }])->get();
     }
 
     public function HashBlogData ($blogsData)

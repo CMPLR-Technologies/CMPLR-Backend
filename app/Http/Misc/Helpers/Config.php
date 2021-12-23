@@ -10,4 +10,5 @@ class Config
 	const CACHE_TTL=60*60; // 60seconds * 60 min (1hour)
     const EXPIRE =10;
 	const PAGINATION_BLOGS_LIMIT = 15; 
+	const Message_PAGINATION_LIMIT =10 ;
 }

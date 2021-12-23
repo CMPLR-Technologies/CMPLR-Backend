@@ -80,7 +80,7 @@ class LoginController extends Controller
         if ($this->loginService->CheckUserAuthorized($loginCredenials)){
             //generate the token for the user 
             $userLoginToken = $this->loginService->CreateUserToken(auth()->user());
-
+    
             //now return this token on success login attempt
             return response()->json(['user'=>auth()->user(), 'token'=>$userLoginToken] ,200);
         }else{

@@ -43,6 +43,10 @@ class Blog extends Model
         return $this->belongsToMany(User::class, 'blog_users', 'blog_id', 'user_id');
     }
 
+    public function messages()
+    {
+        return $this->hasMany(Chat::class ,'to_blog_id' );
+    }
     public function Posts()
     {
         return $this->hasMany(Posts::class,'blog_id');
