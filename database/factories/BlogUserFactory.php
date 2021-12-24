@@ -13,9 +13,10 @@ class BlogUserFactory extends Factory
      */
     public function definition()
     {
+        $id = $this->faker->numberBetween(1, 10);
         return [
-            'user_id' => $this->faker->numberBetween(1, 10),
-            'blog_id' => $this->faker->numberBetween(1, 10),
+            'user_id' => $id,
+            'blog_id' => $id,
         ];
     }
 }

@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 
 class UserFactory extends Factory
 {
+    protected $id =1 ;
     /**
      * Define the model's default state.
      *
@@ -34,6 +35,7 @@ class UserFactory extends Factory
             'conversational_notification' => $this->faker->boolean(),
             'filtered_content' => json_encode($this->faker->words()),
             'remember_token' => Str::random(10),
+             'primary_blog_id'=> $this->id++ ,
         ];
     }
 

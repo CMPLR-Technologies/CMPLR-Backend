@@ -120,7 +120,7 @@ class PostNotesController extends Controller
         $blogHashData= $this->postNotesService->HashBlogData($blogsData);
         $result = $this->postNotesService->GetNotesResult($notes , $blogHashData , $counts);
         
-        return response()->json([$result] , 200);
+        return response()->json($result , 200);
 
     }
 

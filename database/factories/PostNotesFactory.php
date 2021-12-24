@@ -14,11 +14,12 @@ class PostNotesFactory extends Factory
     public function definition()
     {
         $type = $this->faker->randomElement(array('like', 'reply', 'reblog'));
-        $content =($type =='reply')?$this->faker->sentence(4): null;
+        $content = ($type =='reply')?$this->faker->sentence(4) :null ;  
+        
         return [
             'user_id' => $this->faker->numberBetween(1 , 10),
             'post_id' => $this->faker->numberBetween(1 , 50),
-            'type' => $this->faker->randomElement(array('like', 'reply', 'reblog')),
+            'type' => $type,
             'content'=>  $content ,
         ];
     }
