@@ -15,6 +15,7 @@ use App\Services\Ask\AnswerAskService;
 use App\Services\Ask\DeleteAskService;
 use App\Services\Inbox\GetBlogInboxService;
 use App\Services\Inbox\GetInboxService;
+use App\Services\Notifications\NotificationsService;
 use Error;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
@@ -120,10 +121,10 @@ class AskController extends Controller
         $code=(new CreateAskService())->CreateAsk($request->all(),$blogName);        
 
         //return the response
-        if($code==201)
-            return $this->success_response(Success::CREATED,201);
-        else if($code==404)
+        if($code==404)
             return $this->error_response(Errors::ERROR_MSGS_404,'wrong target blog',404);
+        else if($code==201)
+           return $this->success_response(Success::CREATED,201);
 
     }
 

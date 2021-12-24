@@ -4,6 +4,8 @@ namespace App\Services\Ask;
 
 use App\Models\Blog;
 use App\Models\Post;
+use App\Models\User;
+use App\Services\Notifications\NotificationsService;
 use Carbon\Carbon;
 
 class AnswerAskService{
@@ -51,6 +53,27 @@ class AnswerAskService{
 
         //update 
         $ask->update();
+
+        //get source_user primary blog id
+        $primaryBlogId=null;
+        if($ask->source_user_id!=null)
+            $primaryBlogId=User::find($ask->source_user_id)->primary_blog_id;
+
+        //delete ask notification
+        (new NotificationsService())->DeleteNotification(
+            $primaryBlogId,
+            $ask->blog_id,
+            'ask',
+            $ask->id,
+        );
+
+        //add answer notification
+        (new NotificationsService())->CreateNotification(
+            $ask->blog_id,
+            $primaryBlogId,
+            'answer',
+            $ask->id,
+        );
 
         return 200;
     }

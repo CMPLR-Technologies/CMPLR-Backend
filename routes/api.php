@@ -20,6 +20,7 @@ use App\Http\Controllers\AskController;
 use App\Http\Controllers\BlogSubmitController;
 use App\Http\Controllers\BlogBlockController;
 use App\Http\Controllers\InboxController;
+use App\Http\Controllers\NotificationsController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -123,3 +124,25 @@ Route::delete('/submit/{submitId}', [BlogSubmitController::class, 'DeleteSubmit'
 Route::post('/blog/{blogName}/blocks', [BlogBlockController::class, 'BlockBlog'])->middleware('auth:api');
 Route::delete('/blog/{blogName}/blocks', [BlogBlockController::class, 'UnblockBlog'])->middleware('auth:api');
 Route::get('/blog/{blogName}/blocks', [BlogBlockController::class, 'GetBlogBlocks'])->middleware('auth:api');
+
+// Notification
+Route::get('/blog/{blogName}/notifications', [NotificationsController::class, 'GetNotifications'])->middleware('auth:api');
+Route::put('/notifications/{notificationId}/see', [NotificationsController::class, 'SeeNotification'])->middleware('auth:api');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Route::get('/notifications', [NotificationsController::class, 'GetNotifications'])->middleware('auth:api');
+

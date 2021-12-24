@@ -4,6 +4,7 @@ namespace App\Services\Ask;
 
 use App\Models\Blog;
 use App\Models\Post;
+use App\Services\Notifications\NotificationsService;
 use Illuminate\Support\Facades\DB;
 
 class CreateAskService{
@@ -37,7 +38,7 @@ class CreateAskService{
         
 
         //create ask
-        Post::create([
+        $ask=Post::create([
             'blog_id'=>$blog->id,
             'blog_name'=>$blogName,
             'content'=>$request['content'],
@@ -47,6 +48,14 @@ class CreateAskService{
             'is_anonymous'=>$request['is_anonymous'],
             'source_content'=>array_key_exists('source_content',$request )?$request['source_content']:null
         ]);    
+
+        //add ask notification
+        (new NotificationsService())->CreateNotification(
+            $request['is_anonymous']==null?null:auth()->user()->primary_blog_id,
+            $blog->id,
+            'ask',
+            $ask->id,
+        );
 
         return 201;
     }

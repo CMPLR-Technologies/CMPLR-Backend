@@ -9,6 +9,7 @@ use App\Services\Blog\CreateBlogService;
 use App\Services\Blog\DeleteBlogService;
 use App\Services\Blog\FollowBlogService;
 use App\Services\Blog\UnfollowBlogService;
+use App\Services\Notifications\NotificationsService;
 use Illuminate\Http\Request;
 
 class UserBlogController extends Controller
@@ -256,7 +257,18 @@ class UserBlogController extends Controller
         else if ($code == 404)
             return $this->error_response(Errors::ERROR_MSGS_404,'Blog name is not available!',404);
         else
+        {
+            //add follow notification
+            (new NotificationsService())->CreateNotification(
+                auth()->user()->primary_blog_id,
+                $blog->id,
+                'follow',
+                null,
+            );
+
             return $this->success_response('Followed',200);
+        }
+
     }
 
 
@@ -334,8 +346,18 @@ class UserBlogController extends Controller
         else if ($code == 404)
             return $this->error_response(Errors::ERROR_MSGS_404,'Blog name is not available!',404);
         else
-            return $this->success_response('Unfollowed',200);
+        {
+            //remove follow notification
+            (new NotificationsService())->DeleteNotification(
+                auth()->user()->primary_blog_id,
+                $blog->id,
+                'follow',
+                null,
+                null
+            );
 
+            return $this->success_response('Unfollowed',200);
+        }
     }
 
 }
