@@ -34,4 +34,14 @@ class Posts extends Model
     {
         return $this->hasMany(PostNotes::class);
     }
+
+    function is_liked(User $user)
+    {
+        return !! PostNotes::where('user_id',$user->id)->where('post_id','=',$this->id)->first();
+    }
+
+    function count_notes()
+    {
+        return PostNotes::where('post_id',$this->id)->count();
+    }
 }

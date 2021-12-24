@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Posts;
+use App\Models\PostNotes;
 use Illuminate\Database\Seeder;
 
-class PostsSeeder extends Seeder
+class PostNotesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +14,6 @@ class PostsSeeder extends Seeder
      */
     public function run()
     {
-        Posts::factory()->count(50)->create();
+        PostNotes::factory()->count(1000)->create();
     }
 }

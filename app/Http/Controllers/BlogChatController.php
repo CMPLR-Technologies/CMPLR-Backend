@@ -2,17 +2,39 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Misc\Helpers\Config;
+use App\Http\Resources\BlogChatCollection;
+use App\Services\Blog\BlogChatService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BlogChatController extends Controller
 {
-    
+    /*
+    |--------------------------------------------------------------------------
+    | BlogChat Controller
+    |--------------------------------------------------------------------------|
+    | This controller handles all conversation  
+    |
+   */
+    protected $blogChatService;
+
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(BlogChatService $blogChatService)
+    {
+        $this->blogChatService = $blogChatService;
+    }
 
     /**
      * @OA\Get(
-     * path="/messaging",
+     * path="/blog/messaging",
      * summary="getting all messages",
      * description="This method can be used to get all messages of authorized user",
-     * operationId="messaging",
+     * operationId="Messaging",
      * tags={"Chats"},
      *   @OA\Response(
      *      response=401,
@@ -38,11 +60,27 @@ class BlogChatController extends Controller
      * security ={{"bearer":{}}}
      * )
      */
-    public function messaging()
+
+    public function GetMessages($blogId)
     {
-        //
+        $userid = Auth::user()->id;
+
+        // cehck for valid blogfrom id
+        if (!$this->blogChatService->IsValidBlogId($blogId, $userid)) {
+            return $this->error_response('Unauthenticated', 'Invalid blog id', 401);
+        }
+        // getting lates messages 
+        $messages = $this->blogChatService->GetLatestMessages($blogId);
+        // getting all blog settings   
+        $blogsData = $this->blogChatService->GetBlogDataforChatParteners($messages, $blogId);
+
+        // getting latest Message result
+        $latestMessages = $this->blogChatService->GetLatestMessagesResult($blogsData, $messages, $blogId);
+
+
+        return response()->json($latestMessages, 200);
     }
-     /**
+    /**
      * @OA\Get(
      * path="/messaging/conversation/{blog-id-from}/{blog-id-to}",
      * summary="getting all messages from some blog",
@@ -66,9 +104,19 @@ class BlogChatController extends Controller
      * security ={{"bearer":{}}}
      * )
      */
-    public function conversation()
+    public function Conversation($blogIdFrom, $blogIdTo)
     {
-        //
+
+        $messages = $this->blogChatService->GetConversationMessages($blogIdFrom, $blogIdTo);
+        if (!$messages->isEmpty()) 
+        {
+            $this->blogChatService->MarkAsRead($messages);
+            $response = new BlogChatCollection($messages);
+        }else {
+            $response['messages']= null ;
+        }
+
+        return response()->json($response, 200);
     }
     /**
      * @OA\Post(
@@ -107,9 +155,18 @@ class BlogChatController extends Controller
      * security ={{"bearer":{}}}
      * )
      */
-    public function sendMessage()
+    public function SendMessage(Request $request, $blogIdFrom, $blogIdTo)
     {
-        //
+        $userId = Auth::user()->id;
+
+        // cehck for valid blogfrom id
+        if (!$this->blogChatService->IsValidBlogId($blogIdFrom, $userId)) {
+            return $this->error_response('Unauthenticated', 'Invalid blog id', 401);
+        }
+
+        $this->blogChatService->CreateMessage($request->Content, $blogIdFrom, $blogIdTo);
+
+        return $this->success_response('Success', 200);
     }
     /**
      * @OA\Delete(
@@ -141,10 +198,16 @@ class BlogChatController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function DeleteMessgaes($blogIdFrom, $blogIdTo)
     {
-        //
+        $userId = Auth::user()->id;
+
+        // cehck for valid blogfrom id
+        if (!$this->blogChatService->IsValidBlogId($blogIdFrom, $userId)) {
+            return $this->error_response('Unauthenticated', 'Invalid blog id', 401);
+        }
+        $this->blogChatService->DeleteMessages($blogIdFrom, $blogIdTo);
+
+        return $this->success_response('Success', 200);
     }
 }
-
-

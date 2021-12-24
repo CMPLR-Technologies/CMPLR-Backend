@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Posts;
+use App\Models\Chat;
 use Illuminate\Database\Seeder;
 
-class PostsSeeder extends Seeder
+class ChatSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +14,7 @@ class PostsSeeder extends Seeder
      */
     public function run()
     {
-        Posts::factory()->count(50)->create();
+        Chat::factory()->count(5000)->create();
+
     }
 }

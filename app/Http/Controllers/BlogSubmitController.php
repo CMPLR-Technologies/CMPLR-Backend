@@ -29,7 +29,7 @@ class BlogSubmitController extends Controller
      * 
      *     @OA\Parameter(
      *     name="type",
-     *     description="type of the submit ('text','photo','link','quote','video'),
+     *     description="type of the submit ('text','photo','link','quote','video')",
      *     in="query",
      *     required=true,
      *     @OA\Schema(type="string")
@@ -66,21 +66,20 @@ class BlogSubmitController extends Controller
      * )
      */
 
-    public function CreateSubmit(CreateSubmitRequest $request,$blogName)
+    public function CreateSubmit(CreateSubmitRequest $request, $blogName)
     {
         //call the service
-        $code=(new SubmitService())->CreateSubmit($request->all(),$blogName);        
+        $code = (new SubmitService())->CreateSubmit($request->all(), $blogName);
 
         //return the response
-        if($code==201)
-            return $this->success_response(Success::CREATED,201);
-        else if($code==404)
-            return $this->error_response(Errors::ERROR_MSGS_404,'wrong target blog',404);
-
+        if ($code == 201)
+            return $this->success_response(Success::CREATED, 201);
+        else if ($code == 404)
+            return $this->error_response(Errors::ERROR_MSGS_404, 'wrong target blog', 404);
     }
 
 
-     /**
+    /**
      * @OA\Delete(
      *   path="/submit/{submitId}",
      *   summary="detete a submit",
@@ -111,28 +110,27 @@ class BlogSubmitController extends Controller
      */
 
     /**
-    * delete a submit send by a user to a blog
-    * 
-    * @return response
-    */
+     * delete a submit send by a user to a blog
+     * 
+     * @return response
+     */
     public function DeleteSubmit($submitId)
     {
         //call the service
-        $code=(new SubmitService())->DeleteSubmit($submitId,auth()->user());
+        $code = (new SubmitService())->DeleteSubmit($submitId, auth()->user());
 
         //return the response
-        if($code==404)
-            return $this->error_response(Errors::ERROR_MSGS_404,'wrong targets',404);
-        else if($code==403)
-            return $this->error_response(Errors::ERROR_MSGS_403,'user is not a member of the blog',403);
+        if ($code == 404)
+            return $this->error_response(Errors::ERROR_MSGS_404, 'wrong targets', 404);
+        else if ($code == 403)
+            return $this->error_response(Errors::ERROR_MSGS_403, 'user is not a member of the blog', 403);
         else
-            return $this->success_response(Success::DELETED,202);
-
+            return $this->success_response(Success::DELETED, 202);
     }
 
 
 
-      /**
+    /**
      *	@OA\Post
      *	(
      * 		path="/submit/{submitId}",
@@ -185,7 +183,8 @@ class BlogSubmitController extends Controller
      *      		required=false,
      *      		@OA\Schema
      *			    (
-     *           		type="array"
+     *           		type="array",
+     *                  @OA\Items ()
      *      	 	)
      *   	),
      * 
@@ -234,29 +233,25 @@ class BlogSubmitController extends Controller
      * 
      * @return response
      */
-    public function PostSubmit(Request $request,$submitId)
+    public function PostSubmit(Request $request, $submitId)
     {
 
-        $this->validate($request,[
-            'content'=>'required',
-            'mobile'=>'boolean',
-            'source_content'=>'string',
-            'tags'=>'array',
-            'state'=>['required','string',Rule::in('publish','private','draft')],
+        $this->validate($request, [
+            'content' => 'required',
+            'mobile' => 'boolean',
+            'source_content' => 'string',
+            'tags' => 'array',
+            'state' => ['required', 'string', Rule::in('publish', 'private', 'draft')],
         ]);
 
-        $code=(new SubmitService())->PostSubmit($request->all(),$submitId,auth()->user());
+        $code = (new SubmitService())->PostSubmit($request->all(), $submitId, auth()->user());
 
         //return the response
-        if($code==404)
-            return $this->error_response(Errors::ERROR_MSGS_404,'wrong targets',404);
-        else if($code==403)
-            return $this->error_response(Errors::ERROR_MSGS_403,'user not a member of the blog',403);
+        if ($code == 404)
+            return $this->error_response(Errors::ERROR_MSGS_404, 'wrong targets', 404);
+        else if ($code == 403)
+            return $this->error_response(Errors::ERROR_MSGS_403, 'user not a member of the blog', 403);
         else
-            return $this->success_response('Posted',200);
-
+            return $this->success_response('Posted', 200);
     }
-
-
-
 }

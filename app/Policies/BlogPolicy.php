@@ -41,22 +41,13 @@ class BlogPolicy
         return true;
     }
 
-    public function EditPost(User $user, Blog $blog, Posts $post)
-    {
-        $check1 = BlogUser::where('user_id',  $user->id)
-            ->where('blog_id', $blog->id)->first();
-
-        $check2 = $blog->Posts()->where('id', $post->id)->first();
-     
-        if ($check1 && $check2)
-            return true;
-        else
-            false;
-    }
+ 
 
     public function delete(User $user, Blog $blog)
     {
         return  $blog->users->contains('id', $user->id) &&
                 $blog->users()->where('user_id', $user->id)->where('full_privileges','true')->first() != null;
     }
+
+  
 }

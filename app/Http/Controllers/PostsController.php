@@ -6,11 +6,11 @@ use App\Http\Misc\Helpers\Config;
 use App\Http\Misc\Helpers\Errors;
 use App\Http\Requests\PostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\PostEditViewResource;
 use App\Http\Resources\PostsCollection;
 use App\Http\Resources\PostsResource;
 use App\Models\Blog;
 use App\Models\BlogSettings;
-use App\Models\BlogUser;
 use App\Models\Posts;
 use App\Models\User;
 use App\Services\Posts\PostsService;
@@ -18,8 +18,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use OpenApi\Annotations\Get;
-use OpenApi\Annotations\Post;
 
 class PostsController extends Controller
 {
@@ -28,9 +26,11 @@ class PostsController extends Controller
     | Posts Controller
     |--------------------------------------------------------------------------|
     | This controller handles the processes of Posts :
-    | Create ,update Posts
+    | Create ,edit and update Posts
+    | retrieve posts (dashboard , by blogname , post_id)
     |
    */
+
     protected $PostsService;
 
     /**
@@ -43,16 +43,6 @@ class PostsController extends Controller
         $this->PostsService = $PostsService;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function index()
-    {
-        //
-    }
 
     /**
      * @OA\Post(
@@ -179,7 +169,7 @@ class PostsController extends Controller
         } catch (\Throwable $th) {
             return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
         }
-
+        // set blog_id
         $request['blog_id'] = $blog->id;
         // create the date of the post
         $request['date'] = Carbon::now()->toRfc850String();
@@ -188,35 +178,14 @@ class PostsController extends Controller
         $post = $this->PostsService->createPost($request->all());
         if (!$post) {
             $error['post'] = 'error while creating post';
-
             return $this->error_response(Errors::ERROR_MSGS_500, $error, 500);
-
         }
-        $response['posts'] = $post;
-        return $this->success_response($response, 201);
+
+        // return post resource
+        return $this->success_response(new PostsResource($post), 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Posts  $posts
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Posts $posts)
-    {
-        //
-    }
 
     /**
      * @OA\get(
@@ -279,12 +248,7 @@ class PostsController extends Controller
      *)
      **/
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Posts  $posts
-     * @return \Illuminate\Http\Response
-     */
+
 
     /**
      * @OA\GET(
@@ -377,39 +341,44 @@ class PostsController extends Controller
      *security ={{"bearer":{}}},
      *)
      **/
-
+    /**
+     * this fuction responsible for edit the specified post.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function edit(Request $request)
     {
+        // get the authenticated user
         $user = Auth::user();
 
+        // get the blog_name and post_id
         $blog_name = $request->route('blog_name');
         $post_id = $request->route('post_id');
 
+        // get the blog data by blog_name  
         $blog = $this->PostsService->GetBlogData($blog_name);
-        if (!$blog){
+        if (!$blog) {
             $error['blog'] = 'there is no blog with this blog_name';
             return $this->error_response(Errors::ERROR_MSGS_404, $error, 404);
         }
 
+        // get the post data by post_id 
         $post = $this->PostsService->GetPostData($post_id);
-        if (!$post){
+        if (!$post) {
             $error['post'] = 'there is no post with this id';
             return $this->error_response(Errors::ERROR_MSGS_404, $error, 404);
         }
 
-
+        // check if this user(blog_name) is authorized to edit this post
         try {
-            $this->authorize('EditPost', [$blog, $post]);
+            $this->authorize('EditPost', [$post, $blog]);
         } catch (\Throwable $th) {
-            return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
+            $error['user'] = Errors::AUTHRIZED;
+            return $this->error_response(Errors::ERROR_MSGS_401, $error, 401);
         }
-
-        $response['avatar'] = BlogSettings::find($blog->id)->first()->avatar;
-        $response['blog_name'] = $blog_name;
-        $post_data = $post->only(['id', 'type', 'state', 'content', 'date', 'source_content', 'tags']);
-        $response['post'] = $post_data;
-
-        return $this->success_response($response);
+        // set up the response        
+        return $this->success_response(new PostEditViewResource($post));
     }
 
     /**
@@ -465,1083 +434,39 @@ class PostsController extends Controller
     public function update(UpdatePostRequest $request)
     {
         $user = Auth::user();
+        // get blog_name and post_id parameters
         $blog_name = $request->route('blog_name');
         $post_id = $request->route('post_id');
-        
-        
+
+        // get the blog data by blog_name  
         $blog = $this->PostsService->GetBlogData($blog_name);
-        if (!$blog){
+        if (!$blog) {
             $error['blog'] = 'there is no blog with this blog_name';
             return $this->error_response(Errors::ERROR_MSGS_404, $error, 404);
         }
 
+        // get the post data by post_id 
         $post = $this->PostsService->GetPostData($post_id);
-        if (!$post){
+        if (!$post) {
             $error['post'] = 'there is no post with this id';
             return $this->error_response(Errors::ERROR_MSGS_404, $error, 404);
         }
-
-        $this->authorize('EditPost', [$blog, $post]);
+        // check if this user(blog_name) is authorized to edit this post
+        try {
+            $this->authorize('EditPost', [$post, $blog]);
+        } catch (\Throwable $th) {
+            $error['user'] = Errors::AUTHRIZED;
+            return $this->error_response(Errors::ERROR_MSGS_401, $error, 401);
+        }
+        // update post with all data
         $post->update($request->all());
-        return $this->success_response('');
-    }
-
-
-
-    /**
-     * @OA\GET(
-     * path="/posts",
-     * summary="blog/blog_url/posts/?",
-     * description="user can get the posts published by certain blog",
-     * operationId="published_posts",
-     * tags={"Posts"},
-     *  @OA\Parameter(
-     *         name="blog-identifier",
-     *         in="query",
-     *         required=true,
-     *      ),
-     *  @OA\Parameter(
-     *         name="type",
-     *         in="query",
-     *         required=false,
-     *         description="The type of post to return one of the following: text, quote, link, answer, video, audio, photo, chat",
-     * ),
-     *  @OA\Parameter(
-     *         name="post_id",
-     *         in="query",
-     *         required=false,
-     *         description="A specific post ID",
-     *         @OA\Schema(
-     *              type="integer"
-     *         )
-     *      ),
-     *  @OA\Parameter(
-     *         name="tags",
-     *         in="query",
-     *         required=false,
-     *         description="Limits the response to posts with the specified tag(s), see note below",
-     *         @OA\Schema(
-     *              type="string"
-     *          )
-     *      ),
-     *  @OA\Parameter(
-     *         name="limit",
-     *         in="query",
-     *         required=false,
-     *         description="The number of posts to return",
-     *         @OA\Schema(
-     *              type="integer"
-     *         )
-     *      ),
-     *  @OA\Parameter(
-     *         name="reblog_info",
-     *         in="query",
-     *         required=false,
-     *         description="Indicates whether to return reblog information",
-     *         @OA\Schema(
-     *              type="Boolean"
-     *         )
-     *      ),
-     *  @OA\Parameter(
-     *         name="notes_info",
-     *         in="query",
-     *         required=false,
-     *         description="Indicates whether to return notes information",
-     *         @OA\Schema(
-     *              type="Boolean"
-     *         )
-     *      ),
-     *  @OA\Parameter(
-     *         name="filter",
-     *         in="query",
-     *         required=false,
-     *         description="Indicates whether to return notes information default none",
-     *         @OA\Schema(
-     *              type="String"
-     *         )
-     *      ),
-     * @OA\RequestBody(
-     *    required=true,
-     *    @OA\JsonContent(
-     *       required={"blog-identifier","api_key"},
-     *       @OA\Property(property="blog-identifier", type="string", format="text", example="summer_blog"),
-     *       @OA\Property(property="type", type="string", format="string", example="text"),
-     *       @OA\Property(property="tag", type="string", example="summer"),
-     *    ),
-     * ),
-     * @OA\Response(
-     *    response=404,
-     *    description="Not Found",
-     * ),
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
-     * @OA\Response(
-     *    response=200,
-     *    description="sucess",
-     *    @OA\JsonContent(
-     *       type="object",
-     *       @OA\Property(property="Meta", type="object",
-     *          @OA\Property(property="Status", type="integer", example=200),
-     *           @OA\Property(property="msg", type="string", example="OK"),
-     *        ),
-     *       @OA\Property(property="response", type="object",
-     *             @OA\Property(property="total_no_posts", type="integer", example=2),           
-     *             @OA\Property(property="posts", type="array",
-     *                @OA\Items(
-     *                      @OA\Property(
-     *                         property="post_state",
-     *                         type="string",
-     *                         example="published"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="post_id",
-     *                         type="integer",
-     *                         example=13212313
-     *                      ),
-     *                      @OA\Property(
-     *                         property="blog_id",
-     *                         type="integer",
-     *                         example=123153
-     *                      ),
-     *                      @OA\Property(
-     *                         property="blog_name",
-     *                         type="string",
-     *                         example="summer"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="post_type",
-     *                         type="string",
-     *                         example="text"
-     *                      ),
-     *            @OA\Property(
-     *                property="content",
-     *                type="array",
-     *                example={{
-     *                  "type": "text",
-     *                  "title":"hello",
-     *                  "text": "i am very tired of this",
-     *                }, {
-     *                  "type": "image",
-     *                  "image_url": "http://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90",
-     *                  "caption": "my image in cmp",
-     *                  "alt_text": "photo about friend taking a photo in university"
-     *                },{
-     *                  "type": "link",
-     *                  "url": "https://www.youtube.com/watch?v=yn6ehJS9vv4",
-     *                  "title": "Secrecy Surrounding Senate Health Bill Raises Alarms in Both Parties",
-     *                  "description":"Senate leaders are writing legislation to repeal and replace the Affordable Care Act without a single hearing on the bill and without an open drafting session.",
-     *                  "site_name":"youtube"
-     *                },{
-     *                  "type": "audio",
-     *                  "url": "https://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90/tumblr_nshp8oVOnV1rg0s9xo1.mp3",
-     *                  "provider": "soundcloud",
-     *                  "title":"believer",
-     *                  "artist(optional)":"imagine dragon",
-     *                  "album(optional)":"evolve",
-     *                  "description":"Senate leaders are writing legislation to repeal and replace the Affordable Care Act without a single hearing on the bill and without an open drafting session.",
-     *                  "site_name":"youtube"
-     *                },{
-     *                  "type": "video",
-     *                  "url": "http://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90",
-     *                  "provider":"youtube"
-     *                }
-     * },
-     *                @OA\Items(
-     *                      @OA\Property(
-     *                         property="firstName",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="lastName",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="companyId",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="accountNumber",
-     *                         type="number",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="netPay",
-     *                         type="money",
-     *                         example=""
-     *                      ),
-     *                ),
-     *             ),
-     *                      @OA\Property(
-     *                         property="reblog_key",
-     *                         type="integer",
-     *                         example=12553
-     *                      ),
-     *                      @OA\Property(
-     *                         property="limit",
-     *                         type="integer",
-     *                         example=5
-     *                      ),
-     *                      @OA\Property(
-     *                         property="parent_blog_id",
-     *                         type="integer",
-     *                         example=12523
-     *                      ),
-     *                      @OA\Property(
-     *                         property="parent_post_id",
-     *                         type="integer",
-     *                         example=1223
-     *                      ),
-     *                      @OA\Property(
-     *                         property="post_timestamp",
-     *                         type="integer",
-     *                         example="15311351351"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="post_date",
-     *                         type="string",
-     *                         example="01:01:11"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="format",
-     *                         type="string",
-     *                         example="Rich text"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="blog_avatar",
-     *                         type="string",
-     *                         example="http://media.tumblr.com/avatar/b06fe71cc4ab"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="number_notes",
-     *                         type="integer",
-     *                         example=25
-     *                      ),
-     *            @OA\Property(
-     *                property="layout",
-     *                type="array",
-     *                example={{
-     *                  "type": "rows",
-     *                  "display": "[{blocks:[0,1]} , {blocks:[2]}]",
-     *                }
-     *              },
-     *                @OA\Items(
-     *                      @OA\Property(
-     *                         property="firstName",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="lastName",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="companyId",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="accountNumber",
-     *                         type="number",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="netPay",
-     *                         type="money",
-     *                         example=""
-     *                      ),
-     *                ),
-     *             ),
-     *            @OA\Property(
-     *                property="tags",
-     *                type="array",
-     *                example={{
-     *                     "summer","winter"
-     *                }
-     *              },
-     *                @OA\Items(
-     *                      @OA\Property(
-     *                         property="firstName",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="lastName",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="companyId",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="accountNumber",
-     *                         type="number",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="netPay",
-     *                         type="money",
-     *                         example=""
-     *                      ),
-     *                ),
-     *             ),
-     *                  ),
-     *               ),
-
-     *           ),
-     *        ),
-     *     )
-     * )
-     */
-
-    public function RetrievePublishedPosts(Request $request, Posts $posts)
-    {
-    }
-
-
-    /**
-     * @OA\GET(
-     * path="/posts/queue",
-     * summary="{blog-identifier}/Retrieve Queued Posts",
-     * description="user can get the posts that had been queued",
-     * operationId="Queued_posts",
-     * tags={"Posts"},
-     *  @OA\Parameter(
-     *         name="Limit",
-     *         in="query",
-     *         required=false,
-     *         description="The number of results to return",
-     *         @OA\Schema(
-     *              type="integer"
-     *         )
-     *      ),
-     *  @OA\Parameter(
-     *         name="filter",
-     *         in="query",
-     *         required=false,
-     *         description="Specifies the post format to return(Html,MarkDown,Rich)",
-     *      ),
-     * @OA\RequestBody(
-     *    required=true,
-     *    description="Pass user credentials",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="Limit", type="integer",example=10),
-     *       @OA\Property(property="filter", type="string", format="string", example="Html"),
-     *    ),
-     * ),
-     * @OA\Response(
-     *    response=404,
-     *    description="Not Found",
-     * ),
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
-     * @OA\Response(
-     *    response=200,
-     *    description="sucess",
-     *    @OA\JsonContent(
-     *       type="object",
-     *       @OA\Property(property="Meta", type="object",
-     *          @OA\Property(property="Status", type="integer", example=200),
-     *           @OA\Property(property="msg", type="string", example="OK"),
-     *        ),
-     *       @OA\Property(property="response", type="object",
-     *             @OA\Property(property="total_no_posts", type="integer", example=2),           
-     *             @OA\Property(property="posts", type="array",
-     *                @OA\Items(
-     *                      @OA\Property(
-     *                         property="post_state",
-     *                         type="string",
-     *                         example="published"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="post_id",
-     *                         type="integer",
-     *                         example=13212313
-     *                      ),
-     *                      @OA\Property(
-     *                         property="blog_id",
-     *                         type="integer",
-     *                         example=123153
-     *                      ),
-     *                      @OA\Property(
-     *                         property="blog_name",
-     *                         type="string",
-     *                         example="summer"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="post_type",
-     *                         type="string",
-     *                         example="text"
-     *                      ),
-     *            @OA\Property(
-     *                property="content",
-     *                type="array",
-     *                example={{
-     *                  "type": "text",
-     *                  "title":"hello",
-     *                  "text": "i am very tired of this",
-     *                }, {
-     *                  "type": "image",
-     *                  "image_url": "http://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90",
-     *                  "caption": "my image in cmp",
-     *                  "alt_text": "photo about friend taking a photo in university"
-     *                },{
-     *                  "type": "link",
-     *                  "url": "https://www.youtube.com/watch?v=yn6ehJS9vv4",
-     *                  "title": "Secrecy Surrounding Senate Health Bill Raises Alarms in Both Parties",
-     *                  "description":"Senate leaders are writing legislation to repeal and replace the Affordable Care Act without a single hearing on the bill and without an open drafting session.",
-     *                  "site_name":"youtube"
-     *                },{
-     *                  "type": "audio",
-     *                  "url": "https://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90/tumblr_nshp8oVOnV1rg0s9xo1.mp3",
-     *                  "provider": "soundcloud",
-     *                  "title":"believer",
-     *                  "artist(optional)":"imagine dragon",
-     *                  "album(optional)":"evolve",
-     *                  "description":"Senate leaders are writing legislation to repeal and replace the Affordable Care Act without a single hearing on the bill and without an open drafting session.",
-     *                  "site_name":"youtube"
-     *                },{
-     *                  "type": "video",
-     *                  "url": "http://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90",
-     *                  "provider":"youtube"
-     *                }
-     * },
-     *                @OA\Items(
-     *                      @OA\Property(
-     *                         property="firstName",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="lastName",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="companyId",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="accountNumber",
-     *                         type="number",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="netPay",
-     *                         type="money",
-     *                         example=""
-     *                      ),
-     *                ),
-     *             ),
-     *                      @OA\Property(
-     *                         property="reblog_key",
-     *                         type="integer",
-     *                         example=12553
-     *                      ),
-     *                      @OA\Property(
-     *                         property="limit",
-     *                         type="integer",
-     *                         example=5
-     *                      ),
-     *                      @OA\Property(
-     *                         property="order_in_queue",
-     *                         type="integer",
-     *                         example=2
-     *                      ),
-     *                      @OA\Property(
-     *                         property="parent_blog_id",
-     *                         type="integer",
-     *                         example=12523
-     *                      ),
-     *                      @OA\Property(
-     *                         property="parent_post_id",
-     *                         type="integer",
-     *                         example=1223
-     *                      ),
-     *                      @OA\Property(
-     *                         property="post_timestamp",
-     *                         type="integer",
-     *                         example="15311351351"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="post_date",
-     *                         type="string",
-     *                         example="01:01:11"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="format",
-     *                         type="string",
-     *                         example="Rich text"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="blog_avatar",
-     *                         type="string",
-     *                         example="http://media.tumblr.com/avatar/b06fe71cc4ab"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="number_notes",
-     *                         type="integer",
-     *                         example=25
-     *                      ),
-     *            @OA\Property(
-     *                property="layout",
-     *                type="array",
-     *                example={{
-     *                  "type": "rows",
-     *                  "display": "[{blocks:[0,1]} , {blocks:[2]}]",
-     *                }
-     *              },
-     *                @OA\Items(
-     *                      @OA\Property(
-     *                         property="firstName",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="lastName",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="companyId",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="accountNumber",
-     *                         type="number",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="netPay",
-     *                         type="money",
-     *                         example=""
-     *                      ),
-     *                ),
-     *             ),
-     *            @OA\Property(
-     *                property="tags",
-     *                type="array",
-     *                example={{
-     *                     "summer","winter"
-     *                }
-     *              },
-     *                @OA\Items(
-     *                      @OA\Property(
-     *                         property="firstName",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="lastName",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="companyId",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="accountNumber",
-     *                         type="number",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="netPay",
-     *                         type="money",
-     *                         example=""
-     *                      ),
-     *                ),
-     *             ),
-     *                  ),
-     *               ),
-
-     *           ),
-     *        ),
-     *     ),
-     * security ={{"bearer":{}}}
-     * )
-     */
-    public function RetrieveQueuedPosts(Request $request, Posts $posts)
-    {
-        //
+        return $this->success_response('', 200);
     }
 
 
 
 
-    /**
-     * @OA\Post(
-     ** path="/posts/queue/reorder",
-     *   tags={"Posts"},
-     *   summary="reorder a post within the queue",
-     *   operationId="reorder queued posts",
-     *  @OA\Parameter(
-     *      name="post_id",
-     *      in="query",
-     *      required=true,
-     *      @OA\Schema(
-     *           type="string/integer"
-     *      )
-     *   ),
-     *   @OA\Parameter(
-     *      name="insert_after",
-     *      description="Which post ID to move it after, or 0 to make it the first post",
-     *      in="query",
-     *      required=false,
-     *      @OA\Schema(
-     *           type="string/integer"
-     *      )
-     *   ),
-     * @OA\Response(
-     *    response=200,
-     *    description="success",
-     *    @OA\JsonContent(
-     *       type="object",
-     *       @OA\Property(property="Meta", type="object",
-     *          @OA\Property(property="Status", type="integer", example=200),
-     *           @OA\Property(property="msg", type="string", example="OK"),
-     *        ),
-     *      ),
-     *   ),
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
-     *   @OA\Response(
-     *      response=400,
-     *      description="Bad Request"
-     *   ),
-     * security ={{"bearer":{}}}
-     *)
-     **/
-    public function ReorderQueuedPosts(Request $request)
-    {
-    }
 
-
-    /**
-     * @OA\Post(
-     ** path="/posts/queue/shuffle",
-     *   tags={"Posts"},
-     *   summary="shuffle posts within the queue",
-     *   operationId="shuffle queued posts",
-     * @OA\Response(
-     *    response=200,
-     *    description="success",
-     *    @OA\JsonContent(
-     *       type="object",
-     *       @OA\Property(property="Meta", type="object",
-     *          @OA\Property(property="Status", type="integer", example=200),
-     *           @OA\Property(property="msg", type="string", example="OK"),
-     *        ),
-     *      ),
-     *   ),
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
-     *   @OA\Response(
-     *      response=400,
-     *      description="Bad Request"
-     *   ),
-     * security ={{"bearer":{}}}
-     *)
-     **/
-    public function ShuffleQueuedPosts(Request $request)
-    {
-    }
-
-    /**
-     * @OA\GET(
-     * path="/posts/draft",
-     * summary="{blog-identifier}/posts/draft",
-     * description="user can get the draft posts",
-     * operationId="Drafted_posts",
-     * tags={"Posts"},
-     *  @OA\Parameter(
-     *         name="before_id",
-     *         in="query",
-     *         required=false,
-     *         description="Return posts that have appeared before this ID",
-     *         @OA\Schema(
-     *              type="integer"
-     *         )
-     *      ),
-     *  @OA\Parameter(
-     *         name="filter",
-     *         in="query",
-     *         required=false,
-     *         description="Specifies the post format to return(Html,MarkDown,Rich)",
-     *         @OA\Schema(
-     *              type="string"
-     *         )
-     *      ),
-     * @OA\RequestBody(
-     *    required=true,
-     *    description="Pass user credentials",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="Limit", type="integer",example=10),
-     *       @OA\Property(property="filter", type="string", format="string", example="Markdown"),
-     *    ),
-     * ),
-     * @OA\Response(
-     *    response=404,
-     *    description="Not Found",
-     * ),
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
-     * @OA\Response(
-     *    response=200,
-     *    description="sucess",
-     *    @OA\JsonContent(
-     *       type="object",
-     *       @OA\Property(property="Meta", type="object",
-     *          @OA\Property(property="Status", type="integer", example=200),
-     *           @OA\Property(property="msg", type="string", example="OK"),
-     *        ),
-     *       @OA\Property(property="response", type="object",
-     *             @OA\Property(property="total_users", type="integer", example=1235),           
-     *             @OA\Property(property="Users", type="array",
-     *                @OA\Items(
-     *                      @OA\Property(
-     *                         property="name",
-     *                         type="string",
-     *                         example="david"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="following",
-     *                         type="Boolean",
-     *                         example=true
-     *                      ),
-     *                      @OA\Property(
-     *                         property="Url",
-     *                         type="string",
-     *                         example="https:www.davidslog.com"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="updated",
-     *                         type="integer",
-     *                         example=1308781073
-     *                      ),
-     *                ),
-     *               @OA\Items(
-     *                      @OA\Property(
-     *                         property="namea",
-     *                         type="string",
-     *                         example="ahmed"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="followinga",
-     *                         type="Boolean",
-     *                         example=true
-     *                      ),
-     *                      @OA\Property(
-     *                         property="Urla",
-     *                         type="string",
-     *                         example="https:www.ahmed_a1.com"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="updateda",
-     *                         type="integer",
-     *                         example=1308781073
-     *                      ),
-     *                  ),
-     *               ),           
-     *           ),
-     *        ),
-     *     ),
-     * security ={{"bearer":{}}}
-     * )
-     */
-
-    public function RetrieveDraftPosts(Request $request)
-    {
-        //
-    }
-
-
-
-    /**
-     * @OA\GET(
-     * path="/posts/submission",
-     * summary="{blog-identifier}/posts/submission",
-     * description="retrieve submission posts",
-     * operationId="Submission_Posts",
-     * tags={"Posts"},
-     *  @OA\Parameter(
-     *         name="offset",
-     *         in="query",
-     *         required=false,
-     *         description="Post number to start at",
-     *         @OA\Schema(
-     *              type="String"
-     *         )
-     *      ),
-     *  @OA\Parameter(
-     *         name="filter",
-     *         in="query",
-     *         required=false,
-     *         description="Specifies the post format to return(Html,MarkDown,Rich)",
-     *         @OA\Schema(
-     *              type="string"
-     *         )
-     *      ),
-     * @OA\RequestBody(
-     *    required=true,
-     *    description="Url Example: api.tumblr.com/v1/blog/{blog-identifier}/posts/submission",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="filter", type="string", format="string", example="Markdown"),
-     *    ),
-     * ),
-     *   @OA\Response(
-     *    response=404,
-     *    description="Not Found",
-     * ),
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
-     * @OA\Response(
-     *    response=200,
-     *    description="sucess",
-     *    @OA\JsonContent(
-     *       type="object",
-     *       @OA\Property(property="Meta", type="object",
-     *          @OA\Property(property="Status", type="integer", example=200),
-     *           @OA\Property(property="msg", type="string", example="OK"),
-     *        ),
-     *       @OA\Property(property="response", type="object",
-     *             @OA\Property(property="total_no_posts", type="integer", example=2),           
-     *             @OA\Property(property="posts", type="array",
-     *                @OA\Items(
-     *                      @OA\Property(
-     *                         property="post_state",
-     *                         type="string",
-     *                         example="published"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="post_id",
-     *                         type="integer",
-     *                         example=13212313
-     *                      ),
-     *                      @OA\Property(
-     *                         property="blog_id",
-     *                         type="integer",
-     *                         example=123153
-     *                      ),
-     *                      @OA\Property(
-     *                         property="blog_name",
-     *                         type="string",
-     *                         example="summer"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="post_type",
-     *                         type="string",
-     *                         example="text"
-     *                      ),
-     *            @OA\Property(
-     *                property="content",
-     *                type="array",
-     *                example={{
-     *                  "type": "text",
-     *                  "title":"hello",
-     *                  "text": "i am very tired of this",
-     *                }, {
-     *                  "type": "image",
-     *                  "image_url": "http://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90",
-     *                  "caption": "my image in cmp",
-     *                  "alt_text": "photo about friend taking a photo in university"
-     *                },{
-     *                  "type": "link",
-     *                  "url": "https://www.youtube.com/watch?v=yn6ehJS9vv4",
-     *                  "title": "Secrecy Surrounding Senate Health Bill Raises Alarms in Both Parties",
-     *                  "description":"Senate leaders are writing legislation to repeal and replace the Affordable Care Act without a single hearing on the bill and without an open drafting session.",
-     *                  "site_name":"youtube"
-     *                },{
-     *                  "type": "audio",
-     *                  "url": "https://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90/tumblr_nshp8oVOnV1rg0s9xo1.mp3",
-     *                  "provider": "soundcloud",
-     *                  "title":"believer",
-     *                  "artist(optional)":"imagine dragon",
-     *                  "album(optional)":"evolve",
-     *                  "description":"Senate leaders are writing legislation to repeal and replace the Affordable Care Act without a single hearing on the bill and without an open drafting session.",
-     *                  "site_name":"youtube"
-     *                },{
-     *                  "type": "video",
-     *                  "url": "http://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90",
-     *                  "provider":"youtube"
-     *                }
-     * },
-     *                @OA\Items(
-     *                      @OA\Property(
-     *                         property="firstName",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="lastName",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="companyId",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="accountNumber",
-     *                         type="number",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="netPay",
-     *                         type="money",
-     *                         example=""
-     *                      ),
-     *                ),
-     *             ),
-     *                      @OA\Property(
-     *                         property="reblog_key",
-     *                         type="integer",
-     *                         example=12553
-     *                      ),
-     *                      @OA\Property(
-     *                         property="limit",
-     *                         type="integer",
-     *                         example=5
-     *                      ),
-     *                      @OA\Property(
-     *                         property="parent_blog_id",
-     *                         type="integer",
-     *                         example=12523
-     *                      ),
-     *                      @OA\Property(
-     *                         property="parent_post_id",
-     *                         type="integer",
-     *                         example=1223
-     *                      ),
-     *                      @OA\Property(
-     *                         property="post_timestamp",
-     *                         type="integer",
-     *                         example="15311351351"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="post_date",
-     *                         type="string",
-     *                         example="01:01:11"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="format",
-     *                         type="string",
-     *                         example="Rich text"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="blog_avatar",
-     *                         type="string",
-     *                         example="http://media.tumblr.com/avatar/b06fe71cc4ab"
-     *                      ),
-     *                      @OA\Property(
-     *                         property="number_notes",
-     *                         type="integer",
-     *                         example=25
-     *                      ),
-     *            @OA\Property(
-     *                property="layout",
-     *                type="array",
-     *                example={{
-     *                  "type": "rows",
-     *                  "display": "[{blocks:[0,1]} , {blocks:[2]}]",
-     *                }
-     *              },
-     *                @OA\Items(
-     *                      @OA\Property(
-     *                         property="firstName",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="lastName",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="companyId",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="accountNumber",
-     *                         type="number",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="netPay",
-     *                         type="money",
-     *                         example=""
-     *                      ),
-     *                ),
-     *             ),
-     *            @OA\Property(
-     *                property="tags",
-     *                type="array",
-     *                example={{
-     *                     "summer","winter"
-     *                }
-     *              },
-     *                @OA\Items(
-     *                      @OA\Property(
-     *                         property="firstName",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="lastName",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="companyId",
-     *                         type="string",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="accountNumber",
-     *                         type="number",
-     *                         example=""
-     *                      ),
-     *                      @OA\Property(
-     *                         property="netPay",
-     *                         type="money",
-     *                         example=""
-     *                      ),
-     *                ),
-     *             ),
-     *                  ),
-     *               ),
-
-     *           ),
-     *        ),
-     *     ),
-     *  security ={{"bearer":{}}}
-     * )
-     */
-    public function RetrieveSubmissionPosts()
-    {
-    }
 
 
     public function Notifications()
@@ -1589,7 +514,14 @@ class PostsController extends Controller
      *)
      **/
 
-
+    public function GetPostById(Posts $posts, int $post_id)
+    {
+        $post = Posts::find($post_id);
+        if (!$post)
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
+        // a3mlo post resource bs handle el hta bta3t el auth
+        return $this->success_response($post, 200);
+    }
 
 
     /**
@@ -1598,23 +530,39 @@ class PostsController extends Controller
      * @param  \App\Models\Posts  $posts
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Posts $posts)
+    public function destroy(Posts $posts, int $post_id)
     {
-        //
+        // get post from id
+        $post = Posts::find($post_id);
+        if (!$post)
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
+
+        // get blog of this post
+        $blog = $post->BLogs;
+
+        // check if this user(blog_name) is authorized to delete this post
+        try {
+            $this->authorize('delete', [$post, $blog]);
+        } catch (\Throwable $th) {
+            return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
+        }
+        // delte post
+        $is_deleted = $post->delete();
+        if (!$is_deleted){
+            $error['post']= 'error while deleting post';
+            return $this->error_response(Errors::ERROR_MSGS_500,$error, 500);
+        }
+
+        return $this->success_response('', 200);
     }
 
     /**
      * @OA\get(
-     * path="/radar",
+     * path="posts/radar/",
      * summary="get email for reset password for  user",
      * description="User can reset password for existing email",
      * operationId="GetResestPassword",
-     * tags={"Auth"},
-     *  @OA\Parameter(
-     *         name="token",
-     *         in="query",
-     *         required=true,
-     *      ),
+     * tags={"Posts"},
      * @OA\Response(
      *    response=200,
      *    description="Successfully",
@@ -1624,11 +572,27 @@ class PostsController extends Controller
      *           @OA\Property(property="Status", type="integer", example=200),
      *           @OA\Property(property="msg", type="string", example="success"),
      *           ),
-     *           @OA\Property(property="response", type="object",
-     *              @OA\Property(property="token", type="string", format="text", example="4Y9ZEJqWEABGHkzEXAqNI1F9UZKtKeZVdIChNXBapp9w7XP6mwQZeBXEebMU"),
-     *             @OA\Property(property="email", type="string",format="text", example="ahmed.mohamed.abdelhamed2@gmail.com"),
-     *           ),
-     * ),
+     *          @OA\Property(property="response", type="object",
+     *              @OA\Property(property="post", type="object",
+     *                     @OA\Property(property="post_id", type="integer", example= 123 ),
+     *                     @OA\Property(property="type", type="string", example="text"),
+     *                     @OA\Property(property="state", type="string", format="text", example="private"),
+     *                     @OA\Property(property="content", type="string", format="text", example="<h1> hello all</h1><br/> <div><p>my name is <span>Ahmed</span></p></div>"),
+     *                     @OA\Property(property="date", type="string", format="text", example="Monday, 20-Dec-21 21:54:11 UTC"),
+     *                     @OA\Property(property="source_content", type="string", format="text", example="www.geeksforgeeks.com"),
+     *                     @OA\Property(property="tags", type="string", format="text", example="['DFS','BFS']"),
+     *                     @OA\Property(property="is_liked", type="boolean", example=true),
+     *              ),
+     *              @OA\Property(property="blog", type="object",
+     *                     @OA\Property(property="blog_id", type="integer", example= 123 ),
+     *                     @OA\Property(property="blog_name", type="string", format="text", example="Ahmed_1"),
+     *                     @OA\Property(property="avatar", type="string", format="text", example="https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"),
+     *                     @OA\Property(property="avatar_shape", type="string", example="circle"),
+     *                     @OA\Property(property="replies", type="string", format="text", example="everyone"),
+     *                     @OA\Property(property="follower", type="boolean", example=true),
+     *              ),
+     *          ),
+     *       ),
      * ),
      *   @OA\Response(
      *      response=404,
@@ -1646,43 +610,92 @@ class PostsController extends Controller
      */
     public function GetRadar(Request $request)
     {
+        //get auth user
         $user = Auth::user();
-        // $unwanted_blogs = BlogUser::where('user_id', $user->id)->pluck('blog_id');
-        // dd($unwanted_blogs);
-        
-        $post = Posts::where('state','=','publish')->inRandomOrder()->limit(1)->first();
-        // $blog = Blog::where('id', $post->blog_id)->first();
-        // $avatar = BlogSettings::find($blog->id)->first()->avatar;
-        // $response['avatar'] = $avatar;
-        // $response['blog_name'] = $blog->blog_name;
-        // $response['post'] = $post;
-        
+        // get random post
+        $post =  $this->PostsService->GetRandomPost();
+        if(!$post)
+            return $this->error_response(Errors::ERROR_MSGS_500,'error get post',500);
+        //retrieve post resource
         return $this->success_response(new PostsResource($post), 200);
     }
 
+    /**
+     * @OA\get(
+     * path="posts/view/{blog_name}",
+     * summary="get posts for blog name",
+     * description="get the posts by blog_name",
+     * operationId="getblogposts",
+     * tags={"Posts"},
+     *   @OA\Parameter(
+     *      name="blog_name",
+     *      in="query",
+     *      required=true,
+     *      @OA\Schema(
+     *           type="string"
+     *      )
+     *   ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Successfully",
+     *  @OA\JsonContent(
+     *           type="object",
+     *           @OA\Property(property="Meta", type="object",
+     *           @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="success"),
+     *           ),
+     *          @OA\Property(property="response", type="object",
+     *          @OA\Property(property="posts", type="array",
+     *            @OA\Items(
+     *              @OA\Property(property="post", type="object",
+     *                     @OA\Property(property="post_id", type="integer", example= 123 ),
+     *                     @OA\Property(property="type", type="string", example="text"),
+     *                     @OA\Property(property="state", type="string", format="text", example="private"),
+     *                     @OA\Property(property="content", type="string", format="text", example="<h1> hello all</h1><br/> <div><p>my name is <span>Ahmed</span></p></div>"),
+     *                     @OA\Property(property="date", type="string", format="text", example="Monday, 20-Dec-21 21:54:11 UTC"),
+     *                     @OA\Property(property="source_content", type="string", format="text", example="www.geeksforgeeks.com"),
+     *                     @OA\Property(property="tags", type="string", format="text", example="['DFS','BFS']"),
+     *                     @OA\Property(property="is_liked", type="boolean", example=true),
+     *              ),
+     *              @OA\Property(property="blog", type="object",
+     *                     @OA\Property(property="blog_id", type="integer", example= 123 ),
+     *                     @OA\Property(property="blog_name", type="string", format="text", example="Ahmed_1"),
+     *                     @OA\Property(property="avatar", type="string", format="text", example="https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"),
+     *                     @OA\Property(property="avatar_shape", type="string", example="circle"),
+     *                     @OA\Property(property="replies", type="string", format="text", example="everyone"),
+     *                     @OA\Property(property="follower", type="boolean", example=true),
+     *              ),
+     *             ),
+     *          ),
+     *          @OA\Property(property="next_url", type="string", example= "http://127.0.0.1:8000/api/user/followings?page=2" ),
+     *          @OA\Property(property="total", type="integer", example= 20 ),
+     *          @OA\Property(property="current_page", type="integer", example= 1 ),
+     *          @OA\Property(property="posts_per_page", type="integer", example=4),
+     *          ),
+     *       ),
+     * ),
+     *   @OA\Response(
+     *      response=404,
+     *       description="Not Found",
+     *   ),
+     *   @OA\Response(
+     *      response=422,
+     *       description="invalid Data",
+     *   ),
+     * )
+     */
     public function GetBlogPosts(Request $request, $blog_name)
     {
-        // $posts =  Posts::join('blogs', 'posts.blog_id', '=', 'blogs.id')
-        //     ->join('blog_settings', 'posts.blog_id', '=', 'blog_settings.id')
-        //     ->select('posts.*','blogs.id', 'blogs.blog_name', 'blog_settings.avatar','blog_settings.avatar_shape','blog_settings.replies')
-        //     ->where('blogs.blog_name', $blog_name)
-        //     ->orderBy('date', 'DESC')
-        //     ->paginate(Config::API_PAGINATION_LIMIT);
-        
-
         //TODO:  retrive only published posts
-        $blog = Blog::where('blog_name',$blog_name)->first();
-        $posts = Posts::where('blog_id',$blog->id)->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
-
+        $blog = Blog::where('blog_name', $blog_name)->first();
+        $posts = Posts::where('blog_id', $blog->id)->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
 
         // check if user auth or not
-        if (auth('api')->check()) 
-        {
-            $user = auth()->user();
-            $is_follow = DB::table('user_follow_blog')->where('user_id',$user->id)->get();
+        if (auth('api')->check()) {
+            $user = auth('api')->user();
+            $is_follow = DB::table('user_follow_blog')->where('user_id', $user->id)->get();
         }
-        
-        //new PostsResource($posts->getCollection()) is called inside PostsCollection
+
         return $this->success_response(new PostsCollection($posts));
     }
 

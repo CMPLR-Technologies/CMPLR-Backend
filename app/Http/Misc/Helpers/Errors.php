@@ -56,5 +56,7 @@ class Errors
     //Creation Errors
     const CREATE_ERROR = "Error While creating";
 
+    const AUTHRIZED = "User is not Authrized to do this Action";
+
 }
 

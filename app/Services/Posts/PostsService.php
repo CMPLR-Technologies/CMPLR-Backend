@@ -39,14 +39,14 @@ class PostsService
     public function createPost(array $data)
     {
         try {
-           $post = Posts::create($data);
-           return $post;
+            $post = Posts::create($data);
+            return $post;
         } catch (\Throwable $th) {
             return null;
         }
     }
 
-      /**
+    /**
      * Insert post data in DataBase
      *
      * @param array $data
@@ -55,9 +55,22 @@ class PostsService
      */
     public function GetPostData(int $post_id)
     {
-        $post = Posts::where('id',$post_id)->first();
+        $post = Posts::where('id', $post_id)->first();
         return $post;
     }
 
-
+    /**
+     * GET Random Post
+     *
+     * @param 
+     * 
+     * @return Posts
+     */
+    public function GetRandomPost()
+    {
+        $post = Posts::where('state', '=', 'publish')->inRandomOrder()->limit(1)->first();
+        if(!$post)
+            return null;
+        return $post;
+    }
 }

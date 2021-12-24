@@ -170,29 +170,12 @@ class UserPostConroller extends Controller
      *      )
      *   ),
      *  @OA\Parameter(
-     *      name="reblog_key",
-     *      in="query",
-     *      required=true,
-     *      @OA\Schema(
-     *           type="string"
-     *      )
-     *   ),
-     *  @OA\Parameter(
      *      name="reply_text",
      *      in="query",
      *      required=true,
      *      @OA\Schema(
      *           type="text"
      *      )
-     *   ),
-     *  @OA\Parameter(
-     *      name="tumblelog",
-     *      in="query",
-     *      required=true,
-     *      @OA\Schema(
-     *           type="string"
-     *      ),
-     *      description="the name of blog containing post to get if he is the original poster",
      *   ),
      *   @OA\Response(
      *      response=401,
@@ -218,7 +201,29 @@ class UserPostConroller extends Controller
      * security ={{"bearer":{}}}
      *)
      **/
-    public function UserReply()
+    public function UserReply(Request $request)
     {
+         //getting data 
+         $postId = $request->post_id;
+         $userId = auth()->user()->id;
+         $replyText = $request->reply_text ;
+
+         if (!$userId)
+         {
+             return $this->error_response(Errors::ERROR_MSGS_401,'Unauthenticated',401);
+ 
+         }
+         if (!$postId)
+         {
+             return $this->error_response(Errors::ERROR_MSGS_404,'Post Id Is required',404);
+         }
+         if (!$this->userPostService->UserReplyPost($userId , $postId ,$replyText))
+         {
+             return $this->error_response(Errors::ERROR_MSGS_404,'Note Not Found',404);
+ 
+         }
+ 
+         return response()->json( ['message'=>'Success'], 200);
+ 
     }
 }
