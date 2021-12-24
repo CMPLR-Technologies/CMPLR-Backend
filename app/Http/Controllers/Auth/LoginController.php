@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Misc\Helpers\Errors;
 use App\Services\Auth\LoginService;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Resources\Auth\RegisterResource;
+use App\Models\Blog;
 
 class LoginController extends Controller
 {
@@ -79,10 +81,12 @@ class LoginController extends Controller
         ];
         if ($this->loginService->CheckUserAuthorized($loginCredenials)){
             //generate the token for the user 
-            $userLoginToken = $this->loginService->CreateUserToken(auth()->user());
-
+            $request['token'] = $this->loginService->CreateUserToken(auth()->user());
+            $request['user'] = auth()->user() ;
+            $request['blog'] = Blog::where('id' ,$request['user']->primary_blog_id)->first();
+            $resource =  new RegisterResource($request);
             //now return this token on success login attempt
-            return response()->json(['user'=>auth()->user(), 'token'=>$userLoginToken] ,200);
+            return $this->success_response($resource);
         }else{
             $error['email'] = ['email or password is not valid'];
             // wrong login user not authorized to our system error code 401

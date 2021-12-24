@@ -10,28 +10,17 @@ class SearchController extends Controller
 {
     public function search(Request $request, $query)
     {
-        $tags = Tag::where('name', 'like', '%' . $query . '%')->limit(5)->orderBy('name', 'asc')->get();
-        $blogs = Blog::with('settings')->where('blog_name', 'like', '%' . $query . '%')->limit(5)->orderBy('blog_name', 'asc')->get();
-
-        // $tagsRes = [[]];
-        // foreach ($tags as $tag) {
-        //     dd($request->user->id);
-        //     dd($tag->users()->where('user_id', $request->user()->id)->get());
-        //     $isFollowing = $tag->where('user_id', $request->user()->id)->get();
-        //     $tagsRes[] = [
-        //         'tag' => $tag->name,
-        //         'featured' => $isFollowing,
-        //     ];
-        // }
+        $tags = Tag::where('name', 'like', '%' . $query . '%')->limit(5)->orderBy('name', 'asc')->get(['name', 'slug']);
+        $blogs = Blog::with('settings:blog_id,avatar,avatar_shape')->where('blog_name', 'like', '%' . $query . '%')->limit(5)->orderBy('blog_name', 'asc')->get(['id', 'blog_name', 'title']);
 
         $response = [
             'meta' => [
                 'status' => 200,
-                'msg' => 'Success',
+                'msg' => 'success',
             ],
             'response' => [
-                'blogs' => $blogs,
                 'tags' => $tags,
+                'blogs' => $blogs,
             ],
         ];
 

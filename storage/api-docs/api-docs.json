@@ -12,7 +12,7 @@
         }
     ],
     "paths": {
-        "/blog/{blog-identifier}/ask": {
+        "/blog/{blogName}/ask": {
             "post": {
                 "tags": [
                     "Blogs"
@@ -22,50 +22,42 @@
                 "operationId": "CreateAsk",
                 "parameters": [
                     {
-                        "name": "anonymously",
-                        "in": "path",
-                        "description": "whether to ask the question anonymously or to use the user info",
-                        "required": false,
+                        "name": "content",
+                        "in": "query",
+                        "description": "the content of the ask",
+                        "required": true,
                         "schema": {
-                            "type": "Boolean"
+                            "type": "html"
                         }
                     },
                     {
-                        "name": "question",
+                        "name": "mobile",
                         "in": "query",
-                        "description": "the content of the question",
+                        "description": "was it send using a mobile",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "is_anonymous",
+                        "in": "query",
+                        "description": "was it asked anonymously or not",
                         "required": true,
                         "schema": {
-                            "type": "String"
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "source_content",
+                        "in": "query",
+                        "description": "reference link",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "description": "Pass user credentials",
-                                "required": [
-                                    "question"
-                                ],
-                                "properties": {
-                                    "anonymously": {
-                                        "type": "Boolean",
-                                        "format": "Boolean",
-                                        "example": "true"
-                                    },
-                                    "question": {
-                                        "type": "String",
-                                        "format": "text",
-                                        "example": "how are you?"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "404": {
                         "description": "Not Found"
@@ -73,126 +65,68 @@
                     "401": {
                         "description": "Unauthenticated"
                     },
-                    "200": {
-                        "description": "success"
+                    "201": {
+                        "description": "created successfully"
                     }
                 }
             }
         },
-        "/user/inbox": {
-            "get": {
+        "/ask/{askId}": {
+            "post": {
                 "tags": [
-                    "Users"
+                    "Posts"
                 ],
-                "summary": "the user's inbox",
-                "description": "Retrieve the all asks and  submissions",
-                "operationId": "GetUserInbox",
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true
-                },
-                "responses": {
-                    "404": {
-                        "description": "Not Found"
+                "summary": "answer an ask",
+                "description": "used to answer an aks send to a blog",
+                "operationId": "AnswerAsk",
+                "parameters": [
+                    {
+                        "name": "content",
+                        "in": "query",
+                        "description": "the content of the answer",
+                        "required": true,
+                        "schema": {
+                            "type": "html"
+                        }
                     },
-                    "401": {
-                        "description": "Unauthenticated"
+                    {
+                        "name": "source_content",
+                        "in": "query",
+                        "description": "reference link",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
                     },
-                    "200": {
-                        "description": "success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "Meta": {
-                                            "properties": {
-                                                "Status": {
-                                                    "type": "integer",
-                                                    "example": 200
-                                                },
-                                                "msg": {
-                                                    "type": "string",
-                                                    "example": "OK"
-                                                }
-                                            },
-                                            "type": "object"
-                                        },
-                                        "response": {
-                                            "properties": {
-                                                "total_asks": {
-                                                    "type": "Number",
-                                                    "example": 263
-                                                },
-                                                "total_submissions": {
-                                                    "type": "Number",
-                                                    "example": 214
-                                                },
-                                                "asks": {
-                                                    "description": "asks in user's inbox",
-                                                    "type": "array",
-                                                    "items": {
-                                                        "properties": {
-                                                            "ask_1": {
-                                                                "description": "the first ask",
-                                                                "type": "object"
-                                                            },
-                                                            "ask_2": {
-                                                                "description": "the second ask",
-                                                                "type": "object"
-                                                            },
-                                                            "ask_3": {
-                                                                "description": "the third ask",
-                                                                "type": "object"
-                                                            }
-                                                        },
-                                                        "type": "object"
-                                                    }
-                                                },
-                                                "submissions": {
-                                                    "description": "submissions in user's inbox",
-                                                    "type": "array",
-                                                    "items": {
-                                                        "properties": {
-                                                            "sub_1": {
-                                                                "description": "the first submission",
-                                                                "type": "object"
-                                                            },
-                                                            "sub_2": {
-                                                                "description": "the second submission",
-                                                                "type": "object"
-                                                            },
-                                                            "sub_3": {
-                                                                "description": "the third submission",
-                                                                "type": "object"
-                                                            }
-                                                        },
-                                                        "type": "object"
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
+                    {
+                        "name": "mobile",
+                        "in": "query",
+                        "description": "was it send using a mobile",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "tags",
+                        "in": "query",
+                        "description": "tags of the answer",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {}
+                        }
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "description": "state of the answer publish,private,draft",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
                         }
                     }
-                }
-            }
-        },
-        "/user/inbox/{blog-identifier}": {
-            "get": {
-                "tags": [
-                    "Users"
                 ],
-                "summary": "blog's inbox",
-                "description": "Retrieve the all asks and  submissions of a certain blog",
-                "operationId": "GetBlogInbox",
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true
-                },
                 "responses": {
                     "404": {
                         "description": "Not Found"
@@ -200,85 +134,33 @@
                     "401": {
                         "description": "Unauthenticated"
                     },
+                    "403": {
+                        "description": "forbidden"
+                    },
                     "200": {
-                        "description": "success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "Meta": {
-                                            "properties": {
-                                                "Status": {
-                                                    "type": "integer",
-                                                    "example": 200
-                                                },
-                                                "msg": {
-                                                    "type": "string",
-                                                    "example": "OK"
-                                                }
-                                            },
-                                            "type": "object"
-                                        },
-                                        "response": {
-                                            "properties": {
-                                                "total_asks": {
-                                                    "type": "Number",
-                                                    "example": 263
-                                                },
-                                                "total_submissions": {
-                                                    "type": "Number",
-                                                    "example": 214
-                                                },
-                                                "asks": {
-                                                    "description": "asks in user's inbox",
-                                                    "type": "array",
-                                                    "items": {
-                                                        "properties": {
-                                                            "ask_1": {
-                                                                "description": "the first ask",
-                                                                "type": "object"
-                                                            },
-                                                            "ask_2": {
-                                                                "description": "the second ask",
-                                                                "type": "object"
-                                                            },
-                                                            "ask_3": {
-                                                                "description": "the third ask",
-                                                                "type": "object"
-                                                            }
-                                                        },
-                                                        "type": "object"
-                                                    }
-                                                },
-                                                "submissions": {
-                                                    "description": "submissions in user's inbox",
-                                                    "type": "array",
-                                                    "items": {
-                                                        "properties": {
-                                                            "sub_1": {
-                                                                "description": "the first submission",
-                                                                "type": "object"
-                                                            },
-                                                            "sub_2": {
-                                                                "description": "the second submission",
-                                                                "type": "object"
-                                                            },
-                                                            "sub_3": {
-                                                                "description": "the third submission",
-                                                                "type": "object"
-                                                            }
-                                                        },
-                                                        "type": "object"
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "answered successfully"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "delete an Ask",
+                "description": "user can choose not to answer an ask",
+                "operationId": "DeleteAsk",
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "forbidden"
+                    },
+                    "202": {
+                        "description": "deleted successfully"
                     }
                 }
             }
@@ -941,71 +823,6 @@
                     }
                 ]
             },
-            "post": {
-                "tags": [
-                    "Blogs"
-                ],
-                "summary": "Block a Blog",
-                "description": "Block a blog by sending its identifier",
-                "operationId": "blockBlog",
-                "parameters": [
-                    {
-                        "name": "blog-identifier",
-                        "in": "path",
-                        "description": "Your blog identifier",
-                        "required": true
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "blocked_blog": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "john-doe"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "meta": {
-                                            "properties": {
-                                                "status": {
-                                                    "type": "integer",
-                                                    "example": 200
-                                                },
-                                                "msg": {
-                                                    "type": "string",
-                                                    "example": "OK"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
-            },
             "delete": {
                 "tags": [
                     "Blogs"
@@ -1072,14 +889,81 @@
                 ]
             }
         },
-        "/messaging": {
+        "/blog/{blogName}/blocks": {
+            "post": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Block a Blog",
+                "description": "Block a blog by sending its blogName",
+                "operationId": "blockBlog",
+                "parameters": [
+                    {
+                        "name": "blockName",
+                        "in": "path",
+                        "description": "the name of the blog to block",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "blocked_blog": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "john-doe"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/blog/messaging": {
             "get": {
                 "tags": [
                     "Chats"
                 ],
                 "summary": "getting all messages",
                 "description": "This method can be used to get all messages of authorized user",
-                "operationId": "messaging",
+                "operationId": "Messaging",
                 "responses": {
                     "401": {
                         "description": "Unauthenticated"
@@ -2534,7 +2418,7 @@
                 ]
             }
         },
-        "/blog/{blog-identifier}/submit": {
+        "/blog/{blogName}/submit": {
             "post": {
                 "tags": [
                     "Blogs"
@@ -2544,61 +2428,261 @@
                 "operationId": "submitPost",
                 "parameters": [
                     {
-                        "name": "blog-identifier",
-                        "in": "path",
-                        "description": "Blog name of the person you want to submit a post to",
+                        "name": "content",
+                        "in": "query",
+                        "description": "sumbit content",
                         "required": true,
                         "schema": {
-                            "type": "Boolean"
+                            "type": "html"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "type of the submit ('text','photo','link','quote','video')",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "submissionTag",
+                        "in": "query",
+                        "description": "add 'submission' tag or not",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "mobile",
+                        "in": "query",
+                        "description": "was it sent through mobile",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
                         }
                     }
                 ],
+                "responses": {
+                    "404": {
+                        "description": "wrong target blog"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/submit/{submitId}": {
+            "post": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "edit and post a submit",
+                "description": "used to  a submit send to a blog",
+                "operationId": "PostSubmit",
+                "parameters": [
+                    {
+                        "name": "content",
+                        "in": "query",
+                        "description": "the content of the edited submit",
+                        "required": true,
+                        "schema": {
+                            "type": "html"
+                        }
+                    },
+                    {
+                        "name": "mobile",
+                        "in": "query",
+                        "description": "was it send using a mobile",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "source_content",
+                        "in": "query",
+                        "description": "reference link",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tags",
+                        "in": "query",
+                        "description": "tags of the submit",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {}
+                        }
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "description": "state of the submit publish,private,draft",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "forbidden"
+                    },
+                    "200": {
+                        "description": "posted successfully"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "detete a submit",
+                "description": "Used to delete a submit from the inbox",
+                "operationId": "DeleteSubmit",
+                "responses": {
+                    "404": {
+                        "description": "wrong targets"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "forbidden"
+                    },
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/user/inbox": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "the user's inbox",
+                "description": "Retrieve the all asks and  submissions",
+                "operationId": "GetUserInbox",
                 "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "description": "Pass user credentials",
-                                "required": [
-                                    "type",
-                                    "content"
-                                ],
-                                "properties": {
-                                    "fromBlogName": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "abdullah-alshawafi"
+                    "description": "Pass user credentials",
+                    "required": true
+                },
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status_code": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "messages": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "message1": {
+                                                                "description": "the first ask",
+                                                                "type": "object"
+                                                            },
+                                                            "message2": {
+                                                                "description": "the second ask",
+                                                                "type": "object"
+                                                            },
+                                                            "message3": {
+                                                                "description": "the third ask",
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "next_url": {
+                                                    "description": "next page in pagination",
+                                                    "type": "url"
+                                                },
+                                                "total": {
+                                                    "description": "total number of messages",
+                                                    "type": "integer"
+                                                },
+                                                "current_page": {
+                                                    "description": "current page number",
+                                                    "type": "integer"
+                                                },
+                                                "messages_per_page": {
+                                                    "description": "number of messages per page",
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
                                     },
-                                    "fromBlogId": {
-                                        "type": "integer",
-                                        "format": "number",
-                                        "example": "230"
-                                    },
-                                    "tags": {
-                                        "type": "Boolean",
-                                        "format": "boolean",
-                                        "example": "true"
-                                    },
-                                    "type": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "Text"
-                                    },
-                                    "title": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "My Post"
-                                    },
-                                    "content": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "how are you?"
-                                    }
-                                },
-                                "type": "object"
+                                    "type": "object"
+                                }
                             }
                         }
                     }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "delelte user's inbox",
+                "description": "delete all messages inside the inbox",
+                "operationId": "DeleteInbox",
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
+        },
+        "/user/inbox/{blog-identifier}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "blog's inbox",
+                "description": "Retrieve the all asks and  submissions of a certain blog",
+                "operationId": "GetBlogInbox",
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true
                 },
                 "responses": {
                     "404": {
@@ -2608,14 +2692,72 @@
                         "description": "Unauthenticated"
                     },
                     "200": {
-                        "description": "Success"
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status_code": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "messages": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "message1": {
+                                                                "description": "the first ask",
+                                                                "type": "object"
+                                                            },
+                                                            "message2": {
+                                                                "description": "the second ask",
+                                                                "type": "object"
+                                                            },
+                                                            "message3": {
+                                                                "description": "the third ask",
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "next_url": {
+                                                    "description": "next page in pagination",
+                                                    "type": "url"
+                                                },
+                                                "total": {
+                                                    "description": "total number of messages",
+                                                    "type": "integer"
+                                                },
+                                                "current_page": {
+                                                    "description": "current page number",
+                                                    "type": "integer"
+                                                },
+                                                "messages_per_page": {
+                                                    "description": "number of messages per page",
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
-                },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
+                }
             }
         },
         "/notifications": {
@@ -2779,104 +2921,35 @@
                 ]
             }
         },
-        "/posts": {
+        "/post/notes}": {
             "get": {
                 "tags": [
                     "Posts"
                 ],
-                "summary": "blog/blog_url/posts/?",
-                "description": "user can get the posts published by certain blog",
-                "operationId": "published_posts",
+                "summary": "getting notes for specific post",
+                "description": "This method can be used to get notes for specific post",
+                "operationId": "getNotes",
                 "parameters": [
-                    {
-                        "name": "blog-identifier",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "name": "type",
-                        "in": "query",
-                        "description": "The type of post to return one of the following: text, quote, link, answer, video, audio, photo, chat",
-                        "required": false
-                    },
                     {
                         "name": "post_id",
                         "in": "query",
-                        "description": "A specific post ID",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "tags",
-                        "in": "query",
-                        "description": "Limits the response to posts with the specified tag(s), see note below",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "description": "The number of posts to return",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "reblog_info",
-                        "in": "query",
-                        "description": "Indicates whether to return reblog information",
-                        "required": false,
-                        "schema": {
-                            "type": "Boolean"
-                        }
-                    },
-                    {
-                        "name": "notes_info",
-                        "in": "query",
-                        "description": "Indicates whether to return notes information",
-                        "required": false,
-                        "schema": {
-                            "type": "Boolean"
-                        }
-                    },
-                    {
-                        "name": "filter",
-                        "in": "query",
-                        "description": "Indicates whether to return notes information default none",
-                        "required": false,
-                        "schema": {
-                            "type": "String"
-                        }
+                        "required": true
                     }
                 ],
                 "requestBody": {
+                    "description": "Pass user credentials",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "blog-identifier",
-                                    "api_key"
+                                    "id"
                                 ],
                                 "properties": {
-                                    "blog-identifier": {
-                                        "type": "string",
+                                    "id": {
+                                        "type": "Number",
                                         "format": "text",
-                                        "example": "summer_blog"
-                                    },
-                                    "type": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "text"
-                                    },
-                                    "tag": {
-                                        "type": "string",
-                                        "example": "summer"
+                                        "example": "1234567890000"
                                     }
                                 },
                                 "type": "object"
@@ -2892,7 +2965,7 @@
                         "description": "Unauthenticated"
                     },
                     "200": {
-                        "description": "sucess",
+                        "description": "success",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2912,200 +2985,31 @@
                                         },
                                         "response": {
                                             "properties": {
-                                                "total_no_posts": {
+                                                "total_users": {
                                                     "type": "integer",
-                                                    "example": 2
+                                                    "example": 1235
                                                 },
-                                                "posts": {
+                                                "Users": {
                                                     "type": "array",
                                                     "items": {
                                                         "properties": {
-                                                            "post_state": {
-                                                                "type": "string",
-                                                                "example": "published"
+                                                            "notes": {
+                                                                "type": "Array"
                                                             },
-                                                            "post_id": {
-                                                                "type": "integer",
-                                                                "example": 13212313
+                                                            "rollup_notes": {
+                                                                "type": "Array"
                                                             },
-                                                            "blog_id": {
-                                                                "type": "integer",
-                                                                "example": 123153
+                                                            "total_notes": {
+                                                                "type": "Number",
+                                                                "example": 125
                                                             },
-                                                            "blog_name": {
-                                                                "type": "string",
-                                                                "example": "summer"
+                                                            "total_likes": {
+                                                                "type": "Number",
+                                                                "example": 12
                                                             },
-                                                            "post_type": {
-                                                                "type": "string",
-                                                                "example": "text"
-                                                            },
-                                                            "content": {
-                                                                "type": "array",
-                                                                "items": {
-                                                                    "properties": {
-                                                                        "firstName": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "lastName": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "companyId": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "accountNumber": {
-                                                                            "type": "number",
-                                                                            "example": ""
-                                                                        },
-                                                                        "netPay": {
-                                                                            "type": "money",
-                                                                            "example": ""
-                                                                        }
-                                                                    },
-                                                                    "type": "object"
-                                                                },
-                                                                "example": [
-                                                                    {
-                                                                        "type": "text",
-                                                                        "title": "hello",
-                                                                        "text": "i am very tired of this"
-                                                                    },
-                                                                    {
-                                                                        "type": "image",
-                                                                        "image_url": "http://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90",
-                                                                        "caption": "my image in cmp",
-                                                                        "alt_text": "photo about friend taking a photo in university"
-                                                                    },
-                                                                    {
-                                                                        "type": "link",
-                                                                        "url": "https://www.youtube.com/watch?v=yn6ehJS9vv4",
-                                                                        "title": "Secrecy Surrounding Senate Health Bill Raises Alarms in Both Parties",
-                                                                        "description": "Senate leaders are writing legislation to repeal and replace the Affordable Care Act without a single hearing on the bill and without an open drafting session.",
-                                                                        "site_name": "youtube"
-                                                                    },
-                                                                    {
-                                                                        "type": "audio",
-                                                                        "url": "https://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90/tumblr_nshp8oVOnV1rg0s9xo1.mp3",
-                                                                        "provider": "soundcloud",
-                                                                        "title": "believer",
-                                                                        "artist(optional)": "imagine dragon",
-                                                                        "album(optional)": "evolve",
-                                                                        "description": "Senate leaders are writing legislation to repeal and replace the Affordable Care Act without a single hearing on the bill and without an open drafting session.",
-                                                                        "site_name": "youtube"
-                                                                    },
-                                                                    {
-                                                                        "type": "video",
-                                                                        "url": "http://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90",
-                                                                        "provider": "youtube"
-                                                                    }
-                                                                ]
-                                                            },
-                                                            "reblog_key": {
-                                                                "type": "integer",
-                                                                "example": 12553
-                                                            },
-                                                            "limit": {
-                                                                "type": "integer",
-                                                                "example": 5
-                                                            },
-                                                            "parent_blog_id": {
-                                                                "type": "integer",
-                                                                "example": 12523
-                                                            },
-                                                            "parent_post_id": {
-                                                                "type": "integer",
-                                                                "example": 1223
-                                                            },
-                                                            "post_timestamp": {
-                                                                "type": "integer",
-                                                                "example": "15311351351"
-                                                            },
-                                                            "post_date": {
-                                                                "type": "string",
-                                                                "example": "01:01:11"
-                                                            },
-                                                            "format": {
-                                                                "type": "string",
-                                                                "example": "Rich text"
-                                                            },
-                                                            "blog_avatar": {
-                                                                "type": "string",
-                                                                "example": "http://media.tumblr.com/avatar/b06fe71cc4ab"
-                                                            },
-                                                            "number_notes": {
-                                                                "type": "integer",
-                                                                "example": 25
-                                                            },
-                                                            "layout": {
-                                                                "type": "array",
-                                                                "items": {
-                                                                    "properties": {
-                                                                        "firstName": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "lastName": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "companyId": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "accountNumber": {
-                                                                            "type": "number",
-                                                                            "example": ""
-                                                                        },
-                                                                        "netPay": {
-                                                                            "type": "money",
-                                                                            "example": ""
-                                                                        }
-                                                                    },
-                                                                    "type": "object"
-                                                                },
-                                                                "example": [
-                                                                    {
-                                                                        "type": "rows",
-                                                                        "display": "[{blocks:[0,1]} , {blocks:[2]}]"
-                                                                    }
-                                                                ]
-                                                            },
-                                                            "tags": {
-                                                                "type": "array",
-                                                                "items": {
-                                                                    "properties": {
-                                                                        "firstName": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "lastName": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "companyId": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "accountNumber": {
-                                                                            "type": "number",
-                                                                            "example": ""
-                                                                        },
-                                                                        "netPay": {
-                                                                            "type": "money",
-                                                                            "example": ""
-                                                                        }
-                                                                    },
-                                                                    "type": "object"
-                                                                },
-                                                                "example": [
-                                                                    [
-                                                                        "summer",
-                                                                        "winter"
-                                                                    ]
-                                                                ]
+                                                            "_links": {
+                                                                "type": "Object",
+                                                                "example": "http/...."
                                                             }
                                                         },
                                                         "type": "object"
@@ -3121,7 +3025,9 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/posts": {
             "post": {
                 "tags": [
                     "Posts"
@@ -3132,33 +3038,25 @@
                     {
                         "name": "content",
                         "in": "query",
+                        "description": "written in HTML",
                         "required": true,
                         "schema": {
-                            "type": "Array"
+                            "type": "string"
                         }
                     },
                     {
-                        "name": "layout",
+                        "name": "blog_name",
                         "in": "query",
-                        "description": "there are different types of layout for posts",
-                        "required": false,
+                        "required": true,
                         "schema": {
-                            "type": "Array"
+                            "type": "string"
                         }
                     },
                     {
                         "name": "state",
                         "in": "query",
-                        "description": "the state of the post. Specify one of the following: published, draft, queue, private",
-                        "required": false,
-                        "schema": {
-                            "type": "String"
-                        }
-                    },
-                    {
-                        "name": "publish_on",
-                        "in": "query",
-                        "required": false,
+                        "description": "the state of the post. Specify one of the following: publish, draft, private",
+                        "required": true,
                         "schema": {
                             "type": "String"
                         }
@@ -3166,82 +3064,175 @@
                     {
                         "name": "tags",
                         "in": "query",
-                        "description": "Comma-separated tags for this post",
-                        "required": false,
+                        "description": "array of tags ['tag1','tag2']",
+                        "required": false
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "type of post (text,photos,videos,audios,quotes",
+                        "required": true,
                         "schema": {
                             "type": "String"
                         }
                     },
                     {
-                        "name": "date",
+                        "name": "source_content",
                         "in": "query",
-                        "description": "The GMT date and time of the post, as a string",
+                        "description": "A source for the post content",
                         "required": false,
                         "schema": {
                             "type": "String"
                         }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "content,blog_name,state,type"
+                                ],
+                                "properties": {
+                                    "content": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "<h1> hello all</h1><br/> <div><p>my name is <span>Ahmed</span></p></div>"
+                                    },
+                                    "blog_name": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "Ahmed_1"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "text"
+                                    },
+                                    "state": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "private"
+                                    },
+                                    "source_content": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "www.geeksforgeeks.com"
+                                    },
+                                    "tags": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "['DFS','BFS']"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
                     },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "201": {
+                        "description": "Successfully Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 201
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "Created"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "post": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 123
+                                                        },
+                                                        "content": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "<h1> hello all</h1><br/> <div><p>my name is <span>Ahmed</span></p></div>"
+                                                        },
+                                                        "type": {
+                                                            "type": "string",
+                                                            "example": "text"
+                                                        },
+                                                        "state": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "private"
+                                                        },
+                                                        "source_content": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "www.geeksforgeeks.com"
+                                                        },
+                                                        "tags": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "['DFS','BFS']"
+                                                        },
+                                                        "blog_name": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "Ahmed_1"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/posts/edit/{blog_name}/{post_id}": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Edit existing Post",
+                "operationId": "edit",
+                "parameters": [
                     {
-                        "name": "source_url",
+                        "name": "post_id",
                         "in": "query",
-                        "description": "A source attribution for the post content",
-                        "required": false,
+                        "description": "the ID of the post to edit",
+                        "required": true,
                         "schema": {
-                            "type": "String"
+                            "type": "Number"
                         }
                     },
                     {
-                        "name": "slug",
+                        "name": "blog_name",
                         "in": "query",
-                        "description": "Add a short text summary to the end of the post URL",
-                        "required": false,
+                        "description": "the blog_name of the post to edit",
+                        "required": true,
                         "schema": {
-                            "type": "String"
-                        }
-                    },
-                    {
-                        "name": "is_private",
-                        "in": "query",
-                        "description": "Whether this should be a private answer, if this is an answer.",
-                        "required": false,
-                        "schema": {
-                            "type": "Boolean"
-                        }
-                    },
-                    {
-                        "name": "parent_tumnlrlog_uuid ",
-                        "in": "query",
-                        "description": "the unique public identifier of the tumblelog that’s being reblogged from",
-                        "required": false,
-                        "schema": {
-                            "type": "String"
-                        }
-                    },
-                    {
-                        "name": "parent_post_id",
-                        "in": "query",
-                        "description": " the unique public post Id bing reblogged",
-                        "required": false,
-                        "schema": {
-                            "type": "Integer"
-                        }
-                    },
-                    {
-                        "name": "hide_trail",
-                        "in": "query",
-                        "description": "whether or not to hide the reblog trail with this new post",
-                        "required": false,
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "name": "exclide_tral_items",
-                        "in": "query",
-                        "description": "reblog trail items",
-                        "required": false,
-                        "schema": {
-                            "type": "Array"
+                            "type": "string"
                         }
                     }
                 ],
@@ -3273,83 +3264,48 @@
                                         },
                                         "response": {
                                             "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1234567891234567
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/posts/edit": {
-            "put": {
-                "tags": [
-                    "Posts"
-                ],
-                "summary": "Edit existing Post",
-                "operationId": "edit",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "query",
-                        "description": "the ID of the post to edit",
-                        "required": true,
-                        "schema": {
-                            "type": "Number"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "id"
-                                ],
-                                "properties": {
-                                    "id": {
-                                        "type": "number",
-                                        "format": "text",
-                                        "example": "12546899"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "200": {
-                        "description": "Successfully edited",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "Meta": {
-                                            "properties": {
-                                                "Status": {
-                                                    "type": "integer",
-                                                    "example": 200
+                                                "post": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 123
+                                                        },
+                                                        "content": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "<h1> hello all</h1><br/> <div><p>my name is <span>Ahmed</span></p></div>"
+                                                        },
+                                                        "type": {
+                                                            "type": "string",
+                                                            "example": "text"
+                                                        },
+                                                        "state": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "private"
+                                                        },
+                                                        "source_content": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "www.geeksforgeeks.com"
+                                                        },
+                                                        "tags": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "['DFS','BFS']"
+                                                        }
+                                                    },
+                                                    "type": "object"
                                                 },
-                                                "msg": {
+                                                "blog_name": {
                                                     "type": "string",
-                                                    "example": "OK"
+                                                    "format": "text",
+                                                    "example": "Ahmed_1"
+                                                },
+                                                "avatar": {
+                                                    "type": "string",
+                                                    "format": "text",
+                                                    "example": "https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"
                                                 }
                                             },
                                             "type": "object"
@@ -3372,9 +3328,51 @@
                 "operationId": "edit",
                 "parameters": [
                     {
-                        "name": "post_fromat",
+                        "name": "content",
+                        "in": "query",
+                        "description": "written in HTML",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "blog_name",
                         "in": "query",
                         "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "description": "the state of the post. Specify one of the following: publish, draft, private",
+                        "required": true,
+                        "schema": {
+                            "type": "String"
+                        }
+                    },
+                    {
+                        "name": "tags",
+                        "in": "query",
+                        "description": "array of tags ['tag1','tag2']",
+                        "required": false
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "type of post (text,photos,videos,audios,quotes",
+                        "required": true,
+                        "schema": {
+                            "type": "String"
+                        }
+                    },
+                    {
+                        "name": "source_content",
+                        "in": "query",
+                        "description": "A source for the post content",
+                        "required": false,
                         "schema": {
                             "type": "String"
                         }
@@ -3453,8 +3451,15 @@
                             }
                         }
                     }
-                }
-            },
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/update/{blog_name}/{post-id}": {
             "put": {
                 "tags": [
                     "Posts"
@@ -3515,827 +3520,6 @@
                 }
             }
         },
-        "/posts/queue": {
-            "get": {
-                "tags": [
-                    "Posts"
-                ],
-                "summary": "{blog-identifier}/Retrieve Queued Posts",
-                "description": "user can get the posts that had been queued",
-                "operationId": "Queued_posts",
-                "parameters": [
-                    {
-                        "name": "Limit",
-                        "in": "query",
-                        "description": "The number of results to return",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "filter",
-                        "in": "query",
-                        "description": "Specifies the post format to return(Html,MarkDown,Rich)",
-                        "required": false
-                    }
-                ],
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "Limit": {
-                                        "type": "integer",
-                                        "example": 10
-                                    },
-                                    "filter": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "Html"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "404": {
-                        "description": "Not Found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "200": {
-                        "description": "sucess",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "Meta": {
-                                            "properties": {
-                                                "Status": {
-                                                    "type": "integer",
-                                                    "example": 200
-                                                },
-                                                "msg": {
-                                                    "type": "string",
-                                                    "example": "OK"
-                                                }
-                                            },
-                                            "type": "object"
-                                        },
-                                        "response": {
-                                            "properties": {
-                                                "total_no_posts": {
-                                                    "type": "integer",
-                                                    "example": 2
-                                                },
-                                                "posts": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "properties": {
-                                                            "post_state": {
-                                                                "type": "string",
-                                                                "example": "published"
-                                                            },
-                                                            "post_id": {
-                                                                "type": "integer",
-                                                                "example": 13212313
-                                                            },
-                                                            "blog_id": {
-                                                                "type": "integer",
-                                                                "example": 123153
-                                                            },
-                                                            "blog_name": {
-                                                                "type": "string",
-                                                                "example": "summer"
-                                                            },
-                                                            "post_type": {
-                                                                "type": "string",
-                                                                "example": "text"
-                                                            },
-                                                            "content": {
-                                                                "type": "array",
-                                                                "items": {
-                                                                    "properties": {
-                                                                        "firstName": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "lastName": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "companyId": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "accountNumber": {
-                                                                            "type": "number",
-                                                                            "example": ""
-                                                                        },
-                                                                        "netPay": {
-                                                                            "type": "money",
-                                                                            "example": ""
-                                                                        }
-                                                                    },
-                                                                    "type": "object"
-                                                                },
-                                                                "example": [
-                                                                    {
-                                                                        "type": "text",
-                                                                        "title": "hello",
-                                                                        "text": "i am very tired of this"
-                                                                    },
-                                                                    {
-                                                                        "type": "image",
-                                                                        "image_url": "http://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90",
-                                                                        "caption": "my image in cmp",
-                                                                        "alt_text": "photo about friend taking a photo in university"
-                                                                    },
-                                                                    {
-                                                                        "type": "link",
-                                                                        "url": "https://www.youtube.com/watch?v=yn6ehJS9vv4",
-                                                                        "title": "Secrecy Surrounding Senate Health Bill Raises Alarms in Both Parties",
-                                                                        "description": "Senate leaders are writing legislation to repeal and replace the Affordable Care Act without a single hearing on the bill and without an open drafting session.",
-                                                                        "site_name": "youtube"
-                                                                    },
-                                                                    {
-                                                                        "type": "audio",
-                                                                        "url": "https://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90/tumblr_nshp8oVOnV1rg0s9xo1.mp3",
-                                                                        "provider": "soundcloud",
-                                                                        "title": "believer",
-                                                                        "artist(optional)": "imagine dragon",
-                                                                        "album(optional)": "evolve",
-                                                                        "description": "Senate leaders are writing legislation to repeal and replace the Affordable Care Act without a single hearing on the bill and without an open drafting session.",
-                                                                        "site_name": "youtube"
-                                                                    },
-                                                                    {
-                                                                        "type": "video",
-                                                                        "url": "http://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90",
-                                                                        "provider": "youtube"
-                                                                    }
-                                                                ]
-                                                            },
-                                                            "reblog_key": {
-                                                                "type": "integer",
-                                                                "example": 12553
-                                                            },
-                                                            "limit": {
-                                                                "type": "integer",
-                                                                "example": 5
-                                                            },
-                                                            "order_in_queue": {
-                                                                "type": "integer",
-                                                                "example": 2
-                                                            },
-                                                            "parent_blog_id": {
-                                                                "type": "integer",
-                                                                "example": 12523
-                                                            },
-                                                            "parent_post_id": {
-                                                                "type": "integer",
-                                                                "example": 1223
-                                                            },
-                                                            "post_timestamp": {
-                                                                "type": "integer",
-                                                                "example": "15311351351"
-                                                            },
-                                                            "post_date": {
-                                                                "type": "string",
-                                                                "example": "01:01:11"
-                                                            },
-                                                            "format": {
-                                                                "type": "string",
-                                                                "example": "Rich text"
-                                                            },
-                                                            "blog_avatar": {
-                                                                "type": "string",
-                                                                "example": "http://media.tumblr.com/avatar/b06fe71cc4ab"
-                                                            },
-                                                            "number_notes": {
-                                                                "type": "integer",
-                                                                "example": 25
-                                                            },
-                                                            "layout": {
-                                                                "type": "array",
-                                                                "items": {
-                                                                    "properties": {
-                                                                        "firstName": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "lastName": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "companyId": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "accountNumber": {
-                                                                            "type": "number",
-                                                                            "example": ""
-                                                                        },
-                                                                        "netPay": {
-                                                                            "type": "money",
-                                                                            "example": ""
-                                                                        }
-                                                                    },
-                                                                    "type": "object"
-                                                                },
-                                                                "example": [
-                                                                    {
-                                                                        "type": "rows",
-                                                                        "display": "[{blocks:[0,1]} , {blocks:[2]}]"
-                                                                    }
-                                                                ]
-                                                            },
-                                                            "tags": {
-                                                                "type": "array",
-                                                                "items": {
-                                                                    "properties": {
-                                                                        "firstName": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "lastName": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "companyId": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "accountNumber": {
-                                                                            "type": "number",
-                                                                            "example": ""
-                                                                        },
-                                                                        "netPay": {
-                                                                            "type": "money",
-                                                                            "example": ""
-                                                                        }
-                                                                    },
-                                                                    "type": "object"
-                                                                },
-                                                                "example": [
-                                                                    [
-                                                                        "summer",
-                                                                        "winter"
-                                                                    ]
-                                                                ]
-                                                            }
-                                                        },
-                                                        "type": "object"
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
-            }
-        },
-        "/posts/queue/reorder": {
-            "post": {
-                "tags": [
-                    "Posts"
-                ],
-                "summary": "reorder a post within the queue",
-                "operationId": "reorder queued posts",
-                "parameters": [
-                    {
-                        "name": "post_id",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string/integer"
-                        }
-                    },
-                    {
-                        "name": "insert_after",
-                        "in": "query",
-                        "description": "Which post ID to move it after, or 0 to make it the first post",
-                        "required": false,
-                        "schema": {
-                            "type": "string/integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "Meta": {
-                                            "properties": {
-                                                "Status": {
-                                                    "type": "integer",
-                                                    "example": 200
-                                                },
-                                                "msg": {
-                                                    "type": "string",
-                                                    "example": "OK"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    }
-                },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
-            }
-        },
-        "/posts/queue/shuffle": {
-            "post": {
-                "tags": [
-                    "Posts"
-                ],
-                "summary": "shuffle posts within the queue",
-                "operationId": "shuffle queued posts",
-                "responses": {
-                    "200": {
-                        "description": "success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "Meta": {
-                                            "properties": {
-                                                "Status": {
-                                                    "type": "integer",
-                                                    "example": 200
-                                                },
-                                                "msg": {
-                                                    "type": "string",
-                                                    "example": "OK"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    }
-                },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
-            }
-        },
-        "/posts/draft": {
-            "get": {
-                "tags": [
-                    "Posts"
-                ],
-                "summary": "{blog-identifier}/posts/draft",
-                "description": "user can get the draft posts",
-                "operationId": "Drafted_posts",
-                "parameters": [
-                    {
-                        "name": "before_id",
-                        "in": "query",
-                        "description": "Return posts that have appeared before this ID",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "filter",
-                        "in": "query",
-                        "description": "Specifies the post format to return(Html,MarkDown,Rich)",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "Limit": {
-                                        "type": "integer",
-                                        "example": 10
-                                    },
-                                    "filter": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "Markdown"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "404": {
-                        "description": "Not Found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "200": {
-                        "description": "sucess",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "Meta": {
-                                            "properties": {
-                                                "Status": {
-                                                    "type": "integer",
-                                                    "example": 200
-                                                },
-                                                "msg": {
-                                                    "type": "string",
-                                                    "example": "OK"
-                                                }
-                                            },
-                                            "type": "object"
-                                        },
-                                        "response": {
-                                            "properties": {
-                                                "total_users": {
-                                                    "type": "integer",
-                                                    "example": 1235
-                                                },
-                                                "Users": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "properties": {
-                                                            "name": {
-                                                                "type": "string",
-                                                                "example": "david"
-                                                            },
-                                                            "following": {
-                                                                "type": "Boolean",
-                                                                "example": true
-                                                            },
-                                                            "Url": {
-                                                                "type": "string",
-                                                                "example": "https:www.davidslog.com"
-                                                            },
-                                                            "updated": {
-                                                                "type": "integer",
-                                                                "example": 1308781073
-                                                            }
-                                                        },
-                                                        "type": "object"
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
-            }
-        },
-        "/posts/submission": {
-            "get": {
-                "tags": [
-                    "Posts"
-                ],
-                "summary": "{blog-identifier}/posts/submission",
-                "description": "retrieve submission posts",
-                "operationId": "Submission_Posts",
-                "parameters": [
-                    {
-                        "name": "offset",
-                        "in": "query",
-                        "description": "Post number to start at",
-                        "required": false,
-                        "schema": {
-                            "type": "String"
-                        }
-                    },
-                    {
-                        "name": "filter",
-                        "in": "query",
-                        "description": "Specifies the post format to return(Html,MarkDown,Rich)",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "Url Example: api.tumblr.com/v1/blog/{blog-identifier}/posts/submission",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "filter": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "Markdown"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "404": {
-                        "description": "Not Found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "200": {
-                        "description": "sucess",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "Meta": {
-                                            "properties": {
-                                                "Status": {
-                                                    "type": "integer",
-                                                    "example": 200
-                                                },
-                                                "msg": {
-                                                    "type": "string",
-                                                    "example": "OK"
-                                                }
-                                            },
-                                            "type": "object"
-                                        },
-                                        "response": {
-                                            "properties": {
-                                                "total_no_posts": {
-                                                    "type": "integer",
-                                                    "example": 2
-                                                },
-                                                "posts": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "properties": {
-                                                            "post_state": {
-                                                                "type": "string",
-                                                                "example": "published"
-                                                            },
-                                                            "post_id": {
-                                                                "type": "integer",
-                                                                "example": 13212313
-                                                            },
-                                                            "blog_id": {
-                                                                "type": "integer",
-                                                                "example": 123153
-                                                            },
-                                                            "blog_name": {
-                                                                "type": "string",
-                                                                "example": "summer"
-                                                            },
-                                                            "post_type": {
-                                                                "type": "string",
-                                                                "example": "text"
-                                                            },
-                                                            "content": {
-                                                                "type": "array",
-                                                                "items": {
-                                                                    "properties": {
-                                                                        "firstName": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "lastName": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "companyId": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "accountNumber": {
-                                                                            "type": "number",
-                                                                            "example": ""
-                                                                        },
-                                                                        "netPay": {
-                                                                            "type": "money",
-                                                                            "example": ""
-                                                                        }
-                                                                    },
-                                                                    "type": "object"
-                                                                },
-                                                                "example": [
-                                                                    {
-                                                                        "type": "text",
-                                                                        "title": "hello",
-                                                                        "text": "i am very tired of this"
-                                                                    },
-                                                                    {
-                                                                        "type": "image",
-                                                                        "image_url": "http://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90",
-                                                                        "caption": "my image in cmp",
-                                                                        "alt_text": "photo about friend taking a photo in university"
-                                                                    },
-                                                                    {
-                                                                        "type": "link",
-                                                                        "url": "https://www.youtube.com/watch?v=yn6ehJS9vv4",
-                                                                        "title": "Secrecy Surrounding Senate Health Bill Raises Alarms in Both Parties",
-                                                                        "description": "Senate leaders are writing legislation to repeal and replace the Affordable Care Act without a single hearing on the bill and without an open drafting session.",
-                                                                        "site_name": "youtube"
-                                                                    },
-                                                                    {
-                                                                        "type": "audio",
-                                                                        "url": "https://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90/tumblr_nshp8oVOnV1rg0s9xo1.mp3",
-                                                                        "provider": "soundcloud",
-                                                                        "title": "believer",
-                                                                        "artist(optional)": "imagine dragon",
-                                                                        "album(optional)": "evolve",
-                                                                        "description": "Senate leaders are writing legislation to repeal and replace the Affordable Care Act without a single hearing on the bill and without an open drafting session.",
-                                                                        "site_name": "youtube"
-                                                                    },
-                                                                    {
-                                                                        "type": "video",
-                                                                        "url": "http://media.tumblr.com/b06fe71cc4ab47e93749df060ff54a90",
-                                                                        "provider": "youtube"
-                                                                    }
-                                                                ]
-                                                            },
-                                                            "reblog_key": {
-                                                                "type": "integer",
-                                                                "example": 12553
-                                                            },
-                                                            "limit": {
-                                                                "type": "integer",
-                                                                "example": 5
-                                                            },
-                                                            "parent_blog_id": {
-                                                                "type": "integer",
-                                                                "example": 12523
-                                                            },
-                                                            "parent_post_id": {
-                                                                "type": "integer",
-                                                                "example": 1223
-                                                            },
-                                                            "post_timestamp": {
-                                                                "type": "integer",
-                                                                "example": "15311351351"
-                                                            },
-                                                            "post_date": {
-                                                                "type": "string",
-                                                                "example": "01:01:11"
-                                                            },
-                                                            "format": {
-                                                                "type": "string",
-                                                                "example": "Rich text"
-                                                            },
-                                                            "blog_avatar": {
-                                                                "type": "string",
-                                                                "example": "http://media.tumblr.com/avatar/b06fe71cc4ab"
-                                                            },
-                                                            "number_notes": {
-                                                                "type": "integer",
-                                                                "example": 25
-                                                            },
-                                                            "layout": {
-                                                                "type": "array",
-                                                                "items": {
-                                                                    "properties": {
-                                                                        "firstName": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "lastName": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "companyId": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "accountNumber": {
-                                                                            "type": "number",
-                                                                            "example": ""
-                                                                        },
-                                                                        "netPay": {
-                                                                            "type": "money",
-                                                                            "example": ""
-                                                                        }
-                                                                    },
-                                                                    "type": "object"
-                                                                },
-                                                                "example": [
-                                                                    {
-                                                                        "type": "rows",
-                                                                        "display": "[{blocks:[0,1]} , {blocks:[2]}]"
-                                                                    }
-                                                                ]
-                                                            },
-                                                            "tags": {
-                                                                "type": "array",
-                                                                "items": {
-                                                                    "properties": {
-                                                                        "firstName": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "lastName": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "companyId": {
-                                                                            "type": "string",
-                                                                            "example": ""
-                                                                        },
-                                                                        "accountNumber": {
-                                                                            "type": "number",
-                                                                            "example": ""
-                                                                        },
-                                                                        "netPay": {
-                                                                            "type": "money",
-                                                                            "example": ""
-                                                                        }
-                                                                    },
-                                                                    "type": "object"
-                                                                },
-                                                                "example": [
-                                                                    [
-                                                                        "summer",
-                                                                        "winter"
-                                                                    ]
-                                                                ]
-                                                            }
-                                                        },
-                                                        "type": "object"
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
-            }
-        },
         "/post/delete": {
             "delete": {
                 "tags": [
@@ -4392,6 +3576,284 @@
                         "bearer": []
                     }
                 ]
+            }
+        },
+        "posts/radar/": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "get email for reset password for  user",
+                "description": "User can reset password for existing email",
+                "operationId": "GetResestPassword",
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "success"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "post": {
+                                                    "properties": {
+                                                        "post_id": {
+                                                            "type": "integer",
+                                                            "example": 123
+                                                        },
+                                                        "type": {
+                                                            "type": "string",
+                                                            "example": "text"
+                                                        },
+                                                        "state": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "private"
+                                                        },
+                                                        "content": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "<h1> hello all</h1><br/> <div><p>my name is <span>Ahmed</span></p></div>"
+                                                        },
+                                                        "date": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "Monday, 20-Dec-21 21:54:11 UTC"
+                                                        },
+                                                        "source_content": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "www.geeksforgeeks.com"
+                                                        },
+                                                        "tags": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "['DFS','BFS']"
+                                                        },
+                                                        "is_liked": {
+                                                            "type": "boolean",
+                                                            "example": true
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "blog": {
+                                                    "properties": {
+                                                        "blog_id": {
+                                                            "type": "integer",
+                                                            "example": 123
+                                                        },
+                                                        "blog_name": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "Ahmed_1"
+                                                        },
+                                                        "avatar": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"
+                                                        },
+                                                        "avatar_shape": {
+                                                            "type": "string",
+                                                            "example": "circle"
+                                                        },
+                                                        "replies": {
+                                                            "type": "string",
+                                                            "format": "text",
+                                                            "example": "everyone"
+                                                        },
+                                                        "follower": {
+                                                            "type": "boolean",
+                                                            "example": true
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "422": {
+                        "description": "invalid Data"
+                    }
+                }
+            }
+        },
+        "posts/view/{blog_name}": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "get posts for blog name",
+                "description": "get the posts by blog_name",
+                "operationId": "getblogposts",
+                "parameters": [
+                    {
+                        "name": "blog_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "success"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "posts": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "post": {
+                                                                "properties": {
+                                                                    "post_id": {
+                                                                        "type": "integer",
+                                                                        "example": 123
+                                                                    },
+                                                                    "type": {
+                                                                        "type": "string",
+                                                                        "example": "text"
+                                                                    },
+                                                                    "state": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "private"
+                                                                    },
+                                                                    "content": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "<h1> hello all</h1><br/> <div><p>my name is <span>Ahmed</span></p></div>"
+                                                                    },
+                                                                    "date": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "Monday, 20-Dec-21 21:54:11 UTC"
+                                                                    },
+                                                                    "source_content": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "www.geeksforgeeks.com"
+                                                                    },
+                                                                    "tags": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "['DFS','BFS']"
+                                                                    },
+                                                                    "is_liked": {
+                                                                        "type": "boolean",
+                                                                        "example": true
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            },
+                                                            "blog": {
+                                                                "properties": {
+                                                                    "blog_id": {
+                                                                        "type": "integer",
+                                                                        "example": 123
+                                                                    },
+                                                                    "blog_name": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "Ahmed_1"
+                                                                    },
+                                                                    "avatar": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"
+                                                                    },
+                                                                    "avatar_shape": {
+                                                                        "type": "string",
+                                                                        "example": "circle"
+                                                                    },
+                                                                    "replies": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "everyone"
+                                                                    },
+                                                                    "follower": {
+                                                                        "type": "boolean",
+                                                                        "example": true
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "next_url": {
+                                                    "type": "string",
+                                                    "example": "http://127.0.0.1:8000/api/user/followings?page=2"
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 20
+                                                },
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "posts_per_page": {
+                                                    "type": "integer",
+                                                    "example": 4
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "422": {
+                        "description": "invalid Data"
+                    }
+                }
             }
         },
         "/posts/reblog": {
@@ -4775,7 +4237,7 @@
                         "required": true
                     },
                     {
-                        "name": "url",
+                        "name": "blogName",
                         "in": "query",
                         "required": true
                     },
@@ -4798,7 +4260,7 @@
                             "schema": {
                                 "required": [
                                     "title",
-                                    "url"
+                                    "blogName"
                                 ],
                                 "properties": {
                                     "title": {
@@ -4806,9 +4268,9 @@
                                         "format": "text",
                                         "example": "Summer_Blog"
                                     },
-                                    "url": {
+                                    "blogName": {
                                         "type": "string",
-                                        "format": "url",
+                                        "format": "blogName",
                                         "example": "example.tumblr.com"
                                     },
                                     "privacy": {
@@ -4841,7 +4303,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Blog url is not available!"
+                                            "example": "Blog name is not available!"
                                         }
                                     },
                                     "type": "object"
@@ -4852,13 +4314,13 @@
                 }
             }
         },
-        "/blog/{url}": {
-            "delete": {
+        "/blog/{blogName}": {
+            "post": {
                 "tags": [
                     "Blogs"
                 ],
                 "summary": "Delete Specific Blog",
-                "description": "User Delete Specific Blog ",
+                "description": "User Delete Specific Blog, note this is a post request cause you need to send your password",
                 "operationId": "Delete",
                 "parameters": [
                     {
@@ -4901,7 +4363,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "successful"
+                        "description": "deleted"
                     },
                     "401": {
                         "description": "Unauthenticated"
@@ -4935,22 +4397,13 @@
                     "Users"
                 ],
                 "summary": "Follow a blog",
-                "description": "enable the user to follow a blog using the blog Email or URL",
+                "description": "enable the user to follow a blog using the blogName",
                 "operationId": "UserFollow",
                 "parameters": [
                     {
-                        "name": "url",
+                        "name": "blogName",
                         "in": "query",
-                        "description": "the url of the blog to follow",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "The email of the blog to follow",
+                        "description": "the blogName of the blog to follow",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -4963,20 +4416,11 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "url",
-                                    "email"
-                                ],
                                 "properties": {
-                                    "url": {
+                                    "blogName": {
                                         "type": "string",
-                                        "format": "url",
-                                        "example": "http://wwww.something.com"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "name@something.com"
+                                        "format": "text",
+                                        "example": "myblog"
                                     }
                                 },
                                 "type": "object"
@@ -4993,7 +4437,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Blog url is not available!"
+                                            "example": "Blog name is not available!"
                                         }
                                     },
                                     "type": "object"
@@ -5037,21 +4481,19 @@
                         }
                     }
                 }
-            }
-        },
-        "/user/unfollow": {
-            "post": {
+            },
+            "delete": {
                 "tags": [
                     "Users"
                 ],
                 "summary": "Unfollow a blog",
-                "description": "enable the user to Unfollow a blog using the blog URL",
+                "description": "enable the user to Unfollow a blog using the blog name",
                 "operationId": "UserUnfollow",
                 "parameters": [
                     {
-                        "name": "url",
-                        "in": "query",
-                        "description": "the url of the blog to unfollow",
+                        "name": "blogName",
+                        "in": "path",
+                        "description": "the name of the blog to unfollow",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -5065,13 +4507,13 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "url"
+                                    "blogName"
                                 ],
                                 "properties": {
-                                    "url": {
+                                    "blogName": {
                                         "type": "string",
-                                        "format": "url",
-                                        "example": "http://wwww.something.com"
+                                        "format": "blogName",
+                                        "example": "myblog"
                                     }
                                 },
                                 "type": "object"
@@ -5088,7 +4530,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Blog url is not available!"
+                                            "example": "Blog name is not available!"
                                         }
                                     },
                                     "type": "object"
@@ -5134,7 +4576,7 @@
                 }
             }
         },
-        "/user/info": {
+        "/info": {
             "get": {
                 "tags": [
                     "Users"
@@ -5257,76 +4699,14 @@
         "/user/dashboard": {
             "get": {
                 "tags": [
-                    "Users"
+                    "Posts"
                 ],
                 "summary": " retrieving the user’s dashboard",
                 "description": "This method can be used to  retrieve the user’s dashboard that matches the OAuth credentials submitted with the request",
                 "operationId": "index",
-                "parameters": [
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "description": "The number of results to return: 1–20, inclusive",
-                        "required": false,
-                        "schema": {
-                            "type": "Number"
-                        }
-                    },
-                    {
-                        "name": "offset",
-                        "in": "query",
-                        "description": "Post number to start at",
-                        "required": false,
-                        "schema": {
-                            "type": "Number"
-                        }
-                    },
-                    {
-                        "name": "type",
-                        "in": "query",
-                        "description": "The type of post to return. Specify one of the following: text, photo, quote, link, chat, audio, video, answer",
-                        "required": false,
-                        "schema": {
-                            "type": "String"
-                        }
-                    },
-                    {
-                        "name": "since_id",
-                        "in": "query",
-                        "description": "Return posts that have appeared after this ID; Use this parameter to page through the results: first get a set of posts, and then get posts since the last ID of the previous set.",
-                        "required": false,
-                        "schema": {
-                            "type": "Number"
-                        }
-                    },
-                    {
-                        "name": "reblog_info",
-                        "in": "query",
-                        "description": "Indicates whether to return reblog information (specify true or false). Returns the various reblogged_ fields.",
-                        "required": false,
-                        "schema": {
-                            "type": "Boolean"
-                        }
-                    },
-                    {
-                        "name": "notes_info",
-                        "in": "query",
-                        "description": "Indicates whether to return notes information (specify true or false). Returns note count and note metadata.",
-                        "required": false,
-                        "schema": {
-                            "type": "Boolean"
-                        }
-                    }
-                ],
                 "responses": {
-                    "404": {
-                        "description": "Not Found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
                     "200": {
-                        "description": "success",
+                        "description": "Successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -5339,7 +4719,7 @@
                                                 },
                                                 "msg": {
                                                     "type": "string",
-                                                    "example": "OK"
+                                                    "example": "success"
                                                 }
                                             },
                                             "type": "object"
@@ -5350,21 +4730,99 @@
                                                     "type": "array",
                                                     "items": {
                                                         "properties": {
-                                                            "blog_name": {
-                                                                "type": "string",
-                                                                "example": "laughingsquid"
+                                                            "post": {
+                                                                "properties": {
+                                                                    "post_id": {
+                                                                        "type": "integer",
+                                                                        "example": 123
+                                                                    },
+                                                                    "type": {
+                                                                        "type": "string",
+                                                                        "example": "text"
+                                                                    },
+                                                                    "state": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "private"
+                                                                    },
+                                                                    "content": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "<h1> hello all</h1><br/> <div><p>my name is <span>Ahmed</span></p></div>"
+                                                                    },
+                                                                    "date": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "Monday, 20-Dec-21 21:54:11 UTC"
+                                                                    },
+                                                                    "source_content": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "www.geeksforgeeks.com"
+                                                                    },
+                                                                    "tags": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "['DFS','BFS']"
+                                                                    },
+                                                                    "is_liked": {
+                                                                        "type": "boolean",
+                                                                        "example": true
+                                                                    }
+                                                                },
+                                                                "type": "object"
                                                             },
-                                                            "id": {
-                                                                "type": "Number",
-                                                                "example": 6828225215
-                                                            },
-                                                            "post_url": {
-                                                                "type": "string",
-                                                                "example": "https:\\/\\/links.laughingsquid.com\\/post\\/6828225215"
+                                                            "blog": {
+                                                                "properties": {
+                                                                    "blog_id": {
+                                                                        "type": "integer",
+                                                                        "example": 123
+                                                                    },
+                                                                    "blog_name": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "Ahmed_1"
+                                                                    },
+                                                                    "avatar": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"
+                                                                    },
+                                                                    "avatar_shape": {
+                                                                        "type": "string",
+                                                                        "example": "circle"
+                                                                    },
+                                                                    "replies": {
+                                                                        "type": "string",
+                                                                        "format": "text",
+                                                                        "example": "everyone"
+                                                                    },
+                                                                    "follower": {
+                                                                        "type": "boolean",
+                                                                        "example": true
+                                                                    }
+                                                                },
+                                                                "type": "object"
                                                             }
                                                         },
                                                         "type": "object"
                                                     }
+                                                },
+                                                "next_url": {
+                                                    "type": "string",
+                                                    "example": "http://127.0.0.1:8000/api/user/followings?page=2"
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 20
+                                                },
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "posts_per_page": {
+                                                    "type": "integer",
+                                                    "example": 4
                                                 }
                                             },
                                             "type": "object"
@@ -5374,8 +4832,19 @@
                                 }
                             }
                         }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "422": {
+                        "description": "invalid Data"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         },
         "/user/likes": {
@@ -6513,15 +5982,6 @@
                         "schema": {
                             "type": "Number"
                         }
-                    },
-                    {
-                        "name": "reblog_key",
-                        "in": "query",
-                        "description": "The reblog key for the post id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
                     }
                 ],
                 "requestBody": {
@@ -6531,19 +5991,13 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "id",
-                                    "reblog_key"
+                                    "id"
                                 ],
                                 "properties": {
                                     "id": {
                                         "type": "integer",
                                         "format": "integer",
                                         "example": 1
-                                    },
-                                    "reblog_key": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "hello123"
                                     }
                                 },
                                 "type": "object"
@@ -6570,7 +6024,7 @@
             }
         },
         "/user/unlike": {
-            "post": {
+            "delete": {
                 "tags": [
                     "Users"
                 ],
@@ -6586,15 +6040,6 @@
                         "schema": {
                             "type": "Number"
                         }
-                    },
-                    {
-                        "name": "reblog_key",
-                        "in": "query",
-                        "description": "The reblog key for the post id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
                     }
                 ],
                 "requestBody": {
@@ -6604,19 +6049,13 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "id",
-                                    "reblog_key"
+                                    "id"
                                 ],
                                 "properties": {
                                     "id": {
                                         "type": "integer",
                                         "format": "integer",
                                         "example": 1
-                                    },
-                                    "reblog_key": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "hello123"
                                     }
                                 },
                                 "type": "object"

@@ -179,6 +179,8 @@ class RegisterController extends Controller
       if (!$blog)
          return $this->error_response(Errors::ERROR_MSGS_500,Errors::CREATE_ERROR,500);
 
+      $avatar = $blog->settings->avatar;
+      $avatar_shape =  $blog->settings->avatar_shape;
       // link user with blog
       $link_user_blog = $this->RegisterService->LinkUserBlog($user,$blog);
       
@@ -191,14 +193,14 @@ class RegisterController extends Controller
       if (!$generate_token)
          return $this->error_response(Errors::ERROR_MSGS_500,ERRORS::GENERATE_TOKEN_ERROR,500);
 
-      $request['blog_name'] = $blog->blog_name;
+      $request['blog']=$blog;
       $request['token'] = $user->token();
       
-
       // this method will return true if authentication was successful
       if (Auth::attempt($request->only('email', 'age', 'password'))) 
       {
-         $request['user'] = Auth::user();
+         $user = Auth::user();
+         $request['user'] = $user;
         // Fire Registered event
         event(new Registered($user)); 
         $resource =  new RegisterResource($request);

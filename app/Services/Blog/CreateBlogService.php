@@ -10,8 +10,8 @@ class CreateBlogService{
     //implement the logic of creating a blog
     public function CreateBlog($param,$user)
     {
-        //checking if the url already exists
-        if(Blog::where('url',$param['url'])->first()!=null)
+        //checking if the blogName already exists
+        if(Blog::where('blog_name',$param['blogName'])->first()!=null)
             return 422;
 
         //checking if the blog should be a primary blog 
@@ -22,12 +22,12 @@ class CreateBlogService{
         //creating the blog        
         $blog=Blog::create([
             'title'=>$param['title'],
-            'url'=>$param['url'],
+            'blog_name'=>$param['blogName'],
             'privacy'=>$param['privacy'],
-            'password'=>$param['password'],
-            'blog_name'=>$param['url']
+            'password'=>array_key_exists('password',$param )?$param['password']:null,
+            'url'=>'http://localhost/blogs/'.$param['blogName']
         ]);
-       // dd($user);
+
         //connect the blog with the user through many to many relation
         DB::table('blog_users')->insert([
             'user_id'=>$user->id,
@@ -36,6 +36,11 @@ class CreateBlogService{
             'full_privileges'=>'true',
             'contributor_privileges'=>'false'
         ]);
+
+        DB::table('blog_settings')->insert([
+            'blog_id' => $blog->id,
+        ]);
+
        
         return 201;
     }
