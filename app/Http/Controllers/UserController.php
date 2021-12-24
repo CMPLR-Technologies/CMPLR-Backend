@@ -2,11 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Misc\Helpers\Config;
 use App\Http\Misc\Helpers\Errors;
+use App\Http\Resources\PostsCollection;
+use App\Http\Resources\UserInfoCollection;
+use App\Http\Resources\UserInfoResource;
+use App\Http\Resources\UserResource;
+use App\Models\Blog;
+use App\Models\BlogUser;
+use App\Models\PostNotes;
+use App\Models\Posts;
 use App\Models\User;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -23,7 +33,7 @@ class UserController extends Controller
     }
     /**
      * @OA\Get(
-     * path="/user/info",
+     * path="/info",
      * summary=" retrieving the user’s account information ",
      * description="This method can be used to  retrieve the user’s account information that matches the OAuth credentials submitted with the request",
      * operationId="index",
@@ -110,10 +120,11 @@ class UserController extends Controller
      * )
      */
     
-     /**
-      * Get 
-      */
-    public function GetUserInfo()
+    /**
+    * This function Get User Info
+    *
+    */
+    public function GetUserInfo(Request $request) 
     {
         //Get authenticated user
         $user  = $this->UserService->GetAuthUser();
@@ -124,16 +135,24 @@ class UserController extends Controller
         $user_data = $this->UserService->GetUserData($user);
         if(!$user_data)
             return $this->error_response(Errors::ERROR_MSGS_500, 'Failed to get User data', 500);
-        
+       
+        // get number of followers of user
+        $following_count = $this->UserService->GetUserFollowing($user->id);
+        $user_data['following_counts']=  $following_count;
+        // get number of posts of user
+        $user_posts = $this->UserService->GetUserPosts($user);
+        $user_data['posts_count']=  $user_posts;
         //Get Blog Data 
         $blogs_data = $this->UserService->GetBlogsData($user->id);
         if(!$blogs_data)
             return $this->error_response(Errors::ERROR_MSGS_500, 'Failed to get Blogs data', 500);
-
         // set the response
-        $response = $user_data;
-        $response['blogs'] = $blogs_data;
-        return $this->success_response($response);
+        // $response['user'] = $user_data;
+        $response = $blogs_data;
+        // $response = (object) array_merge(
+        //     (array) $user_data, (array) $blogs_data);
+        //$response = array_merge($user_data->toArray(), array($blogs_data));
+        return $this->success_response(new UserInfoCollection($response));
     }
 
     /**
@@ -142,112 +161,67 @@ class UserController extends Controller
      * summary=" retrieving the user’s dashboard",
      * description="This method can be used to  retrieve the user’s dashboard that matches the OAuth credentials submitted with the request",
      * operationId="index",
-     * tags={"Users"},
-     *   @OA\Parameter(
-     *      name="limit",
-     *      description="The number of results to return: 1–20, inclusive",
-     *      in="query",
-     *      required=false,
-     *      @OA\Schema(
-     *           type="Number"
-     *      )
-     *   ),
-     *    @OA\Parameter(
-     *      name="offset",
-     *      description="Post number to start at",
-     *      in="query",
-     *      required=false,
-     *      @OA\Schema(
-     *           type="Number"
-     *      )
-     *   ),
-     *     @OA\Parameter(
-     *      name="type",
-     *      description="The type of post to return. Specify one of the following: text, photo, quote, link, chat, audio, video, answer",
-     *      in="query",
-     *      required=false,
-     *      @OA\Schema(
-     *           type="String"
-     *      )
-     *   ),
-     *     @OA\Parameter(
-     *      name="since_id",
-     *      description="Return posts that have appeared after this ID; Use this parameter to page through the results: first get a set of posts, and then get posts since the last ID of the previous set.",
-     *      in="query",
-     *      required=false,
-     *      @OA\Schema(
-     *           type="Number"
-     *      )
-     *   ),
-     *      @OA\Parameter(
-     *      name="reblog_info",
-     *      description="Indicates whether to return reblog information (specify true or false). Returns the various reblogged_ fields.",
-     *      in="query",
-     *      required=false,
-     *      @OA\Schema(
-     *           type="Boolean"
-     *      )
-     *   ),
-     *      @OA\Parameter(
-     *      name="notes_info",
-     *      description="Indicates whether to return notes information (specify true or false). Returns note count and note metadata.",
-     *      in="query",
-     *      required=false,
-     *      @OA\Schema(
-     *           type="Boolean"
-     *      )
-     *   ),
+     * tags={"Posts"},
      * 
-     * @OA\Response(
-     *    response=404,
-     *    description="Not Found",
-     * ),
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
      * @OA\Response(
      *    response=200,
-     *    description="success",
-     *         @OA\JsonContent(
-     *          type="object",
-     *               @OA\Property(property="Meta", type="object",
-     *               @OA\Property(property="Status", type="integer", example=200),
-     *                @OA\Property(property="msg", type="string", example="OK"),
-     *               ),
-     *             @OA\Property(property="response", type="object",
-     *          @OA\Property(property="posts", type="array", 
-     *                   @OA\Items(
-     *                         @OA\Property(
-     *                         property="blog_name",
-     *                         type="string",
-     *                         example="laughingsquid"
-     *                      ),    
-     *                        @OA\Property(
-     *                         property="id",
-     *                         type="Number",
-     *                         example=6828225215
-     *                      ), 
-     *                        @OA\Property(
-     *                         property="post_url",
-     *                         type="string",
-     *                         example="https:\/\/links.laughingsquid.com\/post\/6828225215"
-     *                      ),    
-
-     *                
-     *               
-     *                   ),    
+     *    description="Successfully",
+     *  @OA\JsonContent(
+     *           type="object",
+     *           @OA\Property(property="Meta", type="object",
+     *           @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="success"),
      *           ),
-     *        ),
-     *         ),
-
-     *     ),
-     * 
+     *          @OA\Property(property="response", type="object",
+     *          @OA\Property(property="posts", type="array",
+     *            @OA\Items(
+     *              @OA\Property(property="post", type="object",
+     *                     @OA\Property(property="post_id", type="integer", example= 123 ),
+     *                     @OA\Property(property="type", type="string", example="text"),
+     *                     @OA\Property(property="state", type="string", format="text", example="private"),
+     *                     @OA\Property(property="content", type="string", format="text", example="<h1> hello all</h1><br/> <div><p>my name is <span>Ahmed</span></p></div>"),
+     *                     @OA\Property(property="date", type="string", format="text", example="Monday, 20-Dec-21 21:54:11 UTC"),
+     *                     @OA\Property(property="source_content", type="string", format="text", example="www.geeksforgeeks.com"),
+     *                     @OA\Property(property="tags", type="string", format="text", example="['DFS','BFS']"),
+     *                     @OA\Property(property="is_liked", type="boolean", example=true),
+     *              ),
+     *              @OA\Property(property="blog", type="object",
+     *                     @OA\Property(property="blog_id", type="integer", example= 123 ),
+     *                     @OA\Property(property="blog_name", type="string", format="text", example="Ahmed_1"),
+     *                     @OA\Property(property="avatar", type="string", format="text", example="https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"),
+     *                     @OA\Property(property="avatar_shape", type="string", example="circle"),
+     *                     @OA\Property(property="replies", type="string", format="text", example="everyone"),
+     *                     @OA\Property(property="follower", type="boolean", example=true),
+     *              ),
+     *             ),
+     *          ),
+     *          @OA\Property(property="next_url", type="string", example= "http://127.0.0.1:8000/api/user/followings?page=2" ),
+     *          @OA\Property(property="total", type="integer", example= 20 ),
+     *          @OA\Property(property="current_page", type="integer", example= 1 ),
+     *          @OA\Property(property="posts_per_page", type="integer", example=4),
+     *          ),
+     *       ),
+     * ),
+     *   @OA\Response(
+     *      response=404,
+     *       description="Not Found",
+     *   ),
+     *   @OA\Response(
+     *      response=422,
+     *       description="invalid Data",
+     *   ),
+     * security ={{"bearer":{}}}
      * )
      */
-    public function getDashboard()
+    public function GetDashboard(Request $request)
     {
-        //
+        $user = Auth::user();
+        //get all followed blogs
+        $user_blogs = $user->blogs()->pluck('blog_id');
+        $followed_blogs_id = $user->FollowedBlogs->pluck('id');
+        // get posts of blogs that user follow or posts of user himself
+        $Posts = Posts::whereIn('blog_id', $followed_blogs_id)->orWhereIn('blog_id', $user_blogs)->paginate(Config::PAGINATION_LIMIT);
+        return $this->success_response(new PostsCollection($Posts));
     }
 
     /**
@@ -350,9 +324,18 @@ class UserController extends Controller
      * security ={{"bearer":{}}}
      * )
      */
-    public function getLikes()
+    public function GetUserLikes(Request $request)
     {
-        //
+        //get auth user
+        $user = Auth::user();
+        // get id of all posts liked by user
+        $likes = $this->UserService->GetLikes($user->id);
+        //$likes = PostNotes::where('user_id',$user->id)->where('type','=','like')->pluck('post_id');
+
+        //get liked posts
+        $posts = Posts::whereIn('id',$likes)->paginate(config::PAGINATION_LIMIT);
+        
+        return $this->success_response(new PostsCollection($posts));
     }
 
     /**

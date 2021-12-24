@@ -16,4 +16,8 @@ class BlogUser extends Model
         'full_privileges',
         'contributor_privileges'
     ];
+    public function get_blog()
+    {
+        return $this->belongsTo(blog::class);
+    }
 }

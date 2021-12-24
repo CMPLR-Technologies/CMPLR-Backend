@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Blog extends Model
 {
@@ -18,6 +19,10 @@ class Blog extends Model
         'password'
     ];
 
+    protected $hidden = [
+        'password',
+    ];
+    
     public function followers()
     {
         return $this->hasMany(Follow::class);
@@ -37,4 +42,50 @@ class Blog extends Model
     {
         return $this->belongsToMany(User::class, 'blog_users', 'blog_id', 'user_id');
     }
+
+    public function messages()
+    {
+        return $this->hasMany(Chat::class ,'to_blog_id' );
+    }
+    public function Posts()
+    {
+        return $this->hasMany(Posts::class,'blog_id');
+    }
+
+    public function UserFollowers()
+    {
+        return $this->belongsToMany(User::class ,'user_follow_blog', 'user_id', 'blog_id');
+    }
+
+    public function isfollower(User $user)
+    {
+        return !! DB::table('user_follow_blog')->where('user_id',$user->id)->where('blog_id',$this->id)->first();
+    }
+  
+    public function user_blogs()
+    {
+        return $this->hasMany(BlogUser::class);
+    }
+
+    public function count_posts()
+    {
+        return Posts::where('blog_id',$this->id)->count();
+    }
+
+    public function count_followers()
+    {
+        return DB::table('user_follow_blog')->where('blog_id',$this->id)->count();
+    }
+
+    public function BlockedBlogs()
+    {
+        return $this->belongsToMany(Blog::class,'blocks','blog_id','blocked_blog_id');
+    }
+
+    public function Blocks()
+    {
+        return $this->hasMany(Block::class,'blog_id');
+    }
+
+
 }

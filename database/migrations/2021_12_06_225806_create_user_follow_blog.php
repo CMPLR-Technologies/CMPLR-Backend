@@ -10,8 +10,8 @@ class CreateUserFollowBlog extends Migration
     {
         Schema::create('user_follow_blog', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('restrict');
-            $table->foreignId('blog_id')->constrained()->onDelete('restrict');
+            $table->foreignId('blog_id')->references('id')->on('blogs')->onDelete('restrict');
+            $table->foreignId("user_id")->references('id')->on('users')->onDelete('restrict');
             $table->timestamps();
         });
     }
