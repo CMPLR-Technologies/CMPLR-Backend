@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://127.0.0.1:8000",
+            "url": "http://localhost:8000",
             "description": "CMPLR API Server"
         }
     ],
@@ -5862,28 +5862,11 @@
                         }
                     },
                     {
-                        "name": "reblog_key",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
                         "name": "reply_text",
                         "in": "query",
                         "required": true,
                         "schema": {
                             "type": "text"
-                        }
-                    },
-                    {
-                        "name": "tumblelog",
-                        "in": "query",
-                        "description": "the name of blog containing post to get if he is the original poster",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
                         }
                     }
                 ],
