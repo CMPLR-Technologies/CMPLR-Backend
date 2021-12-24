@@ -163,8 +163,19 @@ class BlogSettingsController extends Controller
    *  security ={{"bearer":{}}}
    * )
    */
-  public function getBlogSettings(Request $request, Blog $blog)
+  public function getBlogSettings(Request $request, $blog_name)
   {
+    $blog = Blog::where('blog_name', $blog_name)->first();
+
+    if (!$blog) {
+      return response([
+        'meta' => [
+          'status' => 404,
+          'msg' => 'Blog not found'
+        ]
+      ], 404);
+    }
+
     if (Gate::denies('control-blog-settings', $blog)) {
       return response([
         'meta' => [
@@ -415,258 +426,19 @@ class BlogSettingsController extends Controller
    *   security ={{"bearer":{}}},
    * )
    */
-  public function saveBlogSettings(Request $request, Blog $blog)
+  public function saveBlogSettings(Request $request, $blog_name)
   {
-    if (Gate::denies('control-blog-settings', $blog)) {
+    $blog = Blog::where('blog_name', $blog_name)->first();
+
+    if (!$blog) {
       return response([
         'meta' => [
-          'status' => 403,
-          'msg' => 'Forbidden'
+          'status' => 404,
+          'msg' => 'Blog not found'
         ]
-      ], 403);
+      ], 404);
     }
 
-    $success = BlogSettings::where('blog_id', $blog->id)->update($request->all());
-
-    if (!$success) {
-      return response([
-        'meta' => [
-          'status' => 500,
-          'msg' => 'Error while saving blog settings'
-        ]
-      ], 500);
-    }
-
-    return response([
-      'meta' => [
-        'status' => 200,
-        'msg' => 'Success'
-      ]
-    ]);
-  }
-
-
-  /**
-   *	@OA\Put
-   *	(
-   * 		path="/blog/{blog-identifier}/settings/theme",
-   * 		summary="Edit blog theme",
-   * 		description="Used to change the theme of a certain blog",
-   * 		operationId="editBlogTheme",
-   * 		tags={"Blog Settings"},
-   *
-   *   	@OA\Parameter
-   *		  (
-   *      		name="header_image",
-   *      		in="query",
-   *      		required=false,
-   *      		@OA\Schema
-   *			    (
-   *           		type="text"
-   *      		)
-   *   	),
-   *
-   *   	@OA\Parameter
-   *		  (
-   *      		name="avatar",
-   *      		in="query",
-   *      		required=false,
-   *      		@OA\Schema
-   *			    (
-   *           		type="text"
-   *      		)
-   *   	),
-   *  
-   *   	@OA\Parameter
-   *		  (
-   *      		name="avatar_shape",
-   *      		in="query",
-   *      		required=false,
-   *      		@OA\Schema
-   *			    (
-   *           		type="text"
-   *      		)
-   *   	),
-   *
-   *   	@OA\Parameter
-   *		  (
-   *      		name="background_color",
-   *      		in="query",
-   *      		required=false,
-   *      		@OA\Schema
-   *			    (
-   *           		type="text"
-   *      		)
-   *   	),    
-   *    
-   *   	@OA\Parameter
-   *		  (
-   *      		name="accent_color",
-   *      		in="query",
-   *      		required=false,
-   *      		@OA\Schema
-   *			    (
-   *           		type="text"
-   *      		)
-   *   	),
-   *    
-   *   	@OA\Parameter
-   *		  (
-   *      		name="show_header_image",
-   *      		in="query",
-   *      		required=false,
-   *      		@OA\Schema
-   *			    (
-   *           		type="boolean"
-   *      		)
-   *   	),   
-   * 
-   *   	@OA\Parameter
-   *		  (
-   *      		name="stretch_header_image",
-   *      		in="query",
-   *      		required=false,
-   *      		@OA\Schema
-   *			    (
-   *           		type="boolean"
-   *      		)
-   *   	),  
-   *
-   *   	@OA\Parameter
-   *		  (
-   *      		name="show_avatar",
-   *      		in="query",
-   *      		required=false,
-   *      		@OA\Schema
-   *			    (
-   *           		type="boolean"
-   *      		)
-   *   	),    
-   *
-   *   	@OA\Parameter
-   *		  (
-   *      		name="show_title",
-   *      		in="query",
-   *      		required=false,
-   *      		@OA\Schema
-   *			    (
-   *           		type="boolean"
-   *      		)
-   *   	),     
-   *
-   *   	@OA\Parameter
-   *		  (
-   *      		name="show_description",
-   *      		in="query",
-   *      		required=false,
-   *      		@OA\Schema
-   *			    (
-   *           		type="boolean"
-   *      		)
-   *   	),  
-   *
-   *   	@OA\Parameter
-   *		  (
-   *      		name="user_new_post_type",
-   *      		in="query",
-   *      		required=false,
-   *      		@OA\Schema
-   *			    (
-   *           		type="boolean"
-   *      		)
-   *   	),  
-   *
-   *   	@OA\Parameter
-   *		  (
-   *      		name="url_handling",
-   *      		in="query",
-   *      		required=false,
-   *      		@OA\Schema
-   *			    (
-   *           		type="boolean"
-   *      		)
-   *   	),  
-   *
-   *   	@OA\Parameter
-   *		  (
-   *      		name="layout",
-   *      		in="query",
-   *      		required=false,
-   *      		@OA\Schema
-   *			    (
-   *           		type="text"
-   *      		)
-   *   	),  
-   *
-   *   	@OA\Parameter
-   *		  (
-   *      		name="sliding_header",
-   *      		in="query",
-   *      		required=false,
-   *      		@OA\Schema
-   *			    (
-   *           		type="boolean"
-   *      		)
-   *   	),  
-   *
-   *   	@OA\Parameter
-   *		  (
-   *      		name="show_navigation",
-   *      		in="query",
-   *      		required=false,
-   *      		@OA\Schema
-   *			    (
-   *           		type="boolean"
-   *      		)
-   *   	),  
-   *
-   *    	@OA\RequestBody
-   *		  (
-   *      		required=true,
-   *      		description="Pass user credentials",
-   *      		@OA\JsonContent
-   *			    (
-   *      			@OA\Property(property="header_image", type="string", format="url", example="http://www.google.com/image"),
-   *      			@OA\Property(property="avatar", type="string", format="url", example="http://www.google.com/image"),
-   *      			@OA\Property(property="avatar_shape", type="string", format="text", example="triangle"),
-   *      			@OA\Property(property="background_color", type="string", format="text", example="red"),
-   *      			@OA\Property(property="accent_color", type="string", format="text", example="red"),
-   *      			@OA\Property(property="how_header_image", type="boolean", format="boolean", example="true"),
-   *      			@OA\Property(property="stretch_header_image", type="boolean", format="boolean", example="true"),
-   *      			@OA\Property(property="show_avatar", type="boolean", format="boolean", example="true"),
-   *      			@OA\Property(property="show_title", type="boolean", format="boolean", example="true"),
-   *      			@OA\Property(property="show_description", type="boolean", format="boolean", example="true"),
-   *      			@OA\Property(property="use_new_post_type", type="boolean", format="boolean", example="true"),
-   *      			@OA\Property(property="url_handling", type="boolean", format="boolean", example="true"),
-   *      			@OA\Property(property="layout", type="string", format="text", example="true"),
-   *      			@OA\Property(property="sliding_header", type="boolean", format="boolean", example="true"),
-   *      			@OA\Property(property="show_navigation", type="boolean", format="boolean", example="true"),
-   *         ),
-   *    	),
-   *
-   * 		@OA\Response
-   *		  (
-   *    		response=404,
-   *    		description="Not Found",
-   * 		),
-   *
-   *	   	@OA\Response
-   *		  (
-   *		      response=401,
-   *		      description="Unauthenticated"
-   *	   	),
-   *
-   *		@OA\Response
-   *		(
-   *	    	response=200,
-   *    		description="success",
-   *   ),
-   * security ={{"bearer":{}}},
-   * ),
-   */
-
-  public function editBlogTheme(Request $request, Blog $blog)
-  {
     if (Gate::denies('control-blog-settings', $blog)) {
       return response([
         'meta' => [

@@ -34,6 +34,7 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
 //Chat 
 Route::get('blog/messaging/{blogId}', [BlogChatController::class, 'GetMessages'])->middleware('auth:api');
 Route::get('/messaging/conversation/{blogIdFrom}/{blogIdTo}', [BlogChatController::class, 'Conversation'])->middleware('auth:api');
@@ -50,9 +51,9 @@ Route::get('search/{query}', [SearchController::class, 'search']);
 Route::post('/user/follow', [UserBlogController::class, 'follow'])->middleware('auth:api');
 Route::delete('/user/follow', [UserBlogController::class, 'unfollow'])->middleware('auth:api');
 
-//Like /unlike post
-Route::post('user/like', [UserPostConroller::class ,'Like'])->middleware('auth:api');
-Route::delete('user/unlike', [UserPostConroller::class ,'UnLike'])->middleware('auth:api');
+// Like/Unlike post
+Route::post('user/like', [UserPostConroller::class, 'Like'])->middleware('auth:api');
+Route::delete('user/unlike', [UserPostConroller::class, 'UnLike'])->middleware('auth:api');
 
 // Create/Delete blog
 Route::post('/blog', [UserBlogController::class, 'create'])->middleware('auth:api');
@@ -72,19 +73,18 @@ Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'Ver
 
 // Settings routes
 Route::middleware('auth:api')->group(function () {
-    Route::get('blog/{blog}/settings', [BlogSettingsController::class, 'getBlogSettings'])->name('getBlogSettings');
-    Route::put('blog/{blog}/settings/save', [BlogSettingsController::class, 'saveBlogSettings'])->name('saveBlogSettings');
-    Route::put('blog/{blog}/settings/theme', [BlogSettingsController::class, 'editBlogTheme'])->name('editBlogTheme');
-
+    Route::get('blog/{blog_name}/settings', [BlogSettingsController::class, 'getBlogSettings'])->name('getBlogSettings');
+    Route::put('blog/{blog_name}/settings/save', [BlogSettingsController::class, 'saveBlogSettings'])->name('saveBlogSettings');
 
     Route::get('user/info', [UserController::class, 'GetUserInfo'])->name('GetUser_Info');
-    
+
     Route::get('/user/settings', [UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
     Route::put('user/settings', [UsersettingController::class, 'UpdateSettings'])->name('UpdateAccountSetting');
     Route::put('/settings/change-email', [UsersettingController::class, 'ChangeEmail'])->name('Change Email');
     Route::put('/settings/change-password', [UsersettingController::class, 'ChangePassword'])->name('Change Password');
 });
-//blogs
+
+// Blogs
 Route::middleware(['auth:api'])->group(function () {
     Route::get('/blog/{blog_name}/followers', [BlogController::class, 'GetFollowers'])->name('GetBlogFollowers');
 });
@@ -113,19 +113,19 @@ Route::delete('/user/inbox/', [InboxController::class, 'DeleteInbox'])->middlewa
 //Posts
 Route::middleware('auth:api')->group(function () {
     Route::post('/posts', [PostsController::class, 'create'])->name('CreatePost');
-    Route::get('edit/{blog_name}/{post_id}',[PostsController::class,'edit'])->name('EditPost');
-    Route::put('update/{blog_name}/{post_id}',[PostsController::class,'update'])->name('UpdatePost');
-    Route::get('user/dashboard/',[UserController::class,'GetDashboard'])->name('Get.Dashboard');
-    Route::get('posts/radar/', [ PostsController::class, 'GetRadar' ])->name('post.get.radar');
-    Route::delete('post/delete/{post_id}',[PostsController::class , 'destroy'])->name('post.delete');
-    Route::delete('user/likes',[PostsController::class , 'GetUserLikes'])->name('post.GetUserLikes');
+    Route::get('edit/{blog_name}/{post_id}', [PostsController::class, 'edit'])->name('EditPost');
+    Route::put('update/{blog_name}/{post_id}', [PostsController::class, 'update'])->name('UpdatePost');
+    Route::get('user/dashboard/', [UserController::class, 'GetDashboard'])->name('Get.Dashboard');
+    Route::get('posts/radar/', [PostsController::class, 'GetRadar'])->name('post.get.radar');
+    Route::delete('post/delete/{post_id}', [PostsController::class, 'destroy'])->name('post.delete');
+    Route::delete('user/likes', [PostsController::class, 'GetUserLikes'])->name('post.GetUserLikes');
 });
-Route::get('posts/{post_id}', [ PostsController::class, 'GetPostById' ])->name('post.get.id');
-Route::middleware('guest')->get('posts/view/{blog_name}', [ PostsController::class, 'GetBlogPosts' ])->name('post.get.blogs');
+Route::get('posts/{post_id}', [PostsController::class, 'GetPostById'])->name('post.get.id');
+Route::middleware('guest')->get('posts/view/{blog_name}', [PostsController::class, 'GetBlogPosts'])->name('post.get.blogs');
 
 
-Route::middleware('auth:api')->post('/image_upload', [ UploadMediaController::class, 'UploadImagesaa' ])->name('image.upload.post');
-Route::middleware('auth:api')->post('video_upload', [ UploadMediaController::class, 'UploadVideos' ])->name('Videos.upload.post');
+Route::middleware('auth:api')->post('/image_upload', [UploadMediaController::class, 'UploadImagesaa'])->name('image.upload.post');
+Route::middleware('auth:api')->post('video_upload', [UploadMediaController::class, 'UploadVideos'])->name('Videos.upload.post');
 
 // Submit
 Route::post('/blog/{blogName}/submit', [BlogSubmitController::class, 'CreateSubmit'])->middleware('auth:api');
@@ -136,7 +136,7 @@ Route::delete('/submit/{submitId}', [BlogSubmitController::class, 'DeleteSubmit'
 Route::post('/blog/{blogName}/blocks', [BlogBlockController::class, 'BlockBlog'])->middleware('auth:api');
 Route::delete('/blog/{blogName}/blocks', [BlogBlockController::class, 'UnblockBlog'])->middleware('auth:api');
 Route::get('/blog/{blogName}/blocks', [BlogBlockController::class, 'GetBlogBlocks'])->middleware('auth:api');
-//user 
+
+// User 
 Route::middleware('auth:api')->get('/user/likes', [UserController::class, 'GetUserLikes'])->name('GetUserLikes');
 Route::middleware('auth:api')->get('/user/followings', [UserBlogController::class, 'GetUserFollowing'])->name('Get.User.Following');
-

@@ -7,12 +7,12 @@
     },
     "servers": [
         {
-            "url": "http://127.0.0.1:8000",
+            "url": "http://localhost:8000",
             "description": "CMPLR API Server"
         }
     ],
     "paths": {
-        "/blog/{blogname}/ask": {
+        "/blog/{blogName}/ask": {
             "post": {
                 "tags": [
                     "Blogs"
@@ -27,32 +27,14 @@
                         "description": "the content of the ask",
                         "required": true,
                         "schema": {
-                            "type": "jsonb"
-                        }
-                    },
-                    {
-                        "name": "layout",
-                        "in": "query",
-                        "description": "structured arrangement of items",
-                        "required": true,
-                        "schema": {
-                            "type": "json"
-                        }
-                    },
-                    {
-                        "name": "format",
-                        "in": "query",
-                        "description": "style of the post's format",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                            "type": "html"
                         }
                     },
                     {
                         "name": "mobile",
                         "in": "query",
                         "description": "was it send using a mobile",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "boolean"
                         }
@@ -64,6 +46,15 @@
                         "required": true,
                         "schema": {
                             "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "source_content",
+                        "in": "query",
+                        "description": "reference link",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 ],
@@ -95,23 +86,14 @@
                         "description": "the content of the answer",
                         "required": true,
                         "schema": {
-                            "type": "jsonb"
+                            "type": "html"
                         }
                     },
                     {
-                        "name": "layout",
+                        "name": "source_content",
                         "in": "query",
-                        "description": "structured arrangement of items",
-                        "required": true,
-                        "schema": {
-                            "type": "json"
-                        }
-                    },
-                    {
-                        "name": "format",
-                        "in": "query",
-                        "description": "style of the post's format",
-                        "required": true,
+                        "description": "reference link",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -120,9 +102,28 @@
                         "name": "mobile",
                         "in": "query",
                         "description": "was it send using a mobile",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "tags",
+                        "in": "query",
+                        "description": "tags of the answer",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {}
+                        }
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "description": "state of the answer publish,private,draft",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 ],
@@ -822,71 +823,6 @@
                     }
                 ]
             },
-            "post": {
-                "tags": [
-                    "Blogs"
-                ],
-                "summary": "Block a Blog",
-                "description": "Block a blog by sending its identifier",
-                "operationId": "blockBlog",
-                "parameters": [
-                    {
-                        "name": "blog-identifier",
-                        "in": "path",
-                        "description": "Your blog identifier",
-                        "required": true
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "blocked_blog": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "john-doe"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "meta": {
-                                            "properties": {
-                                                "status": {
-                                                    "type": "integer",
-                                                    "example": 200
-                                                },
-                                                "msg": {
-                                                    "type": "string",
-                                                    "example": "OK"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
-            },
             "delete": {
                 "tags": [
                     "Blogs"
@@ -953,14 +889,81 @@
                 ]
             }
         },
-        "/messaging": {
+        "/blog/{blogName}/blocks": {
+            "post": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Block a Blog",
+                "description": "Block a blog by sending its blogName",
+                "operationId": "blockBlog",
+                "parameters": [
+                    {
+                        "name": "blockName",
+                        "in": "path",
+                        "description": "the name of the blog to block",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "blocked_blog": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "john-doe"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "meta": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/blog/messaging": {
             "get": {
                 "tags": [
                     "Chats"
                 ],
                 "summary": "getting all messages",
                 "description": "This method can be used to get all messages of authorized user",
-                "operationId": "messaging",
+                "operationId": "Messaging",
                 "responses": {
                     "401": {
                         "description": "Unauthenticated"
@@ -2415,7 +2418,7 @@
                 ]
             }
         },
-        "/blog/{blog-identifier}/submit": {
+        "/blog/{blogName}/submit": {
             "post": {
                 "tags": [
                     "Blogs"
@@ -2425,65 +2428,45 @@
                 "operationId": "submitPost",
                 "parameters": [
                     {
-                        "name": "blog-identifier",
-                        "in": "path",
-                        "description": "Blog name of the person you want to submit a post to",
+                        "name": "content",
+                        "in": "query",
+                        "description": "sumbit content",
                         "required": true,
                         "schema": {
-                            "type": "Boolean"
+                            "type": "html"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "type of the submit ('text','photo','link','quote','video')",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "submissionTag",
+                        "in": "query",
+                        "description": "add 'submission' tag or not",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "mobile",
+                        "in": "query",
+                        "description": "was it sent through mobile",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
                         }
                     }
                 ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "description": "Pass user credentials",
-                                "required": [
-                                    "type",
-                                    "content"
-                                ],
-                                "properties": {
-                                    "fromBlogName": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "abdullah-alshawafi"
-                                    },
-                                    "fromBlogId": {
-                                        "type": "integer",
-                                        "format": "number",
-                                        "example": "230"
-                                    },
-                                    "tags": {
-                                        "type": "Boolean",
-                                        "format": "boolean",
-                                        "example": "true"
-                                    },
-                                    "type": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "Text"
-                                    },
-                                    "title": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "My Post"
-                                    },
-                                    "content": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "how are you?"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "404": {
-                        "description": "Not Found"
+                        "description": "wrong target blog"
                     },
                     "401": {
                         "description": "Unauthenticated"
@@ -2491,12 +2474,101 @@
                     "200": {
                         "description": "Success"
                     }
-                },
-                "security": [
+                }
+            }
+        },
+        "/submit/{submitId}": {
+            "post": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "edit and post a submit",
+                "description": "used to  a submit send to a blog",
+                "operationId": "PostSubmit",
+                "parameters": [
                     {
-                        "bearer": []
+                        "name": "content",
+                        "in": "query",
+                        "description": "the content of the edited submit",
+                        "required": true,
+                        "schema": {
+                            "type": "html"
+                        }
+                    },
+                    {
+                        "name": "mobile",
+                        "in": "query",
+                        "description": "was it send using a mobile",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "source_content",
+                        "in": "query",
+                        "description": "reference link",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tags",
+                        "in": "query",
+                        "description": "tags of the submit",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {}
+                        }
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "description": "state of the submit publish,private,draft",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
-                ]
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "forbidden"
+                    },
+                    "200": {
+                        "description": "posted successfully"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "detete a submit",
+                "description": "Used to delete a submit from the inbox",
+                "operationId": "DeleteSubmit",
+                "responses": {
+                    "404": {
+                        "description": "wrong targets"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "forbidden"
+                    },
+                    "200": {
+                        "description": "Success"
+                    }
+                }
             }
         },
         "/user/inbox": {
@@ -3865,140 +3937,6 @@
                         "bearer": []
                     }
                 ]
-            }
-        },
-        "/post/notes": {
-            "get": {
-                "tags": [
-                    "Posts"
-                ],
-                "summary": "getting notes for specific post",
-                "description": "This method can be used to get notes for specific post",
-                "operationId": "getNotes",
-                "parameters": [
-                    {
-                        "name": "blog-identifier",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "name": "before_timestamp",
-                        "in": "query",
-                        "description": "Fetch notes created before this timestamp",
-                        "required": false,
-                        "schema": {
-                            "type": "Number"
-                        }
-                    },
-                    {
-                        "name": "mode",
-                        "in": "query",
-                        "description": "The response formatting mode {all , likes , conversation , rollup ,reblogs_with_tags }",
-                        "required": false,
-                        "schema": {
-                            "type": "String"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "id"
-                                ],
-                                "properties": {
-                                    "id": {
-                                        "type": "Number",
-                                        "format": "text",
-                                        "example": "1234567890000"
-                                    },
-                                    "before_timestamp": {
-                                        "type": "Number",
-                                        "format": "text",
-                                        "example": "1234567890"
-                                    },
-                                    "mode": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "all"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "404": {
-                        "description": "Not Found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "200": {
-                        "description": "success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "Meta": {
-                                            "properties": {
-                                                "Status": {
-                                                    "type": "integer",
-                                                    "example": 200
-                                                },
-                                                "msg": {
-                                                    "type": "string",
-                                                    "example": "OK"
-                                                }
-                                            },
-                                            "type": "object"
-                                        },
-                                        "response": {
-                                            "properties": {
-                                                "total_users": {
-                                                    "type": "integer",
-                                                    "example": 1235
-                                                },
-                                                "Users": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "properties": {
-                                                            "notes": {
-                                                                "type": "Array"
-                                                            },
-                                                            "rollup_notes": {
-                                                                "type": "Array"
-                                                            },
-                                                            "total_notes": {
-                                                                "type": "Number",
-                                                                "example": 125
-                                                            },
-                                                            "total_likes": {
-                                                                "type": "Number",
-                                                                "example": 12
-                                                            },
-                                                            "_links": {
-                                                                "type": "Object",
-                                                                "example": "http/...."
-                                                            }
-                                                        },
-                                                        "type": "object"
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
             }
         },
         "/post/notes": {

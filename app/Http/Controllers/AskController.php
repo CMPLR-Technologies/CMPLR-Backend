@@ -114,17 +114,16 @@ class AskController extends Controller
      * @return response
      */
 
-    public function CreateAsk(CreateAskRequest $request,$blogName)
-    {   
+    public function CreateAsk(CreateAskRequest $request, $blogName)
+    {
         //call the service
-        $code=(new CreateAskService())->CreateAsk($request->all(),$blogName);        
+        $code = (new CreateAskService())->CreateAsk($request->all(), $blogName);
 
         //return the response
-        if($code==201)
-            return $this->success_response(Success::CREATED,201);
-        else if($code==404)
-            return $this->error_response(Errors::ERROR_MSGS_404,'wrong target blog',404);
-
+        if ($code == 201)
+            return $this->success_response(Success::CREATED, 201);
+        else if ($code == 404)
+            return $this->error_response(Errors::ERROR_MSGS_404, 'wrong target blog', 404);
     }
 
 
@@ -182,7 +181,8 @@ class AskController extends Controller
      *      		required=false,
      *      		@OA\Schema
      *			    (
-     *           		type="array"
+     *           		type="array",
+     *                  @OA\Items ()
      *      	 	)
      *   	),
      * 
@@ -231,26 +231,25 @@ class AskController extends Controller
      * 
      * @return response
      */
-    public function AnswerAsk(Request $request,$askId)
+    public function AnswerAsk(Request $request, $askId)
     {
-        $this->validate($request,[
-            'content'=>'required',
-            'mobile'=>'boolean',
-            'source_content'=>'string',
-            'tags'=>'array',
-            'state'=>['required','string',Rule::in('publish','private','draft')],
+        $this->validate($request, [
+            'content' => 'required',
+            'mobile' => 'boolean',
+            'source_content' => 'string',
+            'tags' => 'array',
+            'state' => ['required', 'string', Rule::in('publish', 'private', 'draft')],
         ]);
 
-        $code=(new AnswerAskService())->AnswerAsk($request->all(),$askId,auth()->user());
+        $code = (new AnswerAskService())->AnswerAsk($request->all(), $askId, auth()->user());
 
         //return the response
-        if($code==404)
-            return $this->error_response(Errors::ERROR_MSGS_404,'wrong targets',404);
-        else if($code==403)
-            return $this->error_response(Errors::ERROR_MSGS_403,'user not a member of the blog',403);
+        if ($code == 404)
+            return $this->error_response(Errors::ERROR_MSGS_404, 'wrong targets', 404);
+        else if ($code == 403)
+            return $this->error_response(Errors::ERROR_MSGS_403, 'user not a member of the blog', 403);
         else
-            return $this->success_response('Answered',200);
-
+            return $this->success_response('Answered', 200);
     }
 
 
@@ -290,24 +289,21 @@ class AskController extends Controller
      */
 
     /**
-    * delete an Ask send by a user to a blog
-    * 
-    * @return response
-    */
+     * delete an Ask send by a user to a blog
+     * 
+     * @return response
+     */
     public function DeleteAsk($askId)
     {
         //call the service
-        $code=(new DeleteAskService())->DeleteAsk($askId,auth()->user());
+        $code = (new DeleteAskService())->DeleteAsk($askId, auth()->user());
 
         //return the response
-        if($code==404)
-            return $this->error_response(Errors::ERROR_MSGS_404,'wrong targets',404);
-        else if($code==403)
-            return $this->error_response(Errors::ERROR_MSGS_403,'user is not a member of the blog',403);
+        if ($code == 404)
+            return $this->error_response(Errors::ERROR_MSGS_404, 'wrong targets', 404);
+        else if ($code == 403)
+            return $this->error_response(Errors::ERROR_MSGS_403, 'user is not a member of the blog', 403);
         else
-            return $this->success_response(Success::DELETED,202);
-
+            return $this->success_response(Success::DELETED, 202);
     }
-
-
 }
