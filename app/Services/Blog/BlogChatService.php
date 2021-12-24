@@ -5,7 +5,6 @@ namespace App\Services\Blog;
 use App\Http\Misc\Helpers\Config;
 use App\Models\Blog;
 use App\Models\Chat;
-use GuzzleHttp\Psr7\Message;
 use Illuminate\Support\Facades\DB;
 
 class BlogChatService
@@ -124,7 +123,14 @@ class BlogChatService
      */
     public function GetConversationMessages($blogIdFrom, $blogIdTo)
     {
-        return Chat::where([['from_blog_id', '=', $blogIdFrom], ['to_blog_id', '=', $blogIdTo]])->orwhere([['from_blog_id', '=', $blogIdTo], ['to_blog_id', '=',  $blogIdFrom]])->orderBy('created_at' ,'DESC')->paginate(Config::Message_PAGINATION_LIMIT);
+        try{
+           $conversation = Chat::where([['from_blog_id', '=', $blogIdFrom], ['to_blog_id', '=', $blogIdTo]])->orwhere([['from_blog_id', '=', $blogIdTo], ['to_blog_id', '=',  $blogIdFrom]])->orderBy('created_at' ,'DESC')->paginate(Config::Message_PAGINATION_LIMIT);
+           return $conversation ;
+            
+        } catch (\Throwable $th) {
+            return null;
+        }
+
     }
 
     /**
