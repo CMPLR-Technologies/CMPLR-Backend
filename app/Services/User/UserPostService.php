@@ -38,7 +38,7 @@ class UserPostService
     }
     
     /**
-     * user like post 
+     * user unlike post 
      * 
      * @param User user
      * @param integer postId 
@@ -56,6 +56,30 @@ class UserPostService
             return false;
         }
         return $result ;
+    }
+
+     /**
+     * user reply post 
+     * 
+     * @param User $user
+     * @param integer $postId 
+     * @param $replyText
+     * @return bool 
+     * @author Yousif Ahmed 
+     */
+    public function UserReplyPost($userId,$postId ,$replyText):bool
+    {
+        try {
+            PostNotes::create([
+                'user_id' =>  $userId,
+                'post_id' => $postId,
+                'type' => 'reply',
+                'content'=>$replyText
+            ]);
+        } catch (\Throwable $th) {
+            return false;
+        }
+        return true ;
     }
    
 }

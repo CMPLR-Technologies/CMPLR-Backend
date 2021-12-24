@@ -15,7 +15,7 @@ class BlogChatCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        $blogData =  Blog::where('id',$this->collection[0]->to_blog_id)->first();
+        $blogData = Blog::where('id',$this->collection[0]->to_blog_id)->first();
         return 
         [
             'messages' => $this->collection,

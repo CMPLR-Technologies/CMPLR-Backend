@@ -125,7 +125,7 @@ class BlogChatService
     {
         try{
            $conversation = Chat::where([['from_blog_id', '=', $blogIdFrom], ['to_blog_id', '=', $blogIdTo]])->orwhere([['from_blog_id', '=', $blogIdTo], ['to_blog_id', '=',  $blogIdFrom]])->orderBy('created_at' ,'DESC')->paginate(Config::Message_PAGINATION_LIMIT);
-           return $conversation ;
+           return $conversation;
             
         } catch (\Throwable $th) {
             return null;

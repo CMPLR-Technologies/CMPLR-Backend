@@ -54,7 +54,7 @@ Route::delete('/user/follow', [UserBlogController::class, 'unfollow'])->middlewa
 // Like/Unlike post
 Route::post('user/like', [UserPostConroller::class, 'Like'])->middleware('auth:api');
 Route::delete('user/unlike', [UserPostConroller::class, 'UnLike'])->middleware('auth:api');
-
+Route::post('/user/post/reply' , [UserPostConroller::class , 'UserReply'])->middleware('auth:api');
 // Create/Delete blog
 Route::post('/blog', [UserBlogController::class, 'create'])->middleware('auth:api');
 Route::post('/blog/{blogName}', [UserBlogController::class, 'destroy'])->middleware('auth:api');
