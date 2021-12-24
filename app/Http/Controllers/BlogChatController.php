@@ -111,11 +111,12 @@ class BlogChatController extends Controller
         if (!$messages->isEmpty()) 
         {
             $this->blogChatService->MarkAsRead($messages);
-            $messages = new BlogChatCollection($messages);
-            
+            $response = new BlogChatCollection($messages);
+        }else {
+            $response['messages']= null ;
         }
 
-        return response()->json($messages, 200);
+        return response()->json($response, 200);
     }
     /**
      * @OA\Post(

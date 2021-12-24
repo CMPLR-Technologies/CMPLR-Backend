@@ -2,6 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Misc\Helpers\Errors;
+use App\Http\Resources\NotificationCollection;
+use App\Http\Resources\NotificationResource;
+use App\Models\Notification;
+use App\Services\Notifications\NotificationsService;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
 
 class NotificationsController extends Controller
 {
@@ -212,8 +219,51 @@ class NotificationsController extends Controller
      *  security ={{"bearer":{}}},
      * )
      */
-    public function GetNotifications()
+
+    
+    /**
+     * get notifications of a certain blog
+     * 
+     * @return response
+     */
+
+    public function GetNotifications($blogName)
     {
+        //call service
+        [$code,$notis]=(new NotificationsService())->GetNotifications($blogName,auth()->user());
+
+        // $notis = Notification::latest()->get()->groupBy(function($item){ return $item->created_at->format('d-M-y'); });
+        // $notis=Notification::latest()->get();
+
+        //return the response
+        if($code==404)
+            return $this->error_response(Errors::ERROR_MSGS_404,'blogName not found',404);
+        else if($code==403)
+            return $this->error_response(Errors::ERROR_MSGS_403,'user is not a member of the blog',403);
+        else
+            return $this->success_response(new NotificationCollection($notis),200);
+
+    }
+
+    /**
+     * set a notification to be seen
+     * 
+     * @return response
+     */
+
+    public function SeeNotification($notificationId)
+    {
+        //call servic to do the logic
+        $code=(new NotificationsService())->SeeNotification($notificationId,auth()->user());
+    
+        //return the response
+        if($code==404)
+            return $this->error_response(Errors::ERROR_MSGS_404,'notification id not found',404);
+        else if($code==403)
+            return $this->error_response(Errors::ERROR_MSGS_403,'user is not a member of the blog',403);
+        else
+            return $this->success_response('the notification is set as seen',200);
+
     }
 
 }

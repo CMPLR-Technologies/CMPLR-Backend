@@ -20,6 +20,7 @@ use App\Http\Controllers\AskController;
 use App\Http\Controllers\BlogSubmitController;
 use App\Http\Controllers\BlogBlockController;
 use App\Http\Controllers\InboxController;
+use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\BlogChatController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -54,7 +55,7 @@ Route::delete('/user/follow', [UserBlogController::class, 'unfollow'])->middlewa
 // Like/Unlike post
 Route::post('user/like', [UserPostConroller::class, 'Like'])->middleware('auth:api');
 Route::delete('user/unlike', [UserPostConroller::class, 'UnLike'])->middleware('auth:api');
-
+Route::post('/user/post/reply' , [UserPostConroller::class , 'UserReply'])->middleware('auth:api');
 // Create/Delete blog
 Route::post('/blog', [UserBlogController::class, 'create'])->middleware('auth:api');
 Route::post('/blog/{blogName}', [UserBlogController::class, 'destroy'])->middleware('auth:api');
@@ -136,6 +137,11 @@ Route::delete('/submit/{submitId}', [BlogSubmitController::class, 'DeleteSubmit'
 Route::post('/blog/{blogName}/blocks', [BlogBlockController::class, 'BlockBlog'])->middleware('auth:api');
 Route::delete('/blog/{blogName}/blocks', [BlogBlockController::class, 'UnblockBlog'])->middleware('auth:api');
 Route::get('/blog/{blogName}/blocks', [BlogBlockController::class, 'GetBlogBlocks'])->middleware('auth:api');
+
+// Notification
+Route::get('/blog/{blogName}/notifications', [NotificationsController::class, 'GetNotifications'])->middleware('auth:api');
+Route::put('/notifications/{notificationId}/see', [NotificationsController::class, 'SeeNotification'])->middleware('auth:api');
+// Route::get('/notifications', [NotificationsController::class, 'GetNotifications'])->middleware('auth:api');
 
 // User 
 Route::middleware('auth:api')->get('/user/likes', [UserController::class, 'GetUserLikes'])->name('GetUserLikes');

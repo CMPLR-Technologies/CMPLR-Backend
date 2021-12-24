@@ -4,6 +4,8 @@ namespace App\Services\Ask;
 
 use App\Models\Blog;
 use App\Models\Post;
+use App\Models\User;
+use App\Services\Notifications\NotificationsService;
 use Illuminate\Support\Facades\DB;
 
 class DeleteAskService{
@@ -39,6 +41,20 @@ class DeleteAskService{
         //check if the authenticated user is a member of this blog
         if($blog->users()->where('user_id',$user->id)->first() == null)
             return 403;
+
+        //get source_user primary blog id
+        $primaryBlogId=null;
+        if($ask->source_user_id!=null)
+            $primaryBlogId=User::find($ask->source_user_id)->primary_blog_id;
+
+
+        //delete ask notification
+        (new NotificationsService())->DeleteNotification(
+            $primaryBlogId,
+            $ask->blog_id,
+            'ask',
+            $ask->id,
+        );
 
         //delete ask
         $ask->delete();
