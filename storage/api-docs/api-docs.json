@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8000",
+            "url": "http://127.0.0.1:8000",
             "description": "CMPLR API Server"
         }
     ],
@@ -2637,7 +2637,7 @@
                                                             },
                                                             "targetPostId": {
                                                                 "type": "integer",
-                                                                "example": 666925284723982336
+                                                                "example": 2147483647
                                                             },
                                                             "targetPostSummary": {
                                                                 "type": "string",
@@ -6106,7 +6106,7 @@
                                             "example": [
                                                 {
                                                     "Blog_name": "summer memories",
-                                                    "blog_id": 13515315315,
+                                                    "blog_id": 2147483647,
                                                     "blog_title": "summer22",
                                                     "blog_avatar": "https://www.example.com/image/avatar.png",
                                                     "email_about_new_follower": true,
@@ -6119,7 +6119,7 @@
                                                 },
                                                 {
                                                     "Blog_name": "summer memories 2 ",
-                                                    "blog_id": 13515315314,
+                                                    "blog_id": 2147483647,
                                                     "blog_title": "summer21",
                                                     "blog_avatar": "https://www.example.com/image/avatar.png",
                                                     "email_about_new_follower": false,
