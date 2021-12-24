@@ -36,13 +36,13 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 |
 */
 
-//Chat 
+// Chat 
 Route::get('/blog/messaging/{blogId}', [BlogChatController::class, 'GetMessages'])->middleware('auth:api');
 Route::get('/messaging/conversation/{blogIdFrom}/{blogIdTo}', [BlogChatController::class, 'Conversation'])->middleware('auth:api');
 Route::post('/messaging/conversation/{blogIdFrom}/{blogIdTo}', [BlogChatController::class, 'SendMessage'])->middleware('auth:api');
 Route::delete('/messaging/conversation/{blogIdFrom}/{blogIdTo}', [BlogChatController::class, 'DeleteMessgaes'])->middleware('auth:api');
 
-//post 
+// Post 
 Route::get('post/notes', [PostNotesController::class, 'getNotes']);
 
 // Search
@@ -111,7 +111,7 @@ Route::get('/user/inbox/{blogName}', [InboxController::class, 'GetBlogInbox'])->
 Route::delete('/user/inbox/', [InboxController::class, 'DeleteInbox'])->middleware('auth:api');
 
 
-//Posts
+// Posts
 Route::middleware('auth:api')->group(function () {
     Route::post('/posts', [PostsController::class, 'create'])->name('CreatePost');
     Route::get('edit/{blog_name}/{post_id}', [PostsController::class, 'edit'])->name('EditPost');
