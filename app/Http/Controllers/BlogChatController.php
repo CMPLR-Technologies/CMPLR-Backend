@@ -71,12 +71,16 @@ class BlogChatController extends Controller
         }
         // getting lates messages 
         $messages = $this->blogChatService->GetLatestMessages($blogId);
-        // getting all blog settings   
-        $blogsData = $this->blogChatService->GetBlogDataforChatParteners($messages, $blogId);
+        if (!$messages->isEmpty())
+        {
+            // getting all blog settings   
+             $blogsData = $this->blogChatService->GetBlogDataforChatParteners($messages, $blogId);
 
-        // getting latest Message result
-        $latestMessages = $this->blogChatService->GetLatestMessagesResult($blogsData, $messages, $blogId);
-
+            // getting latest Message result
+            $latestMessages = $this->blogChatService->GetLatestMessagesResult($blogsData, $messages, $blogId);
+        } else {
+             $latestMessages = null ; 
+        }
 
         return response()->json($latestMessages, 200);
     }
