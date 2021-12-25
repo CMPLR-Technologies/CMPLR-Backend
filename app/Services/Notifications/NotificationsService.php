@@ -74,7 +74,7 @@ class NotificationsService{
     }
 
     /**
-     * implements the logic of seeomg a notification
+     * implements the logic of seeing a notification
      * 
      * @return int
      */
@@ -99,5 +99,55 @@ class NotificationsService{
 
         return 200;
     }
+
+    /**
+     * implements the logic of getting the number of unseen notifications
+     * 
+     * @return int
+     */
+
+    public function GetUnseens($user)
+    {
+        //get blog ids of the user
+        $blogIds=$user
+                ->realBlogs()
+                ->pluck('blog_id')
+                ->toArray();
+        
+        //get the number of unseen notifications that were sent to any of the blogs that 
+        //belongs to the user
+        $count=Notification::whereIn('to_blog_id',$blogIds)
+                            ->where('seen','false')
+                            ->count();
+        
+        return $count;
+    }
+
+    /**
+     * implements the logic of storing user's firebase token
+     * 
+     * @return int
+     */
+
+    public function StoreToken($user,$token)
+    {
+        //update user record with the new FCM token
+        $user->fcm_token=$token;
+        $user->update();
+
+        return 200;
+    }
+
+    /**
+     * implements the logic of sending a notification to a certain blog
+     * 
+     * @return int
+     */
+
+    public function SendNotification($user,$token)
+    {
+        
+    }
+
 
 }

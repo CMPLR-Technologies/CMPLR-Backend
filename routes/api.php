@@ -142,6 +142,10 @@ Route::get('/blog/{blogName}/blocks', [BlogBlockController::class, 'GetBlogBlock
 Route::get('/blog/{blogName}/notifications', [NotificationsController::class, 'GetNotifications'])->middleware('auth:api');
 Route::put('/notifications/{notificationId}/see', [NotificationsController::class, 'SeeNotification'])->middleware('auth:api');
 // Route::get('/notifications', [NotificationsController::class, 'GetNotifications'])->middleware('auth:api');
+Route::get('/notifications/unseens', [NotificationsController::class, 'GetUnseens'])->middleware('auth:api');
+Route::post('/notifications/store-token', [NotificationsController::class, 'StoreToken'])->middleware('auth:api');
+
+
 
 // User 
 Route::middleware('auth:api')->get('/user/likes', [UserController::class, 'GetUserLikes'])->name('GetUserLikes');
