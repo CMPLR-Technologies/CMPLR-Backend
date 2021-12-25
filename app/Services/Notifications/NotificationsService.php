@@ -161,7 +161,7 @@ class NotificationsService{
     public function SendNotification($message,$targetTokens)
     {
         $url = 'https://fcm.googleapis.com/fcm/send';
-        $serverKey = 'server key goes here';
+        $serverKey = 'AAAAZADeAGM:APA91bFx2JPNCF5g_0YImp2YlgGlUANPGhIB1fVhcIO4GWAih6we8kyYjaaVMgzR89uA7wdS48g6Nq-If8KvSNjjLHZC4orWkz1AjryhGk2ANYk9x9M7M1JWQ4kms_ZDqPXF5l_6K1so';
   
         $data = [
             "registration_ids" => $targetTokens,
