@@ -719,14 +719,14 @@ class PostsController extends Controller
         return $this->success_response($response);
     }
 
-    public function StuffForYou(Request $request,)
-    {
-        $user = auth('api')->user();
-        $user_followers_id = DB::table('user_follow_blog')->where('user_id',$user->id)->pluck('blog_id');
-        $blogs_followers = DB::table('user_follow_blog')->whereIn('blog_id',$user_followers_id)->pluck('blog_id');
-        $posts = Posts::whereIn('blog_id',$blogs_followers)->paginate(5);
-        return $this->success_response(new PostsCollection($posts));
-    }
+    // public function StuffForYou(Request $request)
+    // {
+    //     $user = auth('api')->user();
+    //     $user_followers_id = DB::table('user_follow_blog')->where('user_id',$user->id)->pluck('blog_id');
+    //     $blogs_followers = DB::table('user_follow_blog')->whereIn('blog_id',$user_followers_id)->pluck('blog_id');
+    //     $posts = Posts::whereIn('blog_id',$blogs_followers)->paginate(5);
+    //     return $this->success_response(new PostsCollection($posts));
+    // }
     /**
      * @OA\Post(
      ** path="/posts/reblog",
