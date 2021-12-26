@@ -2,14 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Misc\Helpers\Errors;
+use Illuminate\Http\Request;
+use App\Services\User\UserTagsService;
 
-class UsertagsConroller extends Controller
+
+class UserTagsConroller extends Controller
 {
-
     /*
-    3b hameeed
-    */
+     |--------------------------------------------------------------------------
+     | UsertagsConroller
+     |--------------------------------------------------------------------------|
+     | This Service handles all UserTags  
+     |
+     */
+    protected $userTagsService;
 
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(UserTagsService $userTagsService)
+    {
+        $this->userTagsService = $userTagsService;
+    }
     /**
      * @OA\Post(
      *   path="/user/tags/add",
@@ -47,8 +64,23 @@ class UsertagsConroller extends Controller
      *       ),
      *)
      **/
-    public function FollowTag()
+    public function FollowTag(Request $request)
     {
+        // getting current user
+        $user = auth()->user();
+        if (!$user)
+            return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
+        //getting tag name 
+        $tagName = $request->tag_name;
+       
+        if (!$this->userTagsService->UserFollowTag($tagName, $user->id))
+        {
+        
+            return $this->error_response(Errors::ERROR_MSGS_400 , 'error while follow tag' , 400);
+
+        }
+        return $this->success_response('Success' ,200);
+
     }
 
 
@@ -89,7 +121,19 @@ class UsertagsConroller extends Controller
      *       ),
      *)
      **/
-    public function UnFollowTag()
+    public function UnFollowTag(Request $request)
     {
+        // getting current user
+        $user = auth()->user();
+        if (!$user)
+            return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
+        //getting tag name 
+        $tagName = $request->tag_name;
+        if(!$this->userTagsService->UserUnFollowTag($tagName ,$user->id))
+        {
+            return $this->error_response(Errors::ERROR_MSGS_400 , 'error while unfollow tag' , 400);
+        }
+       
+         return $this->success_response('Success' ,200);
     }
 }

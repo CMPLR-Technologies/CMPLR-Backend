@@ -30,7 +30,7 @@ class PostNotesController extends Controller
 
  /**
      * @OA\GET(
-     * path="/post/notes}",
+     * path="/post/notes",
      * summary="getting notes for specific post",
      * description="This method can be used to get notes for specific post",
      * operationId="getNotes",

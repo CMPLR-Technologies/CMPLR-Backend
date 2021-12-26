@@ -253,7 +253,7 @@ class NotificationsController extends Controller
 
     public function SeeNotification($notificationId)
     {
-        //call servic to do the logic
+        //call service to do the logic
         $code=(new NotificationsService())->SeeNotification($notificationId,auth()->user());
     
         //return the response
@@ -265,5 +265,41 @@ class NotificationsController extends Controller
             return $this->success_response('the notification is set as seen',200);
 
     }
+
+    /**
+     * get number of unseen notifications of the user
+     * 
+     * @return response
+     */
+
+    public function GetUnseens()
+    {
+        //call service to do the logic
+        $count=(new NotificationsService())->GetUnseens(auth()->user());
+    
+        //return the response
+        return $this->success_response($count,200);
+    }
+
+    /**
+     * store user's firebase token 
+     * 
+     * @return response
+     */
+
+    public function StoreToken(Request $request)
+    {
+        $this->validate($request,[
+            'token'=>'required'
+        ]);
+
+        //call service to do the logic
+        $count=(new NotificationsService())->StoreToken(auth()->user(),$request->token);
+    
+        //return the response
+        return $this->success_response('token stored',200);
+    }
+
+
 
 }

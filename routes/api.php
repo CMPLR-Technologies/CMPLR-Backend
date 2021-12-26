@@ -22,6 +22,7 @@ use App\Http\Controllers\BlogBlockController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\BlogChatController;
+use App\Http\Controllers\UsertagsConroller;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -36,15 +37,22 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 |
 */
 
-//Chat 
+// Chat 
 Route::get('/blog/messaging/{blogId}', [BlogChatController::class, 'GetMessages'])->middleware('auth:api');
 Route::get('/messaging/conversation/{blogIdFrom}/{blogIdTo}', [BlogChatController::class, 'Conversation'])->middleware('auth:api');
 Route::post('/messaging/conversation/{blogIdFrom}/{blogIdTo}', [BlogChatController::class, 'SendMessage'])->middleware('auth:api');
 Route::delete('/messaging/conversation/{blogIdFrom}/{blogIdTo}', [BlogChatController::class, 'DeleteMessgaes'])->middleware('auth:api');
 
-//post 
+// PostNotes 
 Route::get('post/notes', [PostNotesController::class, 'getNotes']);
+Route::post('user/like', [UserPostConroller::class, 'Like'])->middleware('auth:api');
+Route::delete('user/unlike', [UserPostConroller::class, 'UnLike'])->middleware('auth:api');
+Route::post('/user/post/reply' , [UserPostConroller::class , 'UserReply'])->middleware('auth:api');
 
+//postTags 
+Route::post('user/tags/add' , [UsertagsConroller::class , 'FollowTag'])->middleware('auth:api');
+Route::delete('user/tags/remove' , [UsertagsConroller::class , 'UnFollowTag'])->middleware('auth:api');
+Route::get('post/tagged' , [PostsController::class ,'GetTaggedPosts']);
 // Search
 Route::get('search/{query}', [SearchController::class, 'search']);
 
@@ -52,10 +60,7 @@ Route::get('search/{query}', [SearchController::class, 'search']);
 Route::post('/user/follow', [UserBlogController::class, 'follow'])->middleware('auth:api');
 Route::delete('/user/follow', [UserBlogController::class, 'unfollow'])->middleware('auth:api');
 
-// Like/Unlike post
-Route::post('user/like', [UserPostConroller::class, 'Like'])->middleware('auth:api');
-Route::delete('user/unlike', [UserPostConroller::class, 'UnLike'])->middleware('auth:api');
-Route::post('/user/post/reply' , [UserPostConroller::class , 'UserReply'])->middleware('auth:api');
+
 // Create/Delete blog
 Route::post('/blog', [UserBlogController::class, 'create'])->middleware('auth:api');
 Route::post('/blog/{blogName}', [UserBlogController::class, 'destroy'])->middleware('auth:api');
@@ -68,7 +73,6 @@ Route::get('/reset_password/{token}', [ResetPasswordController::class, 'GetReset
 
 Route::post('/login', [LoginController::class, 'Login']);
 Route::post('/logout', [LoginController::class, 'Logout'])->middleware('auth:api');
-
 Route::post('email/verification-notification', [EmailVerificationController::class, 'SendVerificationEmail'])->name('verification.send')->middleware('auth:api');
 Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'Verify'])->name('verification.verify')->middleware('signed');
 
@@ -111,7 +115,7 @@ Route::get('/user/inbox/{blogName}', [InboxController::class, 'GetBlogInbox'])->
 Route::delete('/user/inbox/', [InboxController::class, 'DeleteInbox'])->middleware('auth:api');
 
 
-//Posts
+// Posts
 Route::middleware('auth:api')->group(function () {
     Route::post('/posts', [PostsController::class, 'create'])->name('CreatePost');
     Route::get('edit/{blog_name}/{post_id}', [PostsController::class, 'edit'])->name('EditPost');
@@ -146,6 +150,10 @@ Route::get('/blog/{blogName}/blocks', [BlogBlockController::class, 'GetBlogBlock
 Route::get('/blog/{blogName}/notifications', [NotificationsController::class, 'GetNotifications'])->middleware('auth:api');
 Route::put('/notifications/{notificationId}/see', [NotificationsController::class, 'SeeNotification'])->middleware('auth:api');
 // Route::get('/notifications', [NotificationsController::class, 'GetNotifications'])->middleware('auth:api');
+Route::get('/notifications/unseens', [NotificationsController::class, 'GetUnseens'])->middleware('auth:api');
+Route::post('/notifications/store-token', [NotificationsController::class, 'StoreToken'])->middleware('auth:api');
+
+
 
 // User 
 Route::middleware('auth:api')->get('/user/likes', [UserController::class, 'GetUserLikes'])->name('GetUserLikes');
@@ -154,3 +162,4 @@ Route::middleware('auth:api')->get('/user/followings', [UserBlogController::clas
 // profile
 Route::middleware('auth:api')->get('profile/likes/{blog_name}', [PostsController::class, 'ProfileLikes'])->name('Get.ProfileLikes');
 Route::middleware('auth:api')->get('profile/following/{blog_name}', [PostsController::class, 'ProfileFollowing'])->name('Get.ProfileFollowing');
+

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BlogUserFactory extends Factory
 {
+    protected $id =1 ;
     /**
      * Define the model's default state.
      *
@@ -13,10 +14,10 @@ class BlogUserFactory extends Factory
      */
     public function definition()
     {
-        $id = $this->faker->numberBetween(1, 10);
+        $seedId = $this->id++ ;
         return [
-            'user_id' => $id,
-            'blog_id' => $id,
+            'user_id' => $seedId,
+            'blog_id' => $seedId,
         ];
     }
 }

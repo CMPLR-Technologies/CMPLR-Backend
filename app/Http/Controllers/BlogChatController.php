@@ -71,6 +71,10 @@ class BlogChatController extends Controller
         }
         // getting lates messages 
         $messages = $this->blogChatService->GetLatestMessages($blogId);
+        if ($messages->isEmpty())
+        {
+            return response()->json($messages, 200);
+        }
         // getting all blog settings   
         $blogsData = $this->blogChatService->GetBlogDataforChatParteners($messages, $blogId);
 

@@ -22,6 +22,7 @@ class NotificationResource extends JsonResource
         $post=Post::find($this->post_ask_answer_id);
         
         return [
+            'notification_id'=>$this->id,
             'from_blog_id'=>$this->from_blog_id,
             'from_blog_name'=>$from_blog==null?null:$from_blog->blog_name,
             'from_blog_avatar'=>$from_blog_settings==null?null:$from_blog_settings->avatar,
