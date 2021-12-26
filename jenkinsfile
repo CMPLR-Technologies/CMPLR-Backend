@@ -4,7 +4,7 @@ pipeline {
     
     }
     environment{
-        LOGIN_SERVER = "cmplr.azurecr.io"
+        LOGIN_SERVER = "beta"
     }
     stages {
         stage("fetch"){
@@ -46,30 +46,6 @@ pipeline {
            }
         }
         
-        
-        stage('push image') {
-            steps {
-                echo "======== Pushing image to registry ========="
-                
-                withCredentials([usernamePassword(credentialsId: 'ACR', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) 
-                {
-                    sh """
-                docker login ${LOGIN_SERVER} -u ${USERNAME}  -p ${PASSWORD}
-                docker push ${LOGIN_SERVER}/backend:latest
-                """
-                }
-            }
-            post {
-                success {
-                    echo "======== Pushing image to registry was successful ========="
-                    //slackSend (color:"#00FF00", message: "Master: pushing image success")
-                }
-                failure {
-                    echo "======== Failed to Pushing image to registry ========="
-                    //slackSend (color:"#FF0000", message: "Master: pushing image failure")
-                }
-           }
-        }
 
     }
 }
