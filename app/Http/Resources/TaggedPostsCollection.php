@@ -14,10 +14,13 @@ class TaggedPostsCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return 
-        [
-            'posts' => $this->collection,
-            
-        ];
+        return
+            [
+                'post' => $this->collection,
+                'next_url' => $this->nextPageUrl(),
+                'total' => $this->total(),
+                'current_page' => $this->currentPage(),
+                'posts_per_page' => $this->perPage(),
+            ];
     }
 }
