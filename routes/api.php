@@ -81,8 +81,8 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/user/settings', [UsersettingController::class, 'AccountSettings'])->name('GetAccountSetting');
     Route::put('user/settings', [UsersettingController::class, 'UpdateSettings'])->name('UpdateAccountSetting');
-    Route::put('/settings/change-email', [UsersettingController::class, 'ChangeEmail'])->name('Change Email');
-    Route::put('/settings/change-password', [UsersettingController::class, 'ChangePassword'])->name('Change Password');
+    Route::put('/settings/change_email', [UsersettingController::class, 'ChangeEmail'])->name('Change Email');
+    Route::put('/settings/change_password', [UsersettingController::class, 'ChangePassword'])->name('Change Password');
 });
 
 // Blogs
@@ -123,10 +123,14 @@ Route::middleware('auth:api')->group(function () {
 });
 Route::get('posts/{post_id}', [PostsController::class, 'GetPostById'])->name('post.get.id');
 Route::middleware('guest')->get('posts/view/{blog_name}', [PostsController::class, 'GetBlogPosts'])->name('post.get.blogs');
+Route::get('MiniProfileView/{blog_id}', [PostsController::class, 'MiniProfileView'])->name('post.get.MiniProfileView');
 
 
+
+// upload
 Route::middleware('auth:api')->post('/image_upload', [UploadMediaController::class, 'UploadImagesaa'])->name('image.upload.post');
 Route::middleware('auth:api')->post('video_upload', [UploadMediaController::class, 'UploadVideos'])->name('Videos.upload.post');
+Route::middleware('auth:api')->post('base64image_upload', [UploadMediaController::class, 'UploadBase64Image'])->name('Base64Image.upload.post');
 
 // Submit
 Route::post('/blog/{blogName}/submit', [BlogSubmitController::class, 'CreateSubmit'])->middleware('auth:api');

@@ -69,8 +69,72 @@ class PostsService
     public function GetRandomPost()
     {
         $post = Posts::where('state', '=', 'publish')->inRandomOrder()->limit(1)->first();
-        if(!$post)
+        if (!$post)
             return null;
         return $post;
+    }
+
+    /**
+     * This Function retrieve PostData needed
+     * @param int $blog_id
+     *@return Posts
+     */
+    public function MiniViewPostData(int $blog_id)
+    {
+        $posts = Posts::select('id', 'content')->where('blog_id', $blog_id)->get();
+        // ->whereIn('type', ['photos', 'mixed'])->get();
+        return $posts;
+    }
+
+    /**
+     * This Function retrieve blogsdata needed
+     * @param int $blog_id
+     *@return Posts
+     */
+
+    public function MiniViewBlogData(Blog $blog)
+    {
+        $data1['blog_name'] = $blog->blog_name;
+        $data1['avatar'] = $blog->settings->avatar;
+        $data1['title'] = $blog->title;
+        $data1['header_image'] = $blog->settings->header_image;
+        $data1['is_primary'] = $blog->users()->first()->primary_blog_id == $blog->id;
+        //dd($data1['is_primary'] );
+        // TODO: 
+        $data1['desciption'] = 'hossam el gamd';
+        return $data1;
+    }
+
+    public function GetViews($posts)
+    {
+        $views = [];
+        $size = 0;
+        $img_string = '<img src=';
+        $removed = '<img src="';
+        // loop over posts
+        foreach ($posts as $post) {
+            // check that post has image
+            if (strpos($post['content'], $img_string) !== false) {
+                // regex to get all images in array
+                preg_match_all('/<img[^>]+>/i', $post['content'], $result);
+                // check that image array is not empty
+                if (!empty($result)) {
+                    // get link from image tag
+                    $s = substr($result[0][0], 0, -2);
+                    $link = str_ireplace($removed, "", $s);
+                    // set response
+                    $data['link'] = $link;
+                    $data['post_id'] = $post['id'];
+                    $views[] = $data;
+                    $size += 1;
+                    // retrieve only 3 images
+                    if($size == 3)
+                        break;      
+                }
+            }
+
+   
+        }
+        return $views;
     }
 }

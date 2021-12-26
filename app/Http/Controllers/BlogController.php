@@ -18,7 +18,7 @@ class BlogController extends Controller
      *
      * @return void
      */
-    public function __construct(FollowBlogService $FollowBlogService)
+    public function __construct( FollowBlogService $FollowBlogService)
     {
         $this->FollowBlogService = $FollowBlogService;
     }
@@ -203,30 +203,31 @@ class BlogController extends Controller
      * @param 
      * 
      */
-    public function GetFollowers (Request $request,Blog $blog)
+    public function GetFollowers(Request $request, Blog $blog)
     {
         // get blog_name
         $blog_name = $request->route('blog_name');
         // Get Blog using blog_name
+        
         $blog = $this->FollowBlogService->GetBlog($blog_name);
-        if(!$blog)
-            return $this->error_response(Errors::ERROR_MSGS_404,'Blog Not Found ',404);
+        if (!$blog)
+            return $this->error_response(Errors::ERROR_MSGS_404, 'Blog Not Found ', 404);
 
         // Check if This USer is Authorize to do this action
         try {
-            $this->authorize('ViewFollowers',$blog);
+            $this->authorize('ViewFollowers', $blog);
         } catch (\Throwable $th) {
-            return $this->error_response(Errors::ERROR_MSGS_403,'This action is unauthorized.',403);
+            return $this->error_response(Errors::ERROR_MSGS_403, 'This action is unauthorized.', 403);
         }
         // Get followers'sid that follow this blog
         $followers_id = $this->FollowBlogService->GetFollowersID($blog->id);
 
         // Get Followers Information
         $followers_info = $this->FollowBlogService->GetFollowersInfo($followers_id);
-        
+
         $response['number_of_followers'] = count($followers_id);
         $response['followers'] = $followers_info;
-        
+
         return $this->success_response($response);
     }
 
@@ -292,4 +293,7 @@ class BlogController extends Controller
     public function getFollowing(Request $request, Blog $blog)
     {
     }
+
+
+
 }
