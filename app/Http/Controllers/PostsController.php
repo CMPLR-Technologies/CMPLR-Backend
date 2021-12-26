@@ -6,6 +6,7 @@ use App\Http\Misc\Helpers\Config;
 use App\Http\Misc\Helpers\Errors;
 use App\Http\Requests\PostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\BlogCollection;
 use App\Http\Resources\PostEditViewResource;
 use App\Http\Resources\PostsCollection;
 use App\Http\Resources\PostsResource;
@@ -13,6 +14,8 @@ use App\Http\Resources\TaggedPostsCollection;
 use App\Http\Resources\TaggedPostsResource;
 use App\Models\Blog;
 use App\Models\BlogSettings;
+use App\Models\BlogUser;
+use App\Models\Follow;
 use App\Models\Posts;
 use App\Models\PostTags;
 use App\Models\Tag;
@@ -23,6 +26,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Services\User\UserService;
 
 class PostsController extends Controller
 {
@@ -37,15 +41,17 @@ class PostsController extends Controller
    */
 
     protected $PostsService;
+    protected $UserService;
 
     /**
      * Instantiate a new controller instance.
      *
      * @return void
      */
-    public function __construct(PostsService $PostsService)
+    public function __construct(PostsService $PostsService,UserService $UserService)
     {
         $this->PostsService = $PostsService;
+        $this->UserService = $UserService;
     }
 
 
@@ -609,7 +615,7 @@ class PostsController extends Controller
     /**
      * This Function retrieve Post that is not belong to auth user or one of his followers 
      */
-    public function GetRadar(Request $request)
+   public function GetRadar(Request $request)
     {
         //get auth user
         $user = Auth::user();
@@ -690,13 +696,6 @@ class PostsController extends Controller
         //TODO:  retrive only published posts
         $blog = Blog::where('blog_name', $blog_name)->first();
         $posts = Posts::where('blog_id', $blog->id)->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
-
-        // check if user auth or not
-        if (auth('api')->check()) {
-            $user = auth('api')->user();
-            $is_follow = DB::table('user_follow_blog')->where('user_id', $user->id)->get();
-        }
-
         return $this->success_response(new PostsCollection($posts));
     }
 
@@ -709,32 +708,68 @@ class PostsController extends Controller
      */
     public function MiniProfileView(Request $request, int $blog_id)
     {
-    
+
         $blog = Blog::find($blog_id);
-        if(!$blog)
-            return $this->error_response(Errors::ERROR_MSGS_404,'',404);
-        
-            // get post data
+        if (!$blog)
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
+
+        // get post data
         $posts = $this->PostsService->MiniViewPostData($blog_id);
-        if(!$posts)
-            return $this->error_response(Errors::ERROR_MSGS_404,'',404);
-        
+        if (!$posts)
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
+
         // set blog data
         $response['blog'] =  $this->PostsService->MiniViewBlogData($blog);
-        
+
         //get views
         $response['views'] = $this->PostsService->GetViews($posts);
-        
+
         return $this->success_response($response);
     }
 
-    public function StuffForYou(Request $request,)
+    // public function StuffForYou(Request $request)
+    // {
+    //     $user = auth('api')->user();
+    //     $user_followers_id = DB::table('user_follow_blog')->where('user_id',$user->id)->pluck('blog_id');
+    //     $blogs_followers = DB::table('user_follow_blog')->whereIn('blog_id',$user_followers_id)->pluck('blog_id');
+    //     $posts = Posts::whereIn('blog_id',$blogs_followers)->paginate(5);
+    //     return $this->success_response(new PostsCollection($posts));
+    // }
+
+
+    public function ProfileLikes(Request $request, string $blog_name)
     {
-        $user = auth('api')->user();
-        $user_followers_id = DB::table('user_follow_blog')->where('user_id',$user->id)->pluck('blog_id');
-        $blogs_followers = DB::table('user_follow_blog')->whereIn('blog_id',$user_followers_id)->pluck('blog_id');
-        $posts = Posts::whereIn('blog_id',$blogs_followers)->paginate(5);
+        $blog = Blog::where('blog_name', $blog_name)->first();
+        if ($blog == null)
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
+
+        $user_id = BlogUser::where('blog_id', $blog->id)->where('primary', true)->first()->user_id;
+        if (!$user_id)
+            return $this->error_response(Errors::ERROR_MSGS_404, 'it is not primary blog', 404);
+
+        // get id of all posts liked by user
+        $likes = $this->UserService->GetLikes($user_id);
+
+        //get liked posts
+        $posts = Posts::whereIn('id', $likes)->paginate(config::PAGINATION_LIMIT);
+
         return $this->success_response(new PostsCollection($posts));
+    }
+
+    public function ProfileFollowing(Request $request, string $blog_name)
+    {
+        $blog = Blog::where('blog_name', $blog_name)->first();
+        if ($blog == null)
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
+
+        $user = BlogUser::where('blog_id', $blog->id)->where('primary', true)->first();
+        if (!$user)
+            return $this->error_response(Errors::ERROR_MSGS_404, 'it is not primary blog', 404);
+
+        $blogs_ids = Follow::where('user_id',$user->id)->pluck('blog_id');
+        $blogs = Blog::whereIn('id',$blogs_ids)->paginate(15);
+
+        return $this->success_response(new BlogCollection($blogs));
     }
     /**
      * @OA\Post(
