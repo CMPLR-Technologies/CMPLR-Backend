@@ -11,4 +11,11 @@ class Config
     const EXPIRE =10;
 	const PAGINATION_BLOGS_LIMIT = 15; 
 	const Message_PAGINATION_LIMIT =10 ;
+
+
+
+	// upload 
+	const ALLOWED_EXTESIONS = ['png','jpg','png','jpeg','gif','svg'];
+	const IMAGE_PATH = 'images/';
+	const MAX_IMAGE_SIZE = 5048;
 }

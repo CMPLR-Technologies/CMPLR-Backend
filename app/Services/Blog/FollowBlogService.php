@@ -68,7 +68,7 @@ class FollowBlogService{
         try {
             foreach ($followers_id as $id) {
                 $pid = User::where('id',$id)->first()->primary_blog_id;
-                $followers_data1 = Blog::where('id', $pid )->first()->only(['blog_name','title']);
+                $followers_data1 = Blog::where('id', $pid )->first()->only(['id','blog_name','title']);
                 $followers_data2 = BlogSettings::where('id', $pid )->first()->only(['avatar']);
                 $followers_data = array_merge($followers_data1,$followers_data2);
                 array_push($followers_info,$followers_data);

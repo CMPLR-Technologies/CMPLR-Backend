@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Misc\Helpers\Errors;
 use App\Http\Requests\Auth\GoogleRequest;
 use App\Http\Resources\Auth\RegisterResource;
+use App\Models\Blog;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -61,13 +62,16 @@ class GoogleController extends Controller
         $check = User::where('google_id', $user->id)->first();
         if ($check) {
             $user = Auth::loginUsingId($check->id);
+            $request['user'] = $user;
             try {
-                $userLoginToken = $user->CreateToken('authToken')->accessToken;
+                $request['token'] = $user->CreateToken('authToken')->accessToken;
             } catch (\Throwable $th) {
                 $error['token'] = Errors::GENERATE_TOKEN_ERROR;
                 return $this->error_response(Errors::ERROR_MSGS_500, $error, 500);
             }
-            return response()->json(['user' => auth()->user(), 'token' => $userLoginToken], 200);
+            $request['blog'] = Blog::where('id',$user->primary_blog_id)->first();
+            $resource =  new RegisterResource($request);
+            return $this->success_response($resource,201);
         } else {
             $error['user'] = 'you should register first';
             return $this->error_response(Errors::ERROR_MSGS_401, $error, 401);

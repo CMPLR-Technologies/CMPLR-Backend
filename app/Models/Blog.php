@@ -57,9 +57,11 @@ class Blog extends Model
         return $this->belongsToMany(User::class ,'user_follow_blog', 'user_id', 'blog_id');
     }
 
-    public function isfollower(User $user)
+    public function isfollower()
     {
-        return !! DB::table('user_follow_blog')->where('user_id',$user->id)->where('blog_id',$this->id)->first();
+        if (auth('api')->check()) 
+            return !! DB::table('user_follow_blog')->where('user_id',auth('api')->user()->id)->where('blog_id',$this->id)->first();
+        return false;
     }
   
     public function user_blogs()

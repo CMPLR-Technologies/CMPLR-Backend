@@ -42,7 +42,7 @@ class RegisterResource extends JsonResource
                     'include_followed_tags'=>$this->user->include_followed_tags,
                     'conversational_notification'=>$this->user->conversational_notification,
                     'filtered_content'=>$this->user->filtered_content,
-                    'theme'=>$this->user->google_id,
+                    'theme'=>$this->user->theme,
                     'primary_blog_id'=>$this->user->primary_blog_id,
                     'blog_name'=>$this->blog->blog_name,
                     'avatar'=>$blog_settings->avatar,
