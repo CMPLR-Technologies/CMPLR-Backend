@@ -18,11 +18,10 @@ class PostsFactory extends Factory
     public function definition()
     {
         $paragraphs = $this->faker->paragraphs(rand(2, 6));
-        $title = $this->faker->realText(50);
+        $title = $this->faker->realText(30);
         $content = "<h1>{$title}</h1>";
         foreach ($paragraphs as $para) {
             $content .= "<p>{$para}</p>";
-            
         }
         $blog = Blog::inRandomOrder()->first();
 

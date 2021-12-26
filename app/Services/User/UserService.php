@@ -4,6 +4,7 @@ namespace App\Services\User;
 
 use App\Models\Blog;
 use App\Models\BlogUser;
+use App\Models\Follow;
 use App\Models\Post;
 use App\Models\PostNotes;
 use App\Models\User;
@@ -71,11 +72,13 @@ class UserService
     }
 
     /**
-     * 
+     * this function is responsible for getting user follwing count
+     * @param int $user_id
+     * @return int
      */
     public function GetUserFollowing(int $user_id)
     {
-       return  DB::table('user_follow_blog')->where('user_id',$user_id)->count();
+       return  Follow::where('user_id',$user_id)->count();
     }
 
 
@@ -89,5 +92,8 @@ class UserService
         $posts_count = Post::whereIn('blog_id',$user_blogs)->count();
         return $posts_count;
     }
+
+
+
 
 }

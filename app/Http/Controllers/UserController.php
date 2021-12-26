@@ -119,32 +119,32 @@ class UserController extends Controller
      * security ={{"bearer":{}}}
      * )
      */
-    
+
     /**
-    * This function Get User Info
-    *
-    */
-    public function GetUserInfo(Request $request) 
+     * This function Get User Info
+     *
+     */
+    public function GetUserInfo(Request $request)
     {
         //Get authenticated user
         $user  = $this->UserService->GetAuthUser();
         if (!$user)
             return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
-        
+
         //Get User Data 
         $user_data = $this->UserService->GetUserData($user);
-        if(!$user_data)
+        if (!$user_data)
             return $this->error_response(Errors::ERROR_MSGS_500, 'Failed to get User data', 500);
-       
+
         // get number of followers of user
         $following_count = $this->UserService->GetUserFollowing($user->id);
-        $user_data['following_counts']=  $following_count;
+        $user_data['following_counts'] =  $following_count;
         // get number of posts of user
         $user_posts = $this->UserService->GetUserPosts($user);
-        $user_data['posts_count']=  $user_posts;
+        $user_data['posts_count'] =  $user_posts;
         //Get Blog Data 
         $blogs_data = $this->UserService->GetBlogsData($user->id);
-        if(!$blogs_data)
+        if (!$blogs_data)
             return $this->error_response(Errors::ERROR_MSGS_500, 'Failed to get Blogs data', 500);
         // set the response
         // $response['user'] = $user_data;
@@ -215,13 +215,21 @@ class UserController extends Controller
      */
     public function GetDashboard(Request $request)
     {
-        $user = Auth::user();
-        //get all followed blogs
-        $user_blogs = $user->blogs()->pluck('blog_id');
-        $followed_blogs_id = $user->FollowedBlogs->pluck('id');
-        // get posts of blogs that user follow or posts of user himself
-        $Posts = Posts::whereIn('blog_id', $followed_blogs_id)->orWhereIn('blog_id', $user_blogs)->paginate(Config::PAGINATION_LIMIT);
-        return $this->success_response(new PostsCollection($Posts));
+        $user = auth('api')->user();
+        if ($user) {
+            //get all followed blogs
+            $user_blogs = $user->blogs()->pluck('blog_id');
+            $followed_blogs_id = $user->FollowedBlogs()->pluck('blog_id');
+            // get posts of blogs that user follow or posts of user himself
+            $Posts = Posts::whereIn('blog_id', $followed_blogs_id)->orWhereIn('blog_id', $user_blogs)->paginate(Config::PAGINATION_LIMIT);
+            return $this->success_response(new PostsCollection($Posts));
+        }
+        // for flutter
+        else
+        {
+            $posts = Posts::inRandomOrder()->paginate(5);
+            return $this->success_response(new PostsCollection($posts));
+        }
     }
 
     /**
@@ -330,11 +338,10 @@ class UserController extends Controller
         $user = Auth::user();
         // get id of all posts liked by user
         $likes = $this->UserService->GetLikes($user->id);
-        //$likes = PostNotes::where('user_id',$user->id)->where('type','=','like')->pluck('post_id');
 
         //get liked posts
-        $posts = Posts::whereIn('id',$likes)->paginate(config::PAGINATION_LIMIT);
-        
+        $posts = Posts::whereIn('id', $likes)->paginate(config::PAGINATION_LIMIT);
+
         return $this->success_response(new PostsCollection($posts));
     }
 
@@ -1109,17 +1116,17 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $theme = $user->theme;
-        $response['theme']=$theme;
-        return $this->success_response($response,200);
+        $response['theme'] = $theme;
+        return $this->success_response($response, 200);
     }
 
-    public function UpdateUserTheme (Request $request)
+    public function UpdateUserTheme(Request $request)
     {
         $user = Auth::user();
         $theme = $request->theme;
-        $check = User::where('id',$user->id)->update(array('theme'=> $theme));
-        if(!$check)
-            return $this->error_response(Errors::ERROR_MSGS_500,[''],500);
-        return $this->success_response(['successfully update theme'],200);
+        $check = User::where('id', $user->id)->update(array('theme' => $theme));
+        if (!$check)
+            return $this->error_response(Errors::ERROR_MSGS_500, [''], 500);
+        return $this->success_response(['successfully update theme'], 200);
     }
 }

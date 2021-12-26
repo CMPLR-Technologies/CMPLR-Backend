@@ -4,6 +4,7 @@ namespace App\Services\Blog;
 
 use App\Models\Blog;
 use App\Models\BlogSettings;
+use App\Models\Follow;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -49,7 +50,7 @@ class FollowBlogService{
     public function GetFollowersID(int $blog_id)
     {
         try {
-            $followers_id = DB::table('user_follow_blog')->where('blog_id',$blog_id)->pluck('user_id');
+            $followers_id = Follow::where('blog_id',$blog_id)->pluck('user_id');
         } catch (\Throwable $th) {
             return null;
         }

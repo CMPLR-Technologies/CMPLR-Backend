@@ -116,11 +116,11 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/posts', [PostsController::class, 'create'])->name('CreatePost');
     Route::get('edit/{blog_name}/{post_id}', [PostsController::class, 'edit'])->name('EditPost');
     Route::put('update/{blog_name}/{post_id}', [PostsController::class, 'update'])->name('UpdatePost');
-    Route::get('user/dashboard/', [UserController::class, 'GetDashboard'])->name('Get.Dashboard');
     Route::get('posts/radar/', [PostsController::class, 'GetRadar'])->name('post.get.radar');
     Route::delete('post/delete/{post_id}', [PostsController::class, 'destroy'])->name('post.delete');
     Route::delete('user/likes', [PostsController::class, 'GetUserLikes'])->name('post.GetUserLikes');
 });
+Route::get('user/dashboard/', [UserController::class, 'GetDashboard'])->name('Get.Dashboard');
 Route::get('posts/{post_id}', [PostsController::class, 'GetPostById'])->name('post.get.id');
 Route::middleware('guest')->get('posts/view/{blog_name}', [PostsController::class, 'GetBlogPosts'])->name('post.get.blogs');
 Route::get('MiniProfileView/{blog_id}', [PostsController::class, 'MiniProfileView'])->name('post.get.MiniProfileView');
@@ -150,3 +150,7 @@ Route::put('/notifications/{notificationId}/see', [NotificationsController::clas
 // User 
 Route::middleware('auth:api')->get('/user/likes', [UserController::class, 'GetUserLikes'])->name('GetUserLikes');
 Route::middleware('auth:api')->get('/user/followings', [UserBlogController::class, 'GetUserFollowing'])->name('Get.User.Following');
+
+// profile
+Route::middleware('auth:api')->get('profile/likes/{blog_name}', [PostsController::class, 'ProfileLikes'])->name('Get.ProfileLikes');
+Route::middleware('auth:api')->get('profile/following/{blog_name}', [PostsController::class, 'ProfileFollowing'])->name('Get.ProfileFollowing');
