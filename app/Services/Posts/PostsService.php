@@ -5,6 +5,8 @@ namespace App\Services\Posts;
 use App\Models\Blog;
 use App\Models\BlogUser;
 use App\Models\Posts;
+use App\Models\PostTags;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -34,7 +36,7 @@ class PostsService
      *
      * @param array $data
      * 
-     * @return bool
+     * @return Post
      */
     public function createPost(array $data)
     {
@@ -69,8 +71,37 @@ class PostsService
     public function GetRandomPost()
     {
         $post = Posts::where('state', '=', 'publish')->inRandomOrder()->limit(1)->first();
-        if(!$post)
+        if (!$post)
             return null;
         return $post;
+    }
+
+    /**
+     * Add post Tags 
+     * 
+     * @param $postId
+     * @param $postTags
+     * 
+     * @author Yousif Ahmed
+     */
+    public function AddPostTags($postId, $postTags)
+    {
+        foreach ($postTags as $tag) {
+
+            try {
+                Tag::create([
+                    'name' => $tag,
+                ]);
+            } catch (\Throwable $th) {
+            }
+            try {
+                PostTags::create([
+                    'post_id' => $postId,
+                    'tag_name' => $tag,
+                ]);
+            } catch (\Throwable $th) {
+
+            }
+        }
     }
 }

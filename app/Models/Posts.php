@@ -23,7 +23,10 @@ class Posts extends Model
         'tags' => 'json'
     ];
     
-
+    public function Tags()
+    {
+        return $this->hasMany(PostTags::class,'post_id');
+    }
     // post belong to one blog
     public function BLogs()
     {

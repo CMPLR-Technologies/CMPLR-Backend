@@ -10,4 +10,14 @@ class PostTags extends Model
     use HasFactory;
     public $incrementing = false;
 
+    protected $fillable = [
+        'post_id',
+        'tag_name',
+    ];
+
+    public function post ()
+    {
+        return $this->belongsTo(Posts::class);
+    }
+
 }
