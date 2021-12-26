@@ -884,7 +884,6 @@ class UserController extends Controller
     }
 
 
-    //https://www.tumblr.com/mega-editor/published/ahmed-abdelhamed
 
     /**
      * @OA\Post(
