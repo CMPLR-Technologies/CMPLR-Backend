@@ -10,7 +10,7 @@ pipeline {
         stage("fetch"){
             steps{
                 echo "========Executing Fetch========"
-                git branch: "prod", url: "https://CMPLR-Technologies@dev.azure.com/CMPLR-Technologies/CMPLR-Technologies.Backend/_git/CMPLR-Technologies.Backend"
+                git branch: "dev", url: "https://CMPLR-Technologies@dev.azure.com/CMPLR-Technologies/CMPLR-Technologies.Backend/_git/CMPLR-Technologies.Backend"
             }
             post{
                 success{
