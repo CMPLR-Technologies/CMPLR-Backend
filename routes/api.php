@@ -22,6 +22,7 @@ use App\Http\Controllers\BlogBlockController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\BlogChatController;
+use App\Http\Controllers\UsertagsConroller;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -42,9 +43,16 @@ Route::get('/messaging/conversation/{blogIdFrom}/{blogIdTo}', [BlogChatControlle
 Route::post('/messaging/conversation/{blogIdFrom}/{blogIdTo}', [BlogChatController::class, 'SendMessage'])->middleware('auth:api');
 Route::delete('/messaging/conversation/{blogIdFrom}/{blogIdTo}', [BlogChatController::class, 'DeleteMessgaes'])->middleware('auth:api');
 
-// Post 
+// PostNotes 
 Route::get('post/notes', [PostNotesController::class, 'getNotes']);
+Route::post('user/like', [UserPostConroller::class, 'Like'])->middleware('auth:api');
+Route::delete('user/unlike', [UserPostConroller::class, 'UnLike'])->middleware('auth:api');
+Route::post('/user/post/reply' , [UserPostConroller::class , 'UserReply'])->middleware('auth:api');
 
+//postTags 
+Route::post('user/tags/add' , [UsertagsConroller::class , 'FollowTag'])->middleware('auth:api');
+Route::delete('user/tags/remove' , [UsertagsConroller::class , 'UnFollowTag'])->middleware('auth:api');
+Route::get('post/tagged' , [PostsController::class ,'GetTaggedPosts']);
 // Search
 Route::get('search/{query}', [SearchController::class, 'search']);
 
@@ -52,10 +60,7 @@ Route::get('search/{query}', [SearchController::class, 'search']);
 Route::post('/user/follow', [UserBlogController::class, 'follow'])->middleware('auth:api');
 Route::delete('/user/follow', [UserBlogController::class, 'unfollow'])->middleware('auth:api');
 
-// Like/Unlike post
-Route::post('user/like', [UserPostConroller::class, 'Like'])->middleware('auth:api');
-Route::delete('user/unlike', [UserPostConroller::class, 'UnLike'])->middleware('auth:api');
-Route::post('/user/post/reply' , [UserPostConroller::class , 'UserReply'])->middleware('auth:api');
+
 // Create/Delete blog
 Route::post('/blog', [UserBlogController::class, 'create'])->middleware('auth:api');
 Route::post('/blog/{blogName}', [UserBlogController::class, 'destroy'])->middleware('auth:api');
@@ -68,7 +73,6 @@ Route::get('/reset_password/{token}', [ResetPasswordController::class, 'GetReset
 
 Route::post('/login', [LoginController::class, 'Login']);
 Route::post('/logout', [LoginController::class, 'Logout'])->middleware('auth:api');
-
 Route::post('email/verification-notification', [EmailVerificationController::class, 'SendVerificationEmail'])->name('verification.send')->middleware('auth:api');
 Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'Verify'])->name('verification.verify')->middleware('signed');
 

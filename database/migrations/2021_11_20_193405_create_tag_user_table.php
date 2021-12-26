@@ -9,9 +9,10 @@ class CreateTagUserTable extends Migration
     public function up()
     {
         Schema::create('tag_users', function (Blueprint $table) {
-            $table->foreignId('tag_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->primary(['tag_id', 'user_id']);
+            $table->string('tag_name');
+            $table->foreign('tag_name')->references('name')->on('tags')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->references('id')->on('users')->constrained()->onDelete('cascade');
+            $table->primary(['tag_name', 'user_id']);
             $table->timestamps();
         });
     }
