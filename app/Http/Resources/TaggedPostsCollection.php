@@ -15,7 +15,9 @@ class TaggedPostsCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        $total_followers = TagUser::where('tag_name',$this->tag )->count();
+        $user = auth('api')->user() ;
+        //if ($user->is_Empty)
+//            $is_followers = count(TagUser::where([['tag_name'=>$this->tag],['user_id'=>$user->id ]] )->first())>0;
          return
             [
                 'post' => $this->collection,
@@ -23,8 +25,6 @@ class TaggedPostsCollection extends ResourceCollection
                 'total' => $this->total(),
                 'current_page' => $this->currentPage(),
                 'posts_per_page' => $this->perPage(),
-                'total_followers'=>$total_followers ,
-                'tag_avatar'=>'https://assets.tumblr.com/images/default_avatar/cone_closed_128.png' ,
             ];
     }
 }

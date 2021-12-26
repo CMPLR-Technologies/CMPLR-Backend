@@ -53,6 +53,8 @@ Route::post('/user/post/reply' , [UserPostConroller::class , 'UserReply'])->midd
 Route::post('user/tags/add' , [UsertagsConroller::class , 'FollowTag'])->middleware('auth:api');
 Route::delete('user/tags/remove' , [UsertagsConroller::class , 'UnFollowTag'])->middleware('auth:api');
 Route::get('post/tagged' , [PostsController::class ,'GetTaggedPosts']);
+Route::get('tag/info' , [UserTagsConroller::class ,'GetTagInfo']);
+
 // Search
 Route::get('search/{query}', [SearchController::class, 'search']);
 

@@ -972,8 +972,10 @@ class PostsController extends Controller
         $tag = $request->tag;
 
         // getting all user follows this tag 
-        $posts = $this->PostsService->GetPostsWithTag($tag);
-      
+        $posts = $this->PostsService->GetPostsWithTag($tag);       
+            
         return response()->json( new TaggedPostsCollection($posts ), 200);
     }
+
+    
 }

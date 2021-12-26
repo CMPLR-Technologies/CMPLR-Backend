@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Misc\Helpers\Errors;
+use App\Models\PostTags;
+use App\Models\Tag;
+use App\Models\TagUser;
 use Illuminate\Http\Request;
 use App\Services\User\UserTagsService;
 
@@ -135,5 +138,30 @@ class UserTagsConroller extends Controller
         }
        
          return $this->success_response('Success' ,200);
+    }
+
+    public function GetTagInfo(Request $request)
+    {
+        $tag = $request->tag;
+        if (!$tag)
+            return $this->error_response(Errors::ERROR_MSGS_404 , 'tag not found' ,404);
+        
+        
+        // getting random tags 
+        $response['tags'] = $this->userTagsService->GetRandomTags();
+
+        // getting total followers        
+        $response['total_followers'] = $this->userTagsService->GetTotalTagsFollowers($tag);
+
+        // check if user follow 
+        $response['is_follower'] =$this->userTagsService->IsFollower($tag);
+        
+         // getting tag avatar 
+        $response['tag_avatar']= 'https://assets.tumblr.com/images/default_avatar/cone_closed_128.png' ;
+
+        //total tag posts 
+        $response['total_posts']= PostTags::where('tag_name' , $tag)->count();
+        
+        return response()->json($response ,200);
     }
 }

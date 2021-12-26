@@ -2,6 +2,7 @@
 
 namespace App\Services\User;
 
+use App\Models\Tag;
 use App\Models\TagUser;
 
 class UserTagsService
@@ -52,6 +53,44 @@ class UserTagsService
             return false;
         }
         return true;
+    }
+
+    /**
+     * getting random tags 
+     * 
+     * @return $tags
+     */
+    public function GetRandomTags()
+    {
+        return Tag::select('name')->inRandomOrder()->limit(5)->get()->pluck('name');
+    }
+
+     /**
+     * getting random tags 
+     * 
+     * @param $tag
+     * 
+     * @return $tagscount
+     */
+    public function GetTotalTagsFollowers($tag)
+    {
+        return TagUser::where('tag_name',$tag )->count();
+    }
+    /**
+     * check user follow tag
+     * 
+     * @param $tag
+     * 
+     * @return boolean 
+     */
+    public function IsFollower($tag)
+    {
+        $user = auth('api')->user() ;
+        if ($user)
+            return (TagUser::where(['user_id'=>$user->id , 'tag_name'=>$tag])->first())?true :false ;
+        
+        
+        return  false ;   
     }
 
 }

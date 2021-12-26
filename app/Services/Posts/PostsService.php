@@ -184,7 +184,6 @@ class PostsService
         $postsTags = PostTags::where('tag_name', $tag)->orderBy('created_at', 'DESC')->get();
         $posts= Posts::wherein('id' , $postsTags->pluck('post_id'))->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
         $posts->tag = $tag ;
-       
         return $posts ;
     }
 }
