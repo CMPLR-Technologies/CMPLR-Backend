@@ -13,6 +13,7 @@ use App\Services\Blog\FollowBlogService;
 use App\Services\Blog\UnfollowBlogService;
 use App\Services\Notifications\NotificationsService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserBlogController extends Controller
 {
@@ -367,7 +368,8 @@ class UserBlogController extends Controller
         $user = auth('api')->user();
         //TODO: config paginate limit Config::PAGINATION_BLOGS_LIMIT
         
-        $blogs = $user->FollowedBlogs()->paginate(15);
+        $blog_ids = DB::table('follows')->where('user_id',$user->id)->pluck('blog_id');
+        $blogs = Blog::whereIn('id',$blog_ids)->paginate(15);
         return $this->success_response(new BlogCollection($blogs));
     } 
 
