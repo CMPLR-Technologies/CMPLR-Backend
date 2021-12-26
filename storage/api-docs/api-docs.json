@@ -3703,7 +3703,7 @@
                 ]
             }
         },
-        "/tagged": {
+        "post/tagged": {
             "get": {
                 "tags": [
                     "Posts"

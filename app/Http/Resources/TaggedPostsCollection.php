@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\TagUser;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class TaggedPostsCollection extends ResourceCollection
@@ -14,13 +15,16 @@ class TaggedPostsCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return
+        $total_followers = TagUser::where('tag_name',$this->tag )->count();
+         return
             [
                 'post' => $this->collection,
                 'next_url' => $this->nextPageUrl(),
                 'total' => $this->total(),
                 'current_page' => $this->currentPage(),
                 'posts_per_page' => $this->perPage(),
+                'total_followers'=>$total_followers ,
+                'tag_avatar'=>'https://assets.tumblr.com/images/default_avatar/cone_closed_128.png' ,
             ];
     }
 }

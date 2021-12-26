@@ -2,6 +2,7 @@
 
 namespace App\Services\Posts;
 
+use App\Http\Misc\Helpers\Config;
 use App\Models\Blog;
 use App\Models\BlogUser;
 use App\Models\Posts;
@@ -103,5 +104,23 @@ class PostsService
 
             }
         }
+    }
+
+    /**
+     * Getting Posts with tag
+     * 
+     * @param $tag 
+     * 
+     * @return Posts
+     * @author Yousif Ahmed
+     */
+
+    public function GetPostsWithTag($tag)
+    {
+        $postsTags = PostTags::where('tag_name', $tag)->orderBy('created_at', 'DESC')->get();
+        $posts= Posts::wherein('id' , $postsTags->pluck('post_id'))->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
+        $posts->tag = $tag ;
+       
+        return $posts ;
     }
 }

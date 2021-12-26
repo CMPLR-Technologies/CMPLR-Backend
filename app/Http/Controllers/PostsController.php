@@ -909,11 +909,8 @@ class PostsController extends Controller
         $tag = $request->tag;
 
         // getting all user follows this tag 
-        $postsTags = PostTags::where('tag_name', $tag)->orderBy('created_at', 'DESC')->get();
-        $posts= Posts::wherein('id' , $postsTags->pluck('post_id'))->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
-
-        $total_followers = TagUser::where('tag_name', $tag)->count();
-
-        return response()->json(new TaggedPostsCollection($posts) , 200);
+        $posts = $this->PostsService->GetPostsWithTag($tag);
+      
+        return response()->json( new TaggedPostsCollection($posts ), 200);
     }
 }
