@@ -466,14 +466,6 @@ class PostsController extends Controller
 
 
 
-
-
-
-    public function Notifications()
-    {
-    }
-
-
     /**
      * @OA\Delete(
      ** path="/post/delete",
@@ -520,7 +512,7 @@ class PostsController extends Controller
         if (!$post)
             return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
         // a3mlo post resource bs handle el hta bta3t el auth
-        return $this->success_response($post, 200);
+        return $this->success_response(new PostsResource($post), 200);
     }
 
 
@@ -699,6 +691,42 @@ class PostsController extends Controller
         return $this->success_response(new PostsCollection($posts));
     }
 
+    /**
+     * This Function Responisble for 
+     * get miniview of certain blog by show 3 of its blogs
+     * 
+     * @param int $blog_id
+     * @return response
+     */
+    public function MiniProfileView(Request $request, int $blog_id)
+    {
+    
+        $blog = Blog::find($blog_id);
+        if(!$blog)
+            return $this->error_response(Errors::ERROR_MSGS_404,'',404);
+        
+            // get post data
+        $posts = $this->PostsService->MiniViewPostData($blog_id);
+        if(!$posts)
+            return $this->error_response(Errors::ERROR_MSGS_404,'',404);
+        
+        // set blog data
+        $response['blog'] =  $this->PostsService->MiniViewBlogData($blog);
+        
+        //get views
+        $response['views'] = $this->PostsService->GetViews($posts);
+        
+        return $this->success_response($response);
+    }
+
+    public function StuffForYou(Request $request,)
+    {
+        $user = auth('api')->user();
+        $user_followers_id = DB::table('user_follow_blog')->where('user_id',$user->id)->pluck('blog_id');
+        $blogs_followers = DB::table('user_follow_blog')->whereIn('blog_id',$user_followers_id)->pluck('blog_id');
+        $posts = Posts::whereIn('blog_id',$blogs_followers)->paginate(5);
+        return $this->success_response(new PostsCollection($posts));
+    }
     /**
      * @OA\Post(
      ** path="/posts/reblog",
