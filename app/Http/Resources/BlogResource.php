@@ -22,7 +22,7 @@ class BlogResource extends JsonResource
             'title' => $this->title,
             'avatar' => $blog_settings->avatar,
             'avatar_shape'=>$blog_settings->avatar_shape,
-            'header image'=>$blog_settings->header_image,
+            'header_image'=>$blog_settings->header_image,
             'description'=>$blog_settings->description,
             'background_color'=>$blog_settings->background_color,
             'url'=>$this->url,
