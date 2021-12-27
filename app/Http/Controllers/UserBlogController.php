@@ -6,6 +6,7 @@ use App\Http\Misc\Helpers\Config;
 use App\Http\Misc\Helpers\Errors;
 use App\Http\Misc\Helpers\Success;
 use App\Http\Resources\BlogCollection;
+use App\Http\Resources\BlogResource;
 use App\Models\Blog;
 use App\Services\Blog\CreateBlogService;
 use App\Services\Blog\DeleteBlogService;
@@ -372,5 +373,12 @@ class UserBlogController extends Controller
         $blogs = Blog::whereIn('id',$blog_ids)->paginate(15);
         return $this->success_response(new BlogCollection($blogs));
     } 
+
+
+    public function GetBlogInfo($blogId)
+    {
+        $blog=Blog::find($blogId);
+        return $this->success_response(new BlogResource($blog),200);
+    }
 
 }

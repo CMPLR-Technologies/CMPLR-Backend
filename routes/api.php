@@ -66,6 +66,9 @@ Route::delete('/user/follow', [UserBlogController::class, 'unfollow'])->middlewa
 // Create/Delete blog
 Route::post('/blog', [UserBlogController::class, 'create'])->middleware('auth:api');
 Route::post('/blog/{blogName}', [UserBlogController::class, 'destroy'])->middleware('auth:api');
+Route::get('/blog/{blogId}/info', [UserBlogController::class, 'GetBlogInfo'])->middleware('auth:api');
+
+
 
 Route::post('/register/insert', [RegisterController::class, 'Register'])->name('Register');
 Route::post('/register/validate', [RegisterController::class, 'ValidateRegister'])->name('ValidateRegister')->middleware('cors:api');
@@ -154,8 +157,8 @@ Route::put('/notifications/{notificationId}/see', [NotificationsController::clas
 // Route::get('/notifications', [NotificationsController::class, 'GetNotifications'])->middleware('auth:api');
 Route::get('/notifications/unseens', [NotificationsController::class, 'GetUnseens'])->middleware('auth:api');
 Route::post('/notifications/store-token', [NotificationsController::class, 'StoreToken'])->middleware('auth:api');
-
-
+Route::get('/blog/{blogName}/last-ndays-activity', [NotificationsController::class, 'GetLastNdaysActivity'])->middleware('auth:api');
+Route::get('/blog/{blogName}/last-ndays-totalactivity', [NotificationsController::class, 'GetLastNdaysActivity'])->middleware('auth:api');
 
 // User 
 Route::middleware('auth:api')->get('/user/likes', [UserController::class, 'GetUserLikes'])->name('GetUserLikes');

@@ -14,3 +14,4 @@ yarn-error.log
 /.idea
 /.vscode
 test.http
+api-docs.json

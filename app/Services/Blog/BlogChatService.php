@@ -184,7 +184,7 @@ class BlogChatService
     public function CreateMessage($content, $blogIdFrom, $blogIdTo)
     {
 
-        Chat::create([
+        return Chat::create([
             'from_blog_id' => $blogIdFrom,
             'to_blog_id' => $blogIdTo,
             'content' => $content
