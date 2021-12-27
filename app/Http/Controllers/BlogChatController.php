@@ -171,7 +171,7 @@ class BlogChatController extends Controller
 
         $message =$this->blogChatService->CreateMessage($request->Content, $blogIdFrom, $blogIdTo);
 
-        broadcast(new MessageSent($blogIdFrom , $blogIdTo , $message->content));
+        broadcast(new MessageSent($blogIdFrom , $blogIdTo , $message));
 
         return $this->success_response('Success', 200);
     }

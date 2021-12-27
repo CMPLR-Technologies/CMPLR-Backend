@@ -5776,110 +5776,6 @@
                 ]
             }
         },
-        "/user/tags/add": {
-            "post": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "follow new tag",
-                "operationId": "follow tag",
-                "parameters": [
-                    {
-                        "name": "tag_name",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "Meta": {
-                                            "properties": {
-                                                "Status": {
-                                                    "type": "integer",
-                                                    "example": 200
-                                                },
-                                                "msg": {
-                                                    "type": "string",
-                                                    "example": "ok"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/user/tags/remove": {
-            "delete": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "unfollow tag",
-                "operationId": "unfollow tag",
-                "parameters": [
-                    {
-                        "name": "tag_name",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "Meta": {
-                                            "properties": {
-                                                "Status": {
-                                                    "type": "integer",
-                                                    "example": 200
-                                                },
-                                                "msg": {
-                                                    "type": "string",
-                                                    "example": "ok"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/settings/account": {
             "get": {
                 "tags": [
@@ -6398,6 +6294,110 @@
                         "bearer": []
                     }
                 ]
+            }
+        },
+        "/user/tags/add": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "follow new tag",
+                "operationId": "follow tag",
+                "parameters": [
+                    {
+                        "name": "tag_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "ok"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/tags/remove": {
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "unfollow tag",
+                "operationId": "unfollow tag",
+                "parameters": [
+                    {
+                        "name": "tag_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Meta": {
+                                            "properties": {
+                                                "Status": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "ok"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     },
