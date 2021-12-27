@@ -21,6 +21,11 @@ class BlogResource extends JsonResource
             'blog_name'=>$this->blog_name,
             'title' => $this->title,
             'avatar' => $blog_settings->avatar,
+            'avatar_shape'=>$blog_settings->avatar_shape,
+            'header image'=>$blog_settings->header_image,
+            'description'=>$blog_settings->description,
+            'background_color'=>$blog_settings->background_color,
+            'url'=>$this->url,
             'last_update'=>Carbon::now()
         ];
     }
