@@ -30,6 +30,7 @@ class PostsResource extends JsonResource
                 'tags' => $this->tags,
                 'is_liked' => $this->is_liked(),
                 'notes_count' => $this->count_notes(),
+                'is_mine' => $blog->IsMine(),
             ],
             'blog' => [
                 'blog_id' => $blog->id,

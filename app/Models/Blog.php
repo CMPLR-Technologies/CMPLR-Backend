@@ -60,7 +60,7 @@ class Blog extends Model
     public function isfollower()
     {
         if (auth('api')->check()) 
-            return !! Follow::where('user_id',auth('api')->user()->id)->where('blog_id',$this->id)->first();
+            return !! DB::table('follows')->where('user_id',auth('api')->user()->id)->where('blog_id',$this->id)->first();
         return false;
     }
   
@@ -87,6 +87,14 @@ class Blog extends Model
     public function Blocks()
     {
         return $this->hasMany(Block::class,'blog_id');
+    }
+
+    public function IsMine()
+    {
+        if (auth('api')->check()) 
+            return !! BlogUser::where('user_id',auth('api')->user()->id)->where('blog_id',$this->id)->first();
+        return false;
+       
     }
 
 

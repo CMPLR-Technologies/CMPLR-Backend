@@ -35,6 +35,7 @@ class CreateBlogSettingsTable extends Migration
             $table->text('avatar_shape')->default('circle');
             $table->text('background_color')->default('white');
             $table->text('accent_color')->default('blue');
+            $table->text('description')->default('');
             $table->boolean('show_header_image')->default(true);
             $table->boolean('show_avatar')->default(true);
             $table->boolean('show_title')->default(true);

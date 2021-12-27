@@ -3,10 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Misc\Helpers\Errors;
+use App\Http\Resources\LastNdaysActivityCollection;
+use App\Http\Resources\LastNdaysActivityResource;
 use App\Http\Resources\NotificationCollection;
 use App\Http\Resources\NotificationResource;
+use App\Models\Blog;
 use App\Models\Notification;
+use App\Models\PostNotes;
+use App\Models\User;
 use App\Services\Notifications\NotificationsService;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
@@ -298,6 +305,31 @@ class NotificationsController extends Controller
     
         //return the response
         return $this->success_response('token stored',200);
+    }
+
+    /**
+     * get last ndays activity for a certain blog
+     * 
+     * @return response
+     */
+
+
+    public function GetLastNdaysActivity(Request $request,$blogName)
+    {
+        $this->validate($request,[
+            'lastNdays' => 'required'
+        ]);
+
+        //get sequence of required dates
+        $dates=CarbonPeriod::create(now()->startOfMonth(), now()->endOfMonth())->toArray();
+
+        $blog=Blog::where('blog_name',$blogName)->first();
+
+        foreach ($dates as &$date)
+            $date=[$blog,$date,$request->lastNdays];
+            
+        //return the response
+        return $this->success_response(new LastNdaysActivityCollection($dates),200);
     }
 
 

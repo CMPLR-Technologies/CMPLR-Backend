@@ -23,7 +23,6 @@ class BlogCollection extends ResourceCollection
             'current_page' => $this->currentPage(),
             'next_page' =>$this->currentPage()+1,
             'posts_per_page' => $this->perPage(),
-            'ahmed' => 'true'
         ];
     }
 }
