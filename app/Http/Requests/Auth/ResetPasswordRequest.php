@@ -6,8 +6,8 @@ use App\Http\Misc\Helpers\Errors;
 use App\Http\Misc\Traits\WebServiceResponse;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\validation\Rules\Password;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ResetPasswordRequest extends FormRequest
 {
