@@ -736,19 +736,19 @@ class PostsController extends Controller
     //     return $this->success_response(new PostsCollection($posts));
     // }
 
-
+    
     public function ProfileLikes(Request $request, string $blog_name)
     {
         $blog = Blog::where('blog_name', $blog_name)->first();
         if ($blog == null)
             return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
 
-        $user_id = BlogUser::where('blog_id', $blog->id)->where('primary', true)->first()->user_id;
-        if (!$user_id)
+        $user = BlogUser::where('blog_id', $blog->id)->where('primary', true)->first();
+        if (!$user)
             return $this->error_response(Errors::ERROR_MSGS_404, 'it is not primary blog', 404);
 
         // get id of all posts liked by user
-        $likes = $this->UserService->GetLikes($user_id);
+        $likes = $this->UserService->GetLikes($user->id);
 
         //get liked posts
         $posts = Posts::whereIn('id', $likes)->paginate(config::PAGINATION_LIMIT);
@@ -756,7 +756,7 @@ class PostsController extends Controller
         return $this->success_response(new PostsCollection($posts));
     }
 
-    
+
     public function ProfileFollowing(Request $request, string $blog_name)
     {
         $blog = Blog::where('blog_name', $blog_name)->first();
