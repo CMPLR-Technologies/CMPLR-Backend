@@ -16,8 +16,7 @@ class TaggedPostsCollection extends ResourceCollection
     public function toArray($request)
     {
         $user = auth('api')->user() ;
-        //if ($user->is_Empty)
-//            $is_followers = count(TagUser::where([['tag_name'=>$this->tag],['user_id'=>$user->id ]] )->first())>0;
+  
          return
             [
                 'post' => $this->collection,
