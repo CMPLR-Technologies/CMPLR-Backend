@@ -756,6 +756,7 @@ class PostsController extends Controller
         return $this->success_response(new PostsCollection($posts));
     }
 
+    
     public function ProfileFollowing(Request $request, string $blog_name)
     {
         $blog = Blog::where('blog_name', $blog_name)->first();
