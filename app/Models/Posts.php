@@ -16,7 +16,8 @@ class Posts extends Model
         'blog_name',
         'date',
         'tags',
-        'source_content'
+        'source_content',
+        'title'
     ];
 
     protected $casts = [
