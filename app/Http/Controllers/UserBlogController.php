@@ -368,7 +368,7 @@ class UserBlogController extends Controller
     {
         $user = auth('api')->user();
         //TODO: config paginate limit Config::PAGINATION_BLOGS_LIMIT
-        
+
         $blog_ids = DB::table('follows')->where('user_id',$user->id)->pluck('blog_id');
         $blogs = Blog::whereIn('id',$blog_ids)->paginate(15);
         return $this->success_response(new BlogCollection($blogs));
