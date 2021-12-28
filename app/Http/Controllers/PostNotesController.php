@@ -11,6 +11,8 @@ use App\Services\Post\PostNotesService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use function PHPUnit\Framework\isEmpty;
+
 class PostNotesController extends Controller
 {
     /*
@@ -119,6 +121,11 @@ class PostNotesController extends Controller
         
         $notes =  $this->postNotesService->GetPostNotes($postId);
         
+        // checking null
+        if ( !count($notes))
+        {
+            return response()->json( ['notes'=> $notes ,'total_likes' => 0 ,'total_reblogs'=>0,'total_replys'=>0] , 200);
+        }
         return response()->json( new PostNotesCollection($notes) , 200);
 
     }
