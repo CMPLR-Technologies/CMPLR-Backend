@@ -94,7 +94,7 @@ class UserPostConroller extends Controller
             return $this->error_response(Errors::ERROR_MSGS_404,'Note Not Found',404);
 
         }
-        $this->notification->CreateNotification($userId , null ,'like' ,$postId );
+      //  $this->notification->CreateNotification($userId , null ,'like' ,$postId );
 
         return response()->json( ['message'=>'Success'], 200);
 
