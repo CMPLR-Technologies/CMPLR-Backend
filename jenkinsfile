@@ -24,7 +24,7 @@ pipeline {
                     echo "========fetch execution failed========"
                     //slackSend (color:"#FF0000", message: "Failed to pull code-base from github")
                     
-                }
+                 }
             }
         }
         stage('docker build') {
