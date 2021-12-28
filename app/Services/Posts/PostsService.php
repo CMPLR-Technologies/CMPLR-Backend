@@ -41,12 +41,12 @@ class PostsService
      */
     public function createPost(array $data)
     {
-        try {
+       // try {
             $post = Posts::create($data);
             return $post;
-        } catch (\Throwable $th) {
+        //} catch (\Throwable $th) {
             return null;
-        }
+        //}
     }
 
     /**
