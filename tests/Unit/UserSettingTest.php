@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Http\Requests\SettingsRequest;
 use App\Models\Blog;
 use App\Models\User;
 use App\Services\User\UserSettingService;
@@ -34,7 +35,9 @@ class UserSettingTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+
         if (!self::$initialized) {
+
             $faker = Factory::create(1);
             $request = [
                 'email' => $faker->email(),
@@ -54,6 +57,7 @@ class UserSettingTest extends TestCase
         }
     }
 
+ 
 
     /** @test */
     public function SuccessfulConfirmPassword()

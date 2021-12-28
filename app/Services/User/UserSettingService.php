@@ -115,6 +115,7 @@ class UserSettingService
     {
         try {
             $user = User::where('id',$user_id)->first();
+            $new_password =  Hash::make($new_password);
             $user->update(['password'=>$new_password]);
         } catch (\Throwable $th) {
             return false;
