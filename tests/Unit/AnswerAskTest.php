@@ -5,18 +5,18 @@ namespace Tests\Unit;
 use App\Models\Post;
 use App\Models\Blog;
 use App\Models\User;
-use App\Services\Ask\DeleteAskService;
+use App\Services\Ask\AnswerAskService;
 use Tests\TestCase;
 use Illuminate\Support\Str;
 
-class DeleteAskTest extends TestCase
+class AnswerAskTest extends TestCase
 {
 
     /*
     |--------------------------------------------------------------------------
-    | DeleteAsk Test
+    | AnswerAsk Test
     |--------------------------------------------------------------------------|
-    | This class tests DeleteAsk 
+    | This class tests AnswerAsk 
     |
    */
 
@@ -26,8 +26,12 @@ class DeleteAskTest extends TestCase
     {
         $askId=null;
         $user=null;
+        $param=[
+            'content'=>'<html></html>',
+            'state'=>'draft'
+        ];
 
-        $code=(new DeleteAskService())->DeleteAsk($askId,$user);
+        $code=(new AnswerAskService())->AnswerAsk($param,$askId,$user);
                                                     
         $this->assertEquals(404,$code);
     }
@@ -35,6 +39,11 @@ class DeleteAskTest extends TestCase
     //test if the user is not a member of the blog
     public function test_Forbidden()
     {
+        $param=[
+            'content'=>'<html></html>',
+            'state'=>'draft'
+        ];
+
         //get an ask
         $ask=Post::where('post_ask_submit','ask')->first();
         
@@ -44,7 +53,7 @@ class DeleteAskTest extends TestCase
         //get a user which is not a member of the blog
         $user=User::whereNotIn('id',$usersId)->first();
 
-        $code=(new DeleteAskService())->DeleteAsk($ask->id,$user);
+        $code=(new AnswerAskService())->AnswerAsk($param,$ask->id,$user);
 
         $this->assertEquals(403,$code);
     }
@@ -52,13 +61,18 @@ class DeleteAskTest extends TestCase
     //testing if the request is valid
     public function test_Success()
     {
+        $param=[
+            'content'=>'<html></html>',
+            'state'=>'draft'
+        ];
+
         $ask=Post::where('post_ask_submit','ask')->first();
 
         $user=Blog::find($ask->blog_id)->users()->first();
         
-        $code=(new DeleteAskService())->DeleteAsk($ask->id,$user);
+        $code=(new AnswerAskService())->AnswerAsk($param,$ask->id,$user);
                                                     
-        $this->assertEquals(202,$code);
+        $this->assertEquals(200,$code);
     }
 
 

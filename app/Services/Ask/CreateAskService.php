@@ -23,7 +23,7 @@ class CreateAskService{
      * 
      * @return int
      */
-    public function CreateAsk($request,$blogName)
+    public function CreateAsk($request,$blogName,$user)
     {
         //get target blog
         $blog=Blog::where('blog_name',$blogName)->first();
@@ -33,13 +33,13 @@ class CreateAskService{
             return 404;
 
         //check if blocked
-        if((new BlockService())->isBlocked($blog->id,auth()->user()->primary_blog_id))
+        if((new BlockService())->isBlocked($blog->id,$user->primary_blog_id))
             return 403;
 
         //get user who asked
         $source_user_id=null;
         if($request['is_anonymous']==false)
-            $source_user_id=auth()->id();
+            $source_user_id=$user->id;
         
 
         //create ask
@@ -56,7 +56,7 @@ class CreateAskService{
 
         //add ask notification
         (new NotificationsService())->CreateNotification(
-            $request['is_anonymous']==null?null:auth()->user()->primary_blog_id,
+            $request['is_anonymous']==false?null:$user->primary_blog_id,
             $blog->id,
             'ask',
             $ask->id,

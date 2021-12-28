@@ -118,7 +118,7 @@ class AskController extends Controller
     public function CreateAsk(CreateAskRequest $request, $blogName)
     {
         //call the service
-        $code = (new CreateAskService())->CreateAsk($request->all(), $blogName);
+        $code = (new CreateAskService())->CreateAsk($request->all(), $blogName,auth()->user());
 
         //return the response
         if($code==404)

@@ -68,12 +68,13 @@ class AnswerAskService{
         );
 
         //add answer notification
-        (new NotificationsService())->CreateNotification(
-            $ask->blog_id,
-            $primaryBlogId,
-            'answer',
-            $ask->id,
-        );
+        if($ask->source_user_id!=null)
+            (new NotificationsService())->CreateNotification(
+                $ask->blog_id,
+                $primaryBlogId,
+                'answer',
+                $ask->id,
+            );
 
         return 200;
     }
