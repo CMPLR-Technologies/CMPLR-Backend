@@ -36,8 +36,8 @@ class LastNdaysActivityCollection extends ResourceCollection
         return [
             'data'=>$this->collection,
             'notes'=>$notes,
-            'new followers'=>$newFollowers,
-            'total followers'=>$totalFollowers
+            'new_followers'=>$newFollowers,
+            'total_followers'=>$totalFollowers
         ];
     }
 }

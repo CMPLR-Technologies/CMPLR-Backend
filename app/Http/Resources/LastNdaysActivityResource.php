@@ -31,8 +31,8 @@ class LastNdaysActivityResource extends JsonResource
 
         return [
             'notes'=>$notes,
-            'new followers'=>$newFollowers,
-            'total followers'=>$totalFollowers,
+            'new_followers'=>$newFollowers,
+            'total_followers'=>$totalFollowers,
             'date'=>$this[1]->format('d-m-Y')
         ];
     }
