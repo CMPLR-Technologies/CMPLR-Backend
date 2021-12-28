@@ -17,9 +17,9 @@ class PostNotesCollection extends ResourceCollection
         $notesCounts = (object) $this->collection[0]->post_notes_count();
         return [
             'notes' => $this->collection,
-            'total_likes' => $notesCounts->like,
-            'total_reblogs' => $notesCounts->reblog,
-            'total_replys' => $notesCounts->reply
+            'total_likes' => (int)$notesCounts->like,
+            'total_reblogs' => (int)$notesCounts->reblog,
+            'total_replys' => (int)$notesCounts->reply
         ];
     }
 }

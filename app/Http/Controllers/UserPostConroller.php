@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Misc\Helpers\Errors;
+use App\Models\Posts;
+use App\Services\Notifications\NotificationsService;
 use App\Services\User\UserPostService;
 use Illuminate\Http\Request;
 
@@ -16,15 +18,17 @@ class UserPostConroller extends Controller
     |
    */
     protected $userPostService;
+    protected $notification ;
 
     /**
      * Instantiate a new controller instance.
      *
      * @return void
      */
-    public function __construct(UserPostService $userPostService)
+    public function __construct(UserPostService $userPostService , NotificationsService $notification)
     {
         $this->userPostService = $userPostService;
+        $this->notification = $notification ;
     }
     /**
      * @OA\POST(
@@ -90,6 +94,7 @@ class UserPostConroller extends Controller
             return $this->error_response(Errors::ERROR_MSGS_404,'Note Not Found',404);
 
         }
+        $this->notification->CreateNotification($userId , null ,'like' ,$postId );
 
         return response()->json( ['message'=>'Success'], 200);
 
