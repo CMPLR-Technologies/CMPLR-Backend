@@ -8,27 +8,23 @@ use App\Http\Requests\Auth\GoogleRequest;
 use App\Http\Resources\Auth\RegisterResource;
 use App\Models\Blog;
 use App\Models\User;
-use Exception;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
-use App\Services\Auth\LoginService;
 use App\services\Auth\RegisterService;
 use Illuminate\Auth\Events\Registered;
 
 class GoogleController extends Controller
 {
-    protected $loginService;
     protected $RegisterService;
     /**
      * Instantiate a new controller instance.
      *
      * @return void
      */
-    public function __construct(LoginService $loginService, RegisterService $RegisterService)
+    public function __construct( RegisterService $RegisterService)
     {
-        $this->loginService = $loginService;
         $this->RegisterService = $RegisterService;
     }
     public function GoogleLogin()

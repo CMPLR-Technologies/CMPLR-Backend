@@ -115,6 +115,7 @@ Route::delete('/ask/{askId}', [AskController::class, 'DeleteAsk'])->middleware('
 Route::get('/user/inbox', [InboxController::class, 'GetInbox'])->middleware('auth:api');
 Route::get('/user/inbox/{blogName}', [InboxController::class, 'GetBlogInbox'])->middleware('auth:api');
 Route::delete('/user/inbox/', [InboxController::class, 'DeleteInbox'])->middleware('auth:api');
+Route::delete('/user/inbox/{blogName}', [InboxController::class, 'DeleteBlogInbox'])->middleware('auth:api');
 
 
 // Posts

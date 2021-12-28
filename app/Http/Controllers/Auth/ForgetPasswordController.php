@@ -90,14 +90,12 @@ class ForgetPasswordController extends Controller
         $token = $this->ForgetPasswordService->AddToken($request->email);
 
         if($token == null)
-            return $this->error_response(Errors::ERROR_MSGS_400,['Invalid Token'],400);
+            return $this->error_response(Errors::ERROR_MSGS_400,['Cannot create token'],400);
 
         // send ResetPasswordMail
         if(!$this->ForgetPasswordService->SendResetPasswordMail($request->email , $token))
-            return $this->error_response(Errors::ERROR_MAIL,'',500);
+            return $this->error_response(Errors::ERROR_MSGS_500,Errors::ERROR_MAIL,500);
 
         return $this->success_response(['Check your email'],200);
-    }
-    
- 
+    } 
 }
