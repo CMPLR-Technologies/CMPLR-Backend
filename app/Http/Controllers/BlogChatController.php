@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Events\MessageSent;
-use App\Http\Misc\Helpers\Config;
 use App\Http\Resources\BlogChatCollection;
+use App\Http\Resources\LatestMessagesCollection;
+use App\Http\Resources\LatestMessagesResource;
 use App\Services\Blog\BlogChatService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -70,20 +71,14 @@ class BlogChatController extends Controller
         if (!$this->blogChatService->IsValidBlogId($blogId, $userid)) {
             return $this->error_response('Unauthenticated', 'Invalid blog id', 401);
         }
-        // getting lates messages 
+        // getting latest messages 
         $messages = $this->blogChatService->GetLatestMessages($blogId);
         if ($messages->isEmpty())
         {
             return response()->json($messages, 200);
         }
-        // getting all blog settings   
-        $blogsData = $this->blogChatService->GetBlogDataforChatParteners($messages, $blogId);
 
-        // getting latest Message result
-        $latestMessages = $this->blogChatService->GetLatestMessagesResult($blogsData, $messages, $blogId);
-
-
-        return response()->json($latestMessages, 200);
+        return response()->json(new LatestMessagesCollection($messages), 200);
     }
     /**
      * @OA\Get(
@@ -111,7 +106,7 @@ class BlogChatController extends Controller
      */
     public function Conversation($blogIdFrom, $blogIdTo)
     {
-
+        //getting all conversation messages 
         $messages = $this->blogChatService->GetConversationMessages($blogIdFrom, $blogIdTo);
         if (!$messages->isEmpty()) 
         {
@@ -168,7 +163,7 @@ class BlogChatController extends Controller
         if (!$this->blogChatService->IsValidBlogId($blogIdFrom, $userId)) {
             return $this->error_response('Unauthenticated', 'Invalid blog id', 401);
         }
-
+        //creating messages with content 
         $message =$this->blogChatService->CreateMessage($request->Content, $blogIdFrom, $blogIdTo);
 
         broadcast(new MessageSent($blogIdFrom , $blogIdTo , $message));

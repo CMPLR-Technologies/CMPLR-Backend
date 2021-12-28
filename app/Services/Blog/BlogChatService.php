@@ -9,7 +9,13 @@ use Illuminate\Support\Facades\DB;
 
 class BlogChatService
 {
-
+     /*
+    |--------------------------------------------------------------------------
+    | BlogChat Service 
+    |--------------------------------------------------------------------------|
+    | This service handles all BlogChat Controller needed  
+    |
+   */
     /**
      * Checking for a valid blog id
      * 
@@ -42,47 +48,7 @@ class BlogChatService
 
         return $blogsData;
     }
-    /**
-     * Getting defined result for messages and blogs data
-     * only for reponse structure
-     *
-     * @param $blogData 
-     * @param $messages
-     * @param $blogId 
-     *
-     * @return $collection
-     */
 
-    public function GetLatestMessagesResult($blogsData, $messages, $blogId)
-    {
-        $blogsHashData = [];
-        foreach ($blogsData as $data) {
-            $blogsHashData[$data->id] = $data;
-        }
-
-        for ($i = 0; $i < count($messages); $i++) {
-            if ($messages[$i]->from_blog_id != $blogId)
-                $id = $messages[$i]->from_blog_id;
-            else
-                $id =  $messages[$i]->to_blog_id;
-            $collection[] = [
-                'from_blog_id' => $messages[$i]->from_blog_id,
-                'to_blog_id' => $messages[$i]->to_blog_id,
-                'content' => $messages[$i]->content,
-                'is_read' => $messages[$i]->is_read,
-                'blog_data' => [
-                    'blog_id' => $id,
-                    'blog_name' => $blogsHashData[$id]->blog_name,
-                    'blog_url' => $blogsHashData[$id]->url,
-                    'avatar'   => $blogsHashData[$id]->settings->avatar,
-                    'avatar_shape' => $blogsHashData[$id]->settings->avatar_shape,
-
-                ]
-
-            ];
-        }
-        return $collection;
-    }
     /**
      * Getting recent messages to blog
      * @param $blogId
@@ -123,26 +89,12 @@ class BlogChatService
      */
     public function GetConversationMessages($blogIdFrom, $blogIdTo)
     {
-        try{
-           $conversation = Chat::where([['from_blog_id', '=', $blogIdFrom], ['to_blog_id', '=', $blogIdTo]])->orwhere([['from_blog_id', '=', $blogIdTo], ['to_blog_id', '=',  $blogIdFrom]])->orderBy('created_at' ,'DESC')->paginate(Config::Message_PAGINATION_LIMIT);
-           return $conversation;
-            
+        try {
+            $conversation = Chat::where([['from_blog_id', '=', $blogIdFrom], ['to_blog_id', '=', $blogIdTo]])->orwhere([['from_blog_id', '=', $blogIdTo], ['to_blog_id', '=',  $blogIdFrom]])->orderBy('created_at', 'DESC')->paginate(Config::Message_PAGINATION_LIMIT);
+            return $conversation;
         } catch (\Throwable $th) {
             return null;
         }
-
-    }
-
-    /**
-     * Getting blog data for defined blog id 
-     * 
-     * @param $blogId 
-     * 
-     * @return $blogData
-     */
-    public function GetBlogData($blogId)
-    {
-        return  Blog::where('id', $blogId)->with('settings')->get();
     }
 
     /**
@@ -150,6 +102,7 @@ class BlogChatService
      * 
      * @param $messages 
      * 
+     * @return boolean
      */
     public function MarkAsRead($messages)
     {
@@ -160,40 +113,51 @@ class BlogChatService
                 $message->save();
             }
         }
+        return true ;
     }
-
-    public function ConversationDataResult($recieverBlogData, $messages)
-    {
-        $blogData[] = [
-            'blog_name' => $recieverBlogData[0]->blog_name,
-            'url' => $recieverBlogData[0]->url,
-            'title' => $recieverBlogData[0]->title,
-            'avatar' => $recieverBlogData[0]->avatar,
-            'avatar_shape' => $recieverBlogData[0]->avatar_shape
-        ];
-
-        $result[] = [
-
-            'blog_data' => $blogData[0],
-            'messages' => $messages
-        ];
-
-        return $result;
-    }
+    /**
+     * Creating message 
+     * 
+     * @param $content
+     * @param $blogIdFrom
+     * @param $blogIdTo
+     * 
+     * @return boolean 
+     */
 
     public function CreateMessage($content, $blogIdFrom, $blogIdTo)
     {
-
-        return Chat::create([
-            'from_blog_id' => $blogIdFrom,
-            'to_blog_id' => $blogIdTo,
-            'content' => $content
-        ]);
+        try {
+            return Chat::create([
+                'from_blog_id' => $blogIdFrom,
+                'to_blog_id' => $blogIdTo,
+                'content' => $content
+            ]);
+        } catch (\Throwable $th) {
+            return false;
+        }
+        return true;
     }
+    /**
+     * Deleting conversation messages 
+     * 
+     * @param $blogIdFrom 
+     * @param $blogIdTo
+     * 
+     * @return boolean
+     */
 
-    public function DeleteMessages($blogIdFrom , $blogIdTo)
+    public function DeleteMessages($blogIdFrom, $blogIdTo)
     {
-        Chat::where([['from_blog_id', '=', $blogIdFrom], ['to_blog_id', '=', $blogIdTo]])->orwhere([['from_blog_id', '=', $blogIdTo], ['to_blog_id', '=',  $blogIdFrom]])->delete();
-
+        try {
+            Chat::where([
+                ['from_blog_id', '=', $blogIdFrom],
+                ['to_blog_id', '=', $blogIdTo]
+            ])
+                ->orwhere([['from_blog_id', '=', $blogIdTo], ['to_blog_id', '=',  $blogIdFrom]])->delete();
+        } catch (\Throwable $th) {
+            return false;
+        }
+        return true;
     }
 }
