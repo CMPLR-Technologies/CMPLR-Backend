@@ -3,9 +3,10 @@
 namespace App\Services\User;
 
 use App\Models\Tag;
+use App\Models\Posts;
 use App\Models\TagUser;
-use App\Http\Misc\Helpers\Config;
 use App\Models\PostTags;
+use App\Http\Misc\Helpers\Config;
 
 class UserTagsService
 {
@@ -58,6 +59,24 @@ class UserTagsService
     }
 
     /**
+     * getting the tags followed by a user 
+     * 
+     * @return $tags
+     */
+    public function GetFollowedTags($userId)
+    {
+        $tags = TagUser::where(['user_id' => $userId])->with('tag')->get();
+
+        $followed_tags = [];
+
+        foreach ($tags as $tag) {
+            $followed_tags[] = $tag['tag'];
+        }
+
+        return ($followed_tags);
+    }
+
+    /**
      * getting random tags 
      * 
      * @return $tags
@@ -84,13 +103,9 @@ class UserTagsService
      */
     public function GetTagPosts($tag_name)
     {
-        $post = PostTags::where('tag_name', '=', $tag_name)->with('post');
-
-        if (!$post) {
-            return [];
-        }
-
-        return $post;
+        $postsTags = PostTags::where('tag_name', $tag_name)->orderBy('created_at', 'DESC')->get();
+        $posts = Posts::wherein('id', $postsTags->pluck('post_id'))->orderBy('date', 'DESC')->get();
+        return $posts;
     }
 
     /**

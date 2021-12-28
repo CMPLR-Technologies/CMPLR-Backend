@@ -132,6 +132,7 @@ Route::middleware('guest')->get('posts/view/{blog_name}', [PostsController::clas
 Route::get('MiniProfileView/{blog_id}', [PostsController::class, 'MiniProfileView'])->name('post.get.MiniProfileView');
 
 // Explore
+Route::get('/following/tags', [UserTagsConroller::class, 'GetFollowedTags'])->name('followed.tags')->middleware('auth:api');
 Route::get('/recommended/tags', [UserTagsConroller::class, 'GetRecommendedTags'])->name('recommended.tags');
 Route::get('/recommended/blogs', [BlogController::class, 'GetRecommendedBlogs'])->name('recommended.blogs');
 Route::get('/recommended/posts', [PostsController::class, 'GetRecommendedPosts'])->name('recommended.posts');
