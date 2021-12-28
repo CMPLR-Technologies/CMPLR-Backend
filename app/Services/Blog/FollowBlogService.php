@@ -50,7 +50,7 @@ class FollowBlogService{
     public function GetFollowersID(int $blog_id)
     {
         try {
-            $followers_id = Follow::where('blog_id',$blog_id)->pluck('user_id');
+            $followers_id = DB::table('follows')->where('blog_id',$blog_id)->pluck('user_id');
         } catch (\Throwable $th) {
             return null;
         }
@@ -60,7 +60,7 @@ class FollowBlogService{
     /**
      * This Funtion Get Followers for specific Blog
      */
-    public function GetFollowersInfo(mixed $followers_id)
+    public function GetFollowersInfo($followers_id)
     {
         // if there is no followers return empty array
         if(!$followers_id)
