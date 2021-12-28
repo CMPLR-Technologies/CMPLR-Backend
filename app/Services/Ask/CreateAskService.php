@@ -4,6 +4,7 @@ namespace App\Services\Ask;
 
 use App\Models\Blog;
 use App\Models\Post;
+use App\Services\Block\BlockService;
 use App\Services\Notifications\NotificationsService;
 use Illuminate\Support\Facades\DB;
 
@@ -22,7 +23,7 @@ class CreateAskService{
      * 
      * @return int
      */
-    public function CreateAsk($request,$blogName)
+    public function CreateAsk($request,$blogName,$user)
     {
         //get target blog
         $blog=Blog::where('blog_name',$blogName)->first();
@@ -31,10 +32,14 @@ class CreateAskService{
         if($blog==null)
             return 404;
 
+        //check if blocked
+        if((new BlockService())->isBlocked($blog->id,$user->primary_blog_id))
+            return 403;
+
         //get user who asked
         $source_user_id=null;
         if($request['is_anonymous']==false)
-            $source_user_id=auth()->id();
+            $source_user_id=$user->id;
         
 
         //create ask
@@ -51,7 +56,7 @@ class CreateAskService{
 
         //add ask notification
         (new NotificationsService())->CreateNotification(
-            $request['is_anonymous']==null?null:auth()->user()->primary_blog_id,
+            $request['is_anonymous']==false?null:$user->primary_blog_id,
             $blog->id,
             'ask',
             $ask->id,

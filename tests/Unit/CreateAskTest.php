@@ -2,6 +2,8 @@
 
 namespace Tests\Unit;
 
+use App\Models\Blog;
+use App\Models\User;
 use App\Services\Ask\CreateAskService;
 use Tests\TestCase;
 use Illuminate\Support\Str;
@@ -17,21 +19,18 @@ class CreateAskTest extends TestCase
     |
    */
 
-
-
     //testing if the request is valid
     public function test_Success()
     {
-        $blogName='yousef';
+        $blogName=Blog::take(1)->first()->blog_name;
+        $user=User::take(1)->first();
         $request=[
             'mobile'=>'0',
             'content'=>'{"photo":"p1"}',
             'is_anonymous'=>'0',
-            'layout'=>'{"photo1":"position"}',
-            'format'=>'rich text'
         ];
 
-        $code=(new CreateAskService())->CreateAsk($request,$blogName);
+        $code=(new CreateAskService())->CreateAsk($request,$blogName,$user);
                                                     
         $this->assertEquals(201,$code);
     }
@@ -39,16 +38,15 @@ class CreateAskTest extends TestCase
     //testing if blog name is not found
     public function test_NotFound()
     {
-        $blogName=Str::random(5);
+        $blogName=null;
+        $user=null;
         $request=[
             'mobile'=>'0',
             'content'=>'{"photo":"p1"}',
             'is_anonymous'=>'0',
-            'layout'=>'{"photo1":"position"}',
-            'format'=>'rich text'
         ];
 
-        $code=(new CreateAskService())->CreateAsk($request,$blogName);
+        $code=(new CreateAskService())->CreateAsk($request,$blogName,$user);
                                                     
         $this->assertEquals(404,$code);
     }

@@ -5,6 +5,7 @@ namespace App\Services\Block;
 use App\Http\Misc\Helpers\Config;
 use App\Models\Block;
 use App\Models\Blog;
+use App\Models\Follow;
 
 class BlockService{
 
@@ -50,6 +51,19 @@ class BlockService{
         $blog->Blocks()->create([
             'blocked_blog_id'=>$block->id
         ]);
+
+        //remove the follow relation
+        Follow::where('user_id',$user->id)
+              ->where('blog_id',$block->id)
+              ->delete();
+
+        //get all the users in the blocked blog
+        $blockedUsersIds=$block->users()->pluck('user_id')->toArray();
+        
+        //remove the follow relation
+        Follow::whereIn('user_id',$blockedUsersIds)
+              ->where('blog_id',$blog->id)
+              ->delete();
 
         return 200;
     }

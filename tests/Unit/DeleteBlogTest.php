@@ -6,6 +6,7 @@ use App\Models\Blog;
 use App\Models\User;
 use App\Services\Blog\DeleteBlogService;
 use Tests\TestCase;
+use Illuminate\Support\Str;
 
 class DeleteBlogTest extends TestCase
 {
@@ -15,8 +16,12 @@ class DeleteBlogTest extends TestCase
         $blog=Blog::take(1)->first();
 
         //getting a user with a full privileges 
-        $user=User::find($blog->Users->where('full_privileges',true)->first()->user_id);
-        $param=['email'=>'00','password'=>'00'];
+        $user=$blog->users->first();
+
+        $param=[
+            'email'=>null,
+            'password'=>null
+        ];
 
         $code=(new DeleteBlogService())->DeleteBlog($blog,$user,$param);
                                                     
@@ -28,9 +33,12 @@ class DeleteBlogTest extends TestCase
     {
         $blog=Blog::take(1)->first();
 
-        //getting a user with a full privileges 
-        $user=User::find($blog->Users->where('full_privileges',true)->first()->user_id);
-        $param=['email'=>$user->email,'password'=>$user->password];
+        //getting a user which is a member of the blog 
+        $user=$blog->users->first();
+        $param=[
+            'email'=>$user->email,
+            'password'=>$user->password
+        ];
 
         $code=(new DeleteBlogService())->DeleteBlog($blog,$user,$param);
                                                     

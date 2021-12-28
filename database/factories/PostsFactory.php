@@ -33,7 +33,8 @@ class PostsFactory extends Factory
             'source_content' => Str::random(10),
             'blog_id'=>$blog->id,
             'blog_name'=>$blog->blog_name,
-            'tags' => ['summer','winter']
+            'tags' => ['summer','winter'],
+            'post_ask_submit' => $this->faker->randomElement(['post','ask' ,'submit'])
         ];
     }
 }

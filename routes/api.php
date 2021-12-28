@@ -115,6 +115,7 @@ Route::delete('/ask/{askId}', [AskController::class, 'DeleteAsk'])->middleware('
 Route::get('/user/inbox', [InboxController::class, 'GetInbox'])->middleware('auth:api');
 Route::get('/user/inbox/{blogName}', [InboxController::class, 'GetBlogInbox'])->middleware('auth:api');
 Route::delete('/user/inbox/', [InboxController::class, 'DeleteInbox'])->middleware('auth:api');
+Route::delete('/user/inbox/{blogName}', [InboxController::class, 'DeleteBlogInbox'])->middleware('auth:api');
 
 
 // Posts
@@ -162,7 +163,6 @@ Route::put('/notifications/{notificationId}/see', [NotificationsController::clas
 Route::get('/notifications/unseens', [NotificationsController::class, 'GetUnseens'])->middleware('auth:api');
 Route::post('/notifications/store-token', [NotificationsController::class, 'StoreToken'])->middleware('auth:api');
 Route::get('/blog/{blogName}/last-ndays-activity', [NotificationsController::class, 'GetLastNdaysActivity'])->middleware('auth:api');
-Route::get('/blog/{blogName}/last-ndays-totalactivity', [NotificationsController::class, 'GetLastNdaysActivity'])->middleware('auth:api');
 
 // User 
 Route::middleware('auth:api')->get('/user/likes', [UserController::class, 'GetUserLikes'])->name('GetUserLikes');

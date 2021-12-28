@@ -22,7 +22,7 @@ class SubmitService{
      * 
      * @return int
      */
-    public function CreateSubmit($request,$blogName)
+    public function CreateSubmit($request,$blogName,$user)
     {
         //get target blog
         $blog=Blog::where('blog_name',$blogName)->first();
@@ -32,7 +32,7 @@ class SubmitService{
             return 404;
 
         //get user who submitted
-        $source_user_id=auth()->id();
+        $source_user_id=$user->id;
 
         //create submit
         Post::create([
