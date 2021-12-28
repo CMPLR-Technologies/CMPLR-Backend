@@ -1015,5 +1015,6 @@ class PostsController extends Controller
         $posts = $this->PostsService->GetPostsWithTag($tag);
 
         return response()->json(new TaggedPostsCollection($posts), 200);
+        
     }
 }

@@ -41,4 +41,31 @@ class DeleteInboxService{
         return 200;
     }
 
+    /**
+     * implements the logic of Deleting a blog's inbox
+     * 
+     * @return array
+     */
+    public function DeleteBlogInbox($blogName,$user)
+    {
+        //get target blog
+        $blog=Blog::where('blog_name',$blogName)->first();
+
+        if($blog==null)
+            return 404;
+
+        //check if the authenticated user is a member in this blog
+        if($blog->users->contains('id',$user->id) == false)
+            return 403;
+
+        // get inbox of the blog
+        $blog
+            ->posts()
+            ->where('post_ask_submit','ask')
+            ->orwhere('post_ask_submit','submit')
+            ->delete();
+
+        return 200;
+    }
+
 }

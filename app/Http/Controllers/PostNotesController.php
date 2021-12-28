@@ -119,12 +119,8 @@ class PostNotesController extends Controller
         
         $notes =  $this->postNotesService->GetPostNotes($postId);
         
-        $counts =(object) $this->postNotesService->GetNotesCount($postId);
-
-        $result []=[ $notes ,  $counts];
-        
-        return response()->json(new PostNotesCollection ($result) , 200);
+        return response()->json( new PostNotesCollection($notes) , 200);
 
     }
-
+ 
 }
