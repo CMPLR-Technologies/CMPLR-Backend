@@ -153,7 +153,7 @@ class UsersettingController extends Controller
             return $this->success_response($request->email,200);
 
         // update User Email
-        $is_updated = $this->UserSettingService->UpdateEmail($user, $request->email);
+        $is_updated = $this->UserSettingService->UpdateEmail($user->id, $request->email);
         if (!$is_updated)
             return $this->error_response(Errors::ERROR_MSGS_500, 'Failed to update email', 500);
 
@@ -185,7 +185,7 @@ class UsersettingController extends Controller
         // TODO:check if new pass = old pass
         
         // update User Password
-        $is_updated = $this->UserSettingService->UpdatePassword($user, $request->new_password);
+        $is_updated = $this->UserSettingService->UpdatePassword($user->id, $request->new_password);
         if (!$is_updated)
             return $this->error_response(Errors::ERROR_MSGS_500, 'Failed to update Password', 500);
 

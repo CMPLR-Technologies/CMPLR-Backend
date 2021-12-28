@@ -2,10 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Models\TagUser;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class TaggedPostsCollection extends ResourceCollection
+class TagCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -15,15 +14,13 @@ class TaggedPostsCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        $user = auth('api')->user() ;
-  
-         return
+        return
             [
-                'post' => $this->collection,
+                'tags' => $this->collection,
                 'next_url' => $this->nextPageUrl(),
                 'total' => $this->total(),
                 'current_page' => $this->currentPage(),
-                'posts_per_page' => $this->perPage(),
+                'tags_per_page' => $this->perPage(),
             ];
     }
 }

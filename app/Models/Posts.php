@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Tag;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Posts extends Model
 {
@@ -16,37 +17,39 @@ class Posts extends Model
         'blog_name',
         'date',
         'tags',
-        'source_content'
+        'source_content',
+        'title'
     ];
 
     protected $casts = [
         'tags' => 'json'
     ];
-    
+
     public function Tags()
     {
-        return $this->hasMany(PostTags::class,'post_id');
+        return $this->hasMany(PostTags::class, 'post_id');
     }
+
     // post belong to one blog
     public function BLogs()
     {
-        return $this->belongsTo(Blog::class,'blog_id');
+        return $this->belongsTo(Blog::class, 'blog_id');
     }
 
-    function notes ()
+    function notes()
     {
         return $this->hasMany(PostNotes::class);
     }
 
     function is_liked()
     {
-        if (auth('api')->check()) 
-            return !! PostNotes::where('user_id',auth('api')->user()->id)->where('post_id','=',$this->id)->first();
+        if (auth('api')->check())
+            return !!PostNotes::where('user_id', auth('api')->user()->id)->where('post_id', '=', $this->id)->first();
         return false;
     }
 
     function count_notes()
     {
-        return PostNotes::where('post_id',$this->id)->count();
+        return PostNotes::where('post_id', $this->id)->count();
     }
 }

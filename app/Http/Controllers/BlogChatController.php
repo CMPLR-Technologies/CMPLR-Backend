@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Http\Misc\Helpers\Config;
 use App\Http\Resources\BlogChatCollection;
 use App\Services\Blog\BlogChatService;
@@ -168,7 +169,9 @@ class BlogChatController extends Controller
             return $this->error_response('Unauthenticated', 'Invalid blog id', 401);
         }
 
-        $this->blogChatService->CreateMessage($request->Content, $blogIdFrom, $blogIdTo);
+        $message =$this->blogChatService->CreateMessage($request->Content, $blogIdFrom, $blogIdTo);
+
+        broadcast(new MessageSent($blogIdFrom , $blogIdTo , $message));
 
         return $this->success_response('Success', 200);
     }

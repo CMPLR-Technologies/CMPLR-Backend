@@ -78,7 +78,7 @@ class UserService
      */
     public function GetUserFollowing(int $user_id)
     {
-       return  Follow::where('user_id',$user_id)->count();
+       return  DB::table('follows')->where('user_id',$user_id)->count();
     }
 
 
