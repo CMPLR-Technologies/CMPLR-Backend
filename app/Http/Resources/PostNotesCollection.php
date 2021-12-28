@@ -14,11 +14,12 @@ class PostNotesCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-         return [
-            'notes' => $this->collection[0][0] ,
-            'total_likes'=> $this->collection[0][1]->like,
-            'total_reblogs'=> $this->collection[0][1]->reblog,
-            'total_replys' => $this->collection[0][1]->reply
-         ];
+        $notesCounts = (object) $this->collection[0]->post_notes_count();
+        return [
+            'notes' => $this->collection,
+            'total_likes' => $notesCounts->like,
+            'total_reblogs' => $notesCounts->reblog,
+            'total_replys' => $notesCounts->reply
+        ];
     }
 }
