@@ -121,7 +121,7 @@ class PostNotesController extends Controller
         
         $notes =  $this->postNotesService->GetPostNotes($postId);
         
-        // checking null
+        // checking nullos
         if ( !count($notes))
         {
             return response()->json( ['notes'=> $notes ,'total_likes' => 0 ,'total_reblogs'=>0,'total_replys'=>0] , 200);
