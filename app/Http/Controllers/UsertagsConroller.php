@@ -7,6 +7,8 @@ use App\Models\TagUser;
 use App\Models\PostTags;
 use Illuminate\Http\Request;
 use App\Http\Misc\Helpers\Errors;
+use App\Services\Posts\PostsService;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\TagCollection;
 use App\Services\User\UserTagsService;
 
@@ -21,15 +23,17 @@ class UserTagsConroller extends Controller
      |
      */
     protected $userTagsService;
+    protected $postsService;
 
     /**
      * Instantiate a new controller instance.
      *
      * @return void
      */
-    public function __construct(UserTagsService $userTagsService)
+    public function __construct(UserTagsService $userTagsService, PostsService $postsService)
     {
         $this->userTagsService = $userTagsService;
+        $this->postsService = $postsService;
     }
 
     /**
@@ -163,20 +167,45 @@ class UserTagsConroller extends Controller
         return response()->json($response, 200);
     }
 
+    public function GetFollowedTags()
+    {
+        // getting current user
+        $user = auth()->user();
+
+        if (!$user)
+            return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
+
+        $followed_tags = $this->userTagsService->GetFollowedTags($user->id);
+
+        $response = $this->success_response($followed_tags);
+
+        return $response;
+    }
+
     public function GetRecommendedTags()
     {
-        // Getting random tags 
         $recommended_tags = $this->userTagsService->GetRandomTagsData();
 
-        // $posts = [];
-
-        // foreach ($recommended_tags as $tag) {
-        //     $posts[] = $this->userTagsService->GetTagPosts($tag['name']);
-        // }
-
-        // return $this->success_response($posts);
+        foreach ($recommended_tags as $tag) {
+            $posts = $this->userTagsService->GetTagPosts($tag['name']);
+            $tag['posts_views'] = $this->postsService->GetViews($posts);
+        }
 
         $response = $this->success_response(new TagCollection($recommended_tags));
+
+        return $response;
+    }
+
+    public function GetTrendingTags()
+    {
+        $trending_tags = $this->userTagsService->GetRandomTagsData();
+
+        foreach ($trending_tags as $tag) {
+            $posts = $this->userTagsService->GetTagPosts($tag['name']);
+            $tag['posts_views'] = $this->postsService->GetViews($posts);
+        }
+
+        $response = $this->success_response(new TagCollection($trending_tags));
 
         return $response;
     }
