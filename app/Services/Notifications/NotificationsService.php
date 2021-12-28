@@ -42,10 +42,46 @@ class NotificationsService{
                 ->toArray();
 
         //build the corresponding message
-        $message="notification: {$fromBlogId} {$type}ed your {$toBlogId}";
+
+        $fromBlogName=$fromBlogId==null?'anonymous blog':Blog::find($fromBlogId)->blog_name;
+        $toBlogName=Blog::find($toBlogId)->blog_name;
+
+        $title='';
+        $message='';
+
+        if($type=='follow')
+        {
+            $title='getting famous! :)';
+            $message="{$fromBlogName} followed your blog {$toBlogName}";
+        }
+        else if($type=='ask')
+        {
+            $title='interesting blog! :)';
+            $message="{$fromBlogName} asked your blog {$toBlogName}";
+        }
+        else if($type=='answer')
+        {
+            $title='who is the big fan! :)';
+            $message="{$fromBlogName} answered your ask!";
+        }
+        else if($type=='like')
+        {
+            $title='your post has gone wild! :)';
+            $message="{$fromBlogName} liked your post";
+        }
+        else if($type=='reply')
+        {
+            $title='what an interesting post! :)';
+            $message="{$fromBlogName} replied to your post";
+        }
+        else if($type=='reblog')
+        {
+            $title='your post is on fire! :)';
+            $message="{$fromBlogName} replied to your post";
+        }
 
         //send the notification
-        NotificationsService::SendNotification($message,$usertokens);
+        NotificationsService::SendNotification($title,$message,$usertokens);
     }
 
     /**
@@ -158,7 +194,7 @@ class NotificationsService{
      * @return int
      */
 
-    public function SendNotification($message,$targetTokens)
+    public function SendNotification($title,$message,$targetTokens)
     {
         $url = 'https://fcm.googleapis.com/fcm/send';
         $serverKey = 'AAAAZADeAGM:APA91bFx2JPNCF5g_0YImp2YlgGlUANPGhIB1fVhcIO4GWAih6we8kyYjaaVMgzR89uA7wdS48g6Nq-If8KvSNjjLHZC4orWkz1AjryhGk2ANYk9x9M7M1JWQ4kms_ZDqPXF5l_6K1so';
@@ -166,7 +202,7 @@ class NotificationsService{
         $data = [
             "registration_ids" => $targetTokens,
             "notification" => [
-                "title" => 'notification',
+                "title" => $title,
                 "body" => $message,  
             ]
         ];
