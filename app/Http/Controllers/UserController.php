@@ -937,71 +937,6 @@ class UserController extends Controller
     }
 
     /**
-     * @OA\Delete(
-     *   path="/{blog-identifier}/delete_posts",
-     *   tags={"Posts"},
-     *   summary="user can delete one or more posts",
-     *   operationId="DeletePosts",
-     *  @OA\Parameter(
-     *      name="posts_id[]",
-     *      in="query",
-     *      required=true,
-     *      @OA\Schema(
-     *      type="array",
-     *            @OA\Items(type="integer/string")
-     *          )
-     *      ),
-     *  @OA\Parameter(
-     *      name="tags[]",
-     *      in="query",
-     *      required=true,
-     *      @OA\Schema(
-     *      type="array",
-     *            @OA\Items(type="string")
-     *          ),
-     *      ),
-     * @OA\RequestBody(
-     *    required=true,
-     *    description="Pass user credentials",
-     *    @OA\JsonContent(
-     *       required={"posts_id[]","tags[]"},
-     *       @OA\Property(property="posts_id[]", type="string", 
-     *                   example="[1123153153,153151312]"               
-     *                   ),
-     *       @OA\Property(property="tags[]", type="string", 
-     *                   example="['winter','153151312']"               
-     *                   ),
-     *    ),
-     * ),
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
-     *   @OA\Response(
-     *      response=404,
-     *      description="Not Found"
-     *   ),
-     *   @OA\Response(
-     *          response=200,
-     *          description="Success",
-     *           @OA\JsonContent(
-     *           type="object",
-     *           @OA\Property(property="Meta", type="object",
-     *           @OA\Property(property="Status", type="integer", example=200),
-     *           @OA\Property(property="msg", type="string", example="ok"),
-     *           ),
-     *       ),
-     *            
-     *    ),
-     * security ={{"bearer":{}}}
-     *)
-     **/
-    public function DeletePosts(Request $request)
-    {
-    }
-
-
-    /**
      * @OA\Post(
      *   path="/{blog-identifier}/get_tags_for_posts",
      *   tags={"Blogs"},
@@ -1106,6 +1041,37 @@ class UserController extends Controller
     {
     }
 
+      /**
+     * @OA\Get(
+     *   path="/user_theme",
+     *   tags={"users"},
+     *   summary="Get ",
+     *   operationId="get theme of user",
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     *   @OA\Response(
+     *      response=404,
+     *      description="Not Found"
+     *   ),
+     *   @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *           @OA\JsonContent(
+     *           type="object",
+     *           @OA\Property(property="Meta", type="object",
+     *              @OA\Property(property="Status", type="integer", example=200),
+     *              @OA\Property(property="msg", type="string", example="ok"),
+     *           ),
+     *           @OA\Property(property="response", type="object",
+     *              @OA\Property(property="theme", type="string", example="blue ocean"),
+     *           ),
+     *       ),
+     *   ),      
+     *  security ={{"bearer":{}}},
+     *)
+     **/
     public function GetUserTheme()
     {
         $user = Auth::user();
@@ -1114,13 +1080,45 @@ class UserController extends Controller
         return $this->success_response($response, 200);
     }
 
+
+      /**
+     * @OA\Put(
+     *   path="/user_theme",
+     *   tags={"users"},
+     *   summary="put ",
+     *   operationId="update_theme_of_user",
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     *   @OA\Response(
+     *      response=404,
+     *      description="Not Found"
+     *   ),
+     *   @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *           @OA\JsonContent(
+     *           type="object",
+     *           @OA\Property(property="Meta", type="object",
+     *              @OA\Property(property="Status", type="integer", example=200),
+     *              @OA\Property(property="msg", type="string", example="ok"),
+     *           ),
+     *       ),
+     *   ),      
+     *  security ={{"bearer":{}}},
+     *)
+     **/
     public function UpdateUserTheme(Request $request)
     {
         $user = Auth::user();
         $theme = $request->theme;
-        $check = User::where('id', $user->id)->update(array('theme' => $theme));
+        if(!$theme)
+            return $this->error_response(Errors::ERROR_MSGS_404, ['error while update theme'], 404);
+
+        $check = $this->UserService->UpdateUserTheme($user->id,$theme);
         if (!$check)
-            return $this->error_response(Errors::ERROR_MSGS_500, [''], 500);
+            return $this->error_response(Errors::ERROR_MSGS_500, ['error while update theme'], 500);
         return $this->success_response(['successfully update theme'], 200);
     }
 }

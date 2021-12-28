@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Models\Blog;
 use App\Models\User;
 use App\Services\Auth\RegisterService;
+use Faker\Factory;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -77,42 +78,69 @@ class UserRegisterTest extends TestCase
         ])->assertStatus(200);
     }
 
-     /** @test */
-     //try exist email
-     public function FailureValidateRegister1()
-     {
-         $user = User::take(1)->first();
-         $this->post('api/register/validate', [
-             'email' => $user->email,
-             'blog_name' => Str::random(10),
-             'password' => 'Winter_217'
-         ])->assertStatus(422);
-     }
+    /** @test */
+    //try exist email
+    public function FailureValidateRegister1()
+    {
+        $user = User::take(1)->first();
+        $this->post('api/register/validate', [
+            'email' => $user->email,
+            'blog_name' => Str::random(10),
+            'password' => 'Winter_217'
+        ])->assertStatus(422);
+    }
 
-      /** @test */
-      // try exist blog_name
-      public function FailureValidateRegister2()
-      {
-          $blog = Blog::take(1)->first();
-          $this->post('api/register/validate', [
-              'email' => Str::random(10),
-              'blog_name' => $blog->blog_name,
-              'password' => 'Winter_217'
-          ])->assertStatus(422);
-      }
+    /** @test */
+    // try exist blog_name
+    public function FailureValidateRegister2()
+    {
+        $blog = Blog::take(1)->first();
+        $this->post('api/register/validate', [
+            'email' => Str::random(10),
+            'blog_name' => $blog->blog_name,
+            'password' => 'Winter_217'
+        ])->assertStatus(422);
+    }
 
-       /** @test */
-      // try unvalid password
-      public function FailureValidateRegister3()
-      {
-          $this->post('api/register/validate', [
-              'email' => Str::random(10),
-              'blog_name' => Str::random(15),
-              'password' => 'Winter_217'
-          ])->assertStatus(422);
-      }
+    /** @test */
+    // try unvalid password
+    public function FailureValidateRegister3()
+    {
+        $this->post('api/register/validate', [
+            'email' => Str::random(10),
+            'blog_name' => Str::random(15),
+            'password' => 'Winter_217'
+        ])->assertStatus(422);
+    }
 
-      
+    // try invalid age
+    /** @test */
+    public function FailureValidateRegister4()
+    {
+        $this->post('api/register/insert', [
+            'email' => Str::random(10),
+            'blog_name' => Str::random(15),
+            'password' => 'Winter_217',
+            'age' => 145
+        ])->assertStatus(400);
+    }
 
-
+    // try successful response and check if the token is generated correctly
+    /** @test */
+    public function SuccessfullResponse()
+    {
+        $faker = Factory::create(1);
+        $request = [
+            'email' => $faker->email(),
+            'age' => $faker->numberBetween(18, 80),
+            'blog_name' => $faker->randomLetter(20),
+            'password' => $faker->password(8,20),
+        ];
+        // only needs user to test user settings
+        $response = $this->json('POST', '/api/register/insert', $request, ['Accept' => 'application/json']);
+       // dd($response);
+        $token = ($response->json())['response']['token'];
+        $this->assertNotNull($token);
+    }
+    
 }

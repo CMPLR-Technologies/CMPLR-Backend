@@ -94,6 +94,14 @@ class UserService
     }
 
 
-
+    public function UpdateUserTheme(int $user_id,string $theme)
+    {
+        try {
+            $check = User::where('id', $user_id)->update(array('theme' => $theme));
+        } catch (\Throwable $th) {
+            return null;
+        }
+        return $check;
+    }
 
 }
