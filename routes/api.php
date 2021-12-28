@@ -162,7 +162,6 @@ Route::put('/notifications/{notificationId}/see', [NotificationsController::clas
 Route::get('/notifications/unseens', [NotificationsController::class, 'GetUnseens'])->middleware('auth:api');
 Route::post('/notifications/store-token', [NotificationsController::class, 'StoreToken'])->middleware('auth:api');
 Route::get('/blog/{blogName}/last-ndays-activity', [NotificationsController::class, 'GetLastNdaysActivity'])->middleware('auth:api');
-Route::get('/blog/{blogName}/last-ndays-totalactivity', [NotificationsController::class, 'GetLastNdaysActivity'])->middleware('auth:api');
 
 // User 
 Route::middleware('auth:api')->get('/user/likes', [UserController::class, 'GetUserLikes'])->name('GetUserLikes');

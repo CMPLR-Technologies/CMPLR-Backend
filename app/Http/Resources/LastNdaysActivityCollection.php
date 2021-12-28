@@ -21,9 +21,17 @@ class LastNdaysActivityCollection extends ResourceCollection
 
         $postsIds=$blog->Posts()->pluck('id')->toArray();
 
-        $notes=PostNotes::whereIn('post_id',$postsIds)->whereBetween('created_at',[now()->subDays($lastNdays)->format('Y-m-d'),now()->format('Y-m-d')])->count();
-        $newFollowers=Follow::where('blog_id',$blog->id)->whereBetween('created_at',[now()->subDays($lastNdays)->format('Y-m-d'),now()->format('Y-m-d')])->count();
-        $totalFollowers=Follow::where('blog_id',$blog->id)->where('created_at','<',now()->format('Y-m-d'))->count();
+        $notes=PostNotes::whereIn('post_id',$postsIds)
+                        ->whereBetween('created_at',[now()->subDays($lastNdays-1)->format('Y-m-d').' 00:00:00',now()->format('Y-m-d').' 23:59:59'])
+                        ->count();
+
+        $newFollowers=Follow::where('blog_id',$blog->id)
+                    ->whereBetween('created_at',[now()->subDays($lastNdays-1)->format('Y-m-d').' 00:00:00',now()->format('Y-m-d').' 23:59:59'])
+                    ->count();
+
+        $totalFollowers=Follow::where('blog_id',$blog->id)
+                    ->where('created_at','<=',now()->format('Y-m-d').' 23:59:59')
+                    ->count();
 
         return [
             $this->collection->groupBy(function($item){ return $item[1]->format('d-m-y'); }),
