@@ -20,10 +20,7 @@ class UserSettingTest extends TestCase
 
    // use DatabaseTransactions;
 
-    protected $user_id;
-    protected $user_email;
-    protected $user_password;
-    protected $user_token;
+
 
     protected static $initialized = FALSE;
     protected static $data;
@@ -42,12 +39,12 @@ class UserSettingTest extends TestCase
             $request = [
                 'email' => $faker->email(),
                 'age' => $faker->numberBetween(18, 80),
-                'blog_name' => 'Test_Blog34',
+                'blog_name' => 'A_'. time(),
                 'password' => 'Test_pass34',
             ];
             // only needs user to test user settings
             $response = $this->json('POST', '/api/register/insert', $request, ['Accept' => 'application/json']);
-
+            //dd(($response->json()));
             self::$data['token'] = ($response->json())['response']['token'];
             self::$data['user'] = ($response->json())['response']['user'];
             self::$data['id'] =  ($response->json())['response']['user']['id'];
@@ -85,7 +82,7 @@ class UserSettingTest extends TestCase
         $user = new User();
         $user->fill(self::$data['user']);
         $confirmed =  $UserSettingService->UpdateEmail(self::$data['id'], 'NewUniqueEmail@gmail107.com');
-        return $this->assertTrue(!$confirmed);
+        return $this->assertNotNull($confirmed);
     }
 
 
@@ -94,7 +91,7 @@ class UserSettingTest extends TestCase
     {
         $UserSettingService = new UserSettingService();
         $confirmed =  $UserSettingService->UpdateEmail(self::$data['id'], 'New_password_123');
-        return $this->assertTrue(!$confirmed);
+        return $this->assertNotNull($confirmed);
     }
 
     /** @test */
@@ -107,7 +104,7 @@ class UserSettingTest extends TestCase
         ];
         // no bearer token is given
         $response = $this->json('PUT', '/api/settings/change_email', $request, ['Accept' => 'application/json','Authorization' => 'Bearer '.self::$data['token']]);
-        dd($response);
+        //dd($response);
         // it should be a guest
         $this->assertAuthenticated();
     }
@@ -125,6 +122,8 @@ class UserSettingTest extends TestCase
         // it should be a guest
         $this->assertGuest();
     }
+
+    
 
 
 

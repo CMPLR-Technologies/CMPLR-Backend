@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
-use App\services\Auth\RegisterService;
+use App\Services\Auth\RegisterService;
 use Illuminate\Auth\Events\Registered;
 
 class GoogleController extends Controller
@@ -23,7 +23,7 @@ class GoogleController extends Controller
      *
      * @return void
      */
-    public function __construct( RegisterService $RegisterService)
+    public function __construct(RegisterService $RegisterService)
     {
         $this->RegisterService = $RegisterService;
     }
