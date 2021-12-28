@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Misc\Helpers\Errors;
-use App\Models\PostTags;
 use App\Models\Tag;
 use App\Models\TagUser;
+use App\Models\PostTags;
 use Illuminate\Http\Request;
+use App\Http\Misc\Helpers\Errors;
+use App\Http\Resources\TagCollection;
 use App\Services\User\UserTagsService;
 
 
@@ -30,6 +31,7 @@ class UserTagsConroller extends Controller
     {
         $this->userTagsService = $userTagsService;
     }
+
     /**
      * @OA\Post(
      *   path="/user/tags/add",
@@ -75,15 +77,12 @@ class UserTagsConroller extends Controller
             return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
         //getting tag name 
         $tagName = $request->tag_name;
-       
-        if (!$this->userTagsService->UserFollowTag($tagName, $user->id))
-        {
-        
-            return $this->error_response(Errors::ERROR_MSGS_400 , 'error while follow tag' , 400);
 
+        if (!$this->userTagsService->UserFollowTag($tagName, $user->id)) {
+
+            return $this->error_response(Errors::ERROR_MSGS_400, 'error while follow tag', 400);
         }
-        return $this->success_response('Success' ,200);
-
+        return $this->success_response('Success', 200);
     }
 
 
@@ -132,21 +131,20 @@ class UserTagsConroller extends Controller
             return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
         //getting tag name 
         $tagName = $request->tag_name;
-        if(!$this->userTagsService->UserUnFollowTag($tagName ,$user->id))
-        {
-            return $this->error_response(Errors::ERROR_MSGS_400 , 'error while unfollow tag' , 400);
+        if (!$this->userTagsService->UserUnFollowTag($tagName, $user->id)) {
+            return $this->error_response(Errors::ERROR_MSGS_400, 'error while unfollow tag', 400);
         }
-       
-         return $this->success_response('Success' ,200);
+
+        return $this->success_response('Success', 200);
     }
 
     public function GetTagInfo(Request $request)
     {
         $tag = $request->tag;
         if (!$tag)
-            return $this->error_response(Errors::ERROR_MSGS_404 , 'tag not found' ,404);
-        
-        
+            return $this->error_response(Errors::ERROR_MSGS_404, 'tag not found', 404);
+
+
         // getting random tags 
         $response['tags'] = $this->userTagsService->GetRandomTags();
 
@@ -154,14 +152,32 @@ class UserTagsConroller extends Controller
         $response['total_followers'] = $this->userTagsService->GetTotalTagsFollowers($tag);
 
         // check if user follow 
-        $response['is_follower'] =$this->userTagsService->IsFollower($tag);
-        
-         // getting tag avatar 
-        $response['tag_avatar']= 'https://assets.tumblr.com/images/default_avatar/cone_closed_128.png' ;
+        $response['is_follower'] = $this->userTagsService->IsFollower($tag);
+
+        // getting tag avatar 
+        $response['tag_avatar'] = 'https://assets.tumblr.com/images/default_avatar/cone_closed_128.png';
 
         //total tag posts 
-        $response['total_posts']= PostTags::where('tag_name' , $tag)->count();
-        
-        return response()->json($response ,200);
+        $response['total_posts'] = PostTags::where('tag_name', $tag)->count();
+
+        return response()->json($response, 200);
+    }
+
+    public function GetRecommendedTags()
+    {
+        // Getting random tags 
+        $recommended_tags = $this->userTagsService->GetRandomTagsData();
+
+        // $posts = [];
+
+        // foreach ($recommended_tags as $tag) {
+        //     $posts[] = $this->userTagsService->GetTagPosts($tag['name']);
+        // }
+
+        // return $this->success_response($posts);
+
+        $response = $this->success_response(new TagCollection($recommended_tags));
+
+        return $response;
     }
 }

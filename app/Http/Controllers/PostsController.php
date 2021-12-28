@@ -37,6 +37,7 @@ class PostsController extends Controller
     | This controller handles the processes of Posts :
     | Create ,edit and update Posts
     | retrieve posts (dashboard , by blogname , post_id)
+    | retrieve posts (explore, randomly)
     |
    */
 
@@ -48,7 +49,7 @@ class PostsController extends Controller
      *
      * @return void
      */
-    public function __construct(PostsService $PostsService,UserService $UserService)
+    public function __construct(PostsService $PostsService, UserService $UserService)
     {
         $this->PostsService = $PostsService;
         $this->UserService = $UserService;
@@ -615,7 +616,7 @@ class PostsController extends Controller
     /**
      * This Function retrieve Post that is not belong to auth user or one of his followers 
      */
-   public function GetRadar(Request $request)
+    public function GetRadar(Request $request)
     {
         //get auth user
         $user = Auth::user();
@@ -700,6 +701,44 @@ class PostsController extends Controller
     }
 
     /**
+     * This function is responsible for getting
+     * recommended posts (paginated)
+     * 
+     * @return Post $recommended_posts
+     */
+    public function GetRecommendedPosts()
+    {
+        $recommended_posts = $this->PostsService->GetRandomPosts();
+
+        if (!$recommended_posts) {
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
+        }
+
+        $response = $this->success_response(new PostsCollection($recommended_posts));
+
+        return $response;
+    }
+
+    /**
+     * This function is responsible for getting
+     * trending posts (paginated)
+     * 
+     * @return Post $trending_posts
+     */
+    public function GetTrendingPosts()
+    {
+        $trending_posts = $this->PostsService->GetRandomPosts();
+
+        if (!$trending_posts) {
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
+        }
+
+        $response = $this->success_response(new PostsCollection($trending_posts));
+
+        return $response;
+    }
+
+    /**
      * This Function Responisble for 
      * get miniview of certain blog by show 3 of its blogs
      * 
@@ -756,7 +795,7 @@ class PostsController extends Controller
         return $this->success_response(new PostsCollection($posts));
     }
 
-    
+
     public function ProfileFollowing(Request $request, string $blog_name)
     {
         $blog = Blog::where('blog_name', $blog_name)->first();
@@ -767,8 +806,8 @@ class PostsController extends Controller
         if (!$user)
             return $this->error_response(Errors::ERROR_MSGS_404, 'it is not primary blog', 404);
 
-        $blogs_ids = Follow::where('user_id',$user->id)->pluck('blog_id');
-        $blogs = Blog::whereIn('id',$blogs_ids)->paginate(15);
+        $blogs_ids = Follow::where('user_id', $user->id)->pluck('blog_id');
+        $blogs = Blog::whereIn('id', $blogs_ids)->paginate(15);
 
         return $this->success_response(new BlogCollection($blogs));
     }
@@ -973,10 +1012,8 @@ class PostsController extends Controller
         $tag = $request->tag;
 
         // getting all user follows this tag 
-        $posts = $this->PostsService->GetPostsWithTag($tag);       
-            
-        return response()->json( new TaggedPostsCollection($posts ), 200);
-    }
+        $posts = $this->PostsService->GetPostsWithTag($tag);
 
-    
+        return response()->json(new TaggedPostsCollection($posts), 200);
+    }
 }
