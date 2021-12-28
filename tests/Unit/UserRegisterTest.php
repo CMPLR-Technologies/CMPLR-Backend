@@ -82,7 +82,7 @@ class UserRegisterTest extends TestCase
     //try exist email
     public function FailureValidateRegister1()
     {
-        $user = User::take(1)->first();
+        $user = User::first();
         $this->post('api/register/validate', [
             'email' => $user->email,
             'blog_name' => Str::random(10),
