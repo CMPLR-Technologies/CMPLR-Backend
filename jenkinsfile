@@ -4,12 +4,16 @@ pipeline {
     }
     environment{
         LOGIN_SERVER = "beta"
+        TAG = sh(returnStdout: true, script: "git tag --sort version:refname | tail -1").trim()
     }
     stages {
         stage("fetch"){
             steps{
                 echo "========Executing Fetch========"
                 git branch: "dev", url: "https://CMPLR-Technologies@dev.azure.com/CMPLR-Technologies/CMPLR-Technologies.Backend/_git/CMPLR-Technologies.Backend"
+                sh"""
+                echo $TAG
+                """
             }
             post{
                 success{
