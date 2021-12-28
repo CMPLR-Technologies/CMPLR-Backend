@@ -1,7 +1,6 @@
 pipeline {
     agent {
         label "beta"
-    
     }
     environment{
         LOGIN_SERVER = "beta"
@@ -17,7 +16,7 @@ pipeline {
                     echo "=======fetch executed successfully========"
                     echo "==========Copy .env==========="
                     sh"""
-                    cp ~/env/backend.env ./.env
+                    cp ~/env/backend.env ./.env 
                     """
                 }
                 failure{
