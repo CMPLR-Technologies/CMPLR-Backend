@@ -17,8 +17,8 @@ class InboxResource extends JsonResource
     public function toArray($request)
     {
         $sender=User::find($this->source_user_id);
-        $senderPrimaryBlog=Blog::find($sender->primary_blog_id);
-        $senderSettings = $senderPrimaryBlog->settings;
+        $senderPrimaryBlog=sender==null?null:Blog::find($sender->primary_blog_id);
+        $senderSettings = sender==null?null:$senderPrimaryBlog->settings;
 
         return [
             'message'=> [
@@ -31,10 +31,10 @@ class InboxResource extends JsonResource
             ],
             
             'sender'=>[
-                'avatar'=>$senderSettings->avatar,
-                'avatar_shape'=>$senderSettings->avatar_shape,
-                'primaryBlogId'=>$senderPrimaryBlog->id,
-                'primaryBlogName'=>$senderPrimaryBlog->blog_name,
+                'avatar'=>sender==null?null:$senderSettings->avatar,
+                'avatar_shape'=>sender==null?null:$senderSettings->avatar_shape,
+                'primaryBlogId'=>sender==null?null:$senderPrimaryBlog->id,
+                'primaryBlogName'=>sender==null?null:$senderPrimaryBlog->blog_name,
             ],
 
             'reciever'=>[
