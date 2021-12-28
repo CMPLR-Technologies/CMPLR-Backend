@@ -6,6 +6,7 @@ use App\Models\Blog;
 use App\Models\BlogSettings;
 use App\Models\Follow;
 use App\Models\User;
+use App\Services\Block\BlockService;
 use Illuminate\Support\Facades\DB;
 
 class FollowBlogService{
@@ -21,6 +22,10 @@ class FollowBlogService{
         if($blog->followedBy($user))
             return 409;
         
+        //check if blocked
+        if((new BlockService())->isBlocked($blog->id,$user->primary_blog_id))
+            return 403;
+
         //create a follow through the relation
         $blog->Followers()->create([
             'user_id'=>$user->id

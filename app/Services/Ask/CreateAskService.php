@@ -4,6 +4,7 @@ namespace App\Services\Ask;
 
 use App\Models\Blog;
 use App\Models\Post;
+use App\Services\Block\BlockService;
 use App\Services\Notifications\NotificationsService;
 use Illuminate\Support\Facades\DB;
 
@@ -30,6 +31,10 @@ class CreateAskService{
         //check if blog exists
         if($blog==null)
             return 404;
+
+        //check if blocked
+        if((new BlockService())->isBlocked($blog->id,auth()->user()->primary_blog_id))
+            return 403;
 
         //get user who asked
         $source_user_id=null;

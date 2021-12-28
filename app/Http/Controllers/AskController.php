@@ -123,6 +123,8 @@ class AskController extends Controller
         //return the response
         if($code==404)
             return $this->error_response(Errors::ERROR_MSGS_404,'wrong target blog',404);
+        else if($code==403)
+            return $this->error_response(Errors::ERROR_MSGS_403,'target blog is blocked',403);
         else if($code==201)
            return $this->success_response(Success::CREATED,201);
 
