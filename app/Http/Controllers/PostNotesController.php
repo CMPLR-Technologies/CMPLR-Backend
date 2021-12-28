@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\NotesCountResource;
+use App\Http\Resources\PostNotesCollection;
+use App\Http\Resources\PostNotesResource;
 use App\Models\Blog;
 use App\Models\PostNotes;
 use App\Services\Post\PostNotesService;
@@ -113,14 +116,14 @@ class PostNotesController extends Controller
     public function getNotes(Request $request )
     {
         $postId = (int)$request->post_id;
-        $notes = $this->postNotesService->GetPostNotes($postId);
-        $counts =  $this->postNotesService->GetNotesCount($postId);
-        $blogsId =  $this->postNotesService->GetBlogsId($notes);
-        $blogsData = $this->postNotesService->GetBlogsData($blogsId);
-        $blogHashData= $this->postNotesService->HashBlogData($blogsData);
-        $result = $this->postNotesService->GetNotesResult($notes , $blogHashData , $counts);
         
-        return response()->json($result[0] , 200);
+        $notes =  $this->postNotesService->GetPostNotes($postId);
+        
+        $counts =(object) $this->postNotesService->GetNotesCount($postId);
+
+        $result []=[ $notes ,  $counts];
+        
+        return response()->json(new PostNotesCollection ($result) , 200);
 
     }
 
