@@ -34,7 +34,7 @@ class LastNdaysActivityCollection extends ResourceCollection
                     ->count();
 
         return [
-            $this->collection->groupBy(function($item){ return $item[1]->format('d-m-y'); }),
+            'data'=>$this->collection,
             'notes'=>$notes,
             'new followers'=>$newFollowers,
             'total followers'=>$totalFollowers
