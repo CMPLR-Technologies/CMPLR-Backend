@@ -6,6 +6,7 @@ use App\Models\Blog;
 use App\Models\User;
 use App\Services\Blog\CreateBlogService;
 use Tests\TestCase;
+use Illuminate\Support\Str;
 
 class CreateBlogTest extends TestCase
 {
@@ -15,7 +16,7 @@ class CreateBlogTest extends TestCase
         $blog=Blog::take(1)->first();
         $user=User::take(1)->first();        
 
-        $code=(new CreateBlogService())->CreateBlog(['url'=>$blog->url],$user);
+        $code=(new CreateBlogService())->CreateBlog(['blogName'=>$blog->blog_name],$user);
                                                     
         $this->assertEquals(422,$code);
     }
@@ -24,7 +25,13 @@ class CreateBlogTest extends TestCase
     public function test_Success()
     {
         $user=User::take(1)->first();        
-        $param=['url'=>'url3','title'=>'title1','privacy'=>false,'password'=>null];
+
+        $param=[
+            'blogName'=>Str::random(20),
+            'title'=>Str::random(20),
+            'privacy'=>false,
+            'password'=>null
+        ];
 
         $code=(new CreateBlogService())->CreateBlog($param,$user);
                                                     

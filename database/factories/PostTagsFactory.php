@@ -2,11 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Tag;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class BlogUserFactory extends Factory
+class PostTagsFactory extends Factory
 {
-    protected $id =1 ;
     /**
      * Define the model's default state.
      *
@@ -14,12 +14,11 @@ class BlogUserFactory extends Factory
      */
     public function definition()
     {
-        $seedId = $this->id++ ;
+        $tag = Tag::inRandomOrder()->first();
+
         return [
-            'user_id' => $seedId,
-            'blog_id' => $seedId,
-            'primary' => true,
-            'full_privileges' => true
+            'post_id' => $this->faker->unique()->numberBetween(1, 50),
+            'tag_name' => $tag['name']
         ];
     }
 }

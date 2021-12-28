@@ -89,4 +89,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return DB::table('follows')->where('user_id',$this->id)->count();
     }
 
+    public function PrimaryBlogInfo()
+    {
+        return $this->hasOne(Blog::class , 'id' , 'primary_blog_id');
+    }
+
 }

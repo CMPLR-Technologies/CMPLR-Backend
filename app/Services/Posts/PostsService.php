@@ -78,6 +78,21 @@ class PostsService
     }
 
     /**
+     * GET Random Posts
+     *
+     * @param 
+     * 
+     * @return Posts
+     */
+    public function GetRandomPosts()
+    {
+        $posts = Posts::where('state', '=', 'publish')->inRandomOrder()->paginate(Config::PAGINATION_LIMIT);
+        if (!$posts)
+            return null;
+        return $posts;
+    }
+
+    /**
      * This Function retrieve PostData needed
      * @param int $blog_id
      *@return Posts
@@ -131,12 +146,10 @@ class PostsService
                     $views[] = $data;
                     $size += 1;
                     // retrieve only 3 images
-                    if($size == 3)
-                        break;      
+                    if ($size == 3)
+                        break;
                 }
             }
-
-   
         }
         return $views;
     }
@@ -165,7 +178,6 @@ class PostsService
                     'tag_name' => $tag,
                 ]);
             } catch (\Throwable $th) {
-
             }
         }
     }
@@ -182,8 +194,8 @@ class PostsService
     public function GetPostsWithTag($tag)
     {
         $postsTags = PostTags::where('tag_name', $tag)->orderBy('created_at', 'DESC')->get();
-        $posts= Posts::wherein('id' , $postsTags->pluck('post_id'))->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
-        $posts->tag = $tag ;
-        return $posts ;
+        $posts = Posts::wherein('id', $postsTags->pluck('post_id'))->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
+        $posts->tag = $tag;
+        return $posts;
     }
 }

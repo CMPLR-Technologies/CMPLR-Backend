@@ -316,12 +316,13 @@ class NotificationsController extends Controller
 
     public function GetLastNdaysActivity(Request $request,$blogName)
     {
+        //validate input parameters
         $this->validate($request,[
             'lastNdays' => 'required'
         ]);
 
         //get sequence of required dates
-        $dates=CarbonPeriod::create(now()->startOfMonth(), now()->endOfMonth())->toArray();
+        $dates=CarbonPeriod::create(now()->subDays($request->lastNdays-1), now())->toArray();
 
         $blog=Blog::where('blog_name',$blogName)->first();
 

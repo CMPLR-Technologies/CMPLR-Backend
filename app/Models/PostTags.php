@@ -15,9 +15,8 @@ class PostTags extends Model
         'tag_name',
     ];
 
-    public function post ()
+    public function post()
     {
         return $this->belongsTo(Posts::class);
     }
-
 }

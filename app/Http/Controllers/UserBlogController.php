@@ -260,6 +260,8 @@ class UserBlogController extends Controller
             return $this->error_response(Errors::ERROR_MSGS_409,'Already following',409);
         else if ($code == 404)
             return $this->error_response(Errors::ERROR_MSGS_404,'Blog name is not available!',404);
+        else if($code==403)
+            return $this->error_response(Errors::ERROR_MSGS_403,'target blog is blocked',403);
         else
         {
             //add follow notification

@@ -15,8 +15,8 @@ class CreateChatsTable extends Migration
     {
         Schema::create('chats', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('from_blog_id')->references('id')->on('blogs');
-            $table->foreignId('to_blog_id')->references('id')->on('blogs');
+            $table->foreignId('from_blog_id')->references('id')->on('blogs')->onDelete('cascade');
+            $table->foreignId('to_blog_id')->references('id')->on('blogs')->onDelete('cascade');
             $table->text('content');
             $table->boolean('is_read')->default(false);
             $table->timestamps();
