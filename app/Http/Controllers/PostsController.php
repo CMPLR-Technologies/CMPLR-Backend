@@ -696,8 +696,8 @@ class PostsController extends Controller
     {
         //TODO:  retrive only published posts
         $blog = Blog::where('blog_name', $blog_name)->first();
-        if(!$blog)
-            return $this->error_response(Errors::ERROR_MSGS_404,'',404);
+        if (!$blog)
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
         $posts = Posts::where('blog_id', $blog->id)->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
         return $this->success_response(new PostsCollection($posts));
     }
@@ -710,7 +710,15 @@ class PostsController extends Controller
      */
     public function GetRecommendedPosts()
     {
-        $recommended_posts = $this->PostsService->GetRandomPosts();
+        // Check if there is an authenticated user
+        $user = auth('api')->user();
+        $user_id = null;
+
+        if ($user) {
+            $user_id = $user->id;
+        }
+
+        $recommended_posts = $this->PostsService->GetRandomPosts($user_id);
 
         if (!$recommended_posts) {
             return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
@@ -729,7 +737,15 @@ class PostsController extends Controller
      */
     public function GetTrendingPosts()
     {
-        $trending_posts = $this->PostsService->GetRandomPosts();
+        // Check if there is an authenticated user
+        $user = auth('api')->user();
+        $user_id = null;
+
+        if ($user) {
+            $user_id = $user->id;
+        }
+
+        $trending_posts = $this->PostsService->GetRandomPosts($user_id);
 
         if (!$trending_posts) {
             return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
@@ -777,7 +793,7 @@ class PostsController extends Controller
     //     return $this->success_response(new PostsCollection($posts));
     // }
 
-    
+
     public function ProfileLikes(Request $request, string $blog_name)
     {
         $blog = Blog::where('blog_name', $blog_name)->first();
@@ -1017,6 +1033,5 @@ class PostsController extends Controller
         $posts = $this->PostsService->GetPostsWithTag($tag);
 
         return response()->json(new TaggedPostsCollection($posts), 200);
-        
     }
 }
