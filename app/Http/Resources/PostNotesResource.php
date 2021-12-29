@@ -25,6 +25,8 @@ class PostNotesResource extends JsonResource
              'blog_url'=>$blogData->url,
              'avatar'=> $blogData->settings->avatar ,
              'avatar_shape'=>$blogData->settings->avatar_shape,
+             'follower' => $blogData->isfollower() ,
+             'blog_title'=>$blogData->title 
  
          ];
     }

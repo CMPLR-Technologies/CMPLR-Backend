@@ -5,6 +5,7 @@ namespace App\Services\Posts;
 use App\Http\Misc\Helpers\Config;
 use App\Models\Blog;
 use App\Models\BlogUser;
+use App\Models\Post;
 use App\Models\Posts;
 use App\Models\PostTags;
 use App\Models\Tag;
@@ -136,7 +137,7 @@ class PostsService
             // check that post has image
             if (strpos($post['content'], $img_string) !== false) {
                 // regex to get all images in array
-                preg_match_all('/<img[^>]+>/i', $post['content'], $result);
+                preg_match_all('/src="([^"]*', $post['content'], $result);
                 // check that image array is not empty
                 if (!empty($result)) {
                     // get link from image tag
@@ -199,5 +200,21 @@ class PostsService
         $posts = Posts::wherein('id', $postsTags->pluck('post_id'))->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
         $posts->tag = $tag;
         return $posts;
+    }
+
+    /**
+     * Getting photo Post with tag 
+     * 
+     * @param $tag 
+     * 
+     * @return $post
+     * 
+     */
+    public function GetPostWithTagPhoto ($tag)
+    {
+        $postsTags = PostTags::where('tag_name', $tag)->orderBy('created_at', 'DESC')->get();
+        $post = Posts::wherein('id', $postsTags->pluck('post_id'))->where('type', 'photos')->first();
+        return $post ;
+
     }
 }
