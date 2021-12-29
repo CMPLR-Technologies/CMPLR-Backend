@@ -439,11 +439,13 @@ class BlogSettingsController extends Controller
 
     if ($blog_title) {
       $success = Blog::where('id', $blog->id)->update(['title' => $blog_title]);
-    } else if ($blog_name) {
-      $success = Blog::where('id', $blog->id)->update(['blog_name' => $blog_name]);
-    } else {
-      $success = BlogSettings::where('blog_id', $blog->id)->update($request->all());
     }
+
+    if ($blog_name) {
+      $success = Blog::where('id', $blog->id)->update(['blog_name' => $blog_name]);
+    }
+
+    $success = BlogSettings::where('blog_id', $blog->id)->update($request->except('blog_title', 'blog_name'));
 
     if (!$success) {
       return $this->error_response(Errors::ERROR_MSGS_500, 'Error while saving blog settings', 500);
