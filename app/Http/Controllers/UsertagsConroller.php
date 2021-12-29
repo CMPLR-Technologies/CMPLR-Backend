@@ -8,7 +8,7 @@ use App\Http\Misc\Helpers\Errors;
 use App\Services\Posts\PostsService;
 use App\Http\Resources\TagCollection;
 use App\Services\User\UserTagsService;
-
+use Illuminate\Support\Carbon;
 
 class UserTagsConroller extends Controller
 {
@@ -174,6 +174,17 @@ class UserTagsConroller extends Controller
             return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
 
         $followed_tags = $this->userTagsService->GetFollowedTags($user->id);
+
+        foreach ($followed_tags as $tag) {
+            $tag_posts = $this->userTagsService->GetTagPosts($tag['name']);
+            $tag['posts_count'] = $this->userTagsService->GetTagRecentPostsCount($tag_posts);
+            $tag['cover_image'] = $this->postsService->GetViews($tag_posts);
+            if (!$tag['cover_image']) {
+                $tag['cover_image'] = "";
+            } else {
+                $tag['cover_image'] = $tag['cover_image'][0];
+            }
+        }
 
         $response = $this->success_response($followed_tags);
 

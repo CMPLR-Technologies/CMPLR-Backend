@@ -69,19 +69,20 @@ class UserTagsService
      */
     public function GetFollowedTags(int $userId)
     {
-        $tags = TagUser::where(['user_id' => $userId])->with('tag')->get();
+        $tags = TagUser::where(['user_id' => $userId])->with('tag')->get()->pluck('tag');
+        // dd($tags->toArray());
+        // $followed_tags = [];
 
-        $followed_tags = [];
+        // foreach ($tags as $tag) {
+        //     $tag_name = $tag['tag']['name'];
+        //     $followed_tags[] = [
+        //         'posts_count' => PostTags::where([['tag_name', '=', $tag_name], ['created_at', '>=', Carbon::now()->toDateString()]])->count(),
+        //         'tag' => $tag['tag']
+        //     ];
+        // }
 
-        foreach ($tags as $tag) {
-            $tag_name = $tag['tag']['name'];
-            $followed_tags[] = [
-                'posts_count' => PostTags::where([['tag_name', '=', $tag_name], ['created_at', '>=', Carbon::now()->toDateString()]])->count(),
-                'tag' => $tag['tag']
-            ];
-        }
-
-        return $followed_tags;
+        // return $followed_tags;
+        return $tags;
     }
 
     /**
@@ -122,6 +123,18 @@ class UserTagsService
         $postsTags = PostTags::where('tag_name', $tag_name)->orderBy('created_at', 'DESC')->get();
         $posts = Posts::wherein('id', $postsTags->pluck('post_id'))->orderBy('date', 'DESC')->get();
         return $posts;
+    }
+
+    /**
+     * getting the tag's count of the recent posts
+     * 
+     * @param $tag_posts
+     * 
+     * @return $recent_posts_count
+     */
+    public function GetTagRecentPostsCount($tag_posts)
+    {
+        return $tag_posts->where('created_at', '>=', Carbon::now()->toDateString())->count();
     }
 
     /**
