@@ -163,12 +163,13 @@ class PostsController extends Controller
      **/
 
     /**
-     * Show the form for creating a new resource.
-     *
+     * This function is responsible for create new post
+     *@param $request
      * @return \Illuminate\Http\Response
      */
     public function create(PostRequest $request)
     {
+        // get the current authroized user
         $user = Auth::user();
         // get the blog from blogname
         $blog = $this->PostsService->GetBlogData($request->blog_name);
@@ -193,6 +194,7 @@ class PostsController extends Controller
             return $this->error_response(Errors::ERROR_MSGS_500, $error, 500);
         }
 
+        // add tags to post
         $postId  = $post->id;
         $postTags = $post->tags;
         $this->PostsService->AddPostTags($postId, $postTags);
@@ -474,8 +476,15 @@ class PostsController extends Controller
             $error['user'] = Errors::AUTHRIZED;
             return $this->error_response(Errors::ERROR_MSGS_401, $error, 401);
         }
+        // update the date of the post
+        $request['date'] = Carbon::now()->toRfc850String();
         // update post with all data
-        $post->update($request->all());
+        $is_update = $this->PostsService->UpdatePost($post,$request->all());
+        // check if the post is updated successfully
+        if(!$is_update){
+            $error['post'] = 'Failed to update Post';
+            return $this->error_response(Errors::ERROR_MSGS_500, $error,500); 
+        }
         return $this->success_response('', 200);
     }
 
@@ -521,13 +530,20 @@ class PostsController extends Controller
      *  security ={{"bearer":{}}}
      *)
      **/
-
+    /**
+     * this function return the post with specific id
+     * @param Posts $posts
+     * @param int $post_id
+     * 
+     * @return response
+     */
     public function GetPostById(Posts $posts, int $post_id)
     {
+        // get post by id
         $post = Posts::find($post_id);
+        // check if this id is found
         if (!$post)
             return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
-        // a3mlo post resource bs handle el hta bta3t el auth
         return $this->success_response(new PostsResource($post), 200);
     }
 

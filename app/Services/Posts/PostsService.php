@@ -217,4 +217,14 @@ class PostsService
         return $post ;
 
     }
+
+    public function UpdatePost ($post,$data)
+    {
+        try {
+            $is_updated =  $post->update($data);;
+        } catch (\Throwable $th) {
+            return null;
+        }
+        return  $is_updated;
+    }
 }

@@ -33,19 +33,21 @@ class UploadMediaController extends Controller
 
     public function UploadImagesaa(request $request)
     {
-
         $request->validate([
             'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:5048',
         ]);
         $user = auth('api')->user();
+
         // get image
         $image = $request->file('image');
+        // generate the name of the file
+        $filePath = $this->HandlerBase64Service->GenerateFileName($image,$user->id);
         // remove spaces from image name
-        $image_client_name = str_replace(' ', '', $image->getClientOriginalName());
-        // name of image must be unique
-        $image_name = time() . '_' . $user->id . '_' . $image_client_name;
-        // path of image inside s3 bucket
-        $filePath = 'images/' . $image_name;
+        // $image_client_name = str_replace(' ', '', $image->getClientOriginalName());
+        // // name of image must be unique
+        // $image_name = time() . '_' . $user->id . '_' . $image_client_name;
+        // // path of image inside s3 bucket
+        // $filePath = 'images/' . $image_name;
         // store image
         try {
             Storage::disk('s3')->put($filePath, file_get_contents($image));
