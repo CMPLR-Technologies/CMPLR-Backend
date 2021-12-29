@@ -6,9 +6,10 @@ use App\Models\Blog;
 use Illuminate\Http\Request;
 use App\Http\Misc\Helpers\Errors;
 use App\Services\Blog\BlogService;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\BlogCollection;
-use App\Http\Resources\BLogFollowersCollection;
 use App\Services\Blog\FollowBlogService;
+use App\Http\Resources\BLogFollowersCollection;
 
 class BlogController extends Controller
 {
@@ -36,7 +37,9 @@ class BlogController extends Controller
      */
     public function GetRecommendedBlogs()
     {
-        $recommended_blogs = $this->BlogService->GetRandomBlogs();
+        $user_id = auth('api')->user()->id;
+
+        $recommended_blogs = $this->BlogService->GetRandomBlogs($user_id);
 
         if (!$recommended_blogs) {
             return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
@@ -55,7 +58,9 @@ class BlogController extends Controller
      */
     public function GetTrendingBlogs()
     {
-        $trending_blogs = $this->BlogService->GetRandomBlogs();
+        $user_id = auth('api')->user()->id;
+
+        $trending_blogs = $this->BlogService->GetRandomBlogs($user_id);
 
         if (!$trending_blogs) {
             return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
@@ -88,8 +93,6 @@ class BlogController extends Controller
         //
     }
 
-
-
     /**
      * Update the specified resource in storage.
      *
@@ -102,8 +105,6 @@ class BlogController extends Controller
     {
         //
     }
-
-
 
     /**
      * @OA\Get(
@@ -254,11 +255,11 @@ class BlogController extends Controller
 
         // Get Followers Information
         $followers_info = $this->FollowBlogService->GetFollowersInfo($followers_id);
-      //  $followers = $this->FollowBlogService->GetFollowers($followers_id );
+        //  $followers = $this->FollowBlogService->GetFollowers($followers_id );
 
         $response['number_of_followers'] = count($followers_id);
         $response['followers'] = $followers_info;
-        
+
         return $this->success_response($response);
     }
 
