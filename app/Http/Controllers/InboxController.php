@@ -76,16 +76,25 @@ class InboxController extends Controller
      *      )
      * )
      */
+
+        
+    /**
+     * get inbox of a user
+     * @return response
+     */
+
     public function GetInbox()
     {
         //get authenticated user
         $user=auth()->user();
 
+        //call serice to do the logic
         $ret=(new GetInboxService())->GetInbox($user);
 
         $code=$ret[0];
         $inbox=$ret[1];
 
+        //return appropriate response
         return $this->success_response(new InboxCollection($inbox),$code);
     }
 
@@ -152,14 +161,23 @@ class InboxController extends Controller
      *      )
      * )
      */
+
+    /**
+     * get inbox of a blog
+     * @param string $blogName
+     * @return response
+     */
+
     public function GetBlogInbox($blogName)
     {
 
+        //call serice to do the logic
         $ret =(new GetBlogInboxService())->GetBlogInbox($blogName,auth()->user());
 
         $code=$ret[0];
         $inbox=$ret[1];
 
+        //return appropriate response
         if($code==403)
             return $this->error_response(Errors::ERROR_MSGS_403,'user not a member of the blog',403);
         else if ($code == 404)
@@ -190,17 +208,34 @@ class InboxController extends Controller
      *     	)
      * )
      */
+
+    /**
+     * delete inbox of a user
+     * @return response
+     */
+
     public function DeleteInbox()
     {
+        //call serice to do the logic
         $code=(new DeleteInboxService())->DeleteInbox(auth()->user());
     
+
+        //return appropriate response
         return $this->success_response('all messages are delete',$code);
     }
 
+    /**
+     * delete inbox of a blog
+     * @param string $blogName
+     * @return response
+     */
+
     public function DeleteBlogInbox($blogName)
     {
+        //call serice to do the logic
         $code=(new DeleteInboxService())->DeleteBlogInbox($blogName,auth()->user());
         
+        //return appropriate response
         if($code==403)
             return $this->error_response(Errors::ERROR_MSGS_403,'user not a member of the blog',403);
         else if ($code == 404)

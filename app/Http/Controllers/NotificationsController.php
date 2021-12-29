@@ -229,7 +229,7 @@ class NotificationsController extends Controller
     
     /**
      * get notifications of a certain blog
-     * 
+     * @param string $blogName
      * @return response
      */
 
@@ -253,7 +253,7 @@ class NotificationsController extends Controller
 
     /**
      * set a notification to be seen
-     * 
+     * @param int $notificationId
      * @return response
      */
 
@@ -289,7 +289,7 @@ class NotificationsController extends Controller
 
     /**
      * store user's firebase token 
-     * 
+     * @param Request $request
      * @return response
      */
 
@@ -308,7 +308,8 @@ class NotificationsController extends Controller
 
     /**
      * get last ndays activity for a certain blog
-     * 
+     * @param Request $request
+     * @param string $blogName
      * @return response
      */
 

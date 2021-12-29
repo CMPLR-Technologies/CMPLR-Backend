@@ -111,7 +111,8 @@ class AskController extends Controller
 
     /**
      * creates an Ask send by a user to a blog
-     * 
+     * @param CreateAskRequest $request
+     * @param String $blogName
      * @return response
      */
 
@@ -232,11 +233,13 @@ class AskController extends Controller
 
     /**
      * answer an Ask send by a user to a blog
-     * 
+     * @param Request $request
+     * @param int $askId
      * @return response
      */
     public function AnswerAsk(Request $request, $askId)
     {
+        //validate
         $this->validate($request, [
             'content' => 'required',
             'mobile' => 'boolean',
@@ -245,6 +248,7 @@ class AskController extends Controller
             'state' => ['required', 'string', Rule::in('publish', 'private', 'draft')],
         ]);
 
+        //call service
         $code = (new AnswerAskService())->AnswerAsk($request->all(), $askId, auth()->user());
 
         //return the response
@@ -294,7 +298,7 @@ class AskController extends Controller
 
     /**
      * delete an Ask send by a user to a blog
-     * 
+     * @param $askId
      * @return response
      */
     public function DeleteAsk($askId)

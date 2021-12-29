@@ -68,6 +68,13 @@ class BlogBlockController extends Controller
      *   security ={{"bearer":{}}}
      * )
      */
+
+    /**
+     * get the blocked blogs from a certain blog
+     * @param String $blogName
+     * @return response
+     */
+
     public function GetBlogBlocks($blogName)
     {
         //call service to do the logic
@@ -116,6 +123,14 @@ class BlogBlockController extends Controller
      *   security ={{"bearer":{}}}
      * )
      */
+
+    /**
+     * this method blocks a certain blog from a blog
+     * @param Request $request
+     * @param String $blogName
+     * @return response
+     */
+
     public function BlockBlog(Request $request,$blogName)
     {
         //validate input parameters
@@ -170,6 +185,14 @@ class BlogBlockController extends Controller
      *   security ={{"bearer":{}}}
      * )
      */
+
+    /**
+     * this method unblocks a certain blog from a blog
+     * @param Request $request
+     * @param String $blogName
+     * @return response
+     */
+
     public function UnblockBlog(Request $request,$blogName)
     {
         //validate input parameters
