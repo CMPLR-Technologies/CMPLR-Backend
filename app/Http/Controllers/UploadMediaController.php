@@ -122,8 +122,7 @@ class UploadMediaController extends Controller
 
         // decode and validate image data
         $binary_data = $this->HandlerBase64Service->Base64Validations($image_parts[1]);
-        if (!$binary_data) 
-        {
+        if (!$binary_data) {
             $error['image'] = 'Invalid Base64image Given';
             return $this->error_response(Errors::ERROR_MSGS_422, $error, 422);
         }
@@ -131,8 +130,7 @@ class UploadMediaController extends Controller
         // check image size
         $tmpFile = tempnam(sys_get_temp_dir(), 'medialibrary');
         file_put_contents($tmpFile, $binary_data);
-        if(filesize($tmpFile)/1024 > Config::MAX_IMAGE_SIZE)
-        {
+        if (filesize($tmpFile) / 1024 > Config::MAX_IMAGE_SIZE) {
             $error['image'] = 'Invalid Base64image Size';
             return $this->error_response(Errors::ERROR_MSGS_422, $error, 422);
         }

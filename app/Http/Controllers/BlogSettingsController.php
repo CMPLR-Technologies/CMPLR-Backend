@@ -439,10 +439,18 @@ class BlogSettingsController extends Controller
 
     if ($blog_title) {
       $success = Blog::where('id', $blog->id)->update(['title' => $blog_title]);
+
+      if (!$success) {
+        return $this->error_response(Errors::ERROR_MSGS_500, 'Error while updating blog title', 500);
+      }
     }
 
     if ($blog_name) {
       $success = Blog::where('id', $blog->id)->update(['blog_name' => $blog_name]);
+
+      if (!$success) {
+        return $this->error_response(Errors::ERROR_MSGS_500, 'Error while updating blog username', 500);
+      }
     }
 
     $success = BlogSettings::where('blog_id', $blog->id)->update($request->except('blog_title', 'blog_name'));
