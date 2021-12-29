@@ -205,7 +205,6 @@ class UserController extends Controller
             // get posts of blogs that user follow or posts of user himself
             $Posts = Posts::whereIn('blog_id', $followed_blogs_id)->orWhereIn('blog_id', $user_blogs)->orderBy('date', 'desc')->paginate(Config::PAGINATION_LIMIT);
             // if their is no posts return random posts
-            //dd(count($Posts));
             if(count($Posts) == 0)
             {
                 $Posts = Posts::inRandomOrder()->paginate(Config::PAGINATION_LIMIT);
