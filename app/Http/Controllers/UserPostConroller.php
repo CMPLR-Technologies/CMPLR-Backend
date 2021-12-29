@@ -81,21 +81,20 @@ class UserPostConroller extends Controller
         $user = auth()->user();
 
         if (!$user->id)
-        {
             return $this->error_response(Errors::ERROR_MSGS_401,'Unauthenticated',401);
 
-        }
         if (!$postId)
-        {
             return $this->error_response(Errors::ERROR_MSGS_404,'Post Id Is required',404);
-        }
+        
+        if ($this->userPostService->IsLikePost($user->id , $postId))
+            return $this->error_response(Errors::ERROR_MSGS_400,'User already Like the post',400);
+    
 
         if (!$this->userPostService->UserLikePost($user->id , $postId))
-        {
             return $this->error_response(Errors::ERROR_MSGS_404,'Note Not Found',404);
 
-        }
-        $toBlogId = Post::select('blog_id')->where('id' , $postId)->first();
+
+        $toBlogId = $this->userPostService->GetPostBlogId($postId);
        
         $this->notification->CreateNotification($user->primary_blog_id ,  $toBlogId->blog_id ,'like' ,$postId );
 
