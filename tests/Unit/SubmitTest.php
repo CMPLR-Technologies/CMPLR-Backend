@@ -34,7 +34,8 @@ class SubmitTest extends TestCase
             'content'=>'{"photo":"p1"}',
             'type'=>'photo'
         ];
-
+        
+        $code=(new SubmitService())->CreateSubmit($param,$blogName,$user);
         $code=(new SubmitService())->CreateSubmit($param,$blogName,$user);
                                                     
         $this->assertEquals(201,$code);

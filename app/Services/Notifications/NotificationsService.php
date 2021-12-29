@@ -5,6 +5,7 @@ namespace App\Services\Notifications;
 use App\Models\Blog;
 use App\Models\Notification;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 class NotificationsService{
 
@@ -239,5 +240,25 @@ class NotificationsService{
         // dd($result);        
     }
 
+    /**
+     * implements the logic of getting Last Ndays Activity
+     * 
+     * @return int
+     */
 
+    public function GetLastNdaysActivity($lastNdays,$blogName)
+    {
+        //get sequence of required dates
+        $dates=CarbonPeriod::create(now()->subDays($lastNdays-1), now())->toArray();
+
+        $blog=Blog::where('blog_name',$blogName)->first();
+
+        if($blog==null)
+            return [404,null];
+
+        foreach ($dates as &$date)
+            $date=[$blog,$date,$lastNdays];
+
+        return [200,$dates];
+    }
 }
