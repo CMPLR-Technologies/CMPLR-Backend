@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use App\Http\Misc\Helpers\Errors;
 use App\Models\Blog;
 use App\Models\User;
 use Carbon\Carbon;
@@ -129,5 +130,20 @@ class RegisterService
             $user->withAccessToken($token);
             return true;
         }
+    }
+
+
+    public function GoogleLogin(User $user,string $google_user_id)
+    {
+        $request['user'] = $user;
+        try {
+            $request['token'] = $user->CreateToken('authToken')->accessToken;
+            $request['blog'] = Blog::where('id',$user->primary_blog_id)->first();
+            $user->google_id = $google_user_id;
+            $user->save;
+        } catch (\Throwable $th) {
+            return null;
+        }
+        return $request;
     }
 }

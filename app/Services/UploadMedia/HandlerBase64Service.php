@@ -18,6 +18,15 @@ class HandlerBase64Service
      | on AWS S3 Bucket
      */
 
+    public function GenerateVideoName($video,$user_id)
+    {
+        $video_client_name = str_replace(' ', '', $video->getClientOriginalName());
+        //name of video must be unique
+        $video_name = time() . '_' . $user_id . '_' . $video_client_name;
+        $filePath = 'videos/' . $video_name;
+        return $filePath ;
+    }
+
     /**
      * this function responsible for validate base64 image
      * @param string $base64_data
@@ -36,6 +45,11 @@ class HandlerBase64Service
         return $binary_data;
     }
 
+     /**
+     * this function responsible for validate base64 image extention
+     * @param string $base64_data
+     * @return string
+     */
     public function ValidateEXtension($base64_data)
     {
         $image_type = explode("image/", $base64_data);
@@ -46,6 +60,11 @@ class HandlerBase64Service
         return null;
     }
 
+    /**
+     * this function responsible for Generate image name
+     * @param string $base64_data
+     * @return string
+     */
     public function GenerateImageName($extension)
     {
         $file_name = time() . '_' . Str::random(15) . '.' . $extension;
@@ -53,6 +72,9 @@ class HandlerBase64Service
         return $file_path;
     }
     
+    /**
+     * This function responsible for generate image name
+     */
     public function GenerateFileName($image,$user_id)
     {
         $image_client_name = str_replace(' ', '', $image->getClientOriginalName());
@@ -62,4 +84,15 @@ class HandlerBase64Service
         $file_Path = 'images/' . $image_name;
         return $file_Path;
     }
+
+    public function ValidateImageSize(string $binary_data)
+    {
+        $tmpFile = tempnam(sys_get_temp_dir(), 'medialibrary');
+        file_put_contents($tmpFile, $binary_data);
+        if (filesize($tmpFile) / 1024 > Config::MAX_IMAGE_SIZE) 
+            return false;
+        return true;
+    }
+
+
 }
