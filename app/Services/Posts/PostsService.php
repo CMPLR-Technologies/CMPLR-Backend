@@ -2,16 +2,15 @@
 
 namespace App\Services\Posts;
 
-use App\Models\Tag;
-use App\Models\Blog;
-use App\Models\Post;
-use App\Models\User;
-use App\Models\Posts;
-use App\Models\BlogUser;
-use App\Models\PostTags;
-use Illuminate\Support\Arr;
 use App\Http\Misc\Helpers\Config;
-use Illuminate\Support\Facades\DB;
+use App\Models\Blog;
+use App\Models\BlogUser;
+use App\Models\Post;
+use App\Models\Posts;
+use App\Models\PostTags;
+use App\Models\Tag;
+use App\Models\User;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 class PostsService
@@ -43,11 +42,11 @@ class PostsService
      */
     public function createPost(array $data)
     {
-        // try {
-        $post = Posts::create($data);
-        return $post;
+       // try {
+            $post = Posts::create($data);
+            return $post;
         //} catch (\Throwable $th) {
-        return null;
+            return null;
         //}
     }
 
@@ -82,25 +81,15 @@ class PostsService
     /**
      * GET Random Posts
      *
-     * @param int $user_id
+     * @param 
      * 
      * @return Posts
      */
-    public function GetRandomPosts(int $user_id = null)
+    public function GetRandomPosts()
     {
-        $filtered_posts = [];
-
-        if ($user_id) {
-            $user_blogs = DB::table('blog_users')->where('user_id', $user_id)->pluck('blog_id')->toArray();
-            $followed_blogs = DB::table('follows')->where('user_id', $user_id)->pluck('blog_id')->toArray();
-            $user_posts = DB::table('posts')->whereIn('blog_id', $user_blogs)->pluck('id')->toArray();
-            $followed_blogs_posts = DB::table('posts')->whereIn('blog_id', $followed_blogs)->pluck('id')->toArray();
-
-            $filtered_posts = array_merge($user_posts, $followed_blogs_posts);
-        }
-
-        $posts = Posts::where('state', '=', 'publish')->whereNotIn('id', $filtered_posts)->inRandomOrder()->paginate(Config::PAGINATION_LIMIT);
-
+        $posts = Posts::where('state', '=', 'publish')->inRandomOrder()->paginate(Config::PAGINATION_LIMIT);
+        if (!$posts)
+            return null;
         return $posts;
     }
 
@@ -128,10 +117,10 @@ class PostsService
         $data1['avatar'] = $blog->settings->avatar;
         $data1['title'] = $blog->title;
         $data1['header_image'] = $blog->settings->header_image;
-        if ($blog->users()->first())
+        if( $blog->users()->first())
             $data1['is_primary'] = $blog->users()->first()->primary_blog_id == $blog->id;
-        else
-            $data1['is_primary'] = false;
+        else 
+            $data1['is_primary'] = false; 
         $data1['description'] = $blog->settings->description;
         $data1['is_followed'] = $blog->isfollower();
         return $data1;
@@ -148,7 +137,7 @@ class PostsService
             // check that post has image
             if (strpos($post['content'], $img_string) !== false) {
                 // regex to get all images in array
-                preg_match_all('/src="([^"]*', $post['content'], $result);
+                preg_match_all('/<img[^>]+>/i', $post['content'], $result);
                 // check that image array is not empty
                 if (!empty($result)) {
                     // get link from image tag
@@ -221,11 +210,12 @@ class PostsService
      * @return $post
      * 
      */
-    public function GetPostWithTagPhoto($tag)
+    public function GetPostWithTagPhoto ($tag)
     {
         $postsTags = PostTags::where('tag_name', $tag)->orderBy('created_at', 'DESC')->get();
         $post = Posts::wherein('id', $postsTags->pluck('post_id'))->where('type', 'photos')->first();
-        return $post;
+        return $post ;
+
     }
 
     public function UpdatePost ($post,$data)
