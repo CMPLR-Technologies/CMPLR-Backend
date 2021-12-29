@@ -37,17 +37,17 @@ class RegisterService
         return $user;
     }
 
-    public function CreateUserGoogle(string $email,int $age,string $google_id)
+    public function CreateUserGoogle(string $email, int $age, string $google_id)
     {
-       try {
+        try {
             $user = User::create([
                 'email' => $email,
                 'age' => $age,
-                'google_id' =>$google_id,
+                'google_id' => $google_id,
                 'email_verified_at' => Carbon::now(),
                 'password' => Hash::make('N/A')
             ]);
-       } catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             return null;
         }
         if (!$user)
@@ -66,7 +66,7 @@ class RegisterService
     public function CreateBlog(string $blog_name, User $user)
     {
         try {
-            $blog_url = env('APP_URL') . '\/blogs\/' . $blog_name;
+            $blog_url = env('APP_URL') . '/blogs/' . $blog_name;
             $blog = Blog::create([
                 'blog_name' => $blog_name,
                 'url' => $blog_url,
