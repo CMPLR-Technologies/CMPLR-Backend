@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BlockFactory extends Factory
 {
-    protected $id =1 ;
 
     /**
      * Define the model's default state.
@@ -15,10 +14,9 @@ class BlockFactory extends Factory
      */
     public function definition()
     {
-        $seedId = $this->id++ ;
         return [
-            'blog_id'=>$seedId,
-            'blocked_blog_id'=>$seedId,
+            'blog_id'=>rand(10,20),
+            'blocked_blog_id'=>rand(10,20),
         ];
     }
 }

@@ -156,4 +156,24 @@ class BlockService{
             return false;
     }
 
+    /**
+     * implements the logic of checking if two blogs are blocked
+     * 
+     * @return boolean
+     */
+    public function noBlock($firstBlogId,$secondBlogId)
+    {
+        $blocked=Block::where('blog_id',$firstBlogId)
+                      ->where('blocked_blog_id',$secondBlogId)
+                      ->delete();
+        
+        $blocked+=Block::where('blog_id',$secondBlogId)
+                        ->where('blocked_blog_id',$firstBlogId)
+                        ->delete();
+
+        if($blocked>0)
+            return true;
+        else 
+            return false;
+    }
 }
