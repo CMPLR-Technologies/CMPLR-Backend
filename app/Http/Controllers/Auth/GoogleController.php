@@ -35,7 +35,7 @@ class GoogleController extends Controller
     public function handleGoogleCallback()
     {
         try {
-            $user = Socialite::driver('google')->user();
+            $user = Socialite::driver('google')->stateless()->user();
             $token = $user->token;
             //$user2 = Socialite::driver('google')->userFromToken($token);
             dd($user);
@@ -69,7 +69,7 @@ class GoogleController extends Controller
             $user->google_id = $google_user->id;
             $user->save;
             $resource =  new RegisterResource($request);
-            return $this->success_response($resource,201);
+            return $this->success_response($resource,200);
         } else {
             $error['user'] = 'you should register first';
             return $this->error_response(Errors::ERROR_MSGS_401, $error, 401);

@@ -137,13 +137,13 @@ class ResetPasswordController extends Controller
         $userLoginToken = $user->CreateToken('User_access_token')->accessToken;
 
         // set the response
-        $response['user'] = $user;
-        $response['blog'] = Blog::find($user->primary_blog_id);
-        $response['token'] = $userLoginToken;
+        $request['user'] = $user;
+        $request['blog'] = Blog::where('id' ,$request['user']->primary_blog_id)->first();
+        $request['token'] = $userLoginToken;
 
         // Fire PasswordReset event
         event(new PasswordReset($user));
-        $resource =  new RegisterResource($response);
+        $resource =  new RegisterResource($request);
         // return proper response
         return  $this->success_response($resource, 200);
     }

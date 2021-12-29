@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Misc\Helpers\Errors;
 use App\Services\Blog\BlogService;
 use App\Http\Resources\BlogCollection;
+use App\Http\Resources\BLogFollowersCollection;
 use App\Services\Blog\FollowBlogService;
 
 class BlogController extends Controller
@@ -253,10 +254,11 @@ class BlogController extends Controller
 
         // Get Followers Information
         $followers_info = $this->FollowBlogService->GetFollowersInfo($followers_id);
+      //  $followers = $this->FollowBlogService->GetFollowers($followers_id );
 
         $response['number_of_followers'] = count($followers_id);
         $response['followers'] = $followers_info;
-
+        
         return $this->success_response($response);
     }
 

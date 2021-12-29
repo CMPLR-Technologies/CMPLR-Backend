@@ -97,5 +97,11 @@ class Blog extends Model
        
     }
 
+    public function IsFollowerToMe()
+    {
+        $user = auth('api')->user();
+        return !! DB::table('follows')->where('user_id',$user->id)->where('blog_id',$this->id)->first();
+    }
+
 
 }

@@ -116,10 +116,12 @@ class PostsService
         $data1['avatar'] = $blog->settings->avatar;
         $data1['title'] = $blog->title;
         $data1['header_image'] = $blog->settings->header_image;
-        $data1['is_primary'] = $blog->users()->first()->primary_blog_id == $blog->id;
-        //dd($data1['is_primary'] );
-        // TODO: 
-        $data1['desciption'] = 'hossam el gamd';
+        if( $blog->users()->first())
+            $data1['is_primary'] = $blog->users()->first()->primary_blog_id == $blog->id;
+        else 
+            $data1['is_primary'] = false; 
+        $data1['description'] = $blog->settings->description;
+        $data1['is_followed'] = $blog->isfollower();
         return $data1;
     }
 
