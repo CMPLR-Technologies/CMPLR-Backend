@@ -103,5 +103,11 @@ class Blog extends Model
         return !! DB::table('follows')->where('user_id',$user->id)->where('blog_id',$this->id)->first();
     }
 
-
+    public function IsBlocked()
+    {
+        if(auth('api')->check() )
+            return !! DB::table('blocks')->where('blog_id',auth('api')->user()->primary_blog_id)
+                                    ->where('blocked_blog_id',$this->id)->first();
+        else return false;
+    }
 }

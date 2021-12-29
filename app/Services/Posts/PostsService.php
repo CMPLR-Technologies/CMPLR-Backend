@@ -12,6 +12,7 @@ use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PostsService
 {
@@ -106,6 +107,11 @@ class PostsService
     }
 
     /**
+     * This function is responsible for check if this blog is blocked by me
+     */
+    
+
+    /**
      * This Function retrieve blogsdata needed
      * @param int $blog_id
      *@return Posts
@@ -123,8 +129,11 @@ class PostsService
             $data1['is_primary'] = false; 
         $data1['description'] = $blog->settings->description;
         $data1['is_followed'] = $blog->isfollower();
+        $data1['is_blocked'] = $blog->IsBlocked();
         return $data1;
     }
+
+  
 
     public function GetViews($posts)
     {
