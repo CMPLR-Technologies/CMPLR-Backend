@@ -492,6 +492,23 @@ class PostsController extends Controller
 
 
     /**
+     * this function return the post with specific id
+     * @param Posts $posts
+     * @param int $post_id
+     * 
+     * @return response
+     */
+    public function GetPostById(Posts $posts, int $post_id)
+    {
+        // get post by id
+        $post = Posts::find($post_id);
+        // check if this id is found
+        if (!$post)
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
+        return $this->success_response(new PostsResource($post), 200);
+    }
+
+     /**
      * @OA\Delete(
      ** path="/post/delete",
      *   tags={"Posts"},
@@ -530,24 +547,7 @@ class PostsController extends Controller
      *  security ={{"bearer":{}}}
      *)
      **/
-    /**
-     * this function return the post with specific id
-     * @param Posts $posts
-     * @param int $post_id
-     * 
-     * @return response
-     */
-    public function GetPostById(Posts $posts, int $post_id)
-    {
-        // get post by id
-        $post = Posts::find($post_id);
-        // check if this id is found
-        if (!$post)
-            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
-        return $this->success_response(new PostsResource($post), 200);
-    }
-
-
+   
     /**
      * Remove the specified resource from storage.
      *
@@ -636,6 +636,8 @@ class PostsController extends Controller
     {
         //get auth user
         $user = Auth::user();
+        // get blogs of users
+        $user_blogs = $user->blogs()->pluck('blog_id');
         // get random post
         $post =  $this->PostsService->GetRandomPost();
         if (!$post)
@@ -710,7 +712,6 @@ class PostsController extends Controller
      */
     public function GetBlogPosts(Request $request, $blog_name)
     {
-        //TODO:  retrive only published posts
         $blog = Blog::where('blog_name', $blog_name)->first();
         if (!$blog)
             return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
