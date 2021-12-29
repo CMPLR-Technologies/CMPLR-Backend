@@ -95,6 +95,7 @@ class PostsService
             $followed_blogs = DB::table('follows')->where('user_id', $user_id)->pluck('blog_id')->toArray();
             $user_posts = DB::table('posts')->whereIn('blog_id', $user_blogs)->pluck('id')->toArray();
             $followed_blogs_posts = DB::table('posts')->whereIn('blog_id', $followed_blogs)->pluck('id')->toArray();
+
             $filtered_posts = array_merge($user_posts, $followed_blogs_posts);
         }
 

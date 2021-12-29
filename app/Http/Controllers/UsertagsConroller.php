@@ -160,7 +160,7 @@ class UserTagsConroller extends Controller
 
         // getting tag avatar 
         $tagPost = $this->postsService->GetPostWithTagPhoto($tag);
-        $response['tag_avatar'] = ($tagPost)?$this->postsService->GetViews([$tagPost]):null;
+        $response['tag_avatar'] = ($tagPost) ? $this->postsService->GetViews([$tagPost]) : null;
 
         //total tag posts 
         $response['total_posts'] = PostTags::where('tag_name', $tag)->count();
@@ -185,7 +185,15 @@ class UserTagsConroller extends Controller
 
     public function GetRecommendedTags()
     {
-        $recommended_tags = $this->userTagsService->GetRandomTagsData();
+        // Check if there is an authenticated user
+        $user = auth('api')->user();
+        $user_id = null;
+
+        if ($user) {
+            $user_id = $user->id;
+        }
+
+        $recommended_tags = $this->userTagsService->GetRandomTagsData($user_id);
 
         foreach ($recommended_tags as $tag) {
             $posts = $this->userTagsService->GetTagPosts($tag['name']);
@@ -199,7 +207,15 @@ class UserTagsConroller extends Controller
 
     public function GetTrendingTags()
     {
-        $trending_tags = $this->userTagsService->GetRandomTagsData();
+        // Check if there is an authenticated user
+        $user = auth('api')->user();
+        $user_id = null;
+
+        if ($user) {
+            $user_id = $user->id;
+        }
+
+        $trending_tags = $this->userTagsService->GetRandomTagsData($user_id);
 
         foreach ($trending_tags as $tag) {
             $posts = $this->userTagsService->GetTagPosts($tag['name']);

@@ -7,6 +7,7 @@ use App\Models\Posts;
 use App\Models\TagUser;
 use App\Models\PostTags;
 use App\Http\Misc\Helpers\Config;
+use Illuminate\Support\Facades\DB;
 
 class UserTagsService
 {
@@ -89,11 +90,19 @@ class UserTagsService
     /**
      * getting random tags data
      * 
+     * @param int $user_id
+     * 
      * @return $tags
      */
-    public function GetRandomTagsData()
+    public function GetRandomTagsData(int $user_id = null)
     {
-        return Tag::inRandomOrder()->paginate(Config::PAGINATION_LIMIT);
+        $filtered_tags = [];
+
+        if ($user_id) {
+            $filtered_tags = DB::table('tag_users')->where('user_id', $user_id)->pluck('tag_name')->toArray();
+        }
+
+        return Tag::whereNotIn('name', $filtered_tags)->inRandomOrder()->paginate(Config::PAGINATION_LIMIT);
     }
 
     /**
