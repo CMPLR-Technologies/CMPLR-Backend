@@ -181,7 +181,6 @@ class BlogSettingsController extends Controller
     $settings = BlogSettings::where('blog_id', $blog->id)->first();
 
     unset($settings['id']);
-    unset($settings['blog_id']);
 
     $response = [
       'blog_title' => $blog->title,
