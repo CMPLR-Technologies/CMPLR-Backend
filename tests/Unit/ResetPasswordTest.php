@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Services\Auth\ResetPasswordService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class ResetPasswordTest extends TestCase
@@ -57,8 +58,8 @@ class ResetPasswordTest extends TestCase
     public function test_Failure_CheckEmailToken()
     {
 
-        $email = str::random(10) . '@gmail.com';
-        $token = str::random(10);
+        $email = str::random(15) . '@gmail.com';
+        $token = str::random(15);
         $check = (new ResetPasswordService())->CheckEmailToken($email, $token);
         $this->assertFalse($check);
     }
@@ -94,7 +95,7 @@ class ResetPasswordTest extends TestCase
     }
 
     /**
-     * test if this email is corrosponding to user in our database.
+     * test if this set new password to out data base
      *
      * @return void
      */
@@ -105,4 +106,6 @@ class ResetPasswordTest extends TestCase
         $check = (new ResetPasswordService())->SetNewPassword($user, $password);
         $this->assertTrue($check);
     }
+
+    //TODO: add success request and check token 
 }

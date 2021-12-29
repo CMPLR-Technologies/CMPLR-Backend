@@ -54,13 +54,13 @@ class Blog extends Model
 
     public function UserFollowers()
     {
-        return $this->belongsToMany(User::class ,'user_follow_blog', 'user_id', 'blog_id');
+        return $this->belongsToMany(User::class ,'follows', 'user_id', 'blog_id');
     }
 
     public function isfollower()
     {
         if (auth('api')->check()) 
-            return !! DB::table('user_follow_blog')->where('user_id',auth('api')->user()->id)->where('blog_id',$this->id)->first();
+            return !! DB::table('follows')->where('user_id',auth('api')->user()->id)->where('blog_id',$this->id)->first();
         return false;
     }
   
@@ -76,7 +76,7 @@ class Blog extends Model
 
     public function count_followers()
     {
-        return DB::table('user_follow_blog')->where('blog_id',$this->id)->count();
+        return Follow::where('blog_id',$this->id)->count();
     }
 
     public function BlockedBlogs()
@@ -87,6 +87,20 @@ class Blog extends Model
     public function Blocks()
     {
         return $this->hasMany(Block::class,'blog_id');
+    }
+
+    public function IsMine()
+    {
+        if (auth('api')->check()) 
+            return !! BlogUser::where('user_id',auth('api')->user()->id)->where('blog_id',$this->id)->first();
+        return false;
+       
+    }
+
+    public function IsFollowerToMe()
+    {
+        $user = auth('api')->user();
+        return !! DB::table('follows')->where('user_id',$user->id)->where('blog_id',$this->id)->first();
     }
 
 

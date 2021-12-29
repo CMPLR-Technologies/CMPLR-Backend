@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Posts;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,6 +21,8 @@ class DatabaseSeeder extends Seeder
         $this->call(PostsSeeder::class);
         $this->call(ChatSeeder::class);
         $this->call(PostNotesSeeder::class);
-
+        $this->call(FollowSeeder::class);
+        $this->call(NotificationSeeder::class);
+        $this->call(BlockSeeder::class);
     }
 }

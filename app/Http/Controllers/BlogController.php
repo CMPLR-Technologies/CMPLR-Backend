@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Misc\Helpers\Errors;
 use App\Models\Blog;
-use App\Services\Blog\FollowBlogService;
 use Illuminate\Http\Request;
+use App\Http\Misc\Helpers\Errors;
+use App\Services\Blog\BlogService;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\BlogCollection;
+use App\Services\Blog\FollowBlogService;
+use App\Http\Resources\BLogFollowersCollection;
 
 class BlogController extends Controller
 {
 
 
+    protected $BlogService;
     protected $FollowBlogService;
 
     /**
@@ -18,18 +23,64 @@ class BlogController extends Controller
      *
      * @return void
      */
-    public function __construct( FollowBlogService $FollowBlogService)
+    public function __construct(FollowBlogService $FollowBlogService, BlogService $BlogService)
     {
+        $this->BlogService = $BlogService;
         $this->FollowBlogService = $FollowBlogService;
     }
+
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * This function is responsible for getting
+     * recommended blogs (paginated)
+     * 
+     * @return Blog $recommended_blogs
      */
-    public function index()
+    public function GetRecommendedBlogs()
     {
-        //
+        // Check if there is an authenticated user
+        $user = auth('api')->user();
+        $user_id = null;
+
+        if ($user) {
+            $user_id = $user->id;
+        }
+
+        $recommended_blogs = $this->BlogService->GetRandomBlogs($user_id);
+
+        if (!$recommended_blogs) {
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
+        }
+
+        $response = $this->success_response(new BlogCollection($recommended_blogs));
+
+        return $response;
+    }
+
+    /**
+     * This function is responsible for getting
+     * trending blogs (paginated)
+     * 
+     * @return Blog $trending_blogs
+     */
+    public function GetTrendingBlogs()
+    {
+        // Check if there is an authenticated user
+        $user = auth('api')->user();
+        $user_id = null;
+
+        if ($user) {
+            $user_id = $user->id;
+        }
+
+        $trending_blogs = $this->BlogService->GetRandomBlogs($user_id);
+
+        if (!$trending_blogs) {
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
+        }
+
+        $response = $this->success_response(new BlogCollection($trending_blogs));
+
+        return $response;
     }
 
     /**
@@ -43,10 +94,6 @@ class BlogController extends Controller
         //
     }
 
-
-
-
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -57,8 +104,6 @@ class BlogController extends Controller
     {
         //
     }
-
-
 
     /**
      * Update the specified resource in storage.
@@ -72,8 +117,6 @@ class BlogController extends Controller
     {
         //
     }
-
-
 
     /**
      * @OA\Get(
@@ -208,7 +251,7 @@ class BlogController extends Controller
         // get blog_name
         $blog_name = $request->route('blog_name');
         // Get Blog using blog_name
-        
+
         $blog = $this->FollowBlogService->GetBlog($blog_name);
         if (!$blog)
             return $this->error_response(Errors::ERROR_MSGS_404, 'Blog Not Found ', 404);
@@ -224,6 +267,7 @@ class BlogController extends Controller
 
         // Get Followers Information
         $followers_info = $this->FollowBlogService->GetFollowersInfo($followers_id);
+        //  $followers = $this->FollowBlogService->GetFollowers($followers_id );
 
         $response['number_of_followers'] = count($followers_id);
         $response['followers'] = $followers_info;
@@ -293,7 +337,4 @@ class BlogController extends Controller
     public function getFollowing(Request $request, Blog $blog)
     {
     }
-
-
-
 }

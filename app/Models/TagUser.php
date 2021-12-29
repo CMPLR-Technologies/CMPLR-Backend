@@ -9,6 +9,15 @@ class TagUser extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = ['tag_id', 'user_id'];
     public $incrementing = false;
+
+    protected $fillable = [
+        'tag_name',
+        'user_id',
+    ];
+
+    public function tag()
+    {
+        return $this->belongsTo(Tag::class, 'tag_name', 'name');
+    }
 }

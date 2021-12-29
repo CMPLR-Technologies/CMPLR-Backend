@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Blog;
 use App\Models\BlogSettings;
 use Illuminate\Http\Request;
+use App\Http\Misc\Helpers\Errors;
 use Illuminate\Support\Facades\Gate;
 
 class BlogSettingsController extends Controller
@@ -167,35 +168,28 @@ class BlogSettingsController extends Controller
   {
     $blog = Blog::where('blog_name', $blog_name)->first();
 
+    // Check if the blog exists
     if (!$blog) {
-      return response([
-        'meta' => [
-          'status' => 404,
-          'msg' => 'Blog not found'
-        ]
-      ], 404);
+      return $this->error_response(Errors::ERROR_MSGS_404, 'Blog not found', 404);
     }
 
+    // Check if the authenticated request can view this blog's settings
     if (Gate::denies('control-blog-settings', $blog)) {
-      return response([
-        'meta' => [
-          'status' => 403,
-          'msg' => 'Forbidden'
-        ]
-      ], 403);
+      return $this->error_response(Errors::ERROR_MSGS_403, '', 403);
     }
 
-    $settings = BlogSettings::where('blog_id', $blog->id)->get();
+    $settings = BlogSettings::where('blog_id', $blog->id)->first();
 
-    return response([
-      'meta' => [
-        'status' => 200,
-        'msg' => 'Success'
-      ],
-      'response' => [
-        $settings
-      ]
-    ]);
+    unset($settings['id']);
+    unset($settings['blog_id']);
+
+    $response = [
+      'blog_title' => $blog->title,
+      'blog_name' => $blog->blog_name,
+      'settings' => $settings
+    ];
+
+    return $this->success_response($response);
   }
 
   /**
@@ -430,40 +424,41 @@ class BlogSettingsController extends Controller
   {
     $blog = Blog::where('blog_name', $blog_name)->first();
 
+    // Check if the blog exists
     if (!$blog) {
-      return response([
-        'meta' => [
-          'status' => 404,
-          'msg' => 'Blog not found'
-        ]
-      ], 404);
+      return $this->error_response(Errors::ERROR_MSGS_404, 'Blog not found', 404);
     }
 
+    // Check if the authenticated request can edit this blog's settings
     if (Gate::denies('control-blog-settings', $blog)) {
-      return response([
-        'meta' => [
-          'status' => 403,
-          'msg' => 'Forbidden'
-        ]
-      ], 403);
+      return $this->error_response(Errors::ERROR_MSGS_403, '', 403);
     }
 
-    $success = BlogSettings::where('blog_id', $blog->id)->update($request->all());
+    $blog_title = $request->get('blog_title');
+    $blog_name = $request->get('blog_name');
+
+    if ($blog_title) {
+      $success = Blog::where('id', $blog->id)->update(['title' => $blog_title]);
+
+      if (!$success) {
+        return $this->error_response(Errors::ERROR_MSGS_500, 'Error while updating blog title', 500);
+      }
+    }
+
+    if ($blog_name) {
+      $success = Blog::where('id', $blog->id)->update(['blog_name' => $blog_name]);
+
+      if (!$success) {
+        return $this->error_response(Errors::ERROR_MSGS_500, 'Error while updating blog username', 500);
+      }
+    }
+
+    $success = BlogSettings::where('blog_id', $blog->id)->update($request->except('blog_title', 'blog_name'));
 
     if (!$success) {
-      return response([
-        'meta' => [
-          'status' => 500,
-          'msg' => 'Error while saving blog settings'
-        ]
-      ], 500);
+      return $this->error_response(Errors::ERROR_MSGS_500, 'Error while saving blog settings', 500);
     }
 
-    return response([
-      'meta' => [
-        'status' => 200,
-        'msg' => 'Success'
-      ]
-    ]);
+    return $this->success_response($request->all());
   }
 }

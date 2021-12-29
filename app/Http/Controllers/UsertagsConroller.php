@@ -2,13 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PostTags;
+use Illuminate\Http\Request;
+use App\Http\Misc\Helpers\Errors;
+use App\Services\Posts\PostsService;
+use App\Http\Resources\TagCollection;
+use App\Services\User\UserTagsService;
+use Illuminate\Support\Carbon;
 
-class UsertagsConroller extends Controller
+class UserTagsConroller extends Controller
 {
-
     /*
-    3b hameeed
-    */
+     |--------------------------------------------------------------------------
+     | UsertagsConroller
+     |--------------------------------------------------------------------------|
+     | This Service handles all UserTags  
+     |
+     */
+    protected $userTagsService;
+    protected $postsService;
+
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(UserTagsService $userTagsService, PostsService $postsService)
+    {
+        $this->userTagsService = $userTagsService;
+        $this->postsService = $postsService;
+    }
 
     /**
      * @OA\Post(
@@ -47,8 +70,20 @@ class UsertagsConroller extends Controller
      *       ),
      *)
      **/
-    public function FollowTag()
+    public function FollowTag(Request $request)
     {
+        // getting current user
+        $user = auth()->user();
+        if (!$user)
+            return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
+        //getting tag name 
+        $tagName = $request->tag_name;
+
+        if (!$this->userTagsService->UserFollowTag($tagName, $user->id)) {
+
+            return $this->error_response(Errors::ERROR_MSGS_400, 'error while follow tag', 400);
+        }
+        return $this->success_response('Success', 200);
     }
 
 
@@ -89,7 +124,114 @@ class UsertagsConroller extends Controller
      *       ),
      *)
      **/
-    public function UnFollowTag()
+    public function UnFollowTag(Request $request)
     {
+        // getting current user
+        $user = auth()->user();
+        if (!$user)
+            return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
+        //getting tag name 
+        $tagName = $request->tag_name;
+        if (!$this->userTagsService->UserUnFollowTag($tagName, $user->id)) {
+            return $this->error_response(Errors::ERROR_MSGS_400, 'error while unfollow tag', 400);
+        }
+
+        return $this->success_response('Success', 200);
+    }
+
+    public function GetTagInfo(Request $request)
+    {
+        $tag = $request->tag;
+        if (!$tag)
+            return $this->error_response(Errors::ERROR_MSGS_404, 'tag not found', 404);
+
+
+        // getting random tags 
+        $response['tags'] = $this->userTagsService->GetRandomTags();
+
+        // getting total followers        
+        $response['total_followers'] = $this->userTagsService->GetTotalTagsFollowers($tag);
+
+        // check if user follow 
+        $response['is_follower'] = $this->userTagsService->IsFollower($tag);
+
+        // getting tag avatar 
+        $tagPost = $this->postsService->GetPostWithTagPhoto($tag);
+        $response['tag_avatar'] = ($tagPost) ? $this->postsService->GetViews([$tagPost]) : null;
+
+        //total tag posts 
+        $response['total_posts'] = PostTags::where('tag_name', $tag)->count();
+
+        return response()->json($response, 200);
+    }
+
+    public function GetFollowedTags()
+    {
+        // getting current user
+        $user = auth()->user();
+
+        if (!$user)
+            return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
+
+        $followed_tags = $this->userTagsService->GetFollowedTags($user->id);
+
+        foreach ($followed_tags as $tag) {
+            $tag_posts = $this->userTagsService->GetTagPosts($tag['name']);
+            $tag['posts_count'] = $this->userTagsService->GetTagRecentPostsCount($tag_posts);
+            $tag['cover_image'] = $this->postsService->GetViews($tag_posts);
+            if (!$tag['cover_image']) {
+                $tag['cover_image'] = "";
+            } else {
+                $tag['cover_image'] = $tag['cover_image'][0];
+            }
+        }
+
+        $response = $this->success_response($followed_tags);
+
+        return $response;
+    }
+
+    public function GetRecommendedTags()
+    {
+        // Check if there is an authenticated user
+        $user = auth('api')->user();
+        $user_id = null;
+
+        if ($user) {
+            $user_id = $user->id;
+        }
+
+        $recommended_tags = $this->userTagsService->GetRandomTagsData($user_id);
+
+        foreach ($recommended_tags as $tag) {
+            $posts = $this->userTagsService->GetTagPosts($tag['name']);
+            $tag['posts_views'] = $this->postsService->GetViews($posts);
+        }
+
+        $response = $this->success_response(new TagCollection($recommended_tags));
+
+        return $response;
+    }
+
+    public function GetTrendingTags()
+    {
+        // Check if there is an authenticated user
+        $user = auth('api')->user();
+        $user_id = null;
+
+        if ($user) {
+            $user_id = $user->id;
+        }
+
+        $trending_tags = $this->userTagsService->GetRandomTagsData($user_id);
+
+        foreach ($trending_tags as $tag) {
+            $posts = $this->userTagsService->GetTagPosts($tag['name']);
+            $tag['posts_views'] = $this->postsService->GetViews($posts);
+        }
+
+        $response = $this->success_response(new TagCollection($trending_tags));
+
+        return $response;
     }
 }

@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libpq-dev \
     zip \
-    unzip
+    unzip 
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -29,11 +29,6 @@ COPY . .
 
 RUN composer update
 RUN composer install
-
-
-RUN php artisan key:generate
-
-RUN php artisan l5-swagger:generate
 
 EXPOSE 8000
 

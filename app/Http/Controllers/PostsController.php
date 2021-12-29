@@ -6,18 +6,27 @@ use App\Http\Misc\Helpers\Config;
 use App\Http\Misc\Helpers\Errors;
 use App\Http\Requests\PostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\BlogCollection;
 use App\Http\Resources\PostEditViewResource;
 use App\Http\Resources\PostsCollection;
 use App\Http\Resources\PostsResource;
+use App\Http\Resources\TaggedPostsCollection;
+use App\Http\Resources\TaggedPostsResource;
 use App\Models\Blog;
 use App\Models\BlogSettings;
+use App\Models\BlogUser;
+use App\Models\Follow;
 use App\Models\Posts;
+use App\Models\PostTags;
+use App\Models\Tag;
+use App\Models\TagUser;
 use App\Models\User;
 use App\Services\Posts\PostsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Services\User\UserService;
 
 class PostsController extends Controller
 {
@@ -28,19 +37,22 @@ class PostsController extends Controller
     | This controller handles the processes of Posts :
     | Create ,edit and update Posts
     | retrieve posts (dashboard , by blogname , post_id)
+    | retrieve posts (explore, randomly)
     |
    */
 
     protected $PostsService;
+    protected $UserService;
 
     /**
      * Instantiate a new controller instance.
      *
      * @return void
      */
-    public function __construct(PostsService $PostsService)
+    public function __construct(PostsService $PostsService, UserService $UserService)
     {
         $this->PostsService = $PostsService;
+        $this->UserService = $UserService;
     }
 
 
@@ -151,12 +163,13 @@ class PostsController extends Controller
      **/
 
     /**
-     * Show the form for creating a new resource.
-     *
+     * This function is responsible for create new post
+     *@param $request
      * @return \Illuminate\Http\Response
      */
     public function create(PostRequest $request)
     {
+        // get the current authroized user
         $user = Auth::user();
         // get the blog from blogname
         $blog = $this->PostsService->GetBlogData($request->blog_name);
@@ -181,7 +194,12 @@ class PostsController extends Controller
             return $this->error_response(Errors::ERROR_MSGS_500, $error, 500);
         }
 
-        // return post resource
+        // add tags to post
+        $postId  = $post->id;
+        $postTags = $post->tags;
+        $this->PostsService->AddPostTags($postId, $postTags);
+
+        // return post resource 
         return $this->success_response(new PostsResource($post), 201);
     }
 
@@ -374,7 +392,7 @@ class PostsController extends Controller
         try {
             $this->authorize('EditPost', [$post, $blog]);
         } catch (\Throwable $th) {
-            $error['user'] = Errors::AUTHRIZED;
+            $error['user'] = Errors::AUTHORIZED;
             return $this->error_response(Errors::ERROR_MSGS_401, $error, 401);
         }
         // set up the response        
@@ -455,11 +473,18 @@ class PostsController extends Controller
         try {
             $this->authorize('EditPost', [$post, $blog]);
         } catch (\Throwable $th) {
-            $error['user'] = Errors::AUTHRIZED;
+            $error['user'] = Errors::AUTHORIZED;
             return $this->error_response(Errors::ERROR_MSGS_401, $error, 401);
         }
+        // update the date of the post
+        $request['date'] = Carbon::now()->toRfc850String();
         // update post with all data
-        $post->update($request->all());
+        $is_update = $this->PostsService->UpdatePost($post,$request->all());
+        // check if the post is updated successfully
+        if(!$is_update){
+            $error['post'] = 'Failed to update Post';
+            return $this->error_response(Errors::ERROR_MSGS_500, $error,500); 
+        }
         return $this->success_response('', 200);
     }
 
@@ -505,13 +530,20 @@ class PostsController extends Controller
      *  security ={{"bearer":{}}}
      *)
      **/
-
+    /**
+     * this function return the post with specific id
+     * @param Posts $posts
+     * @param int $post_id
+     * 
+     * @return response
+     */
     public function GetPostById(Posts $posts, int $post_id)
     {
+        // get post by id
         $post = Posts::find($post_id);
+        // check if this id is found
         if (!$post)
             return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
-        // a3mlo post resource bs handle el hta bta3t el auth
         return $this->success_response(new PostsResource($post), 200);
     }
 
@@ -540,9 +572,9 @@ class PostsController extends Controller
         }
         // delte post
         $is_deleted = $post->delete();
-        if (!$is_deleted){
-            $error['post']= 'error while deleting post';
-            return $this->error_response(Errors::ERROR_MSGS_500,$error, 500);
+        if (!$is_deleted) {
+            $error['post'] = 'error while deleting post';
+            return $this->error_response(Errors::ERROR_MSGS_500, $error, 500);
         }
 
         return $this->success_response('', 200);
@@ -606,8 +638,8 @@ class PostsController extends Controller
         $user = Auth::user();
         // get random post
         $post =  $this->PostsService->GetRandomPost();
-        if(!$post)
-            return $this->error_response(Errors::ERROR_MSGS_500,'error get post',500);
+        if (!$post)
+            return $this->error_response(Errors::ERROR_MSGS_500, 'error get post', 500);
         //retrieve post resource
         return $this->success_response(new PostsResource($post), 200);
     }
@@ -680,15 +712,64 @@ class PostsController extends Controller
     {
         //TODO:  retrive only published posts
         $blog = Blog::where('blog_name', $blog_name)->first();
+        if (!$blog)
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
         $posts = Posts::where('blog_id', $blog->id)->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
+        return $this->success_response(new PostsCollection($posts));
+    }
 
-        // check if user auth or not
-        if (auth('api')->check()) {
-            $user = auth('api')->user();
-            $is_follow = DB::table('user_follow_blog')->where('user_id', $user->id)->get();
+    /**
+     * This function is responsible for getting
+     * recommended posts (paginated)
+     * 
+     * @return Post $recommended_posts
+     */
+    public function GetRecommendedPosts()
+    {
+        // Check if there is an authenticated user
+        $user = auth('api')->user();
+        $user_id = null;
+
+        if ($user) {
+            $user_id = $user->id;
         }
 
-        return $this->success_response(new PostsCollection($posts));
+        $recommended_posts = $this->PostsService->GetRandomPosts($user_id);
+
+        if (!$recommended_posts) {
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
+        }
+
+        $response = $this->success_response(new PostsCollection($recommended_posts));
+
+        return $response;
+    }
+
+    /**
+     * This function is responsible for getting
+     * trending posts (paginated)
+     * 
+     * @return Post $trending_posts
+     */
+    public function GetTrendingPosts()
+    {
+        // Check if there is an authenticated user
+        $user = auth('api')->user();
+        $user_id = null;
+
+        if ($user) {
+            $user_id = $user->id;
+        }
+
+        $trending_posts = $this->PostsService->GetRandomPosts($user_id);
+
+        if (!$trending_posts) {
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
+        }
+
+        $response = $this->success_response(new PostsCollection($trending_posts));
+
+        return $response;
     }
 
     /**
@@ -700,22 +781,22 @@ class PostsController extends Controller
      */
     public function MiniProfileView(Request $request, int $blog_id)
     {
-    
+
         $blog = Blog::find($blog_id);
-        if(!$blog)
-            return $this->error_response(Errors::ERROR_MSGS_404,'',404);
-        
-            // get post data
+        if (!$blog)
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
+
+        // get post data
         $posts = $this->PostsService->MiniViewPostData($blog_id);
-        if(!$posts)
-            return $this->error_response(Errors::ERROR_MSGS_404,'',404);
-        
+        if (!$posts)
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
+
         // set blog data
         $response['blog'] =  $this->PostsService->MiniViewBlogData($blog);
-        
+
         //get views
         $response['views'] = $this->PostsService->GetViews($posts);
-        
+
         return $this->success_response($response);
     }
 
@@ -727,6 +808,43 @@ class PostsController extends Controller
     //     $posts = Posts::whereIn('blog_id',$blogs_followers)->paginate(5);
     //     return $this->success_response(new PostsCollection($posts));
     // }
+
+
+    public function ProfileLikes(Request $request, string $blog_name)
+    {
+        $blog = Blog::where('blog_name', $blog_name)->first();
+        if ($blog == null)
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
+
+        $user = BlogUser::where('blog_id', $blog->id)->where('primary', true)->first();
+        if (!$user)
+            return $this->error_response(Errors::ERROR_MSGS_404, 'it is not primary blog', 404);
+
+        // get id of all posts liked by user
+        $likes = $this->UserService->GetLikes($user->id);
+
+        //get liked posts
+        $posts = Posts::whereIn('id', $likes)->paginate(config::PAGINATION_LIMIT);
+
+        return $this->success_response(new PostsCollection($posts));
+    }
+
+
+    public function ProfileFollowing(Request $request, string $blog_name)
+    {
+        $blog = Blog::where('blog_name', $blog_name)->first();
+        if ($blog == null)
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
+
+        $user = BlogUser::where('blog_id', $blog->id)->where('primary', true)->first();
+        if (!$user)
+            return $this->error_response(Errors::ERROR_MSGS_404, 'it is not primary blog', 404);
+
+        $blogs_ids = Follow::where('user_id', $user->id)->pluck('blog_id');
+        $blogs = Blog::whereIn('id', $blogs_ids)->paginate(15);
+
+        return $this->success_response(new BlogCollection($blogs));
+    }
     /**
      * @OA\Post(
      ** path="/posts/reblog",
@@ -802,117 +920,16 @@ class PostsController extends Controller
         //
     }
 
-    /**
-     * @OA\GET(
-     * path="/post/notes",
-     * summary="getting notes for specific post",
-     * description="This method can be used to get notes for specific post",
-     * operationId="getNotes",
-     * tags={"Posts"},
-     *  @OA\Parameter(
-     *         name="blog-identifier",
-     *         in="query",
-     *         required=true,
-     *      ),
-     *   @OA\Parameter(
-     *      name="before_timestamp",
-     *      in="query",
-     *      description="Fetch notes created before this timestamp",
-     *      required=false,
-     *      @OA\Schema(
-     *          type="Number"
-     *      )
-     *   ),
-     *  @OA\Parameter(
-     *      name="mode",
-     *      in="query",
-     *      description="The response formatting mode {all , likes , conversation , rollup ,reblogs_with_tags }",
-     *      required=false,
-     *      @OA\Schema(
-     *          type="String"
-     *      )
-     *   ),
-     *  @OA\RequestBody(
-     *    required=true,
-     *    description="Pass user credentials",
-     *    @OA\JsonContent(
-     *       required={"id"},
-     *       @OA\Property(property="id", type="Number", format="text", example="1234567890000"),
-     *       @OA\Property(property="before_timestamp", type="Number", format="text", example="1234567890"),
-     *       @OA\Property(property="mode", type="string", format="text", example="all"),
-     *    ),
-     * ),
-     * @OA\Response(
-     *    response=404,
-     *    description="Not Found",
-     * ),
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
-     * @OA\Response(
-     *    response=200,
-     *    description="success",
-     *    @OA\JsonContent(
-     *       type="object",
-     *       @OA\Property(property="Meta", type="object",
-     *          @OA\Property(property="Status", type="integer", example=200),
-     *           @OA\Property(property="msg", type="string", example="OK"),
-     *        ),
-     *       @OA\Property(property="response", type="object",
-     *             @OA\Property(property="total_users", type="integer", example=1235),           
-     *             @OA\Property(property="Users", type="array",
-     *                @OA\Items(
-     *                      @OA\Property(
-     *                         property="notes",
-     *                         type="Array",
-     *                      ),
-     *                      @OA\Property(
-     *                         property="rollup_notes",
-     *                         type="Array",
-     *                      ),
-     *                      @OA\Property(
-     *                         property="total_notes",
-     *                         type="Number",
-     *                         example=125
-     *                      ),
-     *                      @OA\Property(
-     *                         property="total_likes",
-     *                         type="Number",
-     *                         example=12
-     *                      ),
-     *                    @OA\Property(
-     *                         property="_links",
-     *                         type="Object",
-     *                         example= "http/...."
-     *                      ),
-     *                ),
-     *       
-     *               ),           
-     *           ),
-     *        ),
-     *     )
-     * )
-     */
 
-    /**
-     * Reblog existing post 
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function getNotes(Request $request)
-    {
-        //
-    }
+
 
     /**
      *	@OA\Get
      *	(
-     * 		path="/tagged",
+     * 		path="post/tagged",
      * 		summary="Get Posts with Tag",
      * 		description="retrieve the posts with specific tag",
-     * 		operationId="getTaggedPosts",
+     * 		operationId="GetTaggedPosts",
      * 		tags={"Posts"},
      *
      *    	@OA\Parameter
@@ -1024,7 +1041,13 @@ class PostsController extends Controller
      *     	)
      * )
      */
-    public function getTaggedPosts()
+    public function GetTaggedPosts(Request $request)
     {
+        $tag = $request->tag;
+
+        // getting all user follows this tag 
+        $posts = $this->PostsService->GetPostsWithTag($tag);
+
+        return response()->json(new TaggedPostsCollection($posts), 200);
     }
 }

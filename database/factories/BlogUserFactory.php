@@ -18,6 +18,8 @@ class BlogUserFactory extends Factory
         return [
             'user_id' => $seedId,
             'blog_id' => $seedId,
+            'primary' => true,
+            'full_privileges' => true
         ];
     }
 }

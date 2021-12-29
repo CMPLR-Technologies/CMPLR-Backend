@@ -33,19 +33,21 @@ class UploadMediaController extends Controller
 
     public function UploadImagesaa(request $request)
     {
-
         $request->validate([
             'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:5048',
         ]);
         $user = auth('api')->user();
+
         // get image
         $image = $request->file('image');
+        // generate the name of the file
+        $filePath = $this->HandlerBase64Service->GenerateFileName($image,$user->id);
         // remove spaces from image name
-        $image_client_name = str_replace(' ', '', $image->getClientOriginalName());
-        // name of image must be unique
-        $image_name = time() . '_' . $user->id . '_' . $image_client_name;
-        // path of image inside s3 bucket
-        $filePath = 'images/' . $image_name;
+        // $image_client_name = str_replace(' ', '', $image->getClientOriginalName());
+        // // name of image must be unique
+        // $image_name = time() . '_' . $user->id . '_' . $image_client_name;
+        // // path of image inside s3 bucket
+        // $filePath = 'images/' . $image_name;
         // store image
         try {
             Storage::disk('s3')->put($filePath, file_get_contents($image));
@@ -122,8 +124,7 @@ class UploadMediaController extends Controller
 
         // decode and validate image data
         $binary_data = $this->HandlerBase64Service->Base64Validations($image_parts[1]);
-        if (!$binary_data) 
-        {
+        if (!$binary_data) {
             $error['image'] = 'Invalid Base64image Given';
             return $this->error_response(Errors::ERROR_MSGS_422, $error, 422);
         }
@@ -131,8 +132,7 @@ class UploadMediaController extends Controller
         // check image size
         $tmpFile = tempnam(sys_get_temp_dir(), 'medialibrary');
         file_put_contents($tmpFile, $binary_data);
-        if(filesize($tmpFile)/1024 > Config::MAX_IMAGE_SIZE)
-        {
+        if (filesize($tmpFile) / 1024 > Config::MAX_IMAGE_SIZE) {
             $error['image'] = 'Invalid Base64image Size';
             return $this->error_response(Errors::ERROR_MSGS_422, $error, 422);
         }

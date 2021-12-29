@@ -25,6 +25,7 @@ class PostRequest extends FormRequest
     public function rules()
     {
         return [
+            //'title' => ['string'],
             'content' =>['required'],
             'type' => ['required','string',Rule::in(['text', 'photos','quotes','chats','audio','videos'])],
             'blog_name' => ['required','string','max:22', 'alpha_dash'],

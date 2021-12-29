@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Services\Auth\ResetPasswordService;
 use App\Http\Misc\Helpers\Errors;
+use App\Http\Resources\Auth\RegisterResource;
+use App\Models\Blog;
 use Illuminate\Auth\Events\PasswordReset;
 
 class ResetPasswordController extends Controller
@@ -128,21 +130,22 @@ class ResetPasswordController extends Controller
 
         // Set the new password
         if (!$this->ResetPasswordService->SetNewPassword($user, $request->password))
-            return  $this->error_response(Errors::ERROR_MSGS_500,'',500);
+            return  $this->error_response(Errors::ERROR_MSGS_500,['error in set new password'],500);
 
         // login after reset 
         // Create access token to user
-        $userLoginToken = $user->CreateToken('authToken')->accessToken;
+        $userLoginToken = $user->CreateToken('User_access_token')->accessToken;
 
         // set the response
-        $response['user'] = $user;
-        $response['token'] = $userLoginToken;
+        $request['user'] = $user;
+        $request['blog'] = Blog::where('id' ,$request['user']->primary_blog_id)->first();
+        $request['token'] = $userLoginToken;
 
         // Fire PasswordReset event
         event(new PasswordReset($user));
-
+        $resource =  new RegisterResource($request);
         // return proper response
-        return  $this->success_response($response, 200);
+        return  $this->success_response($resource, 200);
     }
 
 

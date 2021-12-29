@@ -24,7 +24,7 @@ class DeleteAskTest extends TestCase
     //testing if ask is not found
     public function test_NotFound()
     {
-        $askId=-1;
+        $askId=null;
         $user=null;
 
         $code=(new DeleteAskService())->DeleteAsk($askId,$user);
@@ -36,13 +36,13 @@ class DeleteAskTest extends TestCase
     public function test_Forbidden()
     {
         //get an ask
-        $ask=Post::all()->where('post_ask_submit','ask')->first();
+        $ask=Post::where('post_ask_submit','ask')->first();
         
         //get users that are member of the blog of this ask
         $usersId=Blog::find($ask->blog_id)->users()->pluck('user_id')->toArray();
         
         //get a user which is not a member of the blog
-        $user=User::all()->whereNotIn('id',$usersId)->first();
+        $user=User::whereNotIn('id',$usersId)->first();
 
         $code=(new DeleteAskService())->DeleteAsk($ask->id,$user);
 
@@ -52,7 +52,7 @@ class DeleteAskTest extends TestCase
     //testing if the request is valid
     public function test_Success()
     {
-        $ask=Post::all()->where('post_ask_submit','ask')->first();
+        $ask=Post::where('post_ask_submit','ask')->first();
 
         $user=Blog::find($ask->blog_id)->users()->first();
         

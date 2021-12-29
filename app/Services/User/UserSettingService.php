@@ -84,11 +84,20 @@ class UserSettingService
         return true;
     }
 
-    public function UpdateEmail(User $user, string $new_email)
+    
+    /**
+     * Update User Email
+     * 
+     * @param User $user
+     * @param string $new_email  
+     * 
+     * @return bool
+     */
+    public function UpdateEmail(int $user_id, string $new_email)
     {
         try {
-            $user->email = $new_email;
-            $user->save();
+            $user = User::where('id',$user_id)->first();
+            $user->update(['email'=>$new_email]);
         } catch (\Throwable $th) {
             return false;
         }
@@ -102,14 +111,32 @@ class UserSettingService
      * 
      * @return bool
      */
-    public function UpdatePassword(User $user, string $new_password):bool
+    public function UpdatePassword(int $user_id, string $new_password):bool
     {
         try {
-            $user->password =  Hash::make($new_password);
-            $user->save();
+            $user = User::where('id',$user_id)->first();
+            $new_password =  Hash::make($new_password);
+            $user->update(['password'=>$new_password]);
         } catch (\Throwable $th) {
             return false;
         }
         return true;
+    }
+    
+    /**
+     *  set the new password for user and delete the token  
+     *
+     * if new password matches old password return false
+     * @param string $old_password (current_user->password)
+     * @param string $newpassword
+     * 
+     * @return bool
+     */
+    public function CheckPassword(string $old_Password, string $new_password): bool
+    {   
+        if (Hash::check($new_password, $old_Password)) 
+            return false;
+
+        return true;    
     }
 }

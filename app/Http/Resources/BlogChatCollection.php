@@ -16,15 +16,18 @@ class BlogChatCollection extends ResourceCollection
     public function toArray($request)
     {
         $blogData = Blog::where('id',$this->collection[0]->to_blog_id)->first();
+
         return 
         [
             'messages' => $this->collection,
             'blog_data'=>[
+                'blog_id'=>$blogData->id ,
                 'blog_name' => $blogData->blog_name,
                 'url' => $blogData->url,
                 'title' => $blogData->title,
                 'avatar' => $blogData->settings->avatar,
                 'avatar_shape' => $blogData->settings->avatar_shape
+                
             ],
             'next_url' => $this->nextPageUrl(),
             'total' => $this->total(),

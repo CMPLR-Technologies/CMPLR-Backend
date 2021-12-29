@@ -9,6 +9,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -60,10 +61,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(BlogUser::class);
     }
 
-    public function tags()
-    {
-        return $this->belongsToMany(Tag::class, 'tag_users', 'user_id', 'tag_id');
-    }
 
     // returns the blogs belong to this user
     public function realBlogs()
@@ -78,6 +75,23 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function FollowedBlogs()
     {
-        return $this->belongsToMany(Blog::class ,'user_follow_blog', 'user_id', 'blog_id');
+        return $this->belongsToMany(Blog::class ,'follows', 'user_id', 'blog_id');
     }
+
+    public function LikesCount()
+    {
+        return PostNotes::where('user_id',$this->id)->where('type','=','like')->count();
+    }
+
+    
+    public function FollowCount()
+    {
+        return DB::table('follows')->where('user_id',$this->id)->count();
+    }
+
+    public function PrimaryBlogInfo()
+    {
+        return $this->hasOne(Blog::class , 'id' , 'primary_blog_id');
+    }
+
 }

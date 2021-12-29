@@ -4,7 +4,9 @@ namespace App\Services\Blog;
 
 use App\Models\Blog;
 use App\Models\BlogSettings;
+use App\Models\Follow;
 use App\Models\User;
+use App\Services\Block\BlockService;
 use Illuminate\Support\Facades\DB;
 
 class FollowBlogService{
@@ -20,6 +22,10 @@ class FollowBlogService{
         if($blog->followedBy($user))
             return 409;
         
+        //check if blocked
+        if((new BlockService())->isBlocked($blog->id,$user->primary_blog_id))
+            return 403;
+
         //create a follow through the relation
         $blog->Followers()->create([
             'user_id'=>$user->id
@@ -49,7 +55,7 @@ class FollowBlogService{
     public function GetFollowersID(int $blog_id)
     {
         try {
-            $followers_id = DB::table('user_follow_blog')->where('blog_id',$blog_id)->pluck('user_id');
+            $followers_id = DB::table('follows')->where('blog_id',$blog_id)->pluck('user_id');
         } catch (\Throwable $th) {
             return null;
         }
@@ -59,7 +65,7 @@ class FollowBlogService{
     /**
      * This Funtion Get Followers for specific Blog
      */
-    public function GetFollowersInfo(mixed $followers_id)
+    public function GetFollowersInfo($followers_id)
     {
         // if there is no followers return empty array
         if(!$followers_id)
@@ -67,10 +73,14 @@ class FollowBlogService{
         $followers_info = array();
         try {
             foreach ($followers_id as $id) {
+                // get primary blog id of user 
                 $pid = User::where('id',$id)->first()->primary_blog_id;
-                $followers_data1 = Blog::where('id', $pid )->first()->only(['id','blog_name','title']);
-                $followers_data2 = BlogSettings::where('id', $pid )->first()->only(['avatar']);
-                $followers_data = array_merge($followers_data1,$followers_data2);
+                // get the blog
+                $blog = Blog::where('id', $pid )->first();
+                // get the data needed for blogs
+                $followers_data1 = $blog ->only(['id','blog_name','title']);
+                $followers_data = array_merge($followers_data1,['avatar' => $blog->settings->avatar],['is_followed'=>$blog->IsFollowerToMe()]);
+                // merge data
                 array_push($followers_info,$followers_data);
             }
         } catch (\Throwable $th) {
@@ -79,5 +89,20 @@ class FollowBlogService{
         }
         return $followers_info;
     }
+
+    /**
+     * This function is used in get blogs id 
+     */
+   public function GetBlogIds(int $user_id)
+   {
+        $blog_ids = DB::table('follows')->where('user_id',$user_id)->pluck('blog_id');
+        return $blog_ids;
+   }
+
+   public function GetFollowers($followers_id)
+   {
+        $users = User::whereIn('id',$followers_id)->get();
+        return $users;
+   }
 
 }

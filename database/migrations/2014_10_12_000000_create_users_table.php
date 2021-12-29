@@ -32,6 +32,7 @@ class CreateUsersTable extends Migration
             $table->string('google_id')->nullable();
             $table->string('theme')->default('trueBlue');
             $table->foreignId('primary_blog_id')->nullable();
+            $table->string('fcm_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

@@ -197,4 +197,16 @@ class InboxController extends Controller
         return $this->success_response('all messages are delete',$code);
     }
 
+    public function DeleteBlogInbox($blogName)
+    {
+        $code=(new DeleteInboxService())->DeleteBlogInbox($blogName,auth()->user());
+        
+        if($code==403)
+            return $this->error_response(Errors::ERROR_MSGS_403,'user not a member of the blog',403);
+        else if ($code == 404)
+            return $this->error_response(Errors::ERROR_MSGS_404,'Blog name is not available!',404);
+        else
+            return $this->success_response('all blog messages are delete',$code);
+    }
+
 }

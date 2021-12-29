@@ -6,6 +6,7 @@ use App\Http\Misc\Helpers\Config;
 use App\Http\Misc\Helpers\Errors;
 use App\Http\Misc\Helpers\Success;
 use App\Http\Resources\BlogCollection;
+use App\Http\Resources\BlogResource;
 use App\Models\Blog;
 use App\Services\Blog\CreateBlogService;
 use App\Services\Blog\DeleteBlogService;
@@ -13,9 +14,17 @@ use App\Services\Blog\FollowBlogService;
 use App\Services\Blog\UnfollowBlogService;
 use App\Services\Notifications\NotificationsService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserBlogController extends Controller
 {
+
+    /*
+     | This Controller responsible for handling 
+     | the function linking users and blogs
+     |
+     */
+
     /**
      * @OA\Post(
      * path="/blog",
@@ -79,7 +88,7 @@ class UserBlogController extends Controller
      * )
      */
 
-    
+
     //this function creates a new blog
     public function create(Request $request)
     {
@@ -97,13 +106,12 @@ class UserBlogController extends Controller
 
         //response with the appropriate response 
         if ($code == 422)
-            return $this->error_response(Errors::ERROR_MSGS_422,'Blog name is not available!',422);
+            return $this->error_response(Errors::ERROR_MSGS_422, 'Blog name is not available!', 422);
         else
-            return $this->success_response('Created Successfully',201);
-
+            return $this->success_response('Created Successfully', 201);
     }
 
-        /**
+    /**
      * @OA\Post(
      * path="/blog/{blogName}",
      * summary="Delete Specific Blog",
@@ -165,20 +173,20 @@ class UserBlogController extends Controller
         //getting the blog
         $blog = Blog::where('blog_name', $blogName)->first();
 
-        if($blog==null)
-            return $this->error_response(Errors::ERROR_MSGS_404,'Blog name is not available!',404);
+        if ($blog == null)
+            return $this->error_response(Errors::ERROR_MSGS_404, 'Blog name is not available!', 404);
 
         //checking if this authorized through policy
         $this->authorize('delete', $blog);
-     
+
         //calling the service , responsible for deleting a blog        
         $code = (new DeleteBlogService())->DeleteBlog($blog, auth()->user(), $request->only('email', 'password'));
 
         //response with the appropriate response 
         if ($code == 403)
-            return $this->error_response(Errors::ERROR_MSGS_403,'email or password is incorrect. Please try again',403);
+            return $this->error_response(Errors::ERROR_MSGS_403, 'email or password is incorrect. Please try again', 403);
         else
-            return $this->success_response('deleted',200);
+            return $this->success_response('deleted', 200);
     }
 
 
@@ -255,11 +263,12 @@ class UserBlogController extends Controller
 
         //response with the appropriate response        
         if ($code == 409)
-            return $this->error_response(Errors::ERROR_MSGS_409,'Already following',409);
+            return $this->error_response(Errors::ERROR_MSGS_409, 'Already following', 409);
         else if ($code == 404)
-            return $this->error_response(Errors::ERROR_MSGS_404,'Blog name is not available!',404);
-        else
-        {
+            return $this->error_response(Errors::ERROR_MSGS_404, 'Blog name is not available!', 404);
+        else if ($code == 403)
+            return $this->error_response(Errors::ERROR_MSGS_403, 'target blog is blocked', 403);
+        else {
             //add follow notification
             (new NotificationsService())->CreateNotification(
                 auth()->user()->primary_blog_id,
@@ -268,9 +277,8 @@ class UserBlogController extends Controller
                 null,
             );
 
-            return $this->success_response('Followed',200);
+            return $this->success_response('Followed', 200);
         }
-
     }
 
 
@@ -344,11 +352,10 @@ class UserBlogController extends Controller
 
         //response with the appropriate response 
         if ($code == 409)
-            return $this->error_response(Errors::ERROR_MSGS_409,'Already not following',409);
+            return $this->error_response(Errors::ERROR_MSGS_409, 'Already not following', 409);
         else if ($code == 404)
-            return $this->error_response(Errors::ERROR_MSGS_404,'Blog name is not available!',404);
-        else
-        {
+            return $this->error_response(Errors::ERROR_MSGS_404, 'Blog name is not available!', 404);
+        else {
             //remove follow notification
             (new NotificationsService())->DeleteNotification(
                 auth()->user()->primary_blog_id,
@@ -358,17 +365,78 @@ class UserBlogController extends Controller
                 null
             );
 
-            return $this->success_response('Unfollowed',200);
+            return $this->success_response('Unfollowed', 200);
         }
     }
 
+    /**
+     *	@OA\Get
+     *	(
+     * 		path="user/following",
+     * 		summary="User setting",
+     * 		description="Retrieve following blogs for User.",
+     * 		operationId="Retrieve followings",
+     * 		tags={"User"},
+     * @OA\Response(
+     *    response=200,
+     *    description="Successfully",
+     *  @OA\JsonContent(
+     *           type="object",
+     *           @OA\Property(property="Meta", type="object",
+     *           @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="success"),
+     *           ),
+     *          @OA\Property(property="response", type="object",
+     *          @OA\Property(property="blogs", type="array",
+     *            @OA\Items(
+     *              @OA\Property(property="post", type="object",
+     *                     @OA\Property(property="blog_id", type="integer", example= 123 ),
+     *                     @OA\Property(property="blog_name", type="string", example="ahmed"),
+     *                     @OA\Property(property="title", type="string", format="text", example="CMP"),
+     *                     @OA\Property(property="avatar", type="string", format="text", example="https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"),
+     *                     @OA\Property(property="avatar_shape", type="string", format="text", example="Circle"),
+     *                     @OA\Property(property="description", type="string", format="text", example="ahmed217"),
+     *              ),
+     *             ),
+     *          ),
+     *          @OA\Property(property="next_url", type="string", example= "http://127.0.0.1:8000/api/user/followings?page=2" ),
+     *          @OA\Property(property="total", type="integer", example= 20 ),
+     *          @OA\Property(property="current_page", type="integer", example= 1 ),
+     *          @OA\Property(property="posts_per_page", type="integer", example=4),
+     *          ),
+     *       ),
+     * ),
+     *   @OA\Response(
+     *      response=404,
+     *       description="Not Found",
+     *   ),
+     *   @OA\Response(
+     *      response=422,
+     *       description="invalid Data",
+     *   ),
+     * security ={{"bearer":{}}}
+     * )
+     */
+    /**
+     * This function is responsible for get the blogs that user follows
+     * @param 
+     * @return response
+     */
     public function GetUserFollowing()
     {
+        //get auth user
         $user = auth('api')->user();
-        //TODO: config paginate limit Config::PAGINATION_BLOGS_LIMIT
-        
-        $blogs = $user->FollowedBlogs()->paginate(15);
+        // get blogs id that authenticated user follows
+        $blog_ids = (new FollowBlogService())->GetBlogIds($user->id);
+        //get needed info about these blogs
+        $blogs = Blog::whereIn('id', $blog_ids)->paginate(Config::PAGINATION_BLOGS_LIMIT);
         return $this->success_response(new BlogCollection($blogs));
-    } 
+    }
 
+
+    public function GetBlogInfo($blogId)
+    {
+        $blog = Blog::find($blogId);
+        return $this->success_response(new BlogResource($blog), 200);
+    }
 }

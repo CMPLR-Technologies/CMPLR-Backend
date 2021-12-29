@@ -2,9 +2,13 @@
 
 namespace App\Services\Posts;
 
+use App\Http\Misc\Helpers\Config;
 use App\Models\Blog;
 use App\Models\BlogUser;
+use App\Models\Post;
 use App\Models\Posts;
+use App\Models\PostTags;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -34,16 +38,16 @@ class PostsService
      *
      * @param array $data
      * 
-     * @return bool
+     * @return Post
      */
     public function createPost(array $data)
     {
-        try {
+       // try {
             $post = Posts::create($data);
             return $post;
-        } catch (\Throwable $th) {
+        //} catch (\Throwable $th) {
             return null;
-        }
+        //}
     }
 
     /**
@@ -75,6 +79,21 @@ class PostsService
     }
 
     /**
+     * GET Random Posts
+     *
+     * @param 
+     * 
+     * @return Posts
+     */
+    public function GetRandomPosts()
+    {
+        $posts = Posts::where('state', '=', 'publish')->inRandomOrder()->paginate(Config::PAGINATION_LIMIT);
+        if (!$posts)
+            return null;
+        return $posts;
+    }
+
+    /**
      * This Function retrieve PostData needed
      * @param int $blog_id
      *@return Posts
@@ -98,10 +117,12 @@ class PostsService
         $data1['avatar'] = $blog->settings->avatar;
         $data1['title'] = $blog->title;
         $data1['header_image'] = $blog->settings->header_image;
-        $data1['is_primary'] = $blog->users()->first()->primary_blog_id == $blog->id;
-        //dd($data1['is_primary'] );
-        // TODO: 
-        $data1['desciption'] = 'hossam el gamd';
+        if( $blog->users()->first())
+            $data1['is_primary'] = $blog->users()->first()->primary_blog_id == $blog->id;
+        else 
+            $data1['is_primary'] = false; 
+        $data1['description'] = $blog->settings->description;
+        $data1['is_followed'] = $blog->isfollower();
         return $data1;
     }
 
@@ -128,13 +149,82 @@ class PostsService
                     $views[] = $data;
                     $size += 1;
                     // retrieve only 3 images
-                    if($size == 3)
-                        break;      
+                    if ($size == 3)
+                        break;
                 }
             }
-
-   
         }
         return $views;
+    }
+
+    /**
+     * Add post Tags 
+     * 
+     * @param $postId
+     * @param $postTags
+     * 
+     * @author Yousif Ahmed
+     */
+    public function AddPostTags($postId, $postTags)
+    {
+        foreach ($postTags as $tag) {
+
+            try {
+                Tag::create([
+                    'name' => $tag,
+                ]);
+            } catch (\Throwable $th) {
+            }
+            try {
+                PostTags::create([
+                    'post_id' => $postId,
+                    'tag_name' => $tag,
+                ]);
+            } catch (\Throwable $th) {
+            }
+        }
+    }
+
+    /**
+     * Getting Posts with tag
+     * 
+     * @param $tag 
+     * 
+     * @return Posts
+     * @author Yousif Ahmed
+     */
+
+    public function GetPostsWithTag($tag)
+    {
+        $postsTags = PostTags::where('tag_name', $tag)->orderBy('created_at', 'DESC')->get();
+        $posts = Posts::wherein('id', $postsTags->pluck('post_id'))->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
+        $posts->tag = $tag;
+        return $posts;
+    }
+
+    /**
+     * Getting photo Post with tag 
+     * 
+     * @param $tag 
+     * 
+     * @return $post
+     * 
+     */
+    public function GetPostWithTagPhoto ($tag)
+    {
+        $postsTags = PostTags::where('tag_name', $tag)->orderBy('created_at', 'DESC')->get();
+        $post = Posts::wherein('id', $postsTags->pluck('post_id'))->where('type', 'photos')->first();
+        return $post ;
+
+    }
+
+    public function UpdatePost ($post,$data)
+    {
+        try {
+            $is_updated =  $post->update($data);;
+        } catch (\Throwable $th) {
+            return null;
+        }
+        return  $is_updated;
     }
 }

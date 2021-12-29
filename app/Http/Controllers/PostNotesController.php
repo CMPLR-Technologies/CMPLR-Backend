@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\NotesCountResource;
+use App\Http\Resources\PostNotesCollection;
+use App\Http\Resources\PostNotesResource;
 use App\Models\Blog;
 use App\Models\PostNotes;
 use App\Services\Post\PostNotesService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
+use function PHPUnit\Framework\isEmpty;
 
 class PostNotesController extends Controller
 {
@@ -30,7 +35,7 @@ class PostNotesController extends Controller
 
  /**
      * @OA\GET(
-     * path="/post/notes}",
+     * path="/post/notes",
      * summary="getting notes for specific post",
      * description="This method can be used to get notes for specific post",
      * operationId="getNotes",
@@ -113,15 +118,16 @@ class PostNotesController extends Controller
     public function getNotes(Request $request )
     {
         $postId = (int)$request->post_id;
-        $notes = $this->postNotesService->GetPostNotes($postId);
-        $counts =  $this->postNotesService->GetNotesCount($postId);
-        $blogsId =  $this->postNotesService->GetBlogsId($notes);
-        $blogsData = $this->postNotesService->GetBlogsData($blogsId);
-        $blogHashData= $this->postNotesService->HashBlogData($blogsData);
-        $result = $this->postNotesService->GetNotesResult($notes , $blogHashData , $counts);
         
-        return response()->json($result , 200);
+        $notes =  $this->postNotesService->GetPostNotes($postId);
+        
+        // checking nullos
+        if ( !count($notes))
+        {
+            return response()->json( ['notes'=> $notes ,'total_likes' => 0 ,'total_reblogs'=>0,'total_replys'=>0] , 200);
+        }
+        return response()->json( new PostNotesCollection($notes) , 200);
 
     }
-
+ 
 }

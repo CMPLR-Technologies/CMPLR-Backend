@@ -4,6 +4,7 @@ namespace App\Services\Auth;
 
 use App\Mail\ResetPasswordMail;
 use App\Models\User;
+use App\Notifications\ForgetPasswordNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -75,8 +76,16 @@ class ForgetPasswordService
      */
     public function SendResetPasswordMail(string $email, string $token): bool
     {
+        // try {
+        //     Mail::to($email)->send(new ResetPasswordMail($token));
+        // } catch (\Throwable $th) {
+        //     return false;
+        // }
+        // return true;
         try {
-            Mail::to($email)->send(new ResetPasswordMail($token));
+         //   Mail::to($email)->send(new ResetPasswordMail($token));
+        $user = User::where('email', $email)->first();
+        $user->notify(new ForgetPasswordNotification($token));
         } catch (\Throwable $th) {
             return false;
         }

@@ -3,10 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Misc\Helpers\Errors;
+use App\Http\Resources\LastNdaysActivityCollection;
+use App\Http\Resources\LastNdaysActivityResource;
 use App\Http\Resources\NotificationCollection;
 use App\Http\Resources\NotificationResource;
+use App\Models\Blog;
 use App\Models\Notification;
+use App\Models\PostNotes;
+use App\Models\User;
 use App\Services\Notifications\NotificationsService;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
@@ -298,6 +304,29 @@ class NotificationsController extends Controller
     
         //return the response
         return $this->success_response('token stored',200);
+    }
+
+    /**
+     * get last ndays activity for a certain blog
+     * 
+     * @return response
+     */
+
+
+    public function GetLastNdaysActivity(Request $request,$blogName)
+    {
+        //validate input parameters
+        $this->validate($request,[
+            'lastNdays' => 'required'
+        ]);
+
+        [$code,$dates]=(new NotificationsService())->GetLastNdaysActivity($request->lastNdays,$blogName);
+            
+        //return the response
+        if($code==404)
+            return $this->error_response(Errors::ERROR_MSGS_404,'blogName not found',404);
+        else
+            return $this->success_response(new LastNdaysActivityCollection($dates),200);
     }
 
 

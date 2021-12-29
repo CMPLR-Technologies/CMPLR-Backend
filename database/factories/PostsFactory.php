@@ -18,11 +18,10 @@ class PostsFactory extends Factory
     public function definition()
     {
         $paragraphs = $this->faker->paragraphs(rand(2, 6));
-        $title = $this->faker->realText(50);
+        $title = $this->faker->realText(30);
         $content = "<h1>{$title}</h1>";
         foreach ($paragraphs as $para) {
             $content .= "<p>{$para}</p>";
-            
         }
         $blog = Blog::inRandomOrder()->first();
 
@@ -34,7 +33,8 @@ class PostsFactory extends Factory
             'source_content' => Str::random(10),
             'blog_id'=>$blog->id,
             'blog_name'=>$blog->blog_name,
-            'tags' => ['summer','winter']
+            'tags' => ['summer','winter'],
+            'post_ask_submit' => $this->faker->randomElement(['post','ask' ,'submit'])
         ];
     }
 }
