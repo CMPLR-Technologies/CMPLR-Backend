@@ -9,6 +9,6 @@ class Success
     const DELETED = "Record deleted successfully!";
     const ADDED = "Record added successfully!";
     const CREATED = "Record created successfully!";
-    const SENT= "Email sent successfully!";
-    const CHANGE= "password change successfully!";
+    const SENT = "Email sent successfully!";
+    const CHANGE = "Password change successfully!";
 }

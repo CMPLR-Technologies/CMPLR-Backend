@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tag;
-use App\Models\TagUser;
 use App\Models\PostTags;
 use Illuminate\Http\Request;
 use App\Http\Misc\Helpers\Errors;
 use App\Services\Posts\PostsService;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\TagCollection;
 use App\Services\User\UserTagsService;
 

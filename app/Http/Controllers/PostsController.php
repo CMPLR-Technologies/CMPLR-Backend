@@ -390,7 +390,7 @@ class PostsController extends Controller
         try {
             $this->authorize('EditPost', [$post, $blog]);
         } catch (\Throwable $th) {
-            $error['user'] = Errors::AUTHRIZED;
+            $error['user'] = Errors::AUTHORIZED;
             return $this->error_response(Errors::ERROR_MSGS_401, $error, 401);
         }
         // set up the response        
@@ -471,7 +471,7 @@ class PostsController extends Controller
         try {
             $this->authorize('EditPost', [$post, $blog]);
         } catch (\Throwable $th) {
-            $error['user'] = Errors::AUTHRIZED;
+            $error['user'] = Errors::AUTHORIZED;
             return $this->error_response(Errors::ERROR_MSGS_401, $error, 401);
         }
         // update post with all data

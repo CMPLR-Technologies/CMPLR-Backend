@@ -2,6 +2,7 @@
 
 namespace App\Services\User;
 
+use Carbon\Carbon;
 use App\Models\Tag;
 use App\Models\Posts;
 use App\Models\TagUser;
@@ -62,19 +63,25 @@ class UserTagsService
     /**
      * getting the tags followed by a user 
      * 
+     * @param int $user_id
+     * 
      * @return $tags
      */
-    public function GetFollowedTags($userId)
+    public function GetFollowedTags(int $userId)
     {
         $tags = TagUser::where(['user_id' => $userId])->with('tag')->get();
 
         $followed_tags = [];
 
         foreach ($tags as $tag) {
-            $followed_tags[] = $tag['tag'];
+            $tag_name = $tag['tag']['name'];
+            $followed_tags[] = [
+                'posts_count' => PostTags::where([['tag_name', '=', $tag_name], ['created_at', '>=', Carbon::now()->toDateString()]])->count(),
+                'tag' => $tag['tag']
+            ];
         }
 
-        return ($followed_tags);
+        return $followed_tags;
     }
 
     /**
