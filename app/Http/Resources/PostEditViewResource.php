@@ -18,6 +18,7 @@ class PostEditViewResource extends JsonResource
         $blog_settings = $blog->settings;
         return [
             'post'=>[
+                'title' => $this->title,
                 'post_id' => $this->id,
                 'type' => $this->type,
                 'state' =>$this->state,
