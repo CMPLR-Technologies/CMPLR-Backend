@@ -159,7 +159,9 @@ class UserTagsConroller extends Controller
         $response['is_follower'] = $this->userTagsService->IsFollower($tag);
 
         // getting tag avatar 
-        $response['tag_avatar'] = 'https://assets.tumblr.com/images/default_avatar/cone_closed_128.png';
+         $tagPost =$this->postsService->GetPostWithTagPhoto($tag);
+         $response['before'] =$tagPost->content ;
+         $response['tag_avatar'] = $this->postsService->GetViews([$tagPost]);
 
         //total tag posts 
         $response['total_posts'] = PostTags::where('tag_name', $tag)->count();

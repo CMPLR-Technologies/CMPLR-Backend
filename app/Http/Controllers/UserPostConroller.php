@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Misc\Helpers\Errors;
+use App\Models\Post;
 use App\Models\Posts;
 use App\Services\Notifications\NotificationsService;
 use App\Services\User\UserPostService;
@@ -77,9 +78,9 @@ class UserPostConroller extends Controller
     {
         //getting data 
         $postId = $request->id;
-        $userId = auth()->user()->id;
+        $user = auth()->user();
 
-        if (!$userId)
+        if (!$user->id)
         {
             return $this->error_response(Errors::ERROR_MSGS_401,'Unauthenticated',401);
 
@@ -89,12 +90,14 @@ class UserPostConroller extends Controller
             return $this->error_response(Errors::ERROR_MSGS_404,'Post Id Is required',404);
         }
 
-        if (!$this->userPostService->UserLikePost($userId , $postId))
+        if (!$this->userPostService->UserLikePost($user->id , $postId))
         {
             return $this->error_response(Errors::ERROR_MSGS_404,'Note Not Found',404);
 
         }
-      //  $this->notification->CreateNotification($userId , null ,'like' ,$postId );
+        $toBlogId = Post::select('blog_id')->where('id' , $postId)->first();
+       
+        $this->notification->CreateNotification($user->primary_blog_id ,  $toBlogId->blog_id ,'like' ,$postId );
 
         return response()->json( ['message'=>'Success'], 200);
 
@@ -210,23 +213,26 @@ class UserPostConroller extends Controller
     {
          //getting data 
          $postId = $request->post_id;
-         $userId = auth()->user()->id;
+         $user = auth()->user();
          $replyText = $request->reply_text ;
 
-         if (!$userId)
+         if (!$user->id)
          {
              return $this->error_response(Errors::ERROR_MSGS_401,'Unauthenticated',401);
- 
          }
          if (!$postId)
          {
              return $this->error_response(Errors::ERROR_MSGS_404,'Post Id Is required',404);
          }
-         if (!$this->userPostService->UserReplyPost($userId , $postId ,$replyText))
+         if (!$this->userPostService->UserReplyPost($user->id , $postId ,$replyText))
          {
              return $this->error_response(Errors::ERROR_MSGS_404,'Note Not Found',404);
  
          }
+         
+         $toBlogId = Post::select('blog_id')->where('id' , $postId)->first();
+       
+         $this->notification->CreateNotification($user->primary_blog_id ,  $toBlogId->blog_id ,'reply' ,$postId );
  
          return response()->json( ['message'=>'Success'], 200);
  
