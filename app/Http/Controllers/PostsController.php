@@ -490,7 +490,55 @@ class PostsController extends Controller
 
 
 
-
+    /**
+     * @OA\get(
+     * path="posts/view/{post_id}",
+     * summary="get posts by id",
+     * description="User can get posts by id",
+     * operationId="postid",
+     * tags={"Posts"},
+     * @OA\Response(
+     *    response=200,
+     *    description="Successfully",
+     *  @OA\JsonContent(
+     *           type="object",
+     *           @OA\Property(property="Meta", type="object",
+     *           @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="success"),
+     *           ),
+     *          @OA\Property(property="response", type="object",
+     *              @OA\Property(property="post", type="object",
+     *                     @OA\Property(property="post_id", type="integer", example= 123 ),
+     *                     @OA\Property(property="type", type="string", example="text"),
+     *                     @OA\Property(property="state", type="string", format="text", example="private"),
+     *                     @OA\Property(property="content", type="string", format="text", example="<h1> hello all</h1><br/> <div><p>my name is <span>Ahmed</span></p></div>"),
+     *                     @OA\Property(property="date", type="string", format="text", example="Monday, 20-Dec-21 21:54:11 UTC"),
+     *                     @OA\Property(property="source_content", type="string", format="text", example="www.geeksforgeeks.com"),
+     *                     @OA\Property(property="tags", type="string", format="text", example="['DFS','BFS']"),
+     *                     @OA\Property(property="is_liked", type="boolean", example=true),
+     *                     @OA\Property(property="is_mine", type="boolean", example=true),
+     *              ),
+     *              @OA\Property(property="blog", type="object",
+     *                     @OA\Property(property="blog_id", type="integer", example= 123 ),
+     *                     @OA\Property(property="blog_name", type="string", format="text", example="Ahmed_1"),
+     *                     @OA\Property(property="avatar", type="string", format="text", example="https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"),
+     *                     @OA\Property(property="avatar_shape", type="string", example="circle"),
+     *                     @OA\Property(property="replies", type="string", format="text", example="everyone"),
+     *                     @OA\Property(property="follower", type="boolean", example=true),
+     *              ),
+     *          ),
+     *       ),
+     * ),
+     *   @OA\Response(
+     *      response=404,
+     *       description="Not Found",
+     *   ),
+     *   @OA\Response(
+     *      response=422,
+     *       description="invalid Data",
+     *   ),
+     * )
+     */
     /**
      * this function return the post with specific id
      * @param Posts $posts
@@ -583,7 +631,7 @@ class PostsController extends Controller
     /**
      * @OA\get(
      * path="posts/radar/",
-     * summary="get email for reset password for  user",
+     * summary="get random post",
      * description="User can reset password for existing email",
      * operationId="GetResestPassword",
      * tags={"Posts"},
@@ -712,10 +760,13 @@ class PostsController extends Controller
      */
     public function GetBlogPosts(Request $request, $blog_name)
     {
-        $blog = Blog::where('blog_name', $blog_name)->first();
+        // get blog
+        $blog =  $this->PostsService->GetBlogByName($blog_name);
+       
         if (!$blog)
             return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
-        $posts = Posts::where('blog_id', $blog->id)->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
+        // get posts of the blog depend on requested user
+        $posts = $this->PostsService->GetPostsOfBlog($blog->id);
         return $this->success_response(new PostsCollection($posts));
     }
 
@@ -782,7 +833,7 @@ class PostsController extends Controller
      */
     public function MiniProfileView(Request $request, int $blog_id)
     {
-
+        // get blog by blog_id
         $blog = Blog::find($blog_id);
         if (!$blog)
             return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
@@ -793,7 +844,7 @@ class PostsController extends Controller
             return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
 
         // set blog data
-        $response['blog'] =  $this->PostsService->MiniViewBlogData($blog);
+        $response['blog'] = $this->PostsService->MiniViewBlogData($blog);
 
         //get views
         $response['views'] = $this->PostsService->GetViews($posts);
@@ -801,16 +852,14 @@ class PostsController extends Controller
         return $this->success_response($response);
     }
 
-    // public function StuffForYou(Request $request)
-    // {
-    //     $user = auth('api')->user();
-    //     $user_followers_id = DB::table('user_follow_blog')->where('user_id',$user->id)->pluck('blog_id');
-    //     $blogs_followers = DB::table('user_follow_blog')->whereIn('blog_id',$user_followers_id)->pluck('blog_id');
-    //     $posts = Posts::whereIn('blog_id',$blogs_followers)->paginate(5);
-    //     return $this->success_response(new PostsCollection($posts));
-    // }
 
 
+    /**
+     * this function is responsible for get profile likes for blog
+     * @param Request $request
+     * @param string $blog_name
+     * @return Response
+     */
     public function ProfileLikes(Request $request, string $blog_name)
     {
         $blog = Blog::where('blog_name', $blog_name)->first();
@@ -830,7 +879,12 @@ class PostsController extends Controller
         return $this->success_response(new PostsCollection($posts));
     }
 
-
+    /**
+     * this function is responsible for get profile likes for blog
+     * @param Request $request
+     * @param string $blog_name
+     * @return Response
+     */
     public function ProfileFollowing(Request $request, string $blog_name)
     {
         $blog = Blog::where('blog_name', $blog_name)->first();
