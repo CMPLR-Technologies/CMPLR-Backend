@@ -73,15 +73,10 @@ class EmailVerificationController extends Controller
      * ),
      * )
      */
-    public function Verify(EmailVerificationRequest $request)
+    public function Verify(Request $request)
     {
         $user = User::findOrFail($request->id);
 
-        if(!$user)
-        {
-            return response()->json(['message'=>'UnAuthorized email'],401);
-
-        }
         // checking wether the email is already verified 
         if ($this->emailVerificationService->IsEmailVerified($user)) {
             return response()->json(['message'=>'Email Already Verified'],422);
