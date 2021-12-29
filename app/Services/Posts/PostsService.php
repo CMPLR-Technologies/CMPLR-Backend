@@ -135,7 +135,7 @@ class PostsService
             // check that post has image
             if (strpos($post['content'], $img_string) !== false) {
                 // regex to get all images in array
-                preg_match_all('/<img[^>]+>/i', $post['content'], $result);
+                preg_match_all('/src="([^"]*', $post['content'], $result);
                 // check that image array is not empty
                 if (!empty($result)) {
                     // get link from image tag
