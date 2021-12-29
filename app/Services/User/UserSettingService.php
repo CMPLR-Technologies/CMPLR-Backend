@@ -122,4 +122,21 @@ class UserSettingService
         }
         return true;
     }
+    
+    /**
+     *  set the new password for user and delete the token  
+     *
+     * if new password matches old password return false
+     * @param string $old_password (current_user->password)
+     * @param string $newpassword
+     * 
+     * @return bool
+     */
+    public function CheckPassword(string $old_Password, string $new_password): bool
+    {   
+        if (Hash::check($new_password, $old_Password)) 
+            return false;
+
+        return true;    
+    }
 }

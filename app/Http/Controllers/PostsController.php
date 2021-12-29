@@ -696,6 +696,8 @@ class PostsController extends Controller
     {
         //TODO:  retrive only published posts
         $blog = Blog::where('blog_name', $blog_name)->first();
+        if(!$blog)
+            return $this->error_response(Errors::ERROR_MSGS_404,'',404);
         $posts = Posts::where('blog_id', $blog->id)->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
         return $this->success_response(new PostsCollection($posts));
     }

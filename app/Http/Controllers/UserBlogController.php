@@ -18,6 +18,13 @@ use Illuminate\Support\Facades\DB;
 
 class UserBlogController extends Controller
 {
+
+    /*
+     | This Controller responsible for handling 
+     | the function linking users and blogs
+     |
+     */
+
     /**
      * @OA\Post(
      * path="/blog",
@@ -366,13 +373,67 @@ class UserBlogController extends Controller
         }
     }
 
+     /**
+     *	@OA\Get
+     *	(
+     * 		path="user/following",
+     * 		summary="User setting",
+     * 		description="Retrieve following blogs for User.",
+     * 		operationId="Retrieve followings",
+     * 		tags={"User"},
+ * @OA\Response(
+     *    response=200,
+     *    description="Successfully",
+     *  @OA\JsonContent(
+     *           type="object",
+     *           @OA\Property(property="Meta", type="object",
+     *           @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="success"),
+     *           ),
+     *          @OA\Property(property="response", type="object",
+     *          @OA\Property(property="blogs", type="array",
+     *            @OA\Items(
+     *              @OA\Property(property="post", type="object",
+     *                     @OA\Property(property="blog_id", type="integer", example= 123 ),
+     *                     @OA\Property(property="blog_name", type="string", example="ahmed"),
+     *                     @OA\Property(property="title", type="string", format="text", example="CMP"),
+     *                     @OA\Property(property="avatar", type="string", format="text", example="https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"),
+     *                     @OA\Property(property="avatar_shape", type="string", format="text", example="Circle"),
+     *                     @OA\Property(property="description", type="string", format="text", example="ahmed217"),
+     *              ),
+     *             ),
+     *          ),
+     *          @OA\Property(property="next_url", type="string", example= "http://127.0.0.1:8000/api/user/followings?page=2" ),
+     *          @OA\Property(property="total", type="integer", example= 20 ),
+     *          @OA\Property(property="current_page", type="integer", example= 1 ),
+     *          @OA\Property(property="posts_per_page", type="integer", example=4),
+     *          ),
+     *       ),
+     * ),
+     *   @OA\Response(
+     *      response=404,
+     *       description="Not Found",
+     *   ),
+     *   @OA\Response(
+     *      response=422,
+     *       description="invalid Data",
+     *   ),
+     * security ={{"bearer":{}}}
+     * )
+     */
+    /**
+     * This function is responsible for get the blogs that user follows
+     * @param 
+     * @return response
+     */
     public function GetUserFollowing()
     {
+        //get auth user
         $user = auth('api')->user();
-        //TODO: config paginate limit Config::PAGINATION_BLOGS_LIMIT
-
-        $blog_ids = DB::table('follows')->where('user_id',$user->id)->pluck('blog_id');
-        $blogs = Blog::whereIn('id',$blog_ids)->paginate(15);
+        // get blogs id that authenticated user follows
+        $blog_ids =(new FollowBlogService())->GetBlogIds($user->id);
+        //get needed info about these blogs
+        $blogs = Blog::whereIn('id',$blog_ids)->paginate(Config::PAGINATION_BLOGS_LIMIT);
         return $this->success_response(new BlogCollection($blogs));
     } 
 
