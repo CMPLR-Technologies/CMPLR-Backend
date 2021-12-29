@@ -16,7 +16,7 @@ class CreateNotificationsTable extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();         
             $table->integer('from_blog_id')->nullable();        // nullable in case of anonymous
-            $table->integer('to_blog_id');
+            $table->foreignId('to_blog_id')->references('id')->on('blogs')->onDelete('cascade');
             $table->string('type');                             // 'reblog' 'reply' 'like' 'follow' 'ask' 'answer'
             $table->integer('post_ask_answer_id')->nullable();  // nullable in case of 'follow'
             $table->string("date");

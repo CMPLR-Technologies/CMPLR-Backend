@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Models\Blog;
 use App\Models\Follow;
 use App\Models\User;
+use App\Services\Block\BlockService;
 use App\Services\Blog\FollowBlogService;
 use Tests\TestCase;
 
@@ -40,7 +41,9 @@ class FollowBlogTest extends TestCase
         $blog=Blog::find($follow->blog_id);
         $user=User::find($follow->user_id);
         $follow->delete();
-        
+
+        (new BlockService())->noBlock($blog->id,$user->primary_blog_id);
+
         $code=(new FollowBlogService())->FollowBlog($blog,$user);
         
         $this->assertEquals(200,$code);

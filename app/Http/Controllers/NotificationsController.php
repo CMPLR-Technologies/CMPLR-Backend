@@ -13,7 +13,6 @@ use App\Models\PostNotes;
 use App\Models\User;
 use App\Services\Notifications\NotificationsService;
 use Carbon\Carbon;
-use Carbon\CarbonPeriod;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
@@ -321,16 +320,13 @@ class NotificationsController extends Controller
             'lastNdays' => 'required'
         ]);
 
-        //get sequence of required dates
-        $dates=CarbonPeriod::create(now()->subDays($request->lastNdays-1), now())->toArray();
-
-        $blog=Blog::where('blog_name',$blogName)->first();
-
-        foreach ($dates as &$date)
-            $date=[$blog,$date,$request->lastNdays];
+        [$code,$dates]=(new NotificationsService())->GetLastNdaysActivity($request->lastNdays,$blogName);
             
         //return the response
-        return $this->success_response(new LastNdaysActivityCollection($dates),200);
+        if($code==404)
+            return $this->error_response(Errors::ERROR_MSGS_404,'blogName not found',404);
+        else
+            return $this->success_response(new LastNdaysActivityCollection($dates),200);
     }
 
 
