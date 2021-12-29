@@ -71,6 +71,7 @@ class GoogleController extends Controller
             }
             $request['blog'] = Blog::where('id',$user->primary_blog_id)->first();
             $user->google_id = $google_user->id;
+            $user->email_verified_at = Carbon::now();
             $user->save;
             $resource =  new RegisterResource($request);
             return $this->success_response($resource,200);
