@@ -11,7 +11,7 @@ class BlogService
     /**
      * GET Random Blogs
      *
-     * @param 
+     * @param int $user_id
      * 
      * @return Blogs
      */

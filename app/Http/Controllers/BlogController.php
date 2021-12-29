@@ -37,7 +37,13 @@ class BlogController extends Controller
      */
     public function GetRecommendedBlogs()
     {
-        $user_id = auth('api')->user()->id;
+        // Check if there is an authenticated user
+        $user = auth('api')->user();
+        $user_id = null;
+
+        if ($user) {
+            $user_id = $user->id;
+        }
 
         $recommended_blogs = $this->BlogService->GetRandomBlogs($user_id);
 
@@ -58,7 +64,13 @@ class BlogController extends Controller
      */
     public function GetTrendingBlogs()
     {
-        $user_id = auth('api')->user()->id;
+        // Check if there is an authenticated user
+        $user = auth('api')->user();
+        $user_id = null;
+
+        if ($user) {
+            $user_id = $user->id;
+        }
 
         $trending_blogs = $this->BlogService->GetRandomBlogs($user_id);
 
