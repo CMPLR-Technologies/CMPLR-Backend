@@ -44,7 +44,11 @@ class GoogleController extends Controller
         }
     }
 
-
+    /**
+     * this function is used for google login of user 
+     * @param $request
+     * @return $response
+     */
     public function GetUserFromGoogle(Request $request)
     {
         $token = $request->token;
@@ -67,6 +71,7 @@ class GoogleController extends Controller
             }
             $request['blog'] = Blog::where('id',$user->primary_blog_id)->first();
             $user->google_id = $google_user->id;
+            $user->email_verified_at = Carbon::now();
             $user->save;
             $resource =  new RegisterResource($request);
             return $this->success_response($resource,200);
@@ -77,32 +82,40 @@ class GoogleController extends Controller
     }
 
     /**
-     * this function is responsible for 
+     * this function is used for google signup of user 
+     * @param $request
+     * @return $response
      */
     public function SignUpWithGoogle(GoogleRequest $request)
     {
         try {
-            $user = Socialite::driver('google')->userFromToken($request->token);
+            $google_user = Socialite::driver('google')->userFromToken($request->token);
         } catch (\Throwable $th) {
             $error['token'] = Errors::TOKEN_ERROR;
             return $this->error_response(Errors::ERROR_MSGS_422, $error, 422);
         }
         // check if the user is already a user 
-        if (User::where('email', $user->email)->first()) 
+        $user = User::where('email', $google_user->email)->first();
+        if ($user) 
         {
             $user = Auth::loginUsingId($user->id);
             try {
                 $userLoginToken = $user->CreateToken('authToken')->accessToken;
+                $request['token'] = $userLoginToken;
             } catch (\Throwable $th) {
                 $error['token'] = Errors::GENERATE_TOKEN_ERROR;
                 return $this->error_response(Errors::ERROR_MSGS_500, $error, 500);
             }
-            //TODO: return register resource
-            return response()->json(['user' => auth()->user(), 'token' => $userLoginToken], 200);
+            $request['user'] = $user;
+            $request['blog'] = Blog::where('id',$user->primary_blog_id)->first();
+            $user->google_id = $google_user->id;
+            $user->save;
+            $resource =  new RegisterResource($request);
+            return $this->success_response($resource,200);
         }
 
         // create user
-        $user = $this->RegisterService->CreateUserGoogle($user->email, $request->age, $user->id);
+        $user = $this->RegisterService->CreateUserGoogle($google_user->email, $request->age, $google_user->id);
         if (!$user) {
             $error['user'] = Errors::CREATE_ERROR;
             $this->error_response(Errors::ERROR_MSGS_500, $error, 500);

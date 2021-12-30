@@ -27,7 +27,7 @@ class TaggedPostsResource extends JsonResource
                 'date' => $this->date,
                 'source_content' => $this->source_content,
                 'tags' => $this->tags,
-                'is_liked' => ($user)?$this->is_liked($user):null,
+                'is_liked' => $this->is_liked(),
                 'notes_count' => $this->count_notes(),
             ],
             'blog' => [

@@ -33,19 +33,16 @@ class UploadMediaController extends Controller
 
     public function UploadImagesaa(request $request)
     {
-
         $request->validate([
             'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:5048',
         ]);
         $user = auth('api')->user();
+
         // get image
         $image = $request->file('image');
-        // remove spaces from image name
-        $image_client_name = str_replace(' ', '', $image->getClientOriginalName());
-        // name of image must be unique
-        $image_name = time() . '_' . $user->id . '_' . $image_client_name;
-        // path of image inside s3 bucket
-        $filePath = 'images/' . $image_name;
+        // generate the name of the file
+        $filePath = $this->HandlerBase64Service->GenerateFileName($image,$user->id);
+      
         // store image
         try {
             Storage::disk('s3')->put($filePath, file_get_contents($image));
@@ -80,10 +77,8 @@ class UploadMediaController extends Controller
         // get video
         $video = $request->file('video');
         // remove spaces from video name
-        $video_client_name = str_replace(' ', '', $video->getClientOriginalName());
-        //name of video must be unique
-        $video_name = time() . '_' . $user->id . '_' . $video_client_name;
-        $filePath = 'videos/' . $video_name;
+
+        $filePath = $this->HandlerBase64Service->GenerateVideoName($video,$user->id);
         try {
             Storage::disk('s3')->put($filePath, file_get_contents($video));
         } catch (\Throwable $th) {
@@ -101,6 +96,7 @@ class UploadMediaController extends Controller
     /**
      * This Function is Responisble for upload images in 
      * base64 form
+     * @param 
      */
     function UploadBase64Image(request $request)
     {
@@ -122,19 +118,17 @@ class UploadMediaController extends Controller
 
         // decode and validate image data
         $binary_data = $this->HandlerBase64Service->Base64Validations($image_parts[1]);
-        if (!$binary_data) 
-        {
+        if (!$binary_data) {
             $error['image'] = 'Invalid Base64image Given';
             return $this->error_response(Errors::ERROR_MSGS_422, $error, 422);
         }
 
         // check image size
-        $tmpFile = tempnam(sys_get_temp_dir(), 'medialibrary');
-        file_put_contents($tmpFile, $binary_data);
-        if(filesize($tmpFile)/1024 > Config::MAX_IMAGE_SIZE)
+        $check_size = $this->HandlerBase64Service->ValidateImageSize($binary_data);
+        if(!$check_size)
         {
             $error['image'] = 'Invalid Base64image Size';
-            return $this->error_response(Errors::ERROR_MSGS_422, $error, 422);
+            return $this->error_response(Errors::ERROR_MSGS_422, $error, 422); 
         }
 
         // generate image name 

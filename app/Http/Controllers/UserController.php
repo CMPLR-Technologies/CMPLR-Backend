@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+use function PHPUnit\Framework\isEmpty;
+
 class UserController extends Controller
 {
     protected $UserService;
@@ -196,17 +198,24 @@ class UserController extends Controller
     {
         $user = auth('api')->user();
         if ($user) {
-            //get all followed blogs
+            // get the blogs of the
             $user_blogs = $user->blogs()->pluck('blog_id');
+            //get all followed blogs
             $followed_blogs_id = $user->FollowedBlogs()->pluck('blog_id');
             // get posts of blogs that user follow or posts of user himself
             $Posts = Posts::whereIn('blog_id', $followed_blogs_id)->orWhereIn('blog_id', $user_blogs)->orderBy('date', 'desc')->paginate(Config::PAGINATION_LIMIT);
+            // if their is no posts return random posts
+            if(count($Posts) == 0)
+            {
+                $Posts = Posts::inRandomOrder()->paginate(Config::PAGINATION_LIMIT);
+                return $this->success_response(new PostsCollection($Posts));
+            }
             return $this->success_response(new PostsCollection($Posts));
         }
-        // for flutter
+        // for flutter if their is no authentication return random posts
         else
         {
-            $posts = Posts::inRandomOrder()->paginate(5);
+            $posts = Posts::inRandomOrder()->paginate(Config::PAGINATION_LIMIT);
             return $this->success_response(new PostsCollection($posts));
         }
     }
@@ -754,134 +763,7 @@ class UserController extends Controller
     {
     }
 
-    // 7ta fy blogs b3d check
-
-    /**
-     * @OA\Post(
-     *   path="/blog/{blog-identifier}/subscription",
-     *   tags={"Blogs"},
-     *   summary="subscription a blog",
-     *   operationId="subscription",
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
-     *   @OA\Response(
-     *      response=404,
-     *      description="Not Found"
-     *   ),
-     *   @OA\Response(
-     *          response=200,
-     *          description="Success",
-     *           @OA\JsonContent(
-     *           type="object",
-     *           @OA\Property(property="Meta", type="object",
-     *           @OA\Property(property="Status", type="integer", example=200),
-     *           @OA\Property(property="msg", type="string", example="ok"),
-     *           ),
-     *       ),
-     *            
-     *    ),
-     * security ={{"bearer":{}}}
-     *)
-     **/
-    public function BlogSubscription()
-    {
-    }
-
-    /**
-     * @OA\Delete(
-     *   path="/blog/{blog-identifier}/subscription",
-     *   tags={"Blogs"},
-     *   summary="subscription a blog",
-     *   operationId="Unsubscription",
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
-     *  @OA\Parameter(
-     *      name="post_id",
-     *      in="query",
-     *      required=true,
-     *      @OA\Schema(
-     *           type="string"
-     *      )
-     *   ),
-     *   @OA\Response(
-     *      response=404,
-     *      description="Not Found"
-     *   ),
-     *   @OA\Response(
-     *          response=200,
-     *          description="Success",
-     *           @OA\JsonContent(
-     *           type="object",
-     *           @OA\Property(property="Meta", type="object",
-     *           @OA\Property(property="Status", type="integer", example=200),
-     *           @OA\Property(property="msg", type="string", example="ok"),
-     *           ),
-     *       ),
-     *            
-     *    ),
-     * security ={{"bearer":{}}}
-     *)
-     **/
-    public function BlogUnSubscription()
-    {
-    }
-
-
-
-    /**
-     * @OA\Post(
-     *   path="/{blog-identifier}/add_tags_to_posts",
-     *   tags={"Blogs"},
-     *   summary="add new tag(s) to existing post(s)",
-     *   operationId="Add Tags to Posts",
-     *  @OA\Parameter(
-     *         name="posts_id[]",
-     *         in="query",
-     *         required=true,
-     *         @OA\Schema(
-     *         type="array",
-     *              @OA\Items(type="string")
-     *          )
-     *      ),
-     *  @OA\Parameter(
-     *         name="tag[]",
-     *         in="query",
-     *         required=true,
-     *         @OA\Schema(
-     *         type="array",
-     *              @OA\Items(type="string")
-     *          )
-     *      ),
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
-     *   @OA\Response(
-     *      response=404,
-     *      description="Not Found"
-     *   ),
-     *   @OA\Response(
-     *          response=200,
-     *          description="Success",
-     *           @OA\JsonContent(
-     *           type="object",
-     *           @OA\Property(property="Meta", type="object",
-     *           @OA\Property(property="Status", type="integer", example=200),
-     *           @OA\Property(property="msg", type="string", example="ok"),
-     *           ),
-     *       ),
-     *            
-     *    ),
-     * security ={{"bearer":{}}}
-     *)
-     **/
-    public function AddTagsToPosts()
-    {
-    }
+    
 
     /**
      * @OA\Post(

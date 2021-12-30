@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use App\Http\Misc\Helpers\Errors;
 use App\Models\Blog;
 use App\Models\User;
 use Carbon\Carbon;
@@ -36,17 +37,17 @@ class RegisterService
         return $user;
     }
 
-    public function CreateUserGoogle(string $email,int $age,string $google_id)
+    public function CreateUserGoogle(string $email, int $age, string $google_id)
     {
-       try {
+        try {
             $user = User::create([
                 'email' => $email,
                 'age' => $age,
-                'google_id' =>$google_id,
+                'google_id' => $google_id,
                 'email_verified_at' => Carbon::now(),
                 'password' => Hash::make('N/A')
             ]);
-       } catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             return null;
         }
         if (!$user)
@@ -65,7 +66,7 @@ class RegisterService
     public function CreateBlog(string $blog_name, User $user)
     {
         try {
-            $blog_url = env('APP_URL') . '\/blogs\/' . $blog_name;
+            $blog_url = env('APP_URL') . '/blogs/' . $blog_name;
             $blog = Blog::create([
                 'blog_name' => $blog_name,
                 'url' => $blog_url,
@@ -129,5 +130,20 @@ class RegisterService
             $user->withAccessToken($token);
             return true;
         }
+    }
+
+
+    public function GoogleLogin(User $user,string $google_user_id)
+    {
+        $request['user'] = $user;
+        try {
+            $request['token'] = $user->CreateToken('authToken')->accessToken;
+            $request['blog'] = Blog::where('id',$user->primary_blog_id)->first();
+            $user->google_id = $google_user_id;
+            $user->save;
+        } catch (\Throwable $th) {
+            return null;
+        }
+        return $request;
     }
 }

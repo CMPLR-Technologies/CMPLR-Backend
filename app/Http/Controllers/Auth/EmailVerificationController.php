@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\EmailVerificationResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\Auth\EmailVerificationService;
@@ -85,6 +86,6 @@ class EmailVerificationController extends Controller
         $this->emailVerificationService->VerifyEmail($user);
         
         
-        return response()->json(['message'=>'Email has been Verified'],200);
+        return response()->json(['message'=>'Email has been Verified' , 'email_verified_at' =>  User::findOrFail($request->id)->email_verified_at],200);
     }
 }
