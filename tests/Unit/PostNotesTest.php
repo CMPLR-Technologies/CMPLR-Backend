@@ -9,7 +9,7 @@ use Tests\TestCase;
 class PostNotesTest extends TestCase
 {
     /**
-     * A basic unit test example.
+     * testing successfully getting notes for specific post
      *
      * @return void
      */
@@ -21,7 +21,7 @@ class PostNotesTest extends TestCase
     }
 
      /**
-     * A basic unit test example.
+     *  testing fail to get notes for undefined post
      *
      * @return void
      */
