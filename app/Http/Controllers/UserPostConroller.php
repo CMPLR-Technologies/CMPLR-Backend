@@ -74,6 +74,15 @@ class UserPostConroller extends Controller
      * security ={{"bearer":{}}}
      * )
      */
+     /**
+     * for user like  specific post
+     *
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
+     */
     public function Like(Request $request)
     {
         //getting data 
@@ -144,6 +153,15 @@ class UserPostConroller extends Controller
      * security ={{"bearer":{}}}
      * )
      */
+    /**
+     * for user unlike  specific post
+     *
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
+     */
     public function UnLike(Request $request)
     {
         $postId = $request->input('id');
@@ -212,6 +230,15 @@ class UserPostConroller extends Controller
      * security ={{"bearer":{}}}
      *)
      **/
+    /**
+     * for user reply for specific post
+     *
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
+     */
     public function UserReply(Request $request)
     {
          //getting data 
