@@ -132,7 +132,12 @@ class RegisterService
         }
     }
 
-
+    /**
+     * this function used to set google login data
+     * @param user
+     * @param string
+     * @return response
+     */
     public function GoogleLogin(User $user,string $googleUserId)
     {
         $request['user'] = $user;
@@ -145,5 +150,18 @@ class RegisterService
             return null;
         }
         return $request;
+    }
+
+    public function UpdateUserData(User $user,string $googleUserId)
+    {
+        try {
+            $isUpdated =  $user->update([
+                'google_id' => $googleUserId,
+                'email_verified_at' => Carbon::now(),
+            ]);
+        } catch (\Throwable $th) {
+            return null;
+        }
+        return  $isUpdated;
     }
 }
