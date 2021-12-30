@@ -22,6 +22,7 @@ class PostNotesResource extends JsonResource
              'content'=> $this->content,
              'timestamp'=>$this->created_at,
              'blog_name'=>$blogData->blog_name,
+             'blog_id' =>$blogData->id ,
              'blog_url'=>$blogData->url,
              'avatar'=> $blogData->settings->avatar ,
              'avatar_shape'=>$blogData->settings->avatar_shape,
