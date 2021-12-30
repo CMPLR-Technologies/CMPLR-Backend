@@ -29,6 +29,6 @@ class SearchService
      */
     public function GetSearchBlogs($query)
     {
-        return Blog::with('settings:blog_id,avatar,avatar_shape')->where([['blog_name', 'like', '%' . $query . '%'], ['title', 'like', '%' . $query . '%']])->limit(5)->orderBy('blog_name', 'asc')->get(['id', 'blog_name', 'title']);
+        return Blog::with('settings:blog_id,avatar,avatar_shape')->where([['blog_name', 'like', '%' . $query . '%']])->orWhere([['title', 'like', '%' . $query . '%']])->limit(5)->orderBy('blog_name', 'asc')->get(['id', 'blog_name', 'title']);
     }
 }
