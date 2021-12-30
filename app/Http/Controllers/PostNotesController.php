@@ -2,16 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\NotesCountResource;
 use App\Http\Resources\PostNotesCollection;
-use App\Http\Resources\PostNotesResource;
-use App\Models\Blog;
-use App\Models\PostNotes;
 use App\Services\Post\PostNotesService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-
-use function PHPUnit\Framework\isEmpty;
 
 class PostNotesController extends Controller
 {
