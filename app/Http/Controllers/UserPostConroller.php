@@ -162,7 +162,7 @@ class UserPostConroller extends Controller
         }
 
         $toBlogId = $this->userPostService->GetPostBlogId($postId);
-        $this->notification->CreateNotification(auth()->user()->primary_blog_id ,  $toBlogId->blog_id ,'like' ,$postId );
+        $this->notification->DeleteNotification(auth()->user()->primary_blog_id ,  $toBlogId->blog_id ,'like' ,$postId );
         
         return response()->json(['message' => 'success'], 200);
     }
