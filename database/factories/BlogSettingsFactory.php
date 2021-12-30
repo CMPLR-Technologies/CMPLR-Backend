@@ -14,8 +14,7 @@ class BlogSettingsFactory extends Factory
     public function definition()
     {
         return [
-            'blog_id' => $this->faker->unique()->numberBetween(1, 10),
-            'show_navigation' => $this->faker->boolean()
+            'blog_id' => $this->faker->unique()->numberBetween(1, 10)
         ];
     }
 }

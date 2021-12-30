@@ -41,7 +41,6 @@ class CreateBlogSettingsTable extends Migration
             $table->boolean('show_title')->default(true);
             $table->boolean('show_description')->default(true);
             $table->boolean('use_new_post_type')->default(true);
-            $table->boolean('show_navigation')->nullable();
             $table->timestamps();
         });
     }

@@ -258,7 +258,7 @@ class BlogController extends Controller
 
         // Check if This USer is Authorize to do this action
         try {
-            $this->authorize('ViewFollowers', $blog);
+            $this->authorize('BlogBelongsToUser', $blog);
         } catch (\Throwable $th) {
             return $this->error_response(Errors::ERROR_MSGS_403, 'This action is unauthorized.', 403);
         }
