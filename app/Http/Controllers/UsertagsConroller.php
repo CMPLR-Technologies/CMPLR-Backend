@@ -70,6 +70,15 @@ class UserTagsConroller extends Controller
      *       ),
      *)
      **/
+     /**
+     * user follow specific tag
+     *
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
+     */
     public function FollowTag(Request $request)
     {
         // getting current user
@@ -124,6 +133,15 @@ class UserTagsConroller extends Controller
      *       ),
      *)
      **/
+     /**
+     * user unfollow specific tag
+     *
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
+     */
     public function UnFollowTag(Request $request)
     {
         // getting current user
@@ -138,6 +156,15 @@ class UserTagsConroller extends Controller
 
         return $this->success_response('Success', 200);
     }
+     /**
+     * getting info of specific tag
+     *
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
+     */
 
     public function GetTagInfo(Request $request)
     {
@@ -164,7 +191,7 @@ class UserTagsConroller extends Controller
 
         return response()->json($response, 200);
     }
-
+    
     public function GetFollowedTags()
     {
         // getting current user
