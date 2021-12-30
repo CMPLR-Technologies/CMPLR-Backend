@@ -2,11 +2,13 @@
 
 namespace App\Services\User;
 
+use App\Http\Misc\Helpers\Config;
 use App\Models\Blog;
 use App\Models\BlogUser;
 use App\Models\Follow;
 use App\Models\Post;
 use App\Models\PostNotes;
+use App\Models\Posts;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -83,7 +85,9 @@ class UserService
 
 
     /**
-     * 
+     * This function responsible for get posts of user
+     * @param User $user
+     * @return integer
      */
     public function GetUserPosts(User $user)
     {
@@ -93,7 +97,13 @@ class UserService
         return $posts_count;
     }
 
-
+    /**
+     * This function responsible for update user theme 
+     * @param integer $user_id
+     * @param string $theme
+     * 
+     * @return object
+     */
     public function UpdateUserTheme(int $user_id,string $theme)
     {
         try {
@@ -102,6 +112,24 @@ class UserService
             return null;
         }
         return $check;
+    }
+
+    /**
+     * This function is responsible for return the proper posts for dashboard
+     * 
+     * @param array $user_blogs
+     * @param array $followed_blogs_id
+     * @return Posts $posts
+     */
+    public function GetDashBoardPosts($user_blogs,$followed_blogs_id)
+    {
+        $Posts = Posts::whereIn('blog_id', $followed_blogs_id)->orWhereIn('blog_id', $user_blogs)->orderBy('updated_at', 'DESC')->paginate(Config::PAGINATION_LIMIT);
+        // if their is no posts return random posts
+        if(count($Posts) == 0)
+        {
+            $Posts = Posts::orderBy('updated_at', 'DESC')->paginate(Config::PAGINATION_LIMIT);
+        }
+        return $Posts;
     }
 
 }

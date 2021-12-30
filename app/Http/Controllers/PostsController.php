@@ -207,7 +207,7 @@ class PostsController extends Controller
 
     /**
      * @OA\get(
-     ** path="/posts/edit/{blog_name}/{post_id}",
+     ** path="/edit/{blog_name}/{post_id}",
      *   tags={"Posts"},
      *   summary="Edit existing Post",
      *   operationId="edit",
@@ -371,18 +371,18 @@ class PostsController extends Controller
         $user = Auth::user();
 
         // get the blog_name and post_id
-        $blog_name = $request->route('blog_name');
-        $post_id = $request->route('post_id');
+        $blogName = $request->route('blog_name');
+        $postId = $request->route('post_id');
 
         // get the blog data by blog_name  
-        $blog = $this->PostsService->GetBlogData($blog_name);
+        $blog = $this->PostsService->GetBlogData($blogName);
         if (!$blog) {
             $error['blog'] = 'there is no blog with this blog_name';
             return $this->error_response(Errors::ERROR_MSGS_404, $error, 404);
         }
 
         // get the post data by post_id 
-        $post = $this->PostsService->GetPostData($post_id);
+        $post = $this->PostsService->GetPostData($postId);
         if (!$post) {
             $error['post'] = 'there is no post with this id';
             return $this->error_response(Errors::ERROR_MSGS_404, $error, 404);
@@ -453,18 +453,18 @@ class PostsController extends Controller
     {
         $user = Auth::user();
         // get blog_name and post_id parameters
-        $blog_name = $request->route('blog_name');
-        $post_id = $request->route('post_id');
+        $blogName = $request->route('blog_name');
+        $postId = $request->route('post_id');
 
         // get the blog data by blog_name  
-        $blog = $this->PostsService->GetBlogData($blog_name);
+        $blog = $this->PostsService->GetBlogData($blogName);
         if (!$blog) {
             $error['blog'] = 'there is no blog with this blog_name';
             return $this->error_response(Errors::ERROR_MSGS_404, $error, 404);
         }
 
         // get the post data by post_id 
-        $post = $this->PostsService->GetPostData($post_id);
+        $post = $this->PostsService->GetPostData($postId);
         if (!$post) {
             $error['post'] = 'there is no post with this id';
             return $this->error_response(Errors::ERROR_MSGS_404, $error, 404);
@@ -479,9 +479,9 @@ class PostsController extends Controller
         // update the date of the post
         $request['date'] = Carbon::now()->toRfc850String();
         // update post with all data
-        $is_update = $this->PostsService->UpdatePost($post,$request->all());
+        $isUpdate = $this->PostsService->UpdatePost($post,$request->all());
         // check if the post is updated successfully
-        if(!$is_update){
+        if(!$isUpdate){
             $error['post'] = 'Failed to update Post';
             return $this->error_response(Errors::ERROR_MSGS_500, $error,500); 
         }
@@ -619,8 +619,8 @@ class PostsController extends Controller
             return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
         }
         // delte post
-        $is_deleted = $post->delete();
-        if (!$is_deleted) {
+        $isDeleted = $this->PostsService->DeletePost( $post);
+        if (!$isDeleted) {
             $error['post'] = 'error while deleting post';
             return $this->error_response(Errors::ERROR_MSGS_500, $error, 500);
         }
@@ -685,9 +685,9 @@ class PostsController extends Controller
         //get auth user
         $user = Auth::user();
         // get blogs of users
-        $user_blogs = $user->blogs()->pluck('blog_id');
+        $userBlogs = $user->blogs()->pluck('blog_id');
         // get random post
-        $post =  $this->PostsService->GetRandomPost();
+        $post =  $this->PostsService->GetRandomPost($userBlogs);
         if (!$post)
             return $this->error_response(Errors::ERROR_MSGS_500, 'error get post', 500);
         //retrieve post resource
@@ -895,9 +895,8 @@ class PostsController extends Controller
         if (!$user)
             return $this->error_response(Errors::ERROR_MSGS_404, 'it is not primary blog', 404);
 
-        $blogs_ids = Follow::where('user_id', $user->id)->pluck('blog_id');
-        $blogs = Blog::whereIn('id', $blogs_ids)->paginate(15);
-
+        $blogsIds = Follow::where('user_id', $user->id)->pluck('blog_id');
+        $blogs = Blog::whereIn('id', $blogsIds)->paginate(config::API_PAGINATION_LIMIT);
         return $this->success_response(new BlogCollection($blogs));
     }
     /**

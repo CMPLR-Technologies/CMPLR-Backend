@@ -107,24 +107,24 @@ class UploadMediaController extends Controller
         $data64 = $request->image;
 
         // split data to two parts
-        $image_parts = explode(";base64,", $data64);
+        $imageParts = explode(";base64,", $data64);
 
         // validate the image extension
-        $extension = $this->HandlerBase64Service->ValidateEXtension($image_parts[0]);
+        $extension = $this->HandlerBase64Service->ValidateEXtension($imageParts[0]);
         if (!$extension) {
-            $error['image'] = $image_parts[0] . ' type is not supported type';
+            $error['image'] = $imageParts[0] . ' type is not supported type';
             return $this->error_response(Errors::ERROR_MSGS_422, $error, 422);
         }
 
         // decode and validate image data
-        $binary_data = $this->HandlerBase64Service->Base64Validations($image_parts[1]);
-        if (!$binary_data) {
+        $binaryData = $this->HandlerBase64Service->Base64Validations($imageParts[1]);
+        if (!$binaryData) {
             $error['image'] = 'Invalid Base64image Given';
             return $this->error_response(Errors::ERROR_MSGS_422, $error, 422);
         }
 
         // check image size
-        $check_size = $this->HandlerBase64Service->ValidateImageSize($binary_data);
+        $check_size = $this->HandlerBase64Service->ValidateImageSize($binaryData);
         if(!$check_size)
         {
             $error['image'] = 'Invalid Base64image Size';
@@ -136,7 +136,7 @@ class UploadMediaController extends Controller
 
         //upload image on Aws s3 Bucket
         try {
-            Storage::disk('s3')->put($filePath, $binary_data);
+            Storage::disk('s3')->put($filePath, $binaryData);
         } catch (\Throwable $th) {
             $error['image'] = 'failed to upload image';
             return $this->error_response(Errors::ERROR_MSGS_500, $error, 500);

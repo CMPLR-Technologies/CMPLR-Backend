@@ -121,8 +121,8 @@ class ResetPasswordController extends Controller
             return  $this->error_response(Errors::NOT_FOUND_USER,'',404);
 
         // check that new password is same as the old one
-        $check_password = $this->ResetPasswordService->CheckPassword($user->password, $request->password);
-        if (!$check_password)
+        $checkPassword = $this->ResetPasswordService->CheckPassword($user->password, $request->password);
+        if (!$checkPassword)
         {
             $error['password']= [Errors::DUPLICATE_PASSWORD];
             return  $this->error_response(Errors::ERROR_MSGS_400,$error,400);

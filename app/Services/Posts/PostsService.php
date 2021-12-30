@@ -71,9 +71,9 @@ class PostsService
      * 
      * @return Posts
      */
-    public function GetRandomPost()
+    public function GetRandomPost($userBlogs)
     {
-        $post = Posts::where('state', '=', 'publish')->inRandomOrder()->limit(1)->first();
+        $post = Posts::where('state', '=', 'publish')->whereNotIn('blog_id',$userBlogs)->inRandomOrder()->limit(1)->first();
         if (!$post)
             return null;
         return $post;
@@ -250,6 +250,21 @@ class PostsService
     }
 
     /**
+     * This function used to delete Post
+     * 
+     */
+    public function DeletePost(Posts $post)
+    {
+        try {
+            $is_deleted = $post->delete();
+        } catch (\Throwable $th) {
+            return null;
+        }
+        return $is_deleted;
+    }
+
+
+    /**
      * this function is responsible for get blog by blog_name
      * @param string $blog_name
      * @return Blog
@@ -270,13 +285,13 @@ class PostsService
         {
             $user = auth('api')->user();
             if( (!!DB::table('follows')->where('user_id',$user->id)->where('blog_id',$blog_id)->first()) || (!!BlogUser::where('user_id',$user->id)->where('blog_id',$blog_id)->first()) )
-                $posts = Posts::where('blog_id', $blog_id)->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
+                $posts = Posts::where('blog_id', $blog_id)->orderBy('updated_at', 'DESC')->paginate(Config::PAGINATION_LIMIT);
             else 
-                 $posts =  Posts::where('blog_id', $blog_id)->where('state','=','publish')->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
+                 $posts =  Posts::where('blog_id', $blog_id)->where('state','=','publish')->orderBy('updated_at', 'DESC')->paginate(Config::PAGINATION_LIMIT);
         }
         else
         {
-            $posts =  Posts::where('blog_id', $blog_id)->where('state','=','publish')->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
+            $posts =  Posts::where('blog_id', $blog_id)->where('state','=','publish')->orderBy('updated_at', 'DESC')->paginate(Config::PAGINATION_LIMIT);
         }
         return $posts;
     }

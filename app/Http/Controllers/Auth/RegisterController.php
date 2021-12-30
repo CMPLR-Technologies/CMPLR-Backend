@@ -178,13 +178,13 @@ class RegisterController extends Controller
          return $this->error_response(Errors::ERROR_MSGS_500,Errors::CREATE_ERROR,500);
 
       // link user with blog
-      $link_user_blog = $this->RegisterService->LinkUserBlog($user,$blog);
-      if(!$link_user_blog)
+      $linkUserBlog = $this->RegisterService->LinkUserBlog($user,$blog);
+      if(!$linkUserBlog)
          return $this->error_response(Errors::ERROR_MSGS_500,'link error',500);
       
       //create the access token to the user   
-      $generate_token = $this->RegisterService->GenerateToken($user);
-      if (!$generate_token)
+      $generateToken = $this->RegisterService->GenerateToken($user);
+      if (!$generateToken)
          return $this->error_response(Errors::ERROR_MSGS_500,ERRORS::GENERATE_TOKEN_ERROR,500);
 
       $request['blog']=$blog;

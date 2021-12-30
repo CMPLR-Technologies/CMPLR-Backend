@@ -263,14 +263,14 @@ class BlogController extends Controller
             return $this->error_response(Errors::ERROR_MSGS_403, 'This action is unauthorized.', 403);
         }
         // Get followers'sid that follow this blog
-        $followers_id = $this->FollowBlogService->GetFollowersID($blog->id);
+        $followersId = $this->FollowBlogService->GetFollowersID($blog->id);
 
         // Get Followers Information
-        $followers_info = $this->FollowBlogService->GetFollowersInfo($followers_id);
+        $followersInfo = $this->FollowBlogService->GetFollowersInfo($followersId);
         //  $followers = $this->FollowBlogService->GetFollowers($followers_id );
 
-        $response['number_of_followers'] = count($followers_id);
-        $response['followers'] = $followers_info;
+        $response['number_of_followers'] = count($followersId);
+        $response['followers'] = $followersInfo;
 
         return $this->success_response($response);
     }
