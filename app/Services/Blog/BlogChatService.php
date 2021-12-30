@@ -26,8 +26,8 @@ class BlogChatService
      */
     public function IsValidBlogId($blogId, $userId)
     {
-        $user_blogs = DB::table('blog_users')->where([['user_id', '=', $userId], ['blog_id', '=', $blogId]])->get();
-        return count($user_blogs) > 0;
+        $userBlogs = DB::table('blog_users')->where([['user_id', '=', $userId], ['blog_id', '=', $blogId]])->get();
+        return count($userBlogs) > 0;
     }
     /**
      * Getting blogs data for chat parteners as latest conversation
@@ -122,7 +122,7 @@ class BlogChatService
      * @param $blogIdFrom
      * @param $blogIdTo
      * 
-     * @return boolean 
+     * @return Chat 
      */
 
     public function CreateMessage($content, $blogIdFrom, $blogIdTo)
@@ -134,9 +134,8 @@ class BlogChatService
                 'content' => $content
             ]);
         } catch (\Throwable $th) {
-            return false;
+            return null;
         }
-        return true;
     }
     /**
      * Deleting conversation messages 
