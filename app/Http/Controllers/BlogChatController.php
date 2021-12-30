@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Events\MessageSent;
 use App\Http\Resources\BlogChatCollection;
 use App\Http\Resources\LatestMessagesCollection;
-use App\Http\Resources\LatestMessagesResource;
 use App\Services\Blog\BlogChatService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -62,7 +61,15 @@ class BlogChatController extends Controller
      * security ={{"bearer":{}}}
      * )
      */
-
+     /**
+     * getting latest message for specific blog.
+     *
+     * @param $blogId
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
+     */
     public function GetMessages($blogId)
     {
         $userid = Auth::user()->id;
@@ -103,6 +110,16 @@ class BlogChatController extends Controller
      * ),
      * security ={{"bearer":{}}}
      * )
+     */
+      /**
+     * getting messages  between two blogs.
+     *
+     * @param $blogIdFrom
+     * @param $blogIdTo
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
      */
     public function Conversation($blogIdFrom, $blogIdTo)
     {
@@ -155,6 +172,17 @@ class BlogChatController extends Controller
      * security ={{"bearer":{}}}
      * )
      */
+     /**
+     * store messages in database between two blogs for sending it.
+     *
+     * @param  Request  $request
+     * @param $blogIdFrom
+     * @param $blogIdTo
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
+     */
     public function SendMessage(Request $request, $blogIdFrom, $blogIdTo)
     {
         $userId = Auth::user()->id;
@@ -195,10 +223,12 @@ class BlogChatController extends Controller
      * )
      */
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified messages from database.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
      */
     public function DeleteMessgaes($blogIdFrom, $blogIdTo)
     {

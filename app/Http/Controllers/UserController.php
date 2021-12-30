@@ -116,23 +116,23 @@ class UserController extends Controller
             return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
 
         //Get User Data 
-        $user_data = $this->UserService->GetUserData($user);
-        if (!$user_data)
+        $userData = $this->UserService->GetUserData($user);
+        if (!$userData)
             return $this->error_response(Errors::ERROR_MSGS_500, 'Failed to get User data', 500);
 
         // get number of followers of user
-        $following_count = $this->UserService->GetUserFollowing($user->id);
-        $user_data['following_counts'] =  $following_count;
+        $followingCount = $this->UserService->GetUserFollowing($user->id);
+        $userData['following_counts'] =  $followingCount;
 
         // get number of posts of user
-        $user_posts = $this->UserService->GetUserPosts($user);
-        $user_data['posts_count'] =  $user_posts;
+        $userPosts = $this->UserService->GetUserPosts($user);
+        $user_data['posts_count'] =  $userPosts;
 
         //Get Blog Data 
-        $blogs_data = $this->UserService->GetBlogsData($user->id);
-        if (!$blogs_data)
+        $blogsData = $this->UserService->GetBlogsData($user->id);
+        if (!$blogsData)
             return $this->error_response(Errors::ERROR_MSGS_500, 'Failed to get Blogs data', 500);
-        $response = $blogs_data;
+        $response = $blogsData;
         return $this->success_response(new UserInfoCollection($response));
     }
 
@@ -197,25 +197,20 @@ class UserController extends Controller
     public function GetDashboard(Request $request)
     {
         $user = auth('api')->user();
-        if ($user) {
+        if ($user) 
+        {
             // get the blogs of the
-            $user_blogs = $user->blogs()->pluck('blog_id');
+            $userBlogs = $user->blogs()->pluck('blog_id');
             //get all followed blogs
-            $followed_blogs_id = $user->FollowedBlogs()->pluck('blog_id');
-            // get posts of blogs that user follow or posts of user himself
-            $Posts = Posts::whereIn('blog_id', $followed_blogs_id)->orWhereIn('blog_id', $user_blogs)->orderBy('date', 'desc')->paginate(Config::PAGINATION_LIMIT);
-            // if their is no posts return random posts
-            if(count($Posts) == 0)
-            {
-                $Posts = Posts::inRandomOrder()->paginate(Config::PAGINATION_LIMIT);
-                return $this->success_response(new PostsCollection($Posts));
-            }
-            return $this->success_response(new PostsCollection($Posts));
+            $followedBlogsId = $user->FollowedBlogs()->pluck('blog_id');
+            // return the proper posts for user
+            $posts = $this->UserService->GetDashBoardPosts($userBlogs, $followedBlogsId);
+            return $this->success_response(new PostsCollection($posts));
         }
         // for flutter if their is no authentication return random posts
         else
         {
-            $posts = Posts::inRandomOrder()->paginate(Config::PAGINATION_LIMIT);
+            $posts = Posts::orderBy('updated_at', 'DESC')->paginate(Config::PAGINATION_LIMIT);
             return $this->success_response(new PostsCollection($posts));
         }
     }

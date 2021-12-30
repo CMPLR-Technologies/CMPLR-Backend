@@ -70,12 +70,15 @@ class GoogleController extends Controller
                 return $this->error_response(Errors::ERROR_MSGS_500, $error, 500);
             }
             $request['blog'] = Blog::where('id',$user->primary_blog_id)->first();
-            $user->google_id = $google_user->id;
-            $user->email_verified_at = Carbon::now();
-            $user->save;
+
+            //update user data
+            $isUpdated = $this->RegisterService->UpdateUserData($user,$google_user->id);
+            if(!$isUpdated)
+                return $this->error_response(Errors::ERROR_MSGS_500,'error to update user data',500);
             $resource =  new RegisterResource($request);
             return $this->success_response($resource,200);
-        } else {
+        } else 
+        {
             $error['user'] = 'you should register first';
             return $this->error_response(Errors::ERROR_MSGS_401, $error, 401);
         }

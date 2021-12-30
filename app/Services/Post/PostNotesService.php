@@ -13,7 +13,9 @@ class PostNotesService
      * 
      * @param integer $postId
      * 
-     * @return array $notes
+     * @return PostNotes $notes
+     * 
+     * @author Yousif Ahmed
      */
     public function GetPostNotes($postId)
     {

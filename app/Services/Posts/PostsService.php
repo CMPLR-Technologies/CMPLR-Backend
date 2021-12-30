@@ -26,10 +26,10 @@ class PostsService
      * 
      * @return object
      */
-    public function GetBlogData(string $blog_name)
+    public function GetBlogData(string $blogName)
     {
 
-        $blog = Blog::where('blog_name', $blog_name)->first();
+        $blog = Blog::where('blog_name', $blogName)->first();
 
         return $blog;
     }
@@ -58,9 +58,9 @@ class PostsService
      * 
      * @return Posts
      */
-    public function GetPostData(int $post_id)
+    public function GetPostData(int $postId)
     {
-        $post = Posts::where('id', $post_id)->first();
+        $post = Posts::where('id', $postId)->first();
         return $post;
     }
 
@@ -96,13 +96,13 @@ class PostsService
     /**
      * GET Random Post
      *
-     * @param 
+     * @param $userBlogs
      * 
      * @return Posts
      */
-    public function GetRandomPost()
+    public function GetRandomPost($userBlogs)
     {
-        $post = Posts::where('state', '=', 'publish')->inRandomOrder()->limit(1)->first();
+        $post = Posts::where('state', '=', 'publish')->whereNotIn('blog_id', $userBlogs)->inRandomOrder()->limit(1)->first();
         if (!$post)
             return null;
         return $post;
@@ -130,10 +130,9 @@ class PostsService
      * @param int $blog_id
      *@return Posts
      */
-    public function MiniViewPostData(int $blog_id)
+    public function MiniViewPostData(int $blogId)
     {
-        $posts = Posts::select('id', 'content')->where('blog_id', $blog_id)->get();
-        // ->whereIn('type', ['photos', 'mixed'])->get();
+        $posts = Posts::select('id', 'content')->where('blog_id', $blogId)->get();
         return $posts;
     }
 
@@ -176,12 +175,12 @@ class PostsService
     {
         $views = [];
         $size = 0;
-        $img_string = '<img src=';
+        $imgString = '<img src=';
         $removed = '<img src="';
         // loop over posts
         foreach ($posts as $post) {
             // check that post has image
-            if (strpos($post['content'], $img_string) !== false) {
+            if (strpos($post['content'], $imgString) !== false) {
                 // regex to get all images in array
                 preg_match_all('/<img[^>]+>/i', $post['content'], $result);
                 // check that image array is not empty
@@ -280,13 +279,28 @@ class PostsService
     }
 
     /**
+     * This function used to delete Post
+     * 
+     */
+    public function DeletePost(Posts $post)
+    {
+        try {
+            $is_deleted = $post->delete();
+        } catch (\Throwable $th) {
+            return null;
+        }
+        return $is_deleted;
+    }
+
+
+    /**
      * this function is responsible for get blog by blog_name
      * @param string $blog_name
      * @return Blog
      */
-    public function GetBlogByName($blog_name)
+    public function GetBlogByName($blogName)
     {
-        $blog = Blog::where('blog_name', $blog_name)->first();
+        $blog = Blog::where('blog_name', $blogName)->first();
         return $blog;
     }
     /**
@@ -294,16 +308,16 @@ class PostsService
      * @param int $blog_id
      * @return Posts 
      */
-    public function GetPostsOfBlog(int $blog_id)
+    public function GetPostsOfBlog(int $blogId)
     {
         if (auth('api')->check()) {
             $user = auth('api')->user();
-            if ((!!DB::table('follows')->where('user_id', $user->id)->where('blog_id', $blog_id)->first()) || (!!BlogUser::where('user_id', $user->id)->where('blog_id', $blog_id)->first()))
-                $posts = Posts::where('blog_id', $blog_id)->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
+            if ((!!DB::table('follows')->where('user_id', $user->id)->where('blog_id', $blogId)->first()) || (!!BlogUser::where('user_id', $user->id)->where('blog_id', $blogId)->first()))
+                $posts = Posts::where('blog_id', $blogId)->orderBy('updated_at', 'DESC')->paginate(Config::PAGINATION_LIMIT);
             else
-                $posts =  Posts::where('blog_id', $blog_id)->where('state', '=', 'publish')->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
+                $posts =  Posts::where('blog_id', $blogId)->where('state', '=', 'publish')->orderBy('updated_at', 'DESC')->paginate(Config::PAGINATION_LIMIT);
         } else {
-            $posts =  Posts::where('blog_id', $blog_id)->where('state', '=', 'publish')->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
+            $posts =  Posts::where('blog_id', $blogId)->where('state', '=', 'publish')->orderBy('updated_at', 'DESC')->paginate(Config::PAGINATION_LIMIT);
         }
         return $posts;
     }

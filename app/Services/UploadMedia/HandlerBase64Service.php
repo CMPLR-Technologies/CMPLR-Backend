@@ -18,11 +18,11 @@ class HandlerBase64Service
      | on AWS S3 Bucket
      */
 
-    public function GenerateVideoName($video,$user_id)
+    public function GenerateVideoName($video,$userId)
     {
         $video_client_name = str_replace(' ', '', $video->getClientOriginalName());
         //name of video must be unique
-        $video_name = time() . '_' . $user_id . '_' . $video_client_name;
+        $video_name = time() . '_' . $userId . '_' . $video_client_name;
         $filePath = 'videos/' . $video_name;
         return $filePath ;
     }
@@ -32,17 +32,17 @@ class HandlerBase64Service
      * @param string $base64_data
      * @return string
      */
-    public function Base64Validations($base64_data)
+    public function Base64Validations($base64Data)
     {
-        if (!base64_decode($base64_data, true))
+        if (!base64_decode($base64Data, true))
             return null;
 
-        $binary_data = base64_decode($base64_data);
+        $binaryData = base64_decode($base64Data);
 
-        if (base64_encode($binary_data) !== $base64_data)
+        if (base64_encode($binaryData) !== $base64Data)
             return null;
 
-        return $binary_data;
+        return $binaryData;
     }
 
      /**
@@ -50,10 +50,10 @@ class HandlerBase64Service
      * @param string $base64_data
      * @return string
      */
-    public function ValidateEXtension($base64_data)
+    public function ValidateEXtension($base64Data)
     {
-        $image_type = explode("image/", $base64_data);
-        $extension = $image_type[1];
+        $imageType = explode("image/", $base64Data);
+        $extension = $imageType[1];
 
         if (in_array(Str::lower($extension), Config::ALLOWED_EXTENSIONS))
             return $extension;
@@ -67,28 +67,28 @@ class HandlerBase64Service
      */
     public function GenerateImageName($extension)
     {
-        $file_name = time() . '_' . Str::random(15) . '.' . $extension;
-        $file_path = Config::IMAGE_PATH . $file_name;
-        return $file_path;
+        $fileName = time() . '_' . Str::random(15) . '.' . $extension;
+        $filePath = Config::IMAGE_PATH . $fileName;
+        return $filePath;
     }
     
     /**
      * This function responsible for generate image name
      */
-    public function GenerateFileName($image,$user_id)
+    public function GenerateFileName($image,$userId)
     {
-        $image_client_name = str_replace(' ', '', $image->getClientOriginalName());
+        $imageClientName = str_replace(' ', '', $image->getClientOriginalName());
         // name of image must be unique
-        $image_name = time() . '_' . $user_id . '_' . $image_client_name;
+        $imageName = time() . '_' . $userId . '_' . $imageClientName;
         // path of image inside s3 bucket
-        $file_Path = 'images/' . $image_name;
-        return $file_Path;
+        $filePath = 'images/' . $imageName;
+        return $filePath;
     }
 
-    public function ValidateImageSize(string $binary_data)
+    public function ValidateImageSize(string $binaryData)
     {
         $tmpFile = tempnam(sys_get_temp_dir(), 'medialibrary');
-        file_put_contents($tmpFile, $binary_data);
+        file_put_contents($tmpFile, $binaryData);
         if (filesize($tmpFile) / 1024 > Config::MAX_IMAGE_SIZE) 
             return false;
         return true;
