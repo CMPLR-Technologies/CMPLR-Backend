@@ -2,31 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\Blog;
+use App\Models\Posts;
+use App\Models\Follow;
+use App\Models\BlogUser;
+use Illuminate\Http\Request;
 use App\Http\Misc\Helpers\Config;
 use App\Http\Misc\Helpers\Errors;
 use App\Http\Requests\PostRequest;
-use App\Http\Requests\UpdatePostRequest;
-use App\Http\Resources\BlogCollection;
-use App\Http\Resources\PostEditViewResource;
-use App\Http\Resources\PostsCollection;
-use App\Http\Resources\PostsResource;
-use App\Http\Resources\TaggedPostsCollection;
-use App\Http\Resources\TaggedPostsResource;
-use App\Models\Blog;
-use App\Models\BlogSettings;
-use App\Models\BlogUser;
-use App\Models\Follow;
-use App\Models\Posts;
-use App\Models\PostTags;
-use App\Models\Tag;
-use App\Models\TagUser;
-use App\Models\User;
-use App\Services\Posts\PostsService;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use App\Services\User\UserService;
+use App\Services\Posts\PostsService;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\PostsResource;
+use App\Http\Resources\BlogCollection;
+use App\Http\Resources\PostsCollection;
+use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\DraftPostCollection;
+use App\Http\Resources\DraftPostResource;
+use App\Http\Resources\PostEditViewResource;
+use App\Http\Resources\TaggedPostsCollection;
 
 class PostsController extends Controller
 {
@@ -178,7 +173,7 @@ class PostsController extends Controller
 
         // check that the user can create post from this Blog
         try {
-            $this->authorize('CreatePost', $blog);
+            $this->authorize('BlogBelongsToUser', $blog);
         } catch (\Throwable $th) {
             return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
         }
@@ -479,11 +474,11 @@ class PostsController extends Controller
         // update the date of the post
         $request['date'] = Carbon::now()->toRfc850String();
         // update post with all data
-        $is_update = $this->PostsService->UpdatePost($post,$request->all());
+        $is_update = $this->PostsService->UpdatePost($post, $request->all());
         // check if the post is updated successfully
-        if(!$is_update){
+        if (!$is_update) {
             $error['post'] = 'Failed to update Post';
-            return $this->error_response(Errors::ERROR_MSGS_500, $error,500); 
+            return $this->error_response(Errors::ERROR_MSGS_500, $error, 500);
         }
         return $this->success_response('', 200);
     }
@@ -556,7 +551,7 @@ class PostsController extends Controller
         return $this->success_response(new PostsResource($post), 200);
     }
 
-     /**
+    /**
      * @OA\Delete(
      ** path="/post/delete",
      *   tags={"Posts"},
@@ -595,7 +590,7 @@ class PostsController extends Controller
      *  security ={{"bearer":{}}}
      *)
      **/
-   
+
     /**
      * Remove the specified resource from storage.
      *
@@ -695,6 +690,64 @@ class PostsController extends Controller
     }
 
     /**
+     * This function retrieves the auth user's posts that are saved as drafts 
+     */
+    public function GetDraft(Request $request, string $blogName)
+    {
+        // get the current authorized user
+        $user = Auth::user();
+
+        // get the blog from blogName
+        $blog = $this->PostsService->GetBlogData($blogName);
+        if (!$blog)
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
+
+        // check that the blog belongs to the auth user
+        try {
+            $this->authorize('BlogBelongsToUser', $blog);
+        } catch (\Throwable $th) {
+            return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
+        }
+
+        // get draft posts
+        $post = $this->PostsService->GetDraftPosts($blog->id);
+        if (!$post)
+            return $this->error_response(Errors::ERROR_MSGS_500, 'Error get draft posts', 500);
+
+        //retrieve draft post collection
+        return $this->success_response(new DraftPostCollection($post), 200);
+    }
+
+    /**
+     * This function publishes the draft post of a blog
+     */
+    public function PublishDraft(Request $request, string $blogName)
+    {
+        // get the current authorized user
+        $user = Auth::user();
+
+        // get the blog from blogName
+        $blog = $this->PostsService->GetBlogData($blogName);
+        if (!$blog)
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
+
+        // check that the blog belongs to the auth user
+        try {
+            $this->authorize('BlogBelongsToUser', $blog);
+        } catch (\Throwable $th) {
+            return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
+        }
+
+        // publish draft post
+        $success = $this->PostsService->PublishDraftPost($blog->id, $request->get('post_id'));
+        if (!$success)
+            return $this->error_response(Errors::ERROR_MSGS_500, 'Error publish draft post', 500);
+
+        //retrieve post collection
+        return $this->success_response([]);
+    }
+
+    /**
      * @OA\get(
      * path="posts/view/{blog_name}",
      * summary="get posts for blog name",
@@ -762,7 +815,7 @@ class PostsController extends Controller
     {
         // get blog
         $blog =  $this->PostsService->GetBlogByName($blog_name);
-       
+
         if (!$blog)
             return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
         // get posts of the blog depend on requested user

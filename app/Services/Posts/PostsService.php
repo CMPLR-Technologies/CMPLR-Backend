@@ -65,6 +65,35 @@ class PostsService
     }
 
     /**
+     * GET blog's draft posts
+     *
+     * @param int $blogId
+     * 
+     * @return Posts
+     * 
+     * @author Abdullah Adel
+     */
+    public function GetDraftPosts(int $blogId)
+    {
+        return Posts::where([['state', '=', 'draft'], ['blog_id', '=', $blogId]])->orderBy('updated_at', 'DESC')->paginate(Config::PAGINATION_LIMIT);
+    }
+
+    /**
+     * Publish blog's draft post
+     *
+     * @param int $blogId
+     * @param int $postId
+     * 
+     * @return boolean
+     * 
+     * @author Abdullah Adel
+     */
+    public function PublishDraftPost(int $blogId, int $postId)
+    {
+        return Posts::where([['state', '=', 'draft'], ['blog_id', '=', $blogId], ['id', '=', $postId]])->update(['state' => 'publish']);
+    }
+
+    /**
      * GET Random Post
      *
      * @param 
@@ -85,6 +114,8 @@ class PostsService
      * @param 
      * 
      * @return Posts
+     * 
+     * @author Abdullah Adel
      */
     public function GetRandomPosts()
     {
@@ -109,7 +140,7 @@ class PostsService
     /**
      * This function is responsible for check if this blog is blocked by me
      */
-    
+
 
     /**
      * This Function retrieve blogsdata needed
@@ -124,17 +155,17 @@ class PostsService
         $data1['title'] = $blog->title;
         $data1['header_image'] = $blog->settings->header_image;
         // check if the this blog is primary
-        if( $blog->users()->first())
+        if ($blog->users()->first())
             $data1['is_primary'] = $blog->users()->first()->primary_blog_id == $blog->id;
-        else 
-            $data1['is_primary'] = false; 
+        else
+            $data1['is_primary'] = false;
         $data1['description'] = $blog->settings->description;
         $data1['is_followed'] = $blog->isfollower();
         $data1['is_blocked'] = $blog->IsBlocked();
         return $data1;
     }
 
-  
+
     /**
      * This function for MiniProfileview 
      * get 3 images of different posts of blog
@@ -225,12 +256,11 @@ class PostsService
      * @return $post
      * 
      */
-    public function GetPostWithTagPhoto ($tag)
+    public function GetPostWithTagPhoto($tag)
     {
         $postsTags = PostTags::where('tag_name', $tag)->orderBy('created_at', 'DESC')->get();
         $post = Posts::wherein('id', $postsTags->pluck('post_id'))->where('type', 'photos')->first();
-        return $post ;
-
+        return $post;
     }
     /**
      * this function responsible for update post
@@ -239,7 +269,7 @@ class PostsService
      * 
      * @return Posts
      */
-    public function UpdatePost ($post,$data)
+    public function UpdatePost($post, $data)
     {
         try {
             $is_updated =  $post->update($data);;
@@ -266,17 +296,14 @@ class PostsService
      */
     public function GetPostsOfBlog(int $blog_id)
     {
-        if(auth('api')->check())
-        {
+        if (auth('api')->check()) {
             $user = auth('api')->user();
-            if( (!!DB::table('follows')->where('user_id',$user->id)->where('blog_id',$blog_id)->first()) || (!!BlogUser::where('user_id',$user->id)->where('blog_id',$blog_id)->first()) )
+            if ((!!DB::table('follows')->where('user_id', $user->id)->where('blog_id', $blog_id)->first()) || (!!BlogUser::where('user_id', $user->id)->where('blog_id', $blog_id)->first()))
                 $posts = Posts::where('blog_id', $blog_id)->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
-            else 
-                 $posts =  Posts::where('blog_id', $blog_id)->where('state','=','publish')->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
-        }
-        else
-        {
-            $posts =  Posts::where('blog_id', $blog_id)->where('state','=','publish')->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
+            else
+                $posts =  Posts::where('blog_id', $blog_id)->where('state', '=', 'publish')->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
+        } else {
+            $posts =  Posts::where('blog_id', $blog_id)->where('state', '=', 'publish')->orderBy('date', 'DESC')->paginate(Config::PAGINATION_LIMIT);
         }
         return $posts;
     }
