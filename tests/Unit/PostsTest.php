@@ -209,15 +209,6 @@ class PostsTest extends TestCase
         $response->assertStatus(401);
     }
 
-    /** @test */
-    // not found postid
-    // public function TestAuthrizedEditPost()
-    // {
-    //     $post = Posts::where('blog_id', self::$data['blog_id'])->first();
-    //     // dd(Posts::where('blog_name',self::$data['blog_name'])->where('id', $post->id)->first());
-    //     $response = $this->json('Get', 'api/edit/' . self::$data['blog_name'] . '/' . $post->id, ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . self::$data['token']]);
-    //     $response->assertStatus(200);
-    // }
 
     /** @test */
     // test update the post data
@@ -247,7 +238,7 @@ class PostsTest extends TestCase
     /** @test */
     public function TestGetRandomPosts()
     {
-        $check = (new PostsService())->GetRandomPost();
+        $check = (new PostsService())->GetRandomPost([1]);
         $this->assertNotNull($check);
     }
 

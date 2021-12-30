@@ -450,9 +450,9 @@ class UserBlogController extends Controller
         //get auth user
         $user = auth('api')->user();
         // get blogs id that authenticated user follows
-        $blog_ids = (new FollowBlogService())->GetBlogIds($user->id);
+        $blogIds = (new FollowBlogService())->GetBlogIds($user->id);
         //get needed info about these blogs
-        $blogs = Blog::whereIn('id', $blog_ids)->paginate(Config::PAGINATION_BLOGS_LIMIT);
+        $blogs = Blog::whereIn('id', $blogIds)->paginate(Config::PAGINATION_BLOGS_LIMIT);
         return $this->success_response(new BlogCollection($blogs));
     }
 

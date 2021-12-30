@@ -37,13 +37,13 @@ class RegisterService
         return $user;
     }
 
-    public function CreateUserGoogle(string $email, int $age, string $google_id)
+    public function CreateUserGoogle(string $email, int $age, string $googleId)
     {
         try {
             $user = User::create([
                 'email' => $email,
                 'age' => $age,
-                'google_id' => $google_id,
+                'google_id' => $googleId,
                 'email_verified_at' => Carbon::now(),
                 'password' => Hash::make('N/A')
             ]);
@@ -63,12 +63,12 @@ class RegisterService
      * 
      * @return Blog
      */
-    public function CreateBlog(string $blog_name, User $user)
+    public function CreateBlog(string $blogName, User $user)
     {
         try {
-            $blog_url = env('APP_URL') . '/blogs/' . $blog_name;
+            $blog_url = env('APP_URL') . '/blogs/' . $blogName;
             $blog = Blog::create([
-                'blog_name' => $blog_name,
+                'blog_name' => $blogName,
                 'url' => $blog_url,
             ]);
             DB::table('blog_settings')->insert([
@@ -133,13 +133,13 @@ class RegisterService
     }
 
 
-    public function GoogleLogin(User $user,string $google_user_id)
+    public function GoogleLogin(User $user,string $googleUserId)
     {
         $request['user'] = $user;
         try {
             $request['token'] = $user->CreateToken('authToken')->accessToken;
             $request['blog'] = Blog::where('id',$user->primary_blog_id)->first();
-            $user->google_id = $google_user_id;
+            $user->google_id = $googleUserId;
             $user->save;
         } catch (\Throwable $th) {
             return null;

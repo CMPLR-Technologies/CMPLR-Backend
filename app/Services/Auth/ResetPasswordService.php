@@ -51,9 +51,9 @@ class ResetPasswordService
      * 
      * @return bool
      */
-    public function CheckPassword(string $old_Password, string $new_password): bool
+    public function CheckPassword(string $oldPassword, string $newPassword): bool
     {   
-        if (Hash::check($new_password, $old_Password)) 
+        if (Hash::check($newPassword, $oldPassword)) 
             return false;
 
         return true;    
@@ -67,10 +67,10 @@ class ResetPasswordService
      * 
      * @return bool
      */
-    public function SetNewPassword(User $user, string $new_password): bool
+    public function SetNewPassword(User $user, string $newPassword): bool
     {
         try {
-            $user->password=Hash::make($new_password);
+            $user->password=Hash::make($newPassword);
             $user->save();
             DB::table('password_resets')->where('email',$user->email)->delete();
             //dd($del);
