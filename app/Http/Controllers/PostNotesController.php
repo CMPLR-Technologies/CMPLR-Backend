@@ -107,6 +107,8 @@ class PostNotesController extends Controller
      * @param Request $request
      * 
      * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed
      */
     public function getNotes(Request $request )
     {
@@ -114,8 +116,8 @@ class PostNotesController extends Controller
         
         $notes =  $this->postNotesService->GetPostNotes($postId);
         
-        // checking nullos
-        if ( !count($notes))
+        // checking null
+        if ( ! $notes->first())
         {
             return response()->json( ['notes'=> $notes ,'total_likes' => 0 ,'total_reblogs'=>0,'total_replys'=>0] , 200);
         }
