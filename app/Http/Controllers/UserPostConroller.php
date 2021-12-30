@@ -160,6 +160,10 @@ class UserPostConroller extends Controller
         if (!$this->userPostService->UserUnlikePost($userId, $postId)){
             return $this->error_response(Errors::ERROR_MSGS_404,'note Not Found',404);
         }
+
+        $toBlogId = $this->userPostService->GetPostBlogId($postId);
+        $this->notification->CreateNotification(auth()->user()->primary_blog_id ,  $toBlogId->blog_id ,'like' ,$postId );
+        
         return response()->json(['message' => 'success'], 200);
     }
     /**
