@@ -37,7 +37,7 @@ pipeline {
                     docker build -t test/backend:latest .
                     docker-compose up -d --build
                     sleep 5
-                    docker exec testbackend php artisan config:cache
+                    docker exec testbackend php artisan config:clear
                     sleep 5
                     docker exec testbackend php artisan migrate:fresh --seed --env=testing
                     sleep 5
