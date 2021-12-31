@@ -66,6 +66,12 @@ class BlogSubmitController extends Controller
      * )
      */
 
+    /**
+     * create a submit send by a user to a blog
+     * @param CreateSubmitRequest $request
+     * @param int $submitId
+     * @return response
+     */
     public function CreateSubmit(CreateSubmitRequest $request, $blogName)
     {
         //call the service
@@ -111,9 +117,10 @@ class BlogSubmitController extends Controller
 
     /**
      * delete a submit send by a user to a blog
-     * 
+     * @param int $submitId
      * @return response
      */
+
     public function DeleteSubmit($submitId)
     {
         //call the service
@@ -229,8 +236,9 @@ class BlogSubmitController extends Controller
 
 
     /**
-     * answer a submit send by a user to a blog
-     * 
+     * approve a submit send by a user to a blog
+     * @param Request $request
+     * @param int $submitId
      * @return response
      */
     public function PostSubmit(Request $request, $submitId)

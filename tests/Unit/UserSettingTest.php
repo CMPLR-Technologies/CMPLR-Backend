@@ -9,7 +9,7 @@ use App\Services\User\UserSettingService;
 use Faker\Factory;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+//use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class UserSettingTest extends TestCase
 {
@@ -18,7 +18,7 @@ class UserSettingTest extends TestCase
     | user settings
     */
 
-   // use DatabaseTransactions;
+    // use DatabaseTransactions;
 
 
 
@@ -39,7 +39,7 @@ class UserSettingTest extends TestCase
             $request = [
                 'email' => $faker->email(),
                 'age' => $faker->numberBetween(18, 80),
-                'blog_name' => 'A_'. time(),
+                'blog_name' => 'A_' . time(),
                 'password' => 'Test_pass34',
             ];
             // only needs user to test user settings
@@ -54,7 +54,7 @@ class UserSettingTest extends TestCase
         }
     }
 
- 
+
 
     /** @test */
     public function SuccessfulConfirmPassword()
@@ -103,7 +103,7 @@ class UserSettingTest extends TestCase
             'password' => 'Ahmed_123',
         ];
         // no bearer token is given
-        $response = $this->json('PUT', '/api/settings/change_email', $request, ['Accept' => 'application/json','Authorization' => 'Bearer '.self::$data['token']]);
+        $response = $this->json('PUT', '/api/settings/change_email', $request, ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . self::$data['token']]);
         //dd($response);
         // it should be a guest
         $this->assertAuthenticated();
@@ -122,13 +122,28 @@ class UserSettingTest extends TestCase
         // it should be a guest
         $this->assertGuest();
     }
+    /** @test */
+    public function UpdateSettings()
+    {
+       $check =  (new UserSettingService())->UpdateSettings(
+            self::$data['id'],
+            [
+                'show_badge' => true,
+                'text_editor' => 'rich'
+            ]
+        );
+        $this->assertTrue($check);
+    }
+
+      /** @test */
+    public function CheckGetSettings()
+    {
+        //dd(self::$data['token']);
+        $user = User::find(self::$data['id']);
+        $response = $this->actingAs($user, 'api')->json('Get', '/api/user/settings')->assertStatus(200);       
+    }
 
     
-
-
-
-
-
 
     public static function tearDownAfterClass(): void
     {

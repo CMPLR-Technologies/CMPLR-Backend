@@ -31,6 +31,7 @@ class CreateAskTest extends TestCase
         ];
 
         $code=(new CreateAskService())->CreateAsk($request,$blogName,$user);
+        $code=(new CreateAskService())->CreateAsk($request,$blogName,$user);
                                                     
         $this->assertEquals(201,$code);
     }

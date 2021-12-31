@@ -14,8 +14,7 @@ class PostsCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return 
-        [
+        return [
             'post' => $this->collection,
             'next_url' => $this->nextPageUrl(),
             'total' => $this->total(),

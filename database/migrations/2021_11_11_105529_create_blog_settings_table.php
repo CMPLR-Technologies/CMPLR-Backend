@@ -11,7 +11,7 @@ class CreateBlogSettingsTable extends Migration
         Schema::create('blog_settings', function (Blueprint $table) {
             $table->id();
             $table->integer("blog_id");
-            $table ->foreign('blog_id')->references('id')->on('blogs')->onDelete('cascade'); 
+            $table->foreign('blog_id')->references('id')->on('blogs')->onDelete('cascade');
             $table->text('replies')->default('everyone');
             $table->boolean('allow_ask')->default(false);
             $table->text('ask_page_title')->default('Ask me anything');
@@ -41,7 +41,6 @@ class CreateBlogSettingsTable extends Migration
             $table->boolean('show_title')->default(true);
             $table->boolean('show_description')->default(true);
             $table->boolean('use_new_post_type')->default(true);
-            $table->boolean('show_navigation')->nullable();
             $table->timestamps();
         });
     }

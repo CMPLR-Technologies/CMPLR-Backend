@@ -56,7 +56,7 @@ class CreateAskService{
 
         //add ask notification
         (new NotificationsService())->CreateNotification(
-            $request['is_anonymous']==false?null:$user->primary_blog_id,
+            $request['is_anonymous']==true?null:$user->primary_blog_id,
             $blog->id,
             'ask',
             $ask->id,

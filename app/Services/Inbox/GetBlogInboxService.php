@@ -39,6 +39,7 @@ class GetBlogInboxService{
                 ->posts()
                 ->where('post_ask_submit','ask')
                 ->orwhere('post_ask_submit','submit')
+                ->orderBy('created_at',"DESC")
                 ->paginate(Config::PAGINATION_LIMIT);
 
         return [200,$inbox];

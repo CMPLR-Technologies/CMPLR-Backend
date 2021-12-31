@@ -21,6 +21,7 @@ class BlogChatCollection extends ResourceCollection
         [
             'messages' => $this->collection,
             'blog_data'=>[
+                'blog_id'=>$blogData->id ,
                 'blog_name' => $blogData->blog_name,
                 'url' => $blogData->url,
                 'title' => $blogData->title,

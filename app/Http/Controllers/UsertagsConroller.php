@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tag;
-use App\Models\TagUser;
 use App\Models\PostTags;
 use Illuminate\Http\Request;
 use App\Http\Misc\Helpers\Errors;
 use App\Services\Posts\PostsService;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\TagCollection;
 use App\Services\User\UserTagsService;
-
+use Illuminate\Support\Carbon;
 
 class UserTagsConroller extends Controller
 {
@@ -73,6 +70,15 @@ class UserTagsConroller extends Controller
      *       ),
      *)
      **/
+     /**
+     * user follow specific tag
+     *
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
+     */
     public function FollowTag(Request $request)
     {
         // getting current user
@@ -127,6 +133,15 @@ class UserTagsConroller extends Controller
      *       ),
      *)
      **/
+     /**
+     * user unfollow specific tag
+     *
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
+     */
     public function UnFollowTag(Request $request)
     {
         // getting current user
@@ -141,6 +156,15 @@ class UserTagsConroller extends Controller
 
         return $this->success_response('Success', 200);
     }
+     /**
+     * getting info of specific tag
+     *
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
+     */
 
     public function GetTagInfo(Request $request)
     {
@@ -159,14 +183,15 @@ class UserTagsConroller extends Controller
         $response['is_follower'] = $this->userTagsService->IsFollower($tag);
 
         // getting tag avatar 
-        $response['tag_avatar'] = 'https://assets.tumblr.com/images/default_avatar/cone_closed_128.png';
+        $tagPost = $this->postsService->GetPostWithTagPhoto($tag);
+        $response['tag_avatar'] = ($tagPost) ? $this->postsService->GetViews([$tagPost]) : null;
 
         //total tag posts 
         $response['total_posts'] = PostTags::where('tag_name', $tag)->count();
 
         return response()->json($response, 200);
     }
-
+    
     public function GetFollowedTags()
     {
         // getting current user
@@ -177,6 +202,17 @@ class UserTagsConroller extends Controller
 
         $followed_tags = $this->userTagsService->GetFollowedTags($user->id);
 
+        foreach ($followed_tags as $tag) {
+            $tag_posts = $this->userTagsService->GetTagPosts($tag['name']);
+            $tag['posts_count'] = $this->userTagsService->GetTagRecentPostsCount($tag_posts);
+            $tag['cover_image'] = $this->postsService->GetViews($tag_posts);
+            if (!$tag['cover_image']) {
+                $tag['cover_image'] = "";
+            } else {
+                $tag['cover_image'] = $tag['cover_image'][0];
+            }
+        }
+
         $response = $this->success_response($followed_tags);
 
         return $response;
@@ -184,7 +220,15 @@ class UserTagsConroller extends Controller
 
     public function GetRecommendedTags()
     {
-        $recommended_tags = $this->userTagsService->GetRandomTagsData();
+        // Check if there is an authenticated user
+        $user = auth('api')->user();
+        $user_id = null;
+
+        if ($user) {
+            $user_id = $user->id;
+        }
+
+        $recommended_tags = $this->userTagsService->GetRandomTagsData($user_id);
 
         foreach ($recommended_tags as $tag) {
             $posts = $this->userTagsService->GetTagPosts($tag['name']);
@@ -198,7 +242,15 @@ class UserTagsConroller extends Controller
 
     public function GetTrendingTags()
     {
-        $trending_tags = $this->userTagsService->GetRandomTagsData();
+        // Check if there is an authenticated user
+        $user = auth('api')->user();
+        $user_id = null;
+
+        if ($user) {
+            $user_id = $user->id;
+        }
+
+        $trending_tags = $this->userTagsService->GetRandomTagsData($user_id);
 
         foreach ($trending_tags as $tag) {
             $posts = $this->userTagsService->GetTagPosts($tag['name']);

@@ -2,16 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\NotesCountResource;
 use App\Http\Resources\PostNotesCollection;
-use App\Http\Resources\PostNotesResource;
-use App\Models\Blog;
-use App\Models\PostNotes;
 use App\Services\Post\PostNotesService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-
-use function PHPUnit\Framework\isEmpty;
 
 class PostNotesController extends Controller
 {
@@ -114,6 +107,8 @@ class PostNotesController extends Controller
      * @param Request $request
      * 
      * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed
      */
     public function getNotes(Request $request )
     {
@@ -122,7 +117,7 @@ class PostNotesController extends Controller
         $notes =  $this->postNotesService->GetPostNotes($postId);
         
         // checking null
-        if ( !count($notes))
+        if ( ! $notes->first())
         {
             return response()->json( ['notes'=> $notes ,'total_likes' => 0 ,'total_reblogs'=>0,'total_replys'=>0] , 200);
         }

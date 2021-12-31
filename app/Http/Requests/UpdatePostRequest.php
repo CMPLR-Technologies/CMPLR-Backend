@@ -25,7 +25,7 @@ class UpdatePostRequest extends FormRequest
     public function rules()
     {
         return [
-            //TODO: add title
+          
             'content' =>['required','string'],
             'type' => ['required','string',Rule::in(['text', 'photos','quotes','chats','audio','videos'])],
             'state' => ['required','string',Rule::in(['publish', 'private','draft'])],

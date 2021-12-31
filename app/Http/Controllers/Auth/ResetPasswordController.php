@@ -121,8 +121,8 @@ class ResetPasswordController extends Controller
             return  $this->error_response(Errors::NOT_FOUND_USER,'',404);
 
         // check that new password is same as the old one
-        $check_password = $this->ResetPasswordService->CheckPassword($user->password, $request->password);
-        if (!$check_password)
+        $checkPassword = $this->ResetPasswordService->CheckPassword($user->password, $request->password);
+        if (!$checkPassword)
         {
             $error['password']= [Errors::DUPLICATE_PASSWORD];
             return  $this->error_response(Errors::ERROR_MSGS_400,$error,400);
@@ -137,13 +137,13 @@ class ResetPasswordController extends Controller
         $userLoginToken = $user->CreateToken('User_access_token')->accessToken;
 
         // set the response
-        $response['user'] = $user;
-        $response['blog'] = Blog::find($user->primary_blog_id);
-        $response['token'] = $userLoginToken;
+        $request['user'] = $user;
+        $request['blog'] = Blog::where('id' ,$request['user']->primary_blog_id)->first();
+        $request['token'] = $userLoginToken;
 
         // Fire PasswordReset event
         event(new PasswordReset($user));
-        $resource =  new RegisterResource($response);
+        $resource =  new RegisterResource($request);
         // return proper response
         return  $this->success_response($resource, 200);
     }

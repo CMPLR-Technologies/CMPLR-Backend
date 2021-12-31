@@ -22,5 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ChatSeeder::class);
         $this->call(PostNotesSeeder::class);
         $this->call(FollowSeeder::class);
+        $this->call(NotificationSeeder::class);
+        $this->call(BlockSeeder::class);
     }
 }

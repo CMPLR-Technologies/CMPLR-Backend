@@ -2,11 +2,13 @@
 
 namespace App\Services\User;
 
+use Carbon\Carbon;
 use App\Models\Tag;
 use App\Models\Posts;
 use App\Models\TagUser;
 use App\Models\PostTags;
 use App\Http\Misc\Helpers\Config;
+use Illuminate\Support\Facades\DB;
 
 class UserTagsService
 {
@@ -61,19 +63,26 @@ class UserTagsService
     /**
      * getting the tags followed by a user 
      * 
+     * @param int $user_id
+     * 
      * @return $tags
      */
-    public function GetFollowedTags($userId)
+    public function GetFollowedTags(int $userId)
     {
-        $tags = TagUser::where(['user_id' => $userId])->with('tag')->get();
+        $tags = TagUser::where(['user_id' => $userId])->with('tag')->get()->pluck('tag');
+        // dd($tags->toArray());
+        // $followed_tags = [];
 
-        $followed_tags = [];
+        // foreach ($tags as $tag) {
+        //     $tag_name = $tag['tag']['name'];
+        //     $followed_tags[] = [
+        //         'posts_count' => PostTags::where([['tag_name', '=', $tag_name], ['created_at', '>=', Carbon::now()->toDateString()]])->count(),
+        //         'tag' => $tag['tag']
+        //     ];
+        // }
 
-        foreach ($tags as $tag) {
-            $followed_tags[] = $tag['tag'];
-        }
-
-        return ($followed_tags);
+        // return $followed_tags;
+        return $tags;
     }
 
     /**
@@ -89,11 +98,19 @@ class UserTagsService
     /**
      * getting random tags data
      * 
+     * @param int $user_id
+     * 
      * @return $tags
      */
-    public function GetRandomTagsData()
+    public function GetRandomTagsData(int $user_id = null)
     {
-        return Tag::inRandomOrder()->paginate(Config::PAGINATION_LIMIT);
+        $filtered_tags = [];
+
+        if ($user_id) {
+            $filtered_tags = DB::table('tag_users')->where('user_id', $user_id)->pluck('tag_name')->toArray();
+        }
+
+        return Tag::whereNotIn('name', $filtered_tags)->inRandomOrder()->paginate(Config::PAGINATION_LIMIT);
     }
 
     /**
@@ -106,6 +123,18 @@ class UserTagsService
         $postsTags = PostTags::where('tag_name', $tag_name)->orderBy('created_at', 'DESC')->get();
         $posts = Posts::wherein('id', $postsTags->pluck('post_id'))->orderBy('date', 'DESC')->get();
         return $posts;
+    }
+
+    /**
+     * getting the tag's count of the recent posts
+     * 
+     * @param $tag_posts
+     * 
+     * @return $recent_posts_count
+     */
+    public function GetTagRecentPostsCount($tag_posts)
+    {
+        return $tag_posts->where('created_at', '>=', Carbon::now()->toDateString())->count();
     }
 
     /**

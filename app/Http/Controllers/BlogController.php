@@ -6,8 +6,10 @@ use App\Models\Blog;
 use Illuminate\Http\Request;
 use App\Http\Misc\Helpers\Errors;
 use App\Services\Blog\BlogService;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\BlogCollection;
 use App\Services\Blog\FollowBlogService;
+use App\Http\Resources\BLogFollowersCollection;
 
 class BlogController extends Controller
 {
@@ -35,7 +37,15 @@ class BlogController extends Controller
      */
     public function GetRecommendedBlogs()
     {
-        $recommended_blogs = $this->BlogService->GetRandomBlogs();
+        // Check if there is an authenticated user
+        $user = auth('api')->user();
+        $user_id = null;
+
+        if ($user) {
+            $user_id = $user->id;
+        }
+
+        $recommended_blogs = $this->BlogService->GetRandomBlogs($user_id);
 
         if (!$recommended_blogs) {
             return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
@@ -54,7 +64,15 @@ class BlogController extends Controller
      */
     public function GetTrendingBlogs()
     {
-        $trending_blogs = $this->BlogService->GetRandomBlogs();
+        // Check if there is an authenticated user
+        $user = auth('api')->user();
+        $user_id = null;
+
+        if ($user) {
+            $user_id = $user->id;
+        }
+
+        $trending_blogs = $this->BlogService->GetRandomBlogs($user_id);
 
         if (!$trending_blogs) {
             return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
@@ -87,8 +105,6 @@ class BlogController extends Controller
         //
     }
 
-
-
     /**
      * Update the specified resource in storage.
      *
@@ -101,8 +117,6 @@ class BlogController extends Controller
     {
         //
     }
-
-
 
     /**
      * @OA\Get(
@@ -244,18 +258,19 @@ class BlogController extends Controller
 
         // Check if This USer is Authorize to do this action
         try {
-            $this->authorize('ViewFollowers', $blog);
+            $this->authorize('BlogBelongsToUser', $blog);
         } catch (\Throwable $th) {
             return $this->error_response(Errors::ERROR_MSGS_403, 'This action is unauthorized.', 403);
         }
         // Get followers'sid that follow this blog
-        $followers_id = $this->FollowBlogService->GetFollowersID($blog->id);
+        $followersId = $this->FollowBlogService->GetFollowersID($blog->id);
 
         // Get Followers Information
-        $followers_info = $this->FollowBlogService->GetFollowersInfo($followers_id);
+        $followersInfo = $this->FollowBlogService->GetFollowersInfo($followersId);
+        //  $followers = $this->FollowBlogService->GetFollowers($followers_id );
 
-        $response['number_of_followers'] = count($followers_id);
-        $response['followers'] = $followers_info;
+        $response['number_of_followers'] = count($followersId);
+        $response['followers'] = $followersInfo;
 
         return $this->success_response($response);
     }

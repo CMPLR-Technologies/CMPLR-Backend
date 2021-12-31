@@ -34,7 +34,7 @@ class UsersettingController extends Controller
     /**
      *	@OA\Get
      *	(
-     * 		path="/settings/account",
+     * 		path="user/settings",
      * 		summary="User setting",
      * 		description="Retrieve Account Setting for User.",
      * 		operationId="accountSettings",
@@ -108,6 +108,43 @@ class UsersettingController extends Controller
         return $this->success_response(new UserSettingResource($data));
     }
 
+
+    /**
+     *	@OA\PUT
+     *	(
+     * 		path="user/settings/",
+     * 		summary="User setting",
+     * 		description="update Setting for User.",
+     * 		operationId="getsettings",
+     * 		tags={"UserSettings"},
+     *
+     * @OA\Response(
+     *    response=200,
+     *    description="Success",
+     *    @OA\JsonContent(
+     *       type="object",
+     *       @OA\Property(property="meta", type="object",
+     *          @OA\Property(property="status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="OK"),
+     *        ),
+     *     
+     *       ),
+     *   ),
+     *   @OA\RequestBody(
+     *    required=true,
+     *    description="Pass user credentials",
+     *    @OA\JsonContent(
+     *       required={"content,blog_name,state,type"},
+     *       @OA\Property(property="show_bagde", type="boolean", example=true),
+     *    ),
+     * ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     * security ={{"bearer":{}}}
+     * )
+     */
     /**
      * Update all User Settings
      * 
@@ -119,18 +156,55 @@ class UsersettingController extends Controller
     {
         // get Auth User
         $user = $this->UserSettingService->GetAuthUser();
-        if(!$user)
+        if (!$user)
             return  $this->error_response(Errors::ERROR_MSGS_401, '', 401);
         // get all the settings needed to be updated 
         $data = $request->all();
         //Update User Settings
-        $is_updated = $this->UserSettingService->UpdateSettings($user->id,$data);
-        if(!$is_updated)
+        $is_updated = $this->UserSettingService->UpdateSettings($user->id, $data);
+        if (!$is_updated)
             return $this->error_response(Errors::ERROR_MSGS_500, 'Failed to Update user settings', 500);
 
-        return $this->success_response('',200);
+        return $this->success_response('', 200);
     }
 
+        /**
+     *	@OA\PUT
+     *	(
+     * 		path="settings/change_email",
+     * 		summary="User change email",
+     * 		description="update email for User.",
+     * 		operationId="update email",
+     * 		tags={"UserSettings"},
+     *
+     * @OA\Response(
+     *    response=200,
+     *    description="Success",
+     *    @OA\JsonContent(
+     *       type="object",
+     *       @OA\Property(property="meta", type="object",
+     *          @OA\Property(property="status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="OK"),
+     *        ),
+     *     
+     *       ),
+     *   ),
+     *   @OA\RequestBody(
+     *    required=true,
+     *    description="Pass user credentials",
+     *    @OA\JsonContent(
+     *       required={"content,blog_name,state,type"},
+     *       @OA\Property(property="email", type="string", example="ahmed@gmail.com"),
+     *       @OA\Property(property="password", type="string", example="**********"),
+     *    ),
+     * ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     * security ={{"bearer":{}}}
+     * )
+     */
     /**
      * update Email of Account
      * 
@@ -150,7 +224,7 @@ class UsersettingController extends Controller
 
         // if the user enters its previous email no need to futher work :)
         if ($request->email == $user->email)
-            return $this->success_response($request->email,200);
+            return $this->success_response($request->email, 200);
 
         // update User Email
         $is_updated = $this->UserSettingService->UpdateEmail($user->id, $request->email);
@@ -158,9 +232,47 @@ class UsersettingController extends Controller
             return $this->error_response(Errors::ERROR_MSGS_500, 'Failed to update email', 500);
 
         $response['email'] = $request->email;
-        return $this->success_response($response,200);
+        return $this->success_response($response, 200);
     }
 
+    /**
+     *	@OA\PUT
+     *	(
+     * 		path="settings/change_password",
+     * 		summary="User change password",
+     * 		description="update password for User.",
+     * 		operationId="update password",
+     * 		tags={"UserSettings"},
+     *
+     * @OA\Response(
+     *    response=200,
+     *    description="Success",
+     *    @OA\JsonContent(
+     *       type="object",
+     *       @OA\Property(property="meta", type="object",
+     *          @OA\Property(property="status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="OK"),
+     *        ),
+     *     
+     *       ),
+     *   ),
+     *   @OA\RequestBody(
+     *    required=true,
+     *    description="Pass user credentials",
+     *    @OA\JsonContent(
+     *       required={"content,blog_name,state,type"},
+     *       @OA\Property(property="password", type="string", example="**********"),
+     *       @OA\Property(property="new_password", type="string", example="**********"),
+     *       @OA\Property(property="new_password_confirmation", type="string", example="**********"),
+     *    ),
+     * ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     * security ={{"bearer":{}}}
+     * )
+     */
     /**
      * change Password of Account
      * @param ChangeEmailRequest
@@ -182,8 +294,13 @@ class UsersettingController extends Controller
         if (strcmp($request->new_password, $request->confirm_new_password) !== 0)
             return  $this->error_response(Errors::ERROR_MSGS_400, 'Passwords don\'t match', 400);
 
-        // TODO:check if new pass = old pass
-        
+        // check if new pass = old pass
+        $check_password = $this->UserSettingService->CheckPassword($user->password, $request->new_password);
+        if (!$check_password) {
+            $error['password'] = [Errors::DUPLICATE_PASSWORD];
+            return  $this->error_response(Errors::ERROR_MSGS_400, $error, 400);
+        }
+
         // update User Password
         $is_updated = $this->UserSettingService->UpdatePassword($user->id, $request->new_password);
         if (!$is_updated)
