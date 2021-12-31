@@ -17,10 +17,10 @@ services:
     image: postgres
     container_name: testdb
     environment:
-        POSTGRES_DB=cmplr_test 
-        POSTGRES_ROOT_PASSWORD=password
-        POSTGRES_PASSWORD=password 
-        POSTGRES_USER=postgres
+      - POSTGRES_DB=cmplr_test 
+      - POSTGRES_ROOT_PASSWORD=password
+      - POSTGRES_PASSWORD=password 
+      - POSTGRES_USER=postgres
 
     networks:
       - test-cmplr
