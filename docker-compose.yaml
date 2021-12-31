@@ -1,0 +1,29 @@
+version: "3.1"
+services:
+
+  testbackend:
+    image: test/backend:latest
+    container_name: testbackend
+    command:
+      - php artisan migrate:fresh --seed --env=testing
+      - php artisan passport:install --env=testing
+      - php artisan test --env=testing
+    networks:
+      - cmplr
+    depends_on:
+      - testdb
+
+  testdb:
+    image: postgres
+    container_name: testdb
+    environment:
+        POSTGRES_DB=cmplr_test 
+        POSTGRES_ROOT_PASSWORD=password
+        POSTGRES_PASSWORD=password 
+        POSTGRES_USER=postgres
+
+    networks:
+      - test-cmplr
+networks:
+  test-cmplr:
+    driver: bridge
