@@ -34,7 +34,7 @@ pipeline {
                 echo "========docker build ========"
                 sh """
                     docker rm -f testdb
-                    docker run -d -p 5432:5432 -e POSTGRES_DATABASE=cmplr_test -e  POSTGRES_ROOT_PASSWORD=password -e  POSTGRES_PASSWORD=password -e  POSTGRES_USER=postgres --name=testdb postgres
+                    docker run -d -p 5432:5432 -e POSTGRES_DB=cmplr_test -e  POSTGRES_ROOT_PASSWORD=password -e  POSTGRES_PASSWORD=password -e  POSTGRES_USER=postgres --name=testdb postgres
                     docker build -t $LOGIN_SERVER/backend:latest .
                     docker rm -f testdb
                 
