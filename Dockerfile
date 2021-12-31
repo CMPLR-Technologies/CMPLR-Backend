@@ -25,13 +25,10 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-COPY ./composer.json ./composer.json
-COPY ./composer.lock ./composer.lock
-COPY ./artisan ./artisan
+COPY . .
 RUN composer update
 RUN composer install
 
-COPY . .
 
 RUN php artisan migrate:fresh --seed --env=testing
 RUN php artisan passport:install --env=testing
