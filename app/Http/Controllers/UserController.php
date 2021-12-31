@@ -197,8 +197,7 @@ class UserController extends Controller
     public function GetDashboard(Request $request)
     {
         $user = auth('api')->user();
-        if ($user) 
-        {
+        if ($user) {
             // get the blogs of the
             $userBlogs = $user->blogs()->pluck('blog_id');
             //get all followed blogs
@@ -208,8 +207,7 @@ class UserController extends Controller
             return $this->success_response(new PostsCollection($posts));
         }
         // for flutter if their is no authentication return random posts
-        else
-        {
+        else {
             $posts = Posts::orderBy('updated_at', 'DESC')->paginate(Config::PAGINATION_LIMIT);
             return $this->success_response(new PostsCollection($posts));
         }
@@ -758,7 +756,7 @@ class UserController extends Controller
     {
     }
 
-    
+
 
     /**
      * @OA\Post(
@@ -865,7 +863,7 @@ class UserController extends Controller
     {
     }
 
-      /**
+    /**
      * @OA\Get(
      *   path="/user_theme",
      *   tags={"users"},
@@ -905,7 +903,7 @@ class UserController extends Controller
     }
 
 
-      /**
+    /**
      * @OA\Put(
      *   path="/user_theme",
      *   tags={"users"},
@@ -937,10 +935,10 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $theme = $request->theme;
-        if(!$theme)
+        if (!$theme)
             return $this->error_response(Errors::ERROR_MSGS_404, ['error while update theme'], 404);
 
-        $check = $this->UserService->UpdateUserTheme($user->id,$theme);
+        $check = $this->UserService->UpdateUserTheme($user->id, $theme);
         if (!$check)
             return $this->error_response(Errors::ERROR_MSGS_500, ['error while update theme'], 500);
         return $this->success_response(['successfully update theme'], 200);

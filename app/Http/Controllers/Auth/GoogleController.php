@@ -18,6 +18,7 @@ use Illuminate\Auth\Events\Registered;
 class GoogleController extends Controller
 {
     protected $RegisterService;
+
     /**
      * Instantiate a new controller instance.
      *
@@ -27,9 +28,10 @@ class GoogleController extends Controller
     {
         $this->RegisterService = $RegisterService;
     }
+
     public function GoogleLogin()
     {
-       return Socialite::driver('google')->redirect();
+        return Socialite::driver('google')->redirect();
     }
 
     public function handleGoogleCallback()
@@ -59,7 +61,7 @@ class GoogleController extends Controller
             return $this->error_response(Errors::ERROR_MSGS_422, $error, 422);
         }
         $check = User::where('email', $google_user->email)->first();
-       // $check = User::where('google_id', $user->id)->first();
+        // $check = User::where('google_id', $user->id)->first();
         if ($check) {
             $user = Auth::loginUsingId($check->id);
             $request['user'] = $user;
@@ -69,16 +71,15 @@ class GoogleController extends Controller
                 $error['token'] = Errors::GENERATE_TOKEN_ERROR;
                 return $this->error_response(Errors::ERROR_MSGS_500, $error, 500);
             }
-            $request['blog'] = Blog::where('id',$user->primary_blog_id)->first();
+            $request['blog'] = Blog::where('id', $user->primary_blog_id)->first();
 
             //update user data
-            $isUpdated = $this->RegisterService->UpdateUserData($user,$google_user->id);
-            if(!$isUpdated)
-                return $this->error_response(Errors::ERROR_MSGS_500,'error to update user data',500);
+            $isUpdated = $this->RegisterService->UpdateUserData($user, $google_user->id);
+            if (!$isUpdated)
+                return $this->error_response(Errors::ERROR_MSGS_500, 'error to update user data', 500);
             $resource =  new RegisterResource($request);
-            return $this->success_response($resource,200);
-        } else 
-        {
+            return $this->success_response($resource, 200);
+        } else {
             $error['user'] = 'you should register first';
             return $this->error_response(Errors::ERROR_MSGS_401, $error, 401);
         }
@@ -99,8 +100,7 @@ class GoogleController extends Controller
         }
         // check if the user is already a user 
         $user = User::where('email', $google_user->email)->first();
-        if ($user) 
-        {
+        if ($user) {
             $user = Auth::loginUsingId($user->id);
             try {
                 $userLoginToken = $user->CreateToken('authToken')->accessToken;
@@ -110,11 +110,11 @@ class GoogleController extends Controller
                 return $this->error_response(Errors::ERROR_MSGS_500, $error, 500);
             }
             $request['user'] = $user;
-            $request['blog'] = Blog::where('id',$user->primary_blog_id)->first();
+            $request['blog'] = Blog::where('id', $user->primary_blog_id)->first();
             $user->google_id = $google_user->id;
             $user->save;
             $resource =  new RegisterResource($request);
-            return $this->success_response($resource,200);
+            return $this->success_response($resource, 200);
         }
 
         // create user
@@ -139,7 +139,7 @@ class GoogleController extends Controller
         if (!$generate_token)
             return $this->error_response(Errors::ERROR_MSGS_500, ERRORS::GENERATE_TOKEN_ERROR, 500);
 
-        $request['blog']=$blog;
+        $request['blog'] = $blog;
         $request['token'] = $user->token();
 
         // this method will return true if authentication was successful

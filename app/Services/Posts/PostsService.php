@@ -16,21 +16,16 @@ use Illuminate\Support\Facades\DB;
 
 class PostsService
 {
-
-
-
     /**
      * Get Blog from BlogName
      *
      * @param string $blog_name
      * 
-     * @return object
+     * @return Blog
      */
     public function GetBlogData(string $blogName)
     {
-
         $blog = Blog::where('blog_name', $blogName)->first();
-
         return $blog;
     }
 
@@ -109,10 +104,8 @@ class PostsService
     }
 
     /**
-     * GET Random Posts
+     * GET Random Posts for explore
      *
-     * @param 
-     * 
      * @return Posts
      * 
      * @author Abdullah Adel
@@ -148,7 +141,6 @@ class PostsService
      */
     public function MiniViewBlogData(Blog $blog)
     {
-
         $data1['blog_name'] = $blog->blog_name;
         $data1['avatar'] = $blog->settings->avatar;
         $data1['title'] = $blog->title;
@@ -208,6 +200,7 @@ class PostsService
      * @param $postId
      * @param $postTags
      * 
+     * @return void
      * @author Yousif Ahmed
      */
     public function AddPostTags($postId, $postTags)
@@ -238,7 +231,6 @@ class PostsService
      * @return Posts
      * @author Yousif Ahmed
      */
-
     public function GetPostsWithTag($tag)
     {
         $postsTags = PostTags::where('tag_name', $tag)->orderBy('created_at', 'DESC')->get();
@@ -252,7 +244,7 @@ class PostsService
      * 
      * @param $tag 
      * 
-     * @return $post
+     * @return Posts $post
      * 
      */
     public function GetPostWithTagPhoto($tag)
@@ -261,6 +253,7 @@ class PostsService
         $post = Posts::wherein('id', $postsTags->pluck('post_id'))->where('type', 'photos')->first();
         return $post;
     }
+
     /**
      * this function responsible for update post
      * @param Posts $post
@@ -292,7 +285,6 @@ class PostsService
         return $is_deleted;
     }
 
-
     /**
      * this function is responsible for get blog by blog_name
      * @param string $blog_name
@@ -303,8 +295,9 @@ class PostsService
         $blog = Blog::where('blog_name', $blogName)->first();
         return $blog;
     }
+
     /**
-     * this function responsible for get posts by blog name
+     * this function responsible for get posts by blog id
      * @param int $blog_id
      * @return Posts 
      */

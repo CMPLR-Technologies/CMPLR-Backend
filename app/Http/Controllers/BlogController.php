@@ -33,7 +33,9 @@ class BlogController extends Controller
      * This function is responsible for getting
      * recommended blogs (paginated)
      * 
-     * @return Blog $recommended_blogs
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Abdullah Adel
      */
     public function GetRecommendedBlogs()
     {
@@ -60,7 +62,9 @@ class BlogController extends Controller
      * This function is responsible for getting
      * trending blogs (paginated)
      * 
-     * @return Blog $trending_blogs
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Abdullah Adel
      */
     public function GetTrendingBlogs()
     {
@@ -81,41 +85,6 @@ class BlogController extends Controller
         $response = $this->success_response(new BlogCollection($trending_blogs));
 
         return $response;
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Blog  $blog
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Blog $blog)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Blog  $blog
-     * @return \Illuminate\Http\Response
-     */
-
-    public function update(Request $request, Blog $blog)
-    {
-        //
     }
 
     /**
@@ -163,7 +132,7 @@ class BlogController extends Controller
      * path="/blog/{blog-identifier}/followers",
      * summary="Retrieve a Blog's Followers",
      * description="This method can be used to get the followers of a specific blog",
-     * operationId="getFollowers",
+     * operationId="GetFollowers",
      * tags={"Blogs"},
      *  @OA\Parameter(
      *         name="blog-identifier",
@@ -243,7 +212,10 @@ class BlogController extends Controller
     /**
      * Get Blog Followers
      * 
-     * @param 
+     * @param Request $request
+     * @param Blog $blog
+     * 
+     * @return Response $response
      * 
      */
     public function GetFollowers(Request $request, Blog $blog)

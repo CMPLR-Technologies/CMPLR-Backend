@@ -29,9 +29,10 @@ class PostsController extends Controller
     |--------------------------------------------------------------------------
     | Posts Controller
     |--------------------------------------------------------------------------|
-    | This controller handles the processes of Posts :
-    | Create ,edit and update Posts
+    | This controller handles the processes of Posts:
+    | Create, edit and update Posts
     | retrieve posts (dashboard , by blogname , post_id)
+    | retrieve posts (draft, by blogname)
     | retrieve posts (explore, randomly)
     |
    */
@@ -355,7 +356,7 @@ class PostsController extends Controller
      *)
      **/
     /**
-     * this fuction responsible for edit the specified post.
+     * this function responsible for edit the specified post.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -434,9 +435,6 @@ class PostsController extends Controller
      *       ),
      *)
      **/
-
-
-
     /**
      * Update the specified resource in storage.
      *
@@ -690,7 +688,14 @@ class PostsController extends Controller
     }
 
     /**
-     * This function retrieves the auth user's posts that are saved as drafts 
+     * This function retrieves the auth user's posts that are saved as drafts
+     *
+     * @param Request $request
+     * @param string $blogName
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Abdullah Adel
      */
     public function GetDraft(Request $request, string $blogName)
     {
@@ -720,6 +725,13 @@ class PostsController extends Controller
 
     /**
      * This function publishes the draft post of a blog
+     *
+     * @param Request $request
+     * @param string $blogName
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Abdullah Adel
      */
     public function PublishDraft(Request $request, string $blogName)
     {
@@ -827,7 +839,9 @@ class PostsController extends Controller
      * This function is responsible for getting
      * recommended posts (paginated)
      * 
-     * @return Post $recommended_posts
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Abdullah Adel
      */
     public function GetRecommendedPosts()
     {
@@ -854,7 +868,9 @@ class PostsController extends Controller
      * This function is responsible for getting
      * trending posts (paginated)
      * 
-     * @return Post $trending_posts
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Abdullah Adel
      */
     public function GetTrendingPosts()
     {
@@ -952,83 +968,6 @@ class PostsController extends Controller
         $blogs = Blog::whereIn('id', $blogsIds)->paginate(config::API_PAGINATION_LIMIT);
         return $this->success_response(new BlogCollection($blogs));
     }
-    /**
-     * @OA\Post(
-     ** path="/posts/reblog",
-     *   tags={"Posts"},
-     *   summary="Reblog existing Post",
-     *   operationId="reblog",
-     *
-     *   @OA\Parameter(
-     *      name="id",
-     *      description="the ID of the reblogged post",
-     *      in="query",
-     *      required=true,
-     *      @OA\Schema(
-     *           type="string"
-     *      )
-     *   ),
-     *   @OA\Parameter(
-     *      name="reblog_key",
-     *      in="query",
-     *      required=true,
-     *      @OA\Schema(
-     *          type="number"
-     *      )
-     *   ),
-     *  @OA\Parameter(
-     *      name="comment",
-     *      in="query",
-     *      description="comment added to the reblogged post",
-     *      required=false,
-     *      @OA\Schema(
-     *          type="string"
-     *      )
-     *   ),
-     *   @OA\Parameter(
-     *      name="native_inline_images",
-     *      in="query",
-     *      required=true,
-     *      @OA\Schema(
-     *          type="boolean"
-     *      )
-     *   ),
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
-     *   @OA\Response(
-     *      response=400,
-     *      description="Bad Request"
-     *   ),
-     *   @OA\Response(
-     *          response=201,
-     *          description="Successfully Created",
-     *           @OA\JsonContent(
-     *           type="object",
-     *           @OA\Property(property="Meta", type="object",
-     *           @OA\Property(property="Status", type="integer", example=201),
-     *           @OA\Property(property="msg", type="string", example="Created"),
-     *           ),
-     *       ),
-     *       ),
-     * security ={{"bearer":{}}}
-     *)
-     **/
-
-    /**
-     * Reblog existing post 
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function reblog(Request $request)
-    {
-        //
-    }
-
-
-
 
     /**
      *	@OA\Get

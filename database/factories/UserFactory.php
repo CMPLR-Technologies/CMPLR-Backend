@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class UserFactory extends Factory
 {
-    protected $id =1 ;
+    protected $id = 1;
     /**
      * Define the model's default state.
      *
@@ -19,9 +19,7 @@ class UserFactory extends Factory
         return [
             'email' => $this->faker->unique()->safeEmail(),
             'password' => Hash::make('Ahmed_123'), // password
-            'age' => $this->faker->randomDigitNotZero(),
-            'following_count' => $this->faker->randomDigit(),
-            'likes_count' => $this->faker->randomDigit(),
+            'age' => $this->faker->numberBetween(18, 80),
             'login_options' => 'google',
             'email_activity_check' => $this->faker->boolean(),
             'TFA' => $this->faker->boolean(),
@@ -35,7 +33,7 @@ class UserFactory extends Factory
             'conversational_notification' => $this->faker->boolean(),
             'filtered_content' => json_encode($this->faker->words()),
             'remember_token' => Str::random(10),
-             'primary_blog_id'=> $this->id++ ,
+            'primary_blog_id' => $this->id++,
         ];
     }
 
