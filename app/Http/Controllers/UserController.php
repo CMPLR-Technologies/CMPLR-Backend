@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+use function PHPUnit\Framework\isEmpty;
+
 class UserController extends Controller
 {
     protected $UserService;
@@ -114,23 +116,23 @@ class UserController extends Controller
             return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
 
         //Get User Data 
-        $user_data = $this->UserService->GetUserData($user);
-        if (!$user_data)
+        $userData = $this->UserService->GetUserData($user);
+        if (!$userData)
             return $this->error_response(Errors::ERROR_MSGS_500, 'Failed to get User data', 500);
 
         // get number of followers of user
-        $following_count = $this->UserService->GetUserFollowing($user->id);
-        $user_data['following_counts'] =  $following_count;
+        $followingCount = $this->UserService->GetUserFollowing($user->id);
+        $userData['following_counts'] =  $followingCount;
 
         // get number of posts of user
-        $user_posts = $this->UserService->GetUserPosts($user);
-        $user_data['posts_count'] =  $user_posts;
+        $userPosts = $this->UserService->GetUserPosts($user);
+        $user_data['posts_count'] =  $userPosts;
 
         //Get Blog Data 
-        $blogs_data = $this->UserService->GetBlogsData($user->id);
-        if (!$blogs_data)
+        $blogsData = $this->UserService->GetBlogsData($user->id);
+        if (!$blogsData)
             return $this->error_response(Errors::ERROR_MSGS_500, 'Failed to get Blogs data', 500);
-        $response = $blogs_data;
+        $response = $blogsData;
         return $this->success_response(new UserInfoCollection($response));
     }
 
@@ -196,17 +198,17 @@ class UserController extends Controller
     {
         $user = auth('api')->user();
         if ($user) {
+            // get the blogs of the
+            $userBlogs = $user->blogs()->pluck('blog_id');
             //get all followed blogs
-            $user_blogs = $user->blogs()->pluck('blog_id');
-            $followed_blogs_id = $user->FollowedBlogs()->pluck('blog_id');
-            // get posts of blogs that user follow or posts of user himself
-            $Posts = Posts::whereIn('blog_id', $followed_blogs_id)->orWhereIn('blog_id', $user_blogs)->orderBy('date', 'desc')->paginate(Config::PAGINATION_LIMIT);
-            return $this->success_response(new PostsCollection($Posts));
+            $followedBlogsId = $user->FollowedBlogs()->pluck('blog_id');
+            // return the proper posts for user
+            $posts = $this->UserService->GetDashBoardPosts($userBlogs, $followedBlogsId);
+            return $this->success_response(new PostsCollection($posts));
         }
-        // for flutter
-        else
-        {
-            $posts = Posts::inRandomOrder()->paginate(5);
+        // for flutter if their is no authentication return random posts
+        else {
+            $posts = Posts::orderBy('updated_at', 'DESC')->paginate(Config::PAGINATION_LIMIT);
             return $this->success_response(new PostsCollection($posts));
         }
     }
@@ -754,134 +756,7 @@ class UserController extends Controller
     {
     }
 
-    // 7ta fy blogs b3d check
 
-    /**
-     * @OA\Post(
-     *   path="/blog/{blog-identifier}/subscription",
-     *   tags={"Blogs"},
-     *   summary="subscription a blog",
-     *   operationId="subscription",
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
-     *   @OA\Response(
-     *      response=404,
-     *      description="Not Found"
-     *   ),
-     *   @OA\Response(
-     *          response=200,
-     *          description="Success",
-     *           @OA\JsonContent(
-     *           type="object",
-     *           @OA\Property(property="Meta", type="object",
-     *           @OA\Property(property="Status", type="integer", example=200),
-     *           @OA\Property(property="msg", type="string", example="ok"),
-     *           ),
-     *       ),
-     *            
-     *    ),
-     * security ={{"bearer":{}}}
-     *)
-     **/
-    public function BlogSubscription()
-    {
-    }
-
-    /**
-     * @OA\Delete(
-     *   path="/blog/{blog-identifier}/subscription",
-     *   tags={"Blogs"},
-     *   summary="subscription a blog",
-     *   operationId="Unsubscription",
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
-     *  @OA\Parameter(
-     *      name="post_id",
-     *      in="query",
-     *      required=true,
-     *      @OA\Schema(
-     *           type="string"
-     *      )
-     *   ),
-     *   @OA\Response(
-     *      response=404,
-     *      description="Not Found"
-     *   ),
-     *   @OA\Response(
-     *          response=200,
-     *          description="Success",
-     *           @OA\JsonContent(
-     *           type="object",
-     *           @OA\Property(property="Meta", type="object",
-     *           @OA\Property(property="Status", type="integer", example=200),
-     *           @OA\Property(property="msg", type="string", example="ok"),
-     *           ),
-     *       ),
-     *            
-     *    ),
-     * security ={{"bearer":{}}}
-     *)
-     **/
-    public function BlogUnSubscription()
-    {
-    }
-
-
-
-    /**
-     * @OA\Post(
-     *   path="/{blog-identifier}/add_tags_to_posts",
-     *   tags={"Blogs"},
-     *   summary="add new tag(s) to existing post(s)",
-     *   operationId="Add Tags to Posts",
-     *  @OA\Parameter(
-     *         name="posts_id[]",
-     *         in="query",
-     *         required=true,
-     *         @OA\Schema(
-     *         type="array",
-     *              @OA\Items(type="string")
-     *          )
-     *      ),
-     *  @OA\Parameter(
-     *         name="tag[]",
-     *         in="query",
-     *         required=true,
-     *         @OA\Schema(
-     *         type="array",
-     *              @OA\Items(type="string")
-     *          )
-     *      ),
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
-     *   @OA\Response(
-     *      response=404,
-     *      description="Not Found"
-     *   ),
-     *   @OA\Response(
-     *          response=200,
-     *          description="Success",
-     *           @OA\JsonContent(
-     *           type="object",
-     *           @OA\Property(property="Meta", type="object",
-     *           @OA\Property(property="Status", type="integer", example=200),
-     *           @OA\Property(property="msg", type="string", example="ok"),
-     *           ),
-     *       ),
-     *            
-     *    ),
-     * security ={{"bearer":{}}}
-     *)
-     **/
-    public function AddTagsToPosts()
-    {
-    }
 
     /**
      * @OA\Post(
@@ -988,10 +863,10 @@ class UserController extends Controller
     {
     }
 
-      /**
+    /**
      * @OA\Get(
      *   path="/user_theme",
-     *   tags={"users"},
+     *   tags={"Users"},
      *   summary="Get ",
      *   operationId="get theme of user",
      *   @OA\Response(
@@ -1028,10 +903,10 @@ class UserController extends Controller
     }
 
 
-      /**
+    /**
      * @OA\Put(
      *   path="/user_theme",
-     *   tags={"users"},
+     *   tags={"Users"},
      *   summary="put ",
      *   operationId="update_theme_of_user",
      *   @OA\Response(
@@ -1060,10 +935,10 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $theme = $request->theme;
-        if(!$theme)
+        if (!$theme)
             return $this->error_response(Errors::ERROR_MSGS_404, ['error while update theme'], 404);
 
-        $check = $this->UserService->UpdateUserTheme($user->id,$theme);
+        $check = $this->UserService->UpdateUserTheme($user->id, $theme);
         if (!$check)
             return $this->error_response(Errors::ERROR_MSGS_500, ['error while update theme'], 500);
         return $this->success_response(['successfully update theme'], 200);

@@ -64,24 +64,26 @@ class FollowBlogService{
 
     /**
      * This Funtion Get Followers for specific Blog
+     * @param array $followers_id
+     * @return array
      */
-    public function GetFollowersInfo($followers_id)
+    public function GetFollowersInfo($followersId)
     {
         // if there is no followers return empty array
-        if(!$followers_id)
+        if(!$followersId)
             return [];
         $followers_info = array();
         try {
-            foreach ($followers_id as $id) {
+            foreach ($followersId as $id) {
                 // get primary blog id of user 
                 $pid = User::where('id',$id)->first()->primary_blog_id;
                 // get the blog
                 $blog = Blog::where('id', $pid )->first();
                 // get the data needed for blogs
-                $followers_data1 = $blog ->only(['id','blog_name','title']);
-                $followers_data = array_merge($followers_data1,['avatar' => $blog->settings->avatar],['is_followed'=>$blog->IsFollowerToMe()]);
+                $followersData1 = $blog ->only(['id','blog_name','title']);
+                $followersData = array_merge($followersData1,['avatar' => $blog->settings->avatar],['is_followed'=>$blog->IsFollowerToMe()]);
                 // merge data
-                array_push($followers_info,$followers_data);
+                array_push($followers_info,$followersData);
             }
         } catch (\Throwable $th) {
             // incase of database exception
@@ -92,16 +94,23 @@ class FollowBlogService{
 
     /**
      * This function is used in get blogs id 
+     * @param integer $user_id
+     * @return array
      */
-   public function GetBlogIds(int $user_id)
+   public function GetBlogIds(int $userId)
    {
-        $blog_ids = DB::table('follows')->where('user_id',$user_id)->pluck('blog_id');
+        $blog_ids = DB::table('follows')->where('user_id',$userId)->orderBy('created_at', 'DESC')->pluck('blog_id');
         return $blog_ids;
    }
 
-   public function GetFollowers($followers_id)
+   /**
+    * this function is used for get followers from their id
+    * @param array $followers_id
+    * @return User
+    */
+   public function GetFollowers($followersId)
    {
-        $users = User::whereIn('id',$followers_id)->get();
+        $users = User::whereIn('id',$followersId)->get();
         return $users;
    }
 

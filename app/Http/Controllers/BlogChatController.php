@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Events\MessageSent;
 use App\Http\Resources\BlogChatCollection;
 use App\Http\Resources\LatestMessagesCollection;
-use App\Http\Resources\LatestMessagesResource;
 use App\Services\Blog\BlogChatService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -62,7 +61,15 @@ class BlogChatController extends Controller
      * security ={{"bearer":{}}}
      * )
      */
-
+    /**
+     * getting latest message for specific blog.
+     *
+     * @param $blogId
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
+     */
     public function GetMessages($blogId)
     {
         $userid = Auth::user()->id;
@@ -73,13 +80,13 @@ class BlogChatController extends Controller
         }
         // getting latest messages 
         $messages = $this->blogChatService->GetLatestMessages($blogId);
-        if ($messages->isEmpty())
-        {
+        if ($messages->isEmpty()) {
             return response()->json($messages, 200);
         }
 
         return response()->json(new LatestMessagesCollection($messages), 200);
     }
+
     /**
      * @OA\Get(
      * path="/messaging/conversation/{blog-id-from}/{blog-id-to}",
@@ -104,20 +111,30 @@ class BlogChatController extends Controller
      * security ={{"bearer":{}}}
      * )
      */
+    /**
+     * getting messages  between two blogs.
+     *
+     * @param $blogIdFrom
+     * @param $blogIdTo
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
+     */
     public function Conversation($blogIdFrom, $blogIdTo)
     {
         //getting all conversation messages 
         $messages = $this->blogChatService->GetConversationMessages($blogIdFrom, $blogIdTo);
-        if (!$messages->isEmpty()) 
-        {
+        if (!$messages->isEmpty()) {
             $this->blogChatService->MarkAsRead($messages);
             $response = new BlogChatCollection($messages);
-        }else {
-            $response['messages']= null ;
+        } else {
+            $response['messages'] = null;
         }
 
         return response()->json($response, 200);
     }
+
     /**
      * @OA\Post(
      * path="/messaging/conversation/{blog-id-from}/{blog-id-to}",
@@ -155,6 +172,17 @@ class BlogChatController extends Controller
      * security ={{"bearer":{}}}
      * )
      */
+    /**
+     * store messages in database between two blogs for sending it.
+     *
+     * @param  Request  $request
+     * @param $blogIdFrom
+     * @param $blogIdTo
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
+     */
     public function SendMessage(Request $request, $blogIdFrom, $blogIdTo)
     {
         $userId = Auth::user()->id;
@@ -164,12 +192,13 @@ class BlogChatController extends Controller
             return $this->error_response('Unauthenticated', 'Invalid blog id', 401);
         }
         //creating messages with content 
-        $message =$this->blogChatService->CreateMessage($request->Content, $blogIdFrom, $blogIdTo);
+        $message = $this->blogChatService->CreateMessage($request->Content, $blogIdFrom, $blogIdTo);
 
-        broadcast(new MessageSent($blogIdFrom , $blogIdTo , $message));
+        broadcast(new MessageSent($blogIdFrom, $blogIdTo, $message));
 
         return $this->success_response('Success', 200);
     }
+
     /**
      * @OA\Delete(
      * path="/messaging/conversation/{blog-id-from}/{blog-id-to}",
@@ -195,10 +224,12 @@ class BlogChatController extends Controller
      * )
      */
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified messages from database.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
      */
     public function DeleteMessgaes($blogIdFrom, $blogIdTo)
     {

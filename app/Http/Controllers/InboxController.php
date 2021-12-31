@@ -19,7 +19,7 @@ class InboxController extends Controller
     |
    */
 
-       /**
+    /**
      *	@OA\Get
      *	(
      * 		path="/user/inbox",
@@ -76,17 +76,26 @@ class InboxController extends Controller
      *      )
      * )
      */
+
+
+    /**
+     * get inbox of a user
+     * @return response
+     */
+
     public function GetInbox()
     {
         //get authenticated user
-        $user=auth()->user();
+        $user = auth()->user();
 
-        $ret=(new GetInboxService())->GetInbox($user);
+        //call serice to do the logic
+        $ret = (new GetInboxService())->GetInbox($user);
 
-        $code=$ret[0];
-        $inbox=$ret[1];
+        $code = $ret[0];
+        $inbox = $ret[1];
 
-        return $this->success_response(new InboxCollection($inbox),$code);
+        //return appropriate response
+        return $this->success_response(new InboxCollection($inbox), $code);
     }
 
     /**
@@ -152,20 +161,29 @@ class InboxController extends Controller
      *      )
      * )
      */
+
+    /**
+     * get inbox of a blog
+     * @param string $blogName
+     * @return response
+     */
+
     public function GetBlogInbox($blogName)
     {
 
-        $ret =(new GetBlogInboxService())->GetBlogInbox($blogName,auth()->user());
+        //call serice to do the logic
+        $ret = (new GetBlogInboxService())->GetBlogInbox($blogName, auth()->user());
 
-        $code=$ret[0];
-        $inbox=$ret[1];
+        $code = $ret[0];
+        $inbox = $ret[1];
 
-        if($code==403)
-            return $this->error_response(Errors::ERROR_MSGS_403,'user not a member of the blog',403);
+        //return appropriate response
+        if ($code == 403)
+            return $this->error_response(Errors::ERROR_MSGS_403, 'user not a member of the blog', 403);
         else if ($code == 404)
-            return $this->error_response(Errors::ERROR_MSGS_404,'Blog name is not available!',404);
+            return $this->error_response(Errors::ERROR_MSGS_404, 'Blog name is not available!', 404);
         else
-            return $this->success_response(new InboxCollection($inbox),$code);
+            return $this->success_response(new InboxCollection($inbox), $code);
     }
 
     /**
@@ -190,23 +208,39 @@ class InboxController extends Controller
      *     	)
      * )
      */
+
+    /**
+     * delete inbox of a user
+     * @return response
+     */
+
     public function DeleteInbox()
     {
-        $code=(new DeleteInboxService())->DeleteInbox(auth()->user());
-    
-        return $this->success_response('all messages are delete',$code);
+        //call serice to do the logic
+        $code = (new DeleteInboxService())->DeleteInbox(auth()->user());
+
+
+        //return appropriate response
+        return $this->success_response('all messages are delete', $code);
     }
+
+    /**
+     * delete inbox of a blog
+     * @param string $blogName
+     * @return response
+     */
 
     public function DeleteBlogInbox($blogName)
     {
-        $code=(new DeleteInboxService())->DeleteBlogInbox($blogName,auth()->user());
-        
-        if($code==403)
-            return $this->error_response(Errors::ERROR_MSGS_403,'user not a member of the blog',403);
-        else if ($code == 404)
-            return $this->error_response(Errors::ERROR_MSGS_404,'Blog name is not available!',404);
-        else
-            return $this->success_response('all blog messages are delete',$code);
-    }
+        //call serice to do the logic
+        $code = (new DeleteInboxService())->DeleteBlogInbox($blogName, auth()->user());
 
+        //return appropriate response
+        if ($code == 403)
+            return $this->error_response(Errors::ERROR_MSGS_403, 'user not a member of the blog', 403);
+        else if ($code == 404)
+            return $this->error_response(Errors::ERROR_MSGS_404, 'Blog name is not available!', 404);
+        else
+            return $this->success_response('all blog messages are delete', $code);
+    }
 }

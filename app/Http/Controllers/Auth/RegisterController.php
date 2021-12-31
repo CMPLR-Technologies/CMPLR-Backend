@@ -33,7 +33,7 @@ class RegisterController extends Controller
       $this->RegisterService = $RegisterService;
    }
 
-  /**
+   /**
     * @OA\Post(
     * path="/register/validate",
     * summary="Register to tumblr",
@@ -80,11 +80,11 @@ class RegisterController extends Controller
     *     )   
     */
    /**
-   * This Function used to validate the Registertion request
-   * @param  RegisterRequest
-   * 
-   * @return response
-   */
+    * This Function used to validate the Registertion request
+    * @param  RegisterRequest
+    * 
+    * @return response
+    */
    public function ValidateRegister(ValidateRegisterRequest $request)
    {
       return $this->success_response((['email' => $request->email]));
@@ -134,23 +134,23 @@ class RegisterController extends Controller
     *      @OA\Property(property="age", type="integer", example=26),
     *    ),
     * ),
-     * @OA\Response(
-     *    response=201,
-     *    description="Successfully",
-     *  @OA\JsonContent(
-     *           type="object",
-     *           @OA\Property(property="Meta", type="object",
-     *           @OA\Property(property="Status", type="integer", example=200),
-     *           @OA\Property(property="msg", type="string", example="success"),
-     *           ),
-     *           @OA\Property(property="response", type="object",
-     *              @OA\Property(property="email", type="string",format="text", example="ahmed.mohamed.abdelhamed2@gmail.com"),
-     *              @OA\Property(property="blog_name", type="string", format="text", example="ahmed123"),
-     *              @OA\Property(property="age", type="integer", example=26),
-     *              @OA\Property(property="token", type="string", format="text", example="4Y9ZEJqWEABGHkzEXAqNI1F9UZKtKeZVdIChNXBapp9w7XP6mwQZeBXEebMU"),
-     *           ),
-     * ),
-     * ),
+    * @OA\Response(
+    *    response=201,
+    *    description="Successfully",
+    *  @OA\JsonContent(
+    *           type="object",
+    *           @OA\Property(property="Meta", type="object",
+    *           @OA\Property(property="Status", type="integer", example=200),
+    *           @OA\Property(property="msg", type="string", example="success"),
+    *           ),
+    *           @OA\Property(property="response", type="object",
+    *              @OA\Property(property="email", type="string",format="text", example="ahmed.mohamed.abdelhamed2@gmail.com"),
+    *              @OA\Property(property="blog_name", type="string", format="text", example="ahmed123"),
+    *              @OA\Property(property="age", type="integer", example=26),
+    *              @OA\Property(property="token", type="string", format="text", example="4Y9ZEJqWEABGHkzEXAqNI1F9UZKtKeZVdIChNXBapp9w7XP6mwQZeBXEebMU"),
+    *           ),
+    * ),
+    * ),
     *       @OA\Response(
     *              response=422,
     *              description="Invalid Data",
@@ -170,37 +170,36 @@ class RegisterController extends Controller
       // create user with given parameters
       $user = $this->RegisterService->CreateUser($request->email, $request->age, $request->password);
       if (!$user)
-         return $this->error_response(Errors::ERROR_MSGS_500,Errors::CREATE_ERROR,500);
+         return $this->error_response(Errors::ERROR_MSGS_500, Errors::CREATE_ERROR, 500);
 
       // create blog with given parameters
-      $blog = $this->RegisterService->CreateBlog($request->blog_name,$user);
+      $blog = $this->RegisterService->CreateBlog($request->blog_name, $user);
       if (!$blog)
-         return $this->error_response(Errors::ERROR_MSGS_500,Errors::CREATE_ERROR,500);
+         return $this->error_response(Errors::ERROR_MSGS_500, Errors::CREATE_ERROR, 500);
 
       // link user with blog
-      $link_user_blog = $this->RegisterService->LinkUserBlog($user,$blog);
-      if(!$link_user_blog)
-         return $this->error_response(Errors::ERROR_MSGS_500,'link error',500);
-      
-      //create the access token to the user   
-      $generate_token = $this->RegisterService->GenerateToken($user);
-      if (!$generate_token)
-         return $this->error_response(Errors::ERROR_MSGS_500,ERRORS::GENERATE_TOKEN_ERROR,500);
+      $linkUserBlog = $this->RegisterService->LinkUserBlog($user, $blog);
+      if (!$linkUserBlog)
+         return $this->error_response(Errors::ERROR_MSGS_500, 'link error', 500);
 
-      $request['blog']=$blog;
+      //create the access token to the user   
+      $generateToken = $this->RegisterService->GenerateToken($user);
+      if (!$generateToken)
+         return $this->error_response(Errors::ERROR_MSGS_500, ERRORS::GENERATE_TOKEN_ERROR, 500);
+
+      $request['blog'] = $blog;
       $request['token'] = $user->token();
-      
+
       // this method will return true if authentication was successful
-      if (Auth::attempt($request->only('email', 'age', 'password'))) 
-      {
+      if (Auth::attempt($request->only('email', 'age', 'password'))) {
          $user = Auth::user();
          $request['user'] = $user;
-        // Fire Registered event
-        event(new Registered($user)); 
-        $resource =  new RegisterResource($request);
-        return $this->success_response($resource,201);
+         // Fire Registered event
+         event(new Registered($user));
+         $resource =  new RegisterResource($request);
+         return $this->success_response($resource, 201);
       }
 
-      return $this->error_response(Errors::ERROR_MSGS_500,Errors::CREATE_ERROR,$code= 500);
+      return $this->error_response(Errors::ERROR_MSGS_500, Errors::CREATE_ERROR, $code = 500);
    }
 }

@@ -13,23 +13,23 @@ class UserPostConroller extends Controller
 {
     /*
     |--------------------------------------------------------------------------
-    | Userpost Controller
+    | UserPost Controller
     |--------------------------------------------------------------------------|
     | This controller handles interactions of the user with posts  
     |
    */
     protected $userPostService;
-    protected $notification ;
+    protected $notification;
 
     /**
      * Instantiate a new controller instance.
      *
      * @return void
      */
-    public function __construct(UserPostService $userPostService , NotificationsService $notification)
+    public function __construct(UserPostService $userPostService, NotificationsService $notification)
     {
         $this->userPostService = $userPostService;
-        $this->notification = $notification ;
+        $this->notification = $notification;
     }
     /**
      * @OA\POST(
@@ -74,6 +74,15 @@ class UserPostConroller extends Controller
      * security ={{"bearer":{}}}
      * )
      */
+    /**
+     * for user like  specific post
+     *
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
+     */
     public function Like(Request $request)
     {
         //getting data 
@@ -81,27 +90,24 @@ class UserPostConroller extends Controller
         $user = auth()->user();
 
         if (!$user->id)
-        {
-            return $this->error_response(Errors::ERROR_MSGS_401,'Unauthenticated',401);
+            return $this->error_response(Errors::ERROR_MSGS_401, 'Unauthenticated', 401);
 
-        }
         if (!$postId)
-        {
-            return $this->error_response(Errors::ERROR_MSGS_404,'Post Id Is required',404);
-        }
+            return $this->error_response(Errors::ERROR_MSGS_404, 'Post Id Is required', 404);
 
-        if (!$this->userPostService->UserLikePost($user->id , $postId))
-        {
-            return $this->error_response(Errors::ERROR_MSGS_404,'Note Not Found',404);
+        if ($this->userPostService->IsLikePost($user->id, $postId))
+            return $this->error_response(Errors::ERROR_MSGS_400, 'User already Like the post', 400);
 
-        }
-        $toBlogId = Post::select('blog_id')->where('id' , $postId)->first();
-       
-        $this->notification->CreateNotification($user->primary_blog_id ,  $toBlogId->blog_id ,'like' ,$postId );
 
-        return response()->json( ['message'=>'Success'], 200);
+        if (!$this->userPostService->UserLikePost($user->id, $postId))
+            return $this->error_response(Errors::ERROR_MSGS_404, 'Note Not Found', 404);
 
-       
+
+        $toBlogId = $this->userPostService->GetPostBlogId($postId);
+
+        $this->notification->CreateNotification($user->primary_blog_id,  $toBlogId->blog_id, 'like', $postId);
+
+        return response()->json(['message' => 'Success'], 200);
     }
 
     /**
@@ -145,22 +151,32 @@ class UserPostConroller extends Controller
      * security ={{"bearer":{}}}
      * )
      */
+    /**
+     * for user unlike  specific post
+     *
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
+     */
     public function UnLike(Request $request)
     {
         $postId = $request->input('id');
         $userId = auth()->user()->id;
-        if (!$userId)
-        {
-            return $this->error_response(Errors::ERROR_MSGS_401,'Unauthenticated',401);
+        if (!$userId) {
+            return $this->error_response(Errors::ERROR_MSGS_401, 'Unauthenticated', 401);
+        }
+        if (!$postId) {
+            return $this->error_response(Errors::ERROR_MSGS_404, 'Post Id Is required', 404);
+        }
+        if (!$this->userPostService->UserUnlikePost($userId, $postId)) {
+            return $this->error_response(Errors::ERROR_MSGS_404, 'note Not Found', 404);
+        }
 
-        }
-        if (!$postId)
-        {
-            return $this->error_response(Errors::ERROR_MSGS_404,'Post Id Is required',404);
-        }
-        if (!$this->userPostService->UserUnlikePost($userId, $postId)){
-            return $this->error_response(Errors::ERROR_MSGS_404,'note Not Found',404);
-        }
+        $toBlogId = $this->userPostService->GetPostBlogId($postId);
+        $this->notification->DeleteNotification(auth()->user()->primary_blog_id,  $toBlogId->blog_id, 'like', $postId);
+
         return response()->json(['message' => 'success'], 200);
     }
     /**
@@ -209,32 +225,36 @@ class UserPostConroller extends Controller
      * security ={{"bearer":{}}}
      *)
      **/
+    /**
+     * for user reply for specific post
+     *
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
+     */
     public function UserReply(Request $request)
     {
-         //getting data 
-         $postId = $request->post_id;
-         $user = auth()->user();
-         $replyText = $request->reply_text ;
+        //getting data 
+        $postId = $request->post_id;
+        $user = auth()->user();
+        $replyText = $request->reply_text;
 
-         if (!$user->id)
-         {
-             return $this->error_response(Errors::ERROR_MSGS_401,'Unauthenticated',401);
-         }
-         if (!$postId)
-         {
-             return $this->error_response(Errors::ERROR_MSGS_404,'Post Id Is required',404);
-         }
-         if (!$this->userPostService->UserReplyPost($user->id , $postId ,$replyText))
-         {
-             return $this->error_response(Errors::ERROR_MSGS_404,'Note Not Found',404);
- 
-         }
-         
-         $toBlogId = Post::select('blog_id')->where('id' , $postId)->first();
-       
-         $this->notification->CreateNotification($user->primary_blog_id ,  $toBlogId->blog_id ,'reply' ,$postId );
- 
-         return response()->json( ['message'=>'Success'], 200);
- 
+        if (!$user->id) {
+            return $this->error_response(Errors::ERROR_MSGS_401, 'Unauthenticated', 401);
+        }
+        if (!$postId) {
+            return $this->error_response(Errors::ERROR_MSGS_404, 'Post Id Is required', 404);
+        }
+        if (!$this->userPostService->UserReplyPost($user->id, $postId, $replyText)) {
+            return $this->error_response(Errors::ERROR_MSGS_404, 'Note Not Found', 404);
+        }
+
+        $toBlogId = Post::select('blog_id')->where('id', $postId)->first();
+
+        $this->notification->CreateNotification($user->primary_blog_id,  $toBlogId->blog_id, 'reply', $postId);
+
+        return response()->json(['message' => 'Success'], 200);
     }
 }

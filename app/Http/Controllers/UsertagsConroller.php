@@ -70,6 +70,15 @@ class UserTagsConroller extends Controller
      *       ),
      *)
      **/
+    /**
+     * user follow specific tag
+     *
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
+     */
     public function FollowTag(Request $request)
     {
         // getting current user
@@ -124,6 +133,15 @@ class UserTagsConroller extends Controller
      *       ),
      *)
      **/
+    /**
+     * user unfollow specific tag
+     *
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
+     */
     public function UnFollowTag(Request $request)
     {
         // getting current user
@@ -139,6 +157,15 @@ class UserTagsConroller extends Controller
         return $this->success_response('Success', 200);
     }
 
+    /**
+     * getting info of specific tag
+     *
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Yousif Ahmed 
+     */
     public function GetTagInfo(Request $request)
     {
         $tag = $request->tag;
@@ -165,6 +192,13 @@ class UserTagsConroller extends Controller
         return response()->json($response, 200);
     }
 
+    /**
+     * Get the tags that the user follows
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Abdullah Adel
+     */
     public function GetFollowedTags()
     {
         // getting current user
@@ -191,6 +225,13 @@ class UserTagsConroller extends Controller
         return $response;
     }
 
+    /**
+     * Get recommended tags for explore
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Abdullah Adel
+     */
     public function GetRecommendedTags()
     {
         // Check if there is an authenticated user
@@ -213,6 +254,13 @@ class UserTagsConroller extends Controller
         return $response;
     }
 
+    /**
+     * Get trending tags for explore
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Abdullah Adel
+     */
     public function GetTrendingTags()
     {
         // Check if there is an authenticated user

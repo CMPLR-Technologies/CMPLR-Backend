@@ -24,7 +24,6 @@ use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\BlogChatController;
 use App\Http\Controllers\UsertagsConroller;
 use Illuminate\Support\Facades\Route;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,7 +55,7 @@ Route::get('post/tagged', [PostsController::class, 'GetTaggedPosts']);
 Route::get('tag/info', [UserTagsConroller::class, 'GetTagInfo']);
 
 // Search
-Route::get('search/{query}', [SearchController::class, 'search']);
+Route::get('search/{query}', [SearchController::class, 'Search']);
 
 // Follow/Unfollow blog
 Route::post('/user/follow', [UserBlogController::class, 'follow'])->middleware('auth:api');
@@ -76,12 +75,12 @@ Route::get('/reset_password/{token}', [ResetPasswordController::class, 'GetReset
 Route::post('/login', [LoginController::class, 'Login']);
 Route::post('/logout', [LoginController::class, 'Logout'])->middleware('auth:api');
 Route::post('email/verification-notification', [EmailVerificationController::class, 'SendVerificationEmail'])->name('verification.send')->middleware('auth:api');
-Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'Verify'])->middleware(['auth', 'signed'])->name('verification.verify');
+Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'Verify'])->middleware(['auth:api'])->name('verification.verify');
 
 // Settings routes
 Route::middleware('auth:api')->group(function () {
-    Route::get('blog/{blog_name}/settings', [BlogSettingsController::class, 'getBlogSettings'])->name('getBlogSettings');
-    Route::put('blog/{blog_name}/settings/save', [BlogSettingsController::class, 'saveBlogSettings'])->name('saveBlogSettings');
+    Route::get('blog/{blog_name}/settings', [BlogSettingsController::class, 'GetBlogSettings']);
+    Route::put('blog/{blog_name}/settings/save', [BlogSettingsController::class, 'SaveBlogSettings']);
 
     Route::get('user/info', [UserController::class, 'GetUserInfo'])->name('GetUser_Info');
 
@@ -117,16 +116,18 @@ Route::get('/user/inbox/{blogName}', [InboxController::class, 'GetBlogInbox'])->
 Route::delete('/user/inbox/', [InboxController::class, 'DeleteInbox'])->middleware('auth:api');
 Route::delete('/user/inbox/{blogName}', [InboxController::class, 'DeleteBlogInbox'])->middleware('auth:api');
 
-
 // Posts
 Route::middleware('auth:api')->group(function () {
-    Route::post('/posts', [PostsController::class, 'create'])->name('CreatePost');
+    Route::post('posts', [PostsController::class, 'create'])->name('CreatePost');
     Route::get('edit/{blog_name}/{post_id}', [PostsController::class, 'edit'])->name('EditPost');
     Route::put('update/{blog_name}/{post_id}', [PostsController::class, 'update'])->name('UpdatePost');
+    Route::get('posts/{blogName}/draft', [PostsController::class, 'GetDraft'])->name('post.get.draft');
+    Route::put('posts/{blogName}/draft', [PostsController::class, 'PublishDraft'])->name('post.publish.draft');
     Route::get('posts/radar/', [PostsController::class, 'GetRadar'])->name('post.get.radar');
     Route::delete('post/delete/{post_id}', [PostsController::class, 'destroy'])->name('post.delete');
     Route::delete('user/likes', [PostsController::class, 'GetUserLikes'])->name('post.GetUserLikes');
 });
+
 Route::get('user/dashboard/', [UserController::class, 'GetDashboard'])->name('Get.Dashboard');
 Route::get('posts/{post_id}', [PostsController::class, 'GetPostById'])->name('post.get.id');
 Route::middleware('guest')->get('posts/view/{blog_name}', [PostsController::class, 'GetBlogPosts'])->name('post.get.blogs');

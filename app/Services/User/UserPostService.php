@@ -1,12 +1,14 @@
 <?php
+
 namespace App\Services\User;
 
 use App\Models\PostNotes;
+use App\Models\Posts;
 use Illuminate\Support\Facades\DB;
 
 class UserPostService
 {
- /*
+    /*
      |--------------------------------------------------------------------------
      | UserPostService
      |--------------------------------------------------------------------------|
@@ -23,8 +25,9 @@ class UserPostService
      * @return bool 
      * @author Yousif Ahmed 
      */
-    public function UserLikePost(int $userId, int $postId):bool
+    public function UserLikePost(int $userId, int $postId): bool
     {
+
         try {
             PostNotes::create([
                 'user_id' =>  $userId,
@@ -34,9 +37,9 @@ class UserPostService
         } catch (\Throwable $th) {
             return false;
         }
-        return true ;
+        return true;
     }
-    
+
     /**
      * user unlike post 
      * 
@@ -46,19 +49,30 @@ class UserPostService
      * @return bool 
      * @author Yousif Ahmed 
      */
-    public function UserUnlikePost(int $userId, int $postId):bool
+    public function UserUnlikePost(int $userId, int $postId): bool
     {
-        $result = false ;
+        $result = false;
         try {
-           $result= DB::table('post_notes')->where(['user_id'=> $userId,'post_id'=> $postId])->delete();
-                
+            $result = DB::table('post_notes')->where(['user_id' => $userId, 'post_id' => $postId])->delete();
         } catch (\Throwable $th) {
             return false;
         }
-        return $result ;
+        return $result;
     }
-
-     /**
+    /**
+     * user already like post 
+     * 
+     * @param User user
+     * @param integer postId 
+     *
+     * @return bool 
+     * @author Yousif Ahmed 
+     */
+    public function IsLikePost(int $userId, int $postId): bool
+    {
+        return (PostNotes::where(['user_id' => $userId, 'post_id' => $postId])->first()) ? true : false;
+    }
+    /**
      * user reply post 
      * 
      * @param User $user
@@ -67,20 +81,36 @@ class UserPostService
      * @return bool 
      * @author Yousif Ahmed 
      */
-    public function UserReplyPost($userId,$postId ,$replyText):bool
+    public function UserReplyPost($userId, $postId, $replyText): bool
     {
         try {
             PostNotes::create([
                 'user_id' =>  $userId,
                 'post_id' => $postId,
                 'type' => 'reply',
-                'content'=>$replyText
+                'content' => $replyText
             ]);
         } catch (\Throwable $th) {
             return false;
         }
-        return true ;
+        return true;
     }
-   
+    /**
+     * getting user blog id of the post 
+     * 
+     * @param $postId
+     *
+     * @return $blogId 
+     * @author Yousif Ahmed 
+     */
+    public function GetPostBlogId($postId)
+    {
+        $blogId = null ;
+        try {
+            $blogId =Posts::select('blog_id')->where('id', $postId)->first();
+        } catch (\Throwable $th) {
+            return null;
+        }
+        return $blogId ;
+    }
 }
-

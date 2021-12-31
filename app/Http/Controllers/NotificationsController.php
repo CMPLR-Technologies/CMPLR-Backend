@@ -18,7 +18,6 @@ use Illuminate\Http\Request;
 
 class NotificationsController extends Controller
 {
-    //
     /**
      * @OA\Get(
      *   path="/notifications",
@@ -225,51 +224,45 @@ class NotificationsController extends Controller
      *  security ={{"bearer":{}}},
      * )
      */
-
-    
     /**
      * get notifications of a certain blog
-     * 
+     * @param string $blogName
      * @return response
      */
-
     public function GetNotifications($blogName)
     {
         //call service
-        [$code,$notis]=(new NotificationsService())->GetNotifications($blogName,auth()->user());
+        [$code, $notis] = (new NotificationsService())->GetNotifications($blogName, auth()->user());
 
         // $notis = Notification::latest()->get()->groupBy(function($item){ return $item->created_at->format('d-M-y'); });
         // $notis=Notification::latest()->get();
 
         //return the response
-        if($code==404)
-            return $this->error_response(Errors::ERROR_MSGS_404,'blogName not found',404);
-        else if($code==403)
-            return $this->error_response(Errors::ERROR_MSGS_403,'user is not a member of the blog',403);
+        if ($code == 404)
+            return $this->error_response(Errors::ERROR_MSGS_404, 'blogName not found', 404);
+        else if ($code == 403)
+            return $this->error_response(Errors::ERROR_MSGS_403, 'user is not a member of the blog', 403);
         else
-            return $this->success_response(new NotificationCollection($notis),200);
-
+            return $this->success_response(new NotificationCollection($notis), 200);
     }
 
     /**
      * set a notification to be seen
-     * 
+     * @param int $notificationId
      * @return response
      */
-
     public function SeeNotification($notificationId)
     {
         //call service to do the logic
-        $code=(new NotificationsService())->SeeNotification($notificationId,auth()->user());
-    
-        //return the response
-        if($code==404)
-            return $this->error_response(Errors::ERROR_MSGS_404,'notification id not found',404);
-        else if($code==403)
-            return $this->error_response(Errors::ERROR_MSGS_403,'user is not a member of the blog',403);
-        else
-            return $this->success_response('the notification is set as seen',200);
+        $code = (new NotificationsService())->SeeNotification($notificationId, auth()->user());
 
+        //return the response
+        if ($code == 404)
+            return $this->error_response(Errors::ERROR_MSGS_404, 'notification id not found', 404);
+        else if ($code == 403)
+            return $this->error_response(Errors::ERROR_MSGS_403, 'user is not a member of the blog', 403);
+        else
+            return $this->success_response('the notification is set as seen', 200);
     }
 
     /**
@@ -277,58 +270,52 @@ class NotificationsController extends Controller
      * 
      * @return response
      */
-
     public function GetUnseens()
     {
         //call service to do the logic
-        $count=(new NotificationsService())->GetUnseens(auth()->user());
-    
+        $count = (new NotificationsService())->GetUnseens(auth()->user());
+
         //return the response
-        return $this->success_response($count,200);
+        return $this->success_response($count, 200);
     }
 
     /**
      * store user's firebase token 
-     * 
+     * @param Request $request
      * @return response
      */
-
     public function StoreToken(Request $request)
     {
-        $this->validate($request,[
-            'token'=>'required'
+        $this->validate($request, [
+            'token' => 'required'
         ]);
 
         //call service to do the logic
-        $count=(new NotificationsService())->StoreToken(auth()->user(),$request->token);
-    
+        $count = (new NotificationsService())->StoreToken(auth()->user(), $request->token);
+
         //return the response
-        return $this->success_response('token stored',200);
+        return $this->success_response('token stored', 200);
     }
 
     /**
      * get last ndays activity for a certain blog
-     * 
+     * @param Request $request
+     * @param string $blogName
      * @return response
      */
-
-
-    public function GetLastNdaysActivity(Request $request,$blogName)
+    public function GetLastNdaysActivity(Request $request, $blogName)
     {
         //validate input parameters
-        $this->validate($request,[
+        $this->validate($request, [
             'lastNdays' => 'required'
         ]);
 
-        [$code,$dates]=(new NotificationsService())->GetLastNdaysActivity($request->lastNdays,$blogName);
-            
+        [$code, $dates] = (new NotificationsService())->GetLastNdaysActivity($request->lastNdays, $blogName);
+
         //return the response
-        if($code==404)
-            return $this->error_response(Errors::ERROR_MSGS_404,'blogName not found',404);
+        if ($code == 404)
+            return $this->error_response(Errors::ERROR_MSGS_404, 'blogName not found', 404);
         else
-            return $this->success_response(new LastNdaysActivityCollection($dates),200);
+            return $this->success_response(new LastNdaysActivityCollection($dates), 200);
     }
-
-
-
 }

@@ -65,9 +65,6 @@ class RegisterRequest extends FormRequest
         ];
     }
 
-
-
-
     /** 
      * 
      * this function overrides the failedValidation in validator class 

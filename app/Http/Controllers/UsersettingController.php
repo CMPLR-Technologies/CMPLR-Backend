@@ -90,7 +90,6 @@ class UsersettingController extends Controller
     /**
      * Get AccountSetting Function Responisble for 
      * get all settings(account,dashboard,notification) to user
-     * @param 
      * 
      * @return Response 
      */
@@ -168,7 +167,7 @@ class UsersettingController extends Controller
         return $this->success_response('', 200);
     }
 
-        /**
+    /**
      *	@OA\PUT
      *	(
      * 		path="settings/change_email",
@@ -275,7 +274,7 @@ class UsersettingController extends Controller
      */
     /**
      * change Password of Account
-     * @param ChangeEmailRequest
+     * @param ChangeEmailRequest $request
      *
      * @return response
      *

@@ -12,24 +12,20 @@ use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PostsService
 {
-
-
-
     /**
      * Get Blog from BlogName
      *
      * @param string $blog_name
      * 
-     * @return object
+     * @return Blog
      */
-    public function GetBlogData(string $blog_name)
+    public function GetBlogData(string $blogName)
     {
-
-        $blog = Blog::where('blog_name', $blog_name)->first();
-
+        $blog = Blog::where('blog_name', $blogName)->first();
         return $blog;
     }
 
@@ -42,12 +38,12 @@ class PostsService
      */
     public function createPost(array $data)
     {
-       // try {
+        try {
             $post = Posts::create($data);
             return $post;
-        //} catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             return null;
-        //}
+        }
     }
 
     /**
@@ -57,33 +53,62 @@ class PostsService
      * 
      * @return Posts
      */
-    public function GetPostData(int $post_id)
+    public function GetPostData(int $postId)
     {
-        $post = Posts::where('id', $post_id)->first();
+        $post = Posts::where('id', $postId)->first();
         return $post;
+    }
+
+    /**
+     * GET blog's draft posts
+     *
+     * @param int $blogId
+     * 
+     * @return Posts
+     * 
+     * @author Abdullah Adel
+     */
+    public function GetDraftPosts(int $blogId)
+    {
+        return Posts::where([['state', '=', 'draft'], ['blog_id', '=', $blogId]])->orderBy('updated_at', 'DESC')->paginate(Config::PAGINATION_LIMIT);
+    }
+
+    /**
+     * Publish blog's draft post
+     *
+     * @param int $blogId
+     * @param int $postId
+     * 
+     * @return boolean
+     * 
+     * @author Abdullah Adel
+     */
+    public function PublishDraftPost(int $blogId, int $postId)
+    {
+        return Posts::where([['state', '=', 'draft'], ['blog_id', '=', $blogId], ['id', '=', $postId]])->update(['state' => 'publish']);
     }
 
     /**
      * GET Random Post
      *
-     * @param 
+     * @param $userBlogs
      * 
      * @return Posts
      */
-    public function GetRandomPost()
+    public function GetRandomPost($userBlogs)
     {
-        $post = Posts::where('state', '=', 'publish')->inRandomOrder()->limit(1)->first();
+        $post = Posts::where('state', '=', 'publish')->whereNotIn('blog_id', $userBlogs)->inRandomOrder()->limit(1)->first();
         if (!$post)
             return null;
         return $post;
     }
 
     /**
-     * GET Random Posts
+     * GET Random Posts for explore
      *
-     * @param 
-     * 
      * @return Posts
+     * 
+     * @author Abdullah Adel
      */
     public function GetRandomPosts()
     {
@@ -98,44 +123,56 @@ class PostsService
      * @param int $blog_id
      *@return Posts
      */
-    public function MiniViewPostData(int $blog_id)
+    public function MiniViewPostData(int $blogId)
     {
-        $posts = Posts::select('id', 'content')->where('blog_id', $blog_id)->get();
-        // ->whereIn('type', ['photos', 'mixed'])->get();
+        $posts = Posts::select('id', 'content')->where('blog_id', $blogId)->get();
         return $posts;
     }
+
+    /**
+     * This function is responsible for check if this blog is blocked by me
+     */
+
 
     /**
      * This Function retrieve blogsdata needed
      * @param int $blog_id
      *@return Posts
      */
-
     public function MiniViewBlogData(Blog $blog)
     {
         $data1['blog_name'] = $blog->blog_name;
         $data1['avatar'] = $blog->settings->avatar;
         $data1['title'] = $blog->title;
         $data1['header_image'] = $blog->settings->header_image;
-        if( $blog->users()->first())
+        // check if the this blog is primary
+        if ($blog->users()->first())
             $data1['is_primary'] = $blog->users()->first()->primary_blog_id == $blog->id;
-        else 
-            $data1['is_primary'] = false; 
+        else
+            $data1['is_primary'] = false;
         $data1['description'] = $blog->settings->description;
         $data1['is_followed'] = $blog->isfollower();
+        $data1['is_blocked'] = $blog->IsBlocked();
         return $data1;
     }
 
+
+    /**
+     * This function for MiniProfileview 
+     * get 3 images of different posts of blog
+     * @param array $posts
+     * @return array
+     */
     public function GetViews($posts)
     {
         $views = [];
         $size = 0;
-        $img_string = '<img src=';
+        $imgString = '<img src=';
         $removed = '<img src="';
         // loop over posts
         foreach ($posts as $post) {
             // check that post has image
-            if (strpos($post['content'], $img_string) !== false) {
+            if (strpos($post['content'], $imgString) !== false) {
                 // regex to get all images in array
                 preg_match_all('/<img[^>]+>/i', $post['content'], $result);
                 // check that image array is not empty
@@ -163,6 +200,7 @@ class PostsService
      * @param $postId
      * @param $postTags
      * 
+     * @return void
      * @author Yousif Ahmed
      */
     public function AddPostTags($postId, $postTags)
@@ -193,7 +231,6 @@ class PostsService
      * @return Posts
      * @author Yousif Ahmed
      */
-
     public function GetPostsWithTag($tag)
     {
         $postsTags = PostTags::where('tag_name', $tag)->orderBy('created_at', 'DESC')->get();
@@ -207,18 +244,24 @@ class PostsService
      * 
      * @param $tag 
      * 
-     * @return $post
+     * @return Posts $post
      * 
      */
-    public function GetPostWithTagPhoto ($tag)
+    public function GetPostWithTagPhoto($tag)
     {
         $postsTags = PostTags::where('tag_name', $tag)->orderBy('created_at', 'DESC')->get();
         $post = Posts::wherein('id', $postsTags->pluck('post_id'))->where('type', 'photos')->first();
-        return $post ;
-
+        return $post;
     }
 
-    public function UpdatePost ($post,$data)
+    /**
+     * this function responsible for update post
+     * @param Posts $post
+     * @param array $data
+     * 
+     * @return Posts
+     */
+    public function UpdatePost($post, $data)
     {
         try {
             $is_updated =  $post->update($data);;
@@ -226,5 +269,49 @@ class PostsService
             return null;
         }
         return  $is_updated;
+    }
+
+    /**
+     * This function used to delete Post
+     * 
+     */
+    public function DeletePost(Posts $post)
+    {
+        try {
+            $is_deleted = $post->delete();
+        } catch (\Throwable $th) {
+            return null;
+        }
+        return $is_deleted;
+    }
+
+    /**
+     * this function is responsible for get blog by blog_name
+     * @param string $blog_name
+     * @return Blog
+     */
+    public function GetBlogByName($blogName)
+    {
+        $blog = Blog::where('blog_name', $blogName)->first();
+        return $blog;
+    }
+
+    /**
+     * this function responsible for get posts by blog id
+     * @param int $blog_id
+     * @return Posts 
+     */
+    public function GetPostsOfBlog(int $blogId)
+    {
+        if (auth('api')->check()) {
+            $user = auth('api')->user();
+            if ((!!DB::table('follows')->where('user_id', $user->id)->where('blog_id', $blogId)->first()) || (!!BlogUser::where('user_id', $user->id)->where('blog_id', $blogId)->first()))
+                $posts = Posts::where('blog_id', $blogId)->orderBy('updated_at', 'DESC')->paginate(Config::PAGINATION_LIMIT);
+            else
+                $posts =  Posts::where('blog_id', $blogId)->where('state', '=', 'publish')->orderBy('updated_at', 'DESC')->paginate(Config::PAGINATION_LIMIT);
+        } else {
+            $posts =  Posts::where('blog_id', $blogId)->where('state', '=', 'publish')->orderBy('updated_at', 'DESC')->paginate(Config::PAGINATION_LIMIT);
+        }
+        return $posts;
     }
 }

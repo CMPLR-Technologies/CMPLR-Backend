@@ -89,7 +89,11 @@ class UserBlogController extends Controller
      */
 
 
-    //this function creates a new blog
+    /**
+     * this function creates a new blog
+     * @param Request $request
+     * @return response
+     */
     public function create(Request $request)
     {
 
@@ -161,7 +165,12 @@ class UserBlogController extends Controller
      * )
      */
 
-    //this method deletes a specific blog 
+    /**
+     * this method deletes a specific blog 
+     * @param String blogName
+     * @param Request request
+     * @return response
+     */
     public function destroy($blogName, Request $request)
     {
         //validate the request parameters
@@ -248,6 +257,11 @@ class UserBlogController extends Controller
      * )
      */
 
+    /**
+     * this method follows a blog
+     * @param Request request
+     * @return response
+     */
     public function follow(Request $request)
     {
         //validate the request parameters
@@ -337,6 +351,12 @@ class UserBlogController extends Controller
      *     ),
      * )
      */
+
+    /**
+     * this method unfollows a blog
+     * @param Request request
+     * @return response
+     */
     public function unfollow(Request $request)
     {
         //validate the request parameters
@@ -376,7 +396,7 @@ class UserBlogController extends Controller
      * 		summary="User setting",
      * 		description="Retrieve following blogs for User.",
      * 		operationId="Retrieve followings",
-     * 		tags={"User"},
+     * 		tags={"Users"},
      * @OA\Response(
      *    response=200,
      *    description="Successfully",
@@ -417,6 +437,7 @@ class UserBlogController extends Controller
      * security ={{"bearer":{}}}
      * )
      */
+
     /**
      * This function is responsible for get the blogs that user follows
      * @param 
@@ -427,16 +448,22 @@ class UserBlogController extends Controller
         //get auth user
         $user = auth('api')->user();
         // get blogs id that authenticated user follows
-        $blog_ids = (new FollowBlogService())->GetBlogIds($user->id);
+        $blogIds = (new FollowBlogService())->GetBlogIds($user->id);
         //get needed info about these blogs
-        $blogs = Blog::whereIn('id', $blog_ids)->paginate(Config::PAGINATION_BLOGS_LIMIT);
+        $blogs = Blog::whereIn('id', $blogIds)->paginate(Config::PAGINATION_BLOGS_LIMIT);
         return $this->success_response(new BlogCollection($blogs));
     }
 
-
+    /**
+     * this method return a blog info using blog_id
+     * @param int @blogId
+     * @return response
+     */
     public function GetBlogInfo($blogId)
     {
+        //get the blog
         $blog = Blog::find($blogId);
+        //return appropriate the response
         return $this->success_response(new BlogResource($blog), 200);
     }
 }

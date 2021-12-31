@@ -6,7 +6,6 @@ use App\Models\Blog;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Arr;
 
 class PostsFactory extends Factory
 {
@@ -23,18 +22,19 @@ class PostsFactory extends Factory
         foreach ($paragraphs as $para) {
             $content .= "<p>{$para}</p>";
         }
+        $content .= "<img src=\"" . $this->faker->imageUrl() . "\" alt=\"Post Content\" >";
         $blog = Blog::inRandomOrder()->first();
 
         return [
-            'type' => $this->faker->randomElement(['text', 'photos','quotes','chats','audio','videos']),
+            'type' => $this->faker->randomElement(['text', 'photos', 'quotes', 'chats', 'audio', 'videos']),
             'content' => $content,
             'date' => Carbon::now()->toRfc850String(),
-            'state' => $this->faker->randomElement(['publish', 'private','draft']),
+            'state' => $this->faker->randomElement(['publish', 'private', 'draft']),
             'source_content' => Str::random(10),
-            'blog_id'=>$blog->id,
-            'blog_name'=>$blog->blog_name,
-            'tags' => ['summer','winter'],
-            'post_ask_submit' => $this->faker->randomElement(['post','ask' ,'submit'])
+            'blog_id' => $blog->id,
+            'blog_name' => $blog->blog_name,
+            'tags' => ['summer', 'winter'],
+            'post_ask_submit' => $this->faker->randomElement(['post', 'ask', 'submit'])
         ];
     }
 }

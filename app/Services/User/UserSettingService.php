@@ -56,10 +56,10 @@ class UserSettingService
      *   
      * @return object
      */
-    public function UpdateSettings(int $user_id,array $data)
+    public function UpdateSettings(int $userId,array $data)
     {
         try {
-            User::where('id', $user_id)->update($data);
+            User::where('id', $userId)->update($data);
         } catch (\Throwable $th) {
             return false;
         }
@@ -76,9 +76,9 @@ class UserSettingService
      * 
      * @return bool
      */
-    public function ConfirmPassword(string $password, string $hashed_password): bool
+    public function ConfirmPassword(string $password, string $hashedPassword): bool
     {
-        $check = Hash::check($password, $hashed_password);
+        $check = Hash::check($password, $hashedPassword);
         if (!$check)
             return false;
         return true;
@@ -93,11 +93,11 @@ class UserSettingService
      * 
      * @return bool
      */
-    public function UpdateEmail(int $user_id, string $new_email)
+    public function UpdateEmail(int $userId, string $newEmail)
     {
         try {
-            $user = User::where('id',$user_id)->first();
-            $user->update(['email'=>$new_email]);
+            $user = User::where('id',$userId)->first();
+            $user->update(['email'=>$newEmail]);
         } catch (\Throwable $th) {
             return false;
         }
@@ -111,12 +111,12 @@ class UserSettingService
      * 
      * @return bool
      */
-    public function UpdatePassword(int $user_id, string $new_password):bool
+    public function UpdatePassword(int $userId, string $newPassword):bool
     {
         try {
-            $user = User::where('id',$user_id)->first();
-            $new_password =  Hash::make($new_password);
-            $user->update(['password'=>$new_password]);
+            $user = User::where('id',$userId)->first();
+            $newPassword =  Hash::make($newPassword);
+            $user->update(['password'=>$newPassword]);
         } catch (\Throwable $th) {
             return false;
         }
@@ -132,9 +132,9 @@ class UserSettingService
      * 
      * @return bool
      */
-    public function CheckPassword(string $old_Password, string $new_password): bool
+    public function CheckPassword(string $oldPassword, string $newPassword): bool
     {   
-        if (Hash::check($new_password, $old_Password)) 
+        if (Hash::check($newPassword, $oldPassword)) 
             return false;
 
         return true;    
