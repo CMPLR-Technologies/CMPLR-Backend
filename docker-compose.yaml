@@ -9,7 +9,7 @@ services:
       - php artisan passport:install --env=testing
       - php artisan test --env=testing
     networks:
-      - cmplr
+      - test-cmplr
     depends_on:
       - testdb
 
