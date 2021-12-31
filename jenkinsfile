@@ -33,9 +33,11 @@ pipeline {
             steps {
                 echo "========docker build ========"
                 sh """
-                    docker-compose down
+                    docker-compose down 
                     docker build -t test/backend:latest .
                     docker-compose up -d --build
+                    sleep 5
+                    php artisan config:cache
                     sleep 5
                     docker exec testbackend php artisan migrate:fresh --seed --env=testing
                     sleep 5
