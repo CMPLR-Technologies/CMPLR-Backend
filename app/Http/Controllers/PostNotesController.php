@@ -26,7 +26,7 @@ class PostNotesController extends Controller
         $this->postNotesService = $postNotesService;
     }
 
- /**
+    /**
      * @OA\GET(
      * path="/post/notes",
      * summary="getting notes for specific post",
@@ -110,19 +110,16 @@ class PostNotesController extends Controller
      * 
      * @author Yousif Ahmed
      */
-    public function getNotes(Request $request )
+    public function getNotes(Request $request)
     {
         $postId = (int)$request->post_id;
-        
-        $notes =  $this->postNotesService->GetPostNotes($postId);
-        
-        // checking null
-        if ( ! $notes->first())
-        {
-            return response()->json( ['notes'=> $notes ,'total_likes' => 0 ,'total_reblogs'=>0,'total_replys'=>0] , 200);
-        }
-        return response()->json( new PostNotesCollection($notes) , 200);
 
+        $notes =  $this->postNotesService->GetPostNotes($postId);
+
+        // checking null
+        if (!$notes->first()) {
+            return response()->json(['notes' => $notes, 'total_likes' => 0, 'total_reblogs' => 0, 'total_replys' => 0], 200);
+        }
+        return response()->json(new PostNotesCollection($notes), 200);
     }
- 
 }

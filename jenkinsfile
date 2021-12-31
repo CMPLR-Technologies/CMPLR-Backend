@@ -4,6 +4,8 @@ pipeline {
     }
     environment{
         LOGIN_SERVER = "beta"
+        WEBHOOK_URL = credentials('Beta_Discord')
+
     }
     stages {
         stage("fetch"){
@@ -18,10 +20,11 @@ pipeline {
                     sh"""
                     cp ~/env/backend.env ./.env 
                     """
+
                 }
                 failure{
                     echo "========fetch execution failed========"
-                    //slackSend (color:"#FF0000", message: "Failed to pull code-base from github")
+                    discordSend description: "Jenkins Pipeline Build", thumbnail: "https://jenkins.io/images/logos/ninja/256.png" ,footer: "Fetch execution failed", result: currentBuild.currentResult, title: JOB_NAME, webhookURL: WEBHOOK_URL
                     
                  }
             }
@@ -30,17 +33,31 @@ pipeline {
             steps {
                 echo "========docker build ========"
                 sh """
-                    docker build -t $LOGIN_SERVER/backend:latest .
+                    docker-compose down 
+                    docker build -t test/backend:latest .
+                    docker-compose up -d --build
+                    sleep 5
+                    docker exec testbackend php artisan config:clear --env=testing
+                    sleep 5
+                    docker exec testbackend php artisan migrate:fresh --seed --env=testing
+                    sleep 5
+                    docker exec testbackend php artisan passport:install --env=testing
+                    sleep 5
+                    docker exec testbackend vendor/bin/phpunit --stop-on-failure
+                    sleep 5
+                    docker-compose down
+                    docker tag test/backend:latest $LOGIN_SERVER/backend:latest
+                
                 """    
             }
             post {
                 success {
                     echo "========docker build success ========"
-                    //slackSend (color:"#00FF00",  message: "Master: Building Image success")
+                discordSend description: "Jenkins Pipeline Build", thumbnail: "https://jenkins.io/images/logos/ninja/256.png",footer: "Docker built successfully", result: currentBuild.currentResult, title: JOB_NAME, webhookURL: WEBHOOK_URL
                 }
                 failure {
                     echo "========docker build failed========"
-                    //slackSend (color:"#FF0000", message: "Master: Building Image failure")
+                    discordSend description: "Jenkins Pipeline Build", thumbnail: "https://jenkins.io/images/logos/ninja/256.png", footer: "Docker building Failed", result: currentBuild.currentResult, title: JOB_NAME, webhookURL: WEBHOOK_URL
                 }
            }
         }

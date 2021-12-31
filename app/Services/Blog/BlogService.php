@@ -9,11 +9,13 @@ use Illuminate\Support\Facades\DB;
 class BlogService
 {
     /**
-     * GET Random Blogs
+     * GET Random Blogs for explore
      *
      * @param int $user_id
      * 
-     * @return Blogs
+     * @return Blog
+     * 
+     * @author Abdullah Adel
      */
     public function GetRandomBlogs(int $user_id = null)
     {

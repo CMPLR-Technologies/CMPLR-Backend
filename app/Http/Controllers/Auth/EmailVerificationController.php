@@ -20,7 +20,7 @@ class EmailVerificationController extends Controller
    */
     protected $emailVerificationService;
 
-     /**
+    /**
      * Instantiate a new controller instance.
      *
      * @return void
@@ -46,18 +46,18 @@ class EmailVerificationController extends Controller
      * ),
      * )
      */
-    public function SendVerificationEmail (Request $request )
+    public function SendVerificationEmail(Request $request)
     {
         // chcking wether the user already verified the email
-            if ($this->emailVerificationService->IsEmailVerified($request->user())) {
-                return response()->json(['message'=>'Email Already Verified'],422);
-            }
-            // send email verification user
-            $this->emailVerificationService->SendingEmailVerification($request->user());
+        if ($this->emailVerificationService->IsEmailVerified($request->user())) {
+            return response()->json(['message' => 'Email Already Verified'], 422);
+        }
+        // send email verification user
+        $this->emailVerificationService->SendingEmailVerification($request->user());
 
-            return response()->json(['message'=>'Email Verification sent'],200);
+        return response()->json(['message' => 'Email Verification sent'], 200);
     }
-     /**
+    /**
      * @OA\Get(
      * path="verify-email/{id}/{hash}",
      * summary="verify email using token which send to your email",
@@ -80,12 +80,12 @@ class EmailVerificationController extends Controller
 
         // checking wether the email is already verified 
         if ($this->emailVerificationService->IsEmailVerified($user)) {
-            return response()->json(['message'=>'Email Already Verified'],422);
+            return response()->json(['message' => 'Email Already Verified'], 422);
         }
         // making the email as verified and creat event verified for the user
         $this->emailVerificationService->VerifyEmail($user);
-        
-        
-        return response()->json(['message'=>'Email has been Verified' , 'email_verified_at' =>  User::findOrFail($request->id)->email_verified_at],200);
+
+
+        return response()->json(['message' => 'Email has been Verified', 'email_verified_at' =>  User::findOrFail($request->id)->email_verified_at], 200);
     }
 }

@@ -2,31 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\Blog;
+use App\Models\Posts;
+use App\Models\Follow;
+use App\Models\BlogUser;
+use Illuminate\Http\Request;
 use App\Http\Misc\Helpers\Config;
 use App\Http\Misc\Helpers\Errors;
 use App\Http\Requests\PostRequest;
-use App\Http\Requests\UpdatePostRequest;
-use App\Http\Resources\BlogCollection;
-use App\Http\Resources\PostEditViewResource;
-use App\Http\Resources\PostsCollection;
-use App\Http\Resources\PostsResource;
-use App\Http\Resources\TaggedPostsCollection;
-use App\Http\Resources\TaggedPostsResource;
-use App\Models\Blog;
-use App\Models\BlogSettings;
-use App\Models\BlogUser;
-use App\Models\Follow;
-use App\Models\Posts;
-use App\Models\PostTags;
-use App\Models\Tag;
-use App\Models\TagUser;
-use App\Models\User;
-use App\Services\Posts\PostsService;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use App\Services\User\UserService;
+use App\Services\Posts\PostsService;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\PostsResource;
+use App\Http\Resources\BlogCollection;
+use App\Http\Resources\PostsCollection;
+use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\DraftPostCollection;
+use App\Http\Resources\DraftPostResource;
+use App\Http\Resources\PostEditViewResource;
+use App\Http\Resources\TaggedPostsCollection;
 
 class PostsController extends Controller
 {
@@ -34,9 +29,10 @@ class PostsController extends Controller
     |--------------------------------------------------------------------------
     | Posts Controller
     |--------------------------------------------------------------------------|
-    | This controller handles the processes of Posts :
-    | Create ,edit and update Posts
+    | This controller handles the processes of Posts:
+    | Create, edit and update Posts
     | retrieve posts (dashboard , by blogname , post_id)
+    | retrieve posts (draft, by blogname)
     | retrieve posts (explore, randomly)
     |
    */
@@ -178,7 +174,7 @@ class PostsController extends Controller
 
         // check that the user can create post from this Blog
         try {
-            $this->authorize('CreatePost', $blog);
+            $this->authorize('BlogBelongsToUser', $blog);
         } catch (\Throwable $th) {
             return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
         }
@@ -360,7 +356,7 @@ class PostsController extends Controller
      *)
      **/
     /**
-     * this fuction responsible for edit the specified post.
+     * this function responsible for edit the specified post.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -439,9 +435,6 @@ class PostsController extends Controller
      *       ),
      *)
      **/
-
-
-
     /**
      * Update the specified resource in storage.
      *
@@ -479,11 +472,11 @@ class PostsController extends Controller
         // update the date of the post
         $request['date'] = Carbon::now()->toRfc850String();
         // update post with all data
-        $isUpdate = $this->PostsService->UpdatePost($post,$request->all());
+        $isUpdate = $this->PostsService->UpdatePost($post, $request->all());
         // check if the post is updated successfully
-        if(!$isUpdate){
+        if (!$isUpdate) {
             $error['post'] = 'Failed to update Post';
-            return $this->error_response(Errors::ERROR_MSGS_500, $error,500); 
+            return $this->error_response(Errors::ERROR_MSGS_500, $error, 500);
         }
         return $this->success_response('', 200);
     }
@@ -556,7 +549,7 @@ class PostsController extends Controller
         return $this->success_response(new PostsResource($post), 200);
     }
 
-     /**
+    /**
      * @OA\Delete(
      ** path="/post/delete",
      *   tags={"Posts"},
@@ -595,7 +588,7 @@ class PostsController extends Controller
      *  security ={{"bearer":{}}}
      *)
      **/
-   
+
     /**
      * Remove the specified resource from storage.
      *
@@ -619,7 +612,7 @@ class PostsController extends Controller
             return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
         }
         // delte post
-        $isDeleted = $this->PostsService->DeletePost( $post);
+        $isDeleted = $this->PostsService->DeletePost($post);
         if (!$isDeleted) {
             $error['post'] = 'error while deleting post';
             return $this->error_response(Errors::ERROR_MSGS_500, $error, 500);
@@ -695,6 +688,78 @@ class PostsController extends Controller
     }
 
     /**
+     * This function retrieves the auth user's posts that are saved as drafts
+     *
+     * @param Request $request
+     * @param string $blogName
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Abdullah Adel
+     */
+    public function GetDraft(Request $request, string $blogName)
+    {
+        // get the current authorized user
+        $user = Auth::user();
+
+        // get the blog from blogName
+        $blog = $this->PostsService->GetBlogData($blogName);
+        if (!$blog)
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
+
+        // check that the blog belongs to the auth user
+        try {
+            $this->authorize('BlogBelongsToUser', $blog);
+        } catch (\Throwable $th) {
+            return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
+        }
+
+        // get draft posts
+        $post = $this->PostsService->GetDraftPosts($blog->id);
+        if (!$post)
+            return $this->error_response(Errors::ERROR_MSGS_500, 'Error get draft posts', 500);
+
+        //retrieve draft post collection
+        return $this->success_response(new DraftPostCollection($post), 200);
+    }
+
+    /**
+     * This function publishes the draft post of a blog
+     *
+     * @param Request $request
+     * @param string $blogName
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Abdullah Adel
+     */
+    public function PublishDraft(Request $request, string $blogName)
+    {
+        // get the current authorized user
+        $user = Auth::user();
+
+        // get the blog from blogName
+        $blog = $this->PostsService->GetBlogData($blogName);
+        if (!$blog)
+            return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
+
+        // check that the blog belongs to the auth user
+        try {
+            $this->authorize('BlogBelongsToUser', $blog);
+        } catch (\Throwable $th) {
+            return $this->error_response(Errors::ERROR_MSGS_401, '', 401);
+        }
+
+        // publish draft post
+        $success = $this->PostsService->PublishDraftPost($blog->id, $request->get('post_id'));
+        if (!$success)
+            return $this->error_response(Errors::ERROR_MSGS_500, 'Error publish draft post', 500);
+
+        //retrieve post collection
+        return $this->success_response([]);
+    }
+
+    /**
      * @OA\get(
      * path="posts/view/{blog_name}",
      * summary="get posts for blog name",
@@ -762,7 +827,7 @@ class PostsController extends Controller
     {
         // get blog
         $blog =  $this->PostsService->GetBlogByName($blog_name);
-       
+
         if (!$blog)
             return $this->error_response(Errors::ERROR_MSGS_404, '', 404);
         // get posts of the blog depend on requested user
@@ -774,7 +839,9 @@ class PostsController extends Controller
      * This function is responsible for getting
      * recommended posts (paginated)
      * 
-     * @return Post $recommended_posts
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Abdullah Adel
      */
     public function GetRecommendedPosts()
     {
@@ -801,7 +868,9 @@ class PostsController extends Controller
      * This function is responsible for getting
      * trending posts (paginated)
      * 
-     * @return Post $trending_posts
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Abdullah Adel
      */
     public function GetTrendingPosts()
     {
@@ -1062,83 +1131,6 @@ class PostsController extends Controller
         $blogs = Blog::whereIn('id', $blogsIds)->paginate(config::API_PAGINATION_LIMIT);
         return $this->success_response(new BlogCollection($blogs));
     }
-    /**
-     * @OA\Post(
-     ** path="/posts/reblog",
-     *   tags={"Posts"},
-     *   summary="Reblog existing Post",
-     *   operationId="reblog",
-     *
-     *   @OA\Parameter(
-     *      name="id",
-     *      description="the ID of the reblogged post",
-     *      in="query",
-     *      required=true,
-     *      @OA\Schema(
-     *           type="string"
-     *      )
-     *   ),
-     *   @OA\Parameter(
-     *      name="reblog_key",
-     *      in="query",
-     *      required=true,
-     *      @OA\Schema(
-     *          type="number"
-     *      )
-     *   ),
-     *  @OA\Parameter(
-     *      name="comment",
-     *      in="query",
-     *      description="comment added to the reblogged post",
-     *      required=false,
-     *      @OA\Schema(
-     *          type="string"
-     *      )
-     *   ),
-     *   @OA\Parameter(
-     *      name="native_inline_images",
-     *      in="query",
-     *      required=true,
-     *      @OA\Schema(
-     *          type="boolean"
-     *      )
-     *   ),
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
-     *   @OA\Response(
-     *      response=400,
-     *      description="Bad Request"
-     *   ),
-     *   @OA\Response(
-     *          response=201,
-     *          description="Successfully Created",
-     *           @OA\JsonContent(
-     *           type="object",
-     *           @OA\Property(property="Meta", type="object",
-     *           @OA\Property(property="Status", type="integer", example=201),
-     *           @OA\Property(property="msg", type="string", example="Created"),
-     *           ),
-     *       ),
-     *       ),
-     * security ={{"bearer":{}}}
-     *)
-     **/
-
-    /**
-     * Reblog existing post 
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function reblog(Request $request)
-    {
-        //
-    }
-
-
-
 
     /**
      *	@OA\Get

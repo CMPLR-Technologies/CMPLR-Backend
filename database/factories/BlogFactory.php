@@ -18,7 +18,7 @@ class BlogFactory extends Factory
 
         return [
             'blog_name' => $blog_name,
-            'url' => 'http://localhost:8000/api/blog/' . $blog_name,
+            'url' => env('APP_URL') . '/api/blog/' . $blog_name,
             'title' => $this->faker->name(),
             'public' => $this->faker->boolean(),
             'privacy' => $privacy,

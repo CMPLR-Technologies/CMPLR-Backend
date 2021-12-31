@@ -75,7 +75,7 @@ class BlogSubmitController extends Controller
     public function CreateSubmit(CreateSubmitRequest $request, $blogName)
     {
         //call the service
-        $code = (new SubmitService())->CreateSubmit($request->all(), $blogName,auth()->user());
+        $code = (new SubmitService())->CreateSubmit($request->all(), $blogName, auth()->user());
 
         //return the response
         if ($code == 201)

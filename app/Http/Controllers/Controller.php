@@ -22,7 +22,7 @@ class Controller extends BaseController
      *      description="CMPLR API Server"
      * )
      */
-    
-     
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests,WebServiceResponse;
+
+
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, WebServiceResponse;
 }

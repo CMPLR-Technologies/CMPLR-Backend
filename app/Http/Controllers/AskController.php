@@ -119,16 +119,15 @@ class AskController extends Controller
     public function CreateAsk(CreateAskRequest $request, $blogName)
     {
         //call the service
-        $code = (new CreateAskService())->CreateAsk($request->all(), $blogName,auth()->user());
+        $code = (new CreateAskService())->CreateAsk($request->all(), $blogName, auth()->user());
 
         //return the response
-        if($code==404)
-            return $this->error_response(Errors::ERROR_MSGS_404,'wrong target blog',404);
-        else if($code==403)
-            return $this->error_response(Errors::ERROR_MSGS_403,'target blog is blocked',403);
-        else if($code==201)
-           return $this->success_response(Success::CREATED,201);
-
+        if ($code == 404)
+            return $this->error_response(Errors::ERROR_MSGS_404, 'wrong target blog', 404);
+        else if ($code == 403)
+            return $this->error_response(Errors::ERROR_MSGS_403, 'target blog is blocked', 403);
+        else if ($code == 201)
+            return $this->success_response(Success::CREATED, 201);
     }
 
 

@@ -18,8 +18,8 @@ trait WebServiceResponse
     {
         return response()->json([
             "meta"  => [
-                "status_code"   => $status_code,
-                "msg"  => $msg
+                "status_code" => $status_code,
+                "msg" => $msg
             ],
             $type => $data,
         ], $status_code);

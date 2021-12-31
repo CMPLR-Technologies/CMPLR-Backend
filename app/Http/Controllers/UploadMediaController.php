@@ -20,6 +20,7 @@ class UploadMediaController extends Controller
     |
    */
     protected $HandlerBase64Service;
+
     public function __construct(HandlerBase64Service $HandlerBase64Service)
     {
         $this->HandlerBase64Service = $HandlerBase64Service;
@@ -80,8 +81,8 @@ class UploadMediaController extends Controller
         // get image
         $image = $request->file('image');
         // generate the name of the file
-        $filePath = $this->HandlerBase64Service->GenerateFileName($image,$user->id);
-      
+        $filePath = $this->HandlerBase64Service->GenerateFileName($image, $user->id);
+
         // store image
         try {
             Storage::disk('s3')->put($filePath, file_get_contents($image));
@@ -158,7 +159,7 @@ class UploadMediaController extends Controller
         $video = $request->file('video');
         // remove spaces from video name
 
-        $filePath = $this->HandlerBase64Service->GenerateVideoName($video,$user->id);
+        $filePath = $this->HandlerBase64Service->GenerateVideoName($video, $user->id);
         try {
             Storage::disk('s3')->put($filePath, file_get_contents($video));
         } catch (\Throwable $th) {
@@ -246,10 +247,9 @@ class UploadMediaController extends Controller
 
         // check image size
         $check_size = $this->HandlerBase64Service->ValidateImageSize($binaryData);
-        if(!$check_size)
-        {
+        if (!$check_size) {
             $error['image'] = 'Invalid Base64image Size';
-            return $this->error_response(Errors::ERROR_MSGS_422, $error, 422); 
+            return $this->error_response(Errors::ERROR_MSGS_422, $error, 422);
         }
 
         // generate image name 

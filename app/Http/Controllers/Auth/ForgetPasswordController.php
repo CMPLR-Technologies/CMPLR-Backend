@@ -31,7 +31,7 @@ class ForgetPasswordController extends Controller
     {
         $this->ForgetPasswordService = $ForgetPasswordService;
     }
-  
+
     /**
      * @OA\Get(
      * path="/forgot_password",
@@ -66,7 +66,7 @@ class ForgetPasswordController extends Controller
      *   ),
      * )
      */
-    
+
     /**
      * ForgetPassword Function handle Validate and sending
      * forget password mail to user
@@ -78,24 +78,24 @@ class ForgetPasswordController extends Controller
     public function ForgetPassword(Request $request)
     {
         $request->validate([
-            'email' => ['required','email','max:255'],
+            'email' => ['required', 'email', 'max:255'],
         ]);
-       // check if user is exist in DB
+        // check if user is exist in DB
         if (!$this->ForgetPasswordService->CheckIfUserExist($request->email)) {
             $error['email'] = ['There is no account associated with this email'];
-            return $this->error_response($msg = Errors::ERROR_MSGS_404,$error,404);
+            return $this->error_response($msg = Errors::ERROR_MSGS_404, $error, 404);
         }
-        
+
         //create reset password token to user
         $token = $this->ForgetPasswordService->AddToken($request->email);
 
-        if($token == null)
-            return $this->error_response(Errors::ERROR_MSGS_400,['Cannot create token'],400);
+        if ($token == null)
+            return $this->error_response(Errors::ERROR_MSGS_400, ['Cannot create token'], 400);
 
         // send ResetPasswordMail
-        if(!$this->ForgetPasswordService->SendResetPasswordMail($request->email , $token))
-            return $this->error_response(Errors::ERROR_MSGS_500,Errors::ERROR_MAIL,500);
+        if (!$this->ForgetPasswordService->SendResetPasswordMail($request->email, $token))
+            return $this->error_response(Errors::ERROR_MSGS_500, Errors::ERROR_MAIL, 500);
 
-        return $this->success_response(['Check your email'],200);
-    } 
+        return $this->success_response(['Check your email'], 200);
+    }
 }

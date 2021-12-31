@@ -29,6 +29,7 @@ class LoginController extends Controller
     {
         $this->loginService = $loginService;
     }
+
     /**
      * @OA\Post(
      * path="/login",
@@ -75,23 +76,22 @@ class LoginController extends Controller
      */
     public function Login(LoginRequest $request)
     {
-        $loginCredenials =[
+        $loginCredenials = [
             'email' =>  $request->email,
-            'password'=>  $request->password
+            'password' =>  $request->password
         ];
-        if ($this->loginService->CheckUserAuthorized($loginCredenials)){
+        if ($this->loginService->CheckUserAuthorized($loginCredenials)) {
             //generate the token for the user 
             $request['token'] = $this->loginService->CreateUserToken(auth()->user());
-            $request['user'] = auth()->user() ;
-            $request['blog'] = Blog::where('id' ,$request['user']->primary_blog_id)->first();
+            $request['user'] = auth()->user();
+            $request['blog'] = Blog::where('id', $request['user']->primary_blog_id)->first();
             $resource =  new RegisterResource($request);
             //now return this token on success login attempt
             return $this->success_response($resource);
-        }else{
+        } else {
             $error['email'] = ['email or password is not valid'];
             // wrong login user not authorized to our system error code 401
-            return $this->error_response(Errors::ERROR_MSGS_401,$error,401);
-           
+            return $this->error_response(Errors::ERROR_MSGS_401, $error, 401);
         }
     }
 
@@ -119,12 +119,11 @@ class LoginController extends Controller
 
             //getting user token the revoke it
             $this->loginService->RevokeUserToken(auth()->user());
-            
-            return response()->json(['message'=>'Logout Successfully'], 200);
 
-        }else {
-        // wrong login user not authorized to our system error code 401
-             return response()->json(['error' => 'UnAuthorized Access'],401);
+            return response()->json(['message' => 'Logout Successfully'], 200);
+        } else {
+            // wrong login user not authorized to our system error code 401
+            return response()->json(['error' => 'UnAuthorized Access'], 401);
         }
     }
 }

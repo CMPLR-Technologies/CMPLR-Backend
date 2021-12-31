@@ -14,24 +14,13 @@ class BlogPolicy
 
 
     /**
-     * Determine whether the user can view the followers of blog or not.
+     * Determine whether the blog belongs to the user or not.
      *
      * @param  User  $user
-     * @param  Post  $post
+     * @param  Blog  $blog
      * @return bool
      */
-    public function ViewFollowers(User $user, Blog $blog)
-    {
-        // user of the blog is the only one that can view the followers
-        $check = BlogUser::where('user_id',  $user->id)
-            ->where('blog_id', $blog->id)->first();
-
-        if (!$check)
-            return false;
-        return true;
-    }
-
-    public function CreatePost(User $user, Blog $blog)
+    public function BlogBelongsToUser(User $user, Blog $blog)
     {
         $check = BlogUser::where('user_id',  $user->id)
             ->where('blog_id', $blog->id)->first();
@@ -40,14 +29,10 @@ class BlogPolicy
             return false;
         return true;
     }
-
- 
 
     public function delete(User $user, Blog $blog)
     {
         return  $blog->users->contains('id', $user->id) &&
-                $blog->users()->where('user_id', $user->id)->where('full_privileges','true')->first() != null;
+            $blog->users()->where('user_id', $user->id)->where('full_privileges', 'true')->first() != null;
     }
-
-  
 }
