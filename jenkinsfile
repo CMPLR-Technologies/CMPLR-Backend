@@ -33,6 +33,7 @@ pipeline {
             steps {
                 echo "========docker build ========"
                 sh """
+                    docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=password --name=test-db postgres
                     docker build -t $LOGIN_SERVER/backend:latest .
                 """    
             }
