@@ -4,10 +4,6 @@ services:
   testbackend:
     image: test/backend:latest
     container_name: testbackend
-    command:
-      - php artisan migrate:fresh --seed --env=testing
-      - php artisan passport:install --env=testing
-      - php artisan test --env=testing
     networks:
       - test-cmplr
     depends_on:
