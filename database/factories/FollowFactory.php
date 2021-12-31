@@ -17,19 +17,19 @@ class FollowFactory extends Factory
      */
     public function definition()
     {
-        // Get all the roles attaching up to 3 random roles to each user
-        $blogs = Blog::all();
+        // // Get all the roles attaching up to 3 random roles to each user
+        // $blogs = Blog::all();
 
-        // Populate the pivot table
-        User::all()->each(function ($user) use ($blogs) {
-            $user->blogs()->attach(
-                $blogs->random(rand(1, 50))->pluck('id')->toArray()
-            );
-        });
+        // // Populate the pivot table
+        // User::all()->each(function ($user) use ($blogs) {
+        //     $user->blogs()->attach(
+        //         $blogs->random(rand(1, 50))->pluck('id')->toArray()
+        //     );
+        // });
 
-        // return [
-        //     'user_id' => $this->id++,
-        //     'blog_id' => $this->faker->numberBetween(1, 100),
-        // ];
+        return [
+            'user_id' => $this->id++,
+            'blog_id' => $this->faker->numberBetween(1, 50),
+        ];
     }
 }
