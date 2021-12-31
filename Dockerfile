@@ -30,9 +30,7 @@ RUN composer update
 RUN composer install
 
 
-RUN php artisan migrate:fresh --seed --env=testing
-RUN php artisan passport:install --env=testing
-RUN php artisan test --env=testing
+
 
 EXPOSE 8000
 
