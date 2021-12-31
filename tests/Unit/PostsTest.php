@@ -28,9 +28,9 @@ class PostsTest extends TestCase
 
             $faker = Factory::create(1);
             $request = [
-                'email' => $faker->email(),
+                'email' => $faker->unique()->email(),
                 'age' => $faker->numberBetween(18, 80),
-                'blog_name' => 'A_' . time(),
+                'blog_name' => 'P_' . time(),
                 'password' => 'Test_pass34',
             ];
             // only needs user to test user settings
