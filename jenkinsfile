@@ -45,7 +45,7 @@ pipeline {
                     sleep 5
                     docker exec testbackend vendor/bin/phpunit --stop-on-failure
                     sleep 5
-                    docker-compose down --rmi all -v --remove-orphans
+                    docker-compose down
                     docker tag test/backend:latest $LOGIN_SERVER/backend:latest
                 
                 """    
