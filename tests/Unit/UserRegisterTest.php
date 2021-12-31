@@ -68,6 +68,8 @@ class UserRegisterTest extends TestCase
         $this->assertNull($check);
     }
 
+
+
     /** @test */
     public function SuccesfullValidateRegister()
     {
@@ -113,8 +115,8 @@ class UserRegisterTest extends TestCase
         ])->assertStatus(422);
     }
 
-    // try invalid age
     /** @test */
+    // try invalid age
     public function FailureValidateRegister4()
     {
         $this->post('api/register/insert', [
@@ -125,22 +127,31 @@ class UserRegisterTest extends TestCase
         ])->assertStatus(400);
     }
 
-    // try successful response and check if the token is generated correctly
-    /** @test */
-    public function SuccessfullResponse()
-    {
-        $faker = Factory::create(1);
-        $request = [
-            'email' => $faker->email(),
-            'age' => $faker->numberBetween(18, 80),
-            'blog_name' => $faker->randomLetter(20),
-            'password' => $faker->password(8,20),
-        ];
-        // only needs user to test user settings
-        $response = $this->json('POST', '/api/register/insert', $request, ['Accept' => 'application/json']);
-       // dd($response);
-        $token = ($response->json())['response']['token'];
-        $this->assertNotNull($token);
-    }
+    //Test Google login and signup
     
+    /** @test */
+    // try to update user
+    public function TestUpdateUserData()
+    {
+        $user = User::take(1)->first();
+        $check = (new RegisterService())->UpdateUserData($user, "123456");
+        $this->assertNotNull($check);
+    }
+
+    /** @test */
+    // try to createuserUsing Google data
+    public function TestCreateUserGoogle()
+    {
+        $check = (new RegisterService())->CreateUserGoogle(time() . 'email' . '@gmail.com', 22, "123456");
+        $this->assertNotNull($check);
+    }
+
+    /** @test */
+    // try to createuserUsing Google data
+    public function TestCreateUserGoogleFailure()
+    {
+        $user = User::take(1)->first();
+        $check = (new RegisterService())->CreateUserGoogle($user->email, 22, "123456");
+        $this->assertNull($check);
+    }
 }

@@ -825,6 +825,68 @@ class PostsController extends Controller
     }
 
     /**
+     * @OA\GET(
+     * path="MiniProfileView/{blog_id}",
+     * summary="MiniProfileView of blog",
+     * description="This method can be used to  upload image",
+     * operationId="miniprofile",
+     * tags={"profile"},
+     * @OA\RequestBody(
+     *      required=true,
+     *      description="Pass user credentials",
+     *      @OA\JsonContent(
+     *           @OA\Property(property="blog_id", type="integer",example=25),
+     *      ),
+     *    ),
+     * @OA\Response(
+     *    response=404,
+     *    description="Not Found",
+     * ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+      * @OA\Response(
+     *    response=200,
+     *    description="success",
+     *    @OA\JsonContent(
+     *       type="object",
+     *       @OA\Property(property="Meta", type="object",
+     *          @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="OK"),
+     *        ),
+     *       @OA\Property(property="response", type="object",
+     *       @OA\Property(property="blog", type="object",
+     *             @OA\Property(property="blog_name", type="string", example="ahmed1"),
+     *             @OA\Property(property="avatar", type="string", example="https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"),   
+     *             @OA\Property(property="title", type="string", example="title"),   
+     *             @OA\Property(property="header_image", type="string",example="https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"),   
+     *             @OA\Property(property="is_primary", type="boolean",example=true),   
+     *             @OA\Property(property="description", type="string",example="hello"),   
+     *             @OA\Property(property="is_followed", type="boolean",example=false),   
+     *             @OA\Property(property="is_blocked", type="boolean",example=false),   
+     * ),                                         
+     *             @OA\Property(property="views", type="array",
+     *                @OA\Items(
+     *                      @OA\Property(
+     *                         property="url",
+     *                         type="string",
+     *                         example="https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"
+     *                      ),
+     *                      @OA\Property(
+     *                         property="post_id",
+     *                         type="integer",
+     *                         example=  25
+     *                      ),
+     *                  ),
+     *                ),           
+     *           ),
+     *        ),
+     *     ),
+     * security ={{"bearer":{}}},
+     * )
+     */
+    /**
      * This Function Responisble for 
      * get miniview of certain blog by show 3 of its blogs
      * 
@@ -853,7 +915,59 @@ class PostsController extends Controller
     }
 
 
-
+     /**
+     * @OA\Get(
+     * path="/profile/likes/{blog_name}",
+     * summary="Retrieve a profile's Likes",
+     * description="retrieve the posts liked by the user",
+     * operationId="getprofileLikes",
+     * tags={"profile"},
+     *
+     *
+     * @OA\Response(
+     *    response=404,
+     *    description="Not Found",
+     * ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     *   
+     *       @OA\Response
+     *		(
+     *	    	response=200,
+     *    		description="success",
+     *    		@OA\JsonContent
+     *			(
+     *       			type="object",
+     *       			@OA\Property
+     *				    (
+     *					    property="Meta", type="object",
+     *					    @OA\Property(property="Status", type="integer", example=200),
+     *					    @OA\Property(property="msg", type="string", example="OK"),
+     *        			),
+     *
+     *       			@OA\Property
+     *				    (
+     *					    property="response", type="object",
+     *             			@OA\Property(property="total_posts", type="Number", example=263),
+     *             			@OA\Property
+     *					    (
+     *						    property="posts", type="array",
+     *                			@OA\Items
+     *						    (
+     *			        	        @OA\Property(property="post1",description="the first post",type="object"),
+     *			        	        @OA\Property(property="post2",description="the second post",type="object"),
+     *			        	        @OA\Property(property="post3",description="the third post",type="object"),
+     *			        	    ),
+     *       
+     *               		),
+     *           		),
+     *        		),
+     *     	),
+     * security ={{"bearer":{}}}
+     * )
+     */
     /**
      * this function is responsible for get profile likes for blog
      * @param Request $request
@@ -879,6 +993,55 @@ class PostsController extends Controller
         return $this->success_response(new PostsCollection($posts));
     }
 
+
+    /**
+     *	@OA\Get
+     *	(
+     * 		path="profile/following/{blog_name}",
+     * 		summary="get followings of profile(user)",
+     * 		description="Retrieve following blogs for User.",
+     * 		operationId="Retrieve profile followings",
+     * 		tags={"profile"},
+     * @OA\Response(
+     *    response=200,
+     *    description="Successfully",
+     *  @OA\JsonContent(
+     *           type="object",
+     *           @OA\Property(property="Meta", type="object",
+     *           @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="success"),
+     *           ),
+     *          @OA\Property(property="response", type="object",
+     *          @OA\Property(property="blogs", type="array",
+     *            @OA\Items(
+     *              @OA\Property(property="post", type="object",
+     *                     @OA\Property(property="blog_id", type="integer", example= 123 ),
+     *                     @OA\Property(property="blog_name", type="string", example="ahmed"),
+     *                     @OA\Property(property="title", type="string", format="text", example="CMP"),
+     *                     @OA\Property(property="avatar", type="string", format="text", example="https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"),
+     *                     @OA\Property(property="avatar_shape", type="string", format="text", example="Circle"),
+     *                     @OA\Property(property="description", type="string", format="text", example="ahmed217"),
+     *              ),
+     *             ),
+     *          ),
+     *          @OA\Property(property="next_url", type="string", example= "http://127.0.0.1:8000/api/user/followings?page=2" ),
+     *          @OA\Property(property="total", type="integer", example= 20 ),
+     *          @OA\Property(property="current_page", type="integer", example= 1 ),
+     *          @OA\Property(property="posts_per_page", type="integer", example=4),
+     *          ),
+     *       ),
+     * ),
+     *   @OA\Response(
+     *      response=404,
+     *       description="Not Found",
+     *   ),
+     *   @OA\Response(
+     *      response=422,
+     *       description="invalid Data",
+     *   ),
+     * security ={{"bearer":{}}}
+     * )
+     */
     /**
      * this function is responsible for get profile likes for blog
      * @param Request $request

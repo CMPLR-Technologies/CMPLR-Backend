@@ -2,11 +2,13 @@
 
 namespace Tests\Unit;
 
+use App\Models\User;
 use App\Services\UploadMedia\HandlerBase64Service;
 use Faker\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Testing\File;
 use Tests\TestCase;
 
 class UploadMediaTest extends TestCase
@@ -46,22 +48,33 @@ class UploadMediaTest extends TestCase
     }
 
     // test image upload
-    /** @test */
+
     //validation check
-    public function TestUploadImageWithoutImageFile()
+
+    /** @test */
+    public function TestUploadImageUnAuthorized()
     {
         Storage::fake('avatars');
-        $response = $this->json('POST', '/api/image_upload', [
-         
-        ], ['Accept' => 'application/json'] );
+        $response = $this->json('POST', '/api/image_upload', [], ['Accept' => 'application/json']);
         $response->assertStatus(401);
-    }   
+    }
 
-    //
+    /** @test */
+    public function TestUploadImageWithoutImageFile()
+    {
+        $response = $this->json('POST', '/api/image_upload', [], ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . self::$data['token']]);
+        $response->assertStatus(422);
+    }
+
+    /** @test */
     public function TestGenerateName()
     {
-        //(new HandlerBase64Service ())->GenerateImageName('');
+        Storage::fake('public');
+        $file = File::image('logo.png', 400, 100);
+        $user_id = User::take(1)->first()->id;
+        $check = (new HandlerBase64Service())->GenerateFileName($file, $user_id);
+        $this->assertNotNull($check);
     }
-    
+
 
 }

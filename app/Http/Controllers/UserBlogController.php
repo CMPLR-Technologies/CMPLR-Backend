@@ -398,7 +398,7 @@ class UserBlogController extends Controller
      * 		summary="User setting",
      * 		description="Retrieve following blogs for User.",
      * 		operationId="Retrieve followings",
-     * 		tags={"User"},
+     * 		tags={"Users"},
      * @OA\Response(
      *    response=200,
      *    description="Successfully",

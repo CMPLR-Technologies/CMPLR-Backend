@@ -48,24 +48,20 @@ class ForgetPasswordTest extends TestCase
     }
 
 
-    /**
-     * Test send resest password mail to user
-     *
-     * @return void
-     */
-    public function test_SendResetPasswordMail()
-    {
-      $reset_password =  DB::table('password_resets')->take(1)->first();
-       $email = $reset_password->email;
-       $token = $reset_password->token;
-       $check = (new ForgetPasswordService())->SendResetPasswordMail($email, $token);
-       $this->assertTrue($check);
-    }
+    // /**
+    //  * Test send resest password mail to user
+    //  *
+    //  * @return void
+    //  */
+    // public function test_SendResetPasswordMail()
+    // {
+    //   $reset_password =  DB::table('password_resets')->take(1)->first();
+    //    $email = $reset_password->email;
+    //    $token = $reset_password->token;
+    //    $check = (new ForgetPasswordService())->SendResetPasswordMail($email, $token);
+    //    $this->assertTrue($check);
+    // }
 
     
-
-
-
-
 
 }

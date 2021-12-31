@@ -44,6 +44,52 @@ class GoogleController extends Controller
         }
     }
 
+      /**
+    * @OA\Post(
+    * path="/google/login",
+    * summary="login with google to tumblr",
+    * description="User register to the website",
+    * operationId="login google",
+    * tags={"Auth"},
+
+    *  @OA\Parameter(
+    *         name="token",
+    *         in="query",
+    *         required=true,
+    *      ),
+    *  
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Pass user credentials",
+    *    @OA\JsonContent(
+    *       required={"token"},
+    *      @OA\Property(property="token", type="string", example="ya29.a0ARrdaM8q2Elie-PdEAJ9ned1PB-2G"),
+    *    ),
+    * ),
+     * @OA\Response(
+     *    response=201,
+     *    description="Successfully",
+     *  @OA\JsonContent(
+     *           type="object",
+     *           @OA\Property(property="Meta", type="object",
+     *           @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="success"),
+     *           ),
+     *           @OA\Property(property="response", type="object",
+     *              @OA\Property(property="email", type="string",format="text", example="ahmed.mohamed.abdelhamed2@gmail.com"),
+     *              @OA\Property(property="blog_name", type="string", format="text", example="ahmed123"),
+     *              @OA\Property(property="age", type="integer", example=26),
+     *              @OA\Property(property="token", type="string", format="text", example="4Y9ZEJqWEABGHkzEXAqNI1F9UZKtKeZVdIChNXBapp9w7XP6mwQZeBXEebMU"),
+     *           ),
+     * ),
+     * ),
+    *       @OA\Response(
+    *              response=422,
+    *              description="Invalid Data",
+    *          ),
+    *    
+    *     )   
+    */
     /**
      * this function is used for google login of user 
      * @param $request
@@ -84,6 +130,65 @@ class GoogleController extends Controller
         }
     }
 
+
+     /**
+    * @OA\Post(
+    * path="/google/signup",
+    * summary="signup with google to tumblr",
+    * description="User register to the website",
+    * operationId="Signup google",
+    * tags={"Auth"},
+
+    *  @OA\Parameter(
+    *         name="token",
+    *         in="query",
+    *         required=true,
+    *      ),
+    *  @OA\Parameter(
+    *         name="blog_name",
+    *         in="query",
+    *         required=true,
+    *      ),
+    *  @OA\Parameter(
+    *         name="age",
+    *         in="query",
+    *         required=true,
+    *      ),
+    *  
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Pass user credentials",
+    *    @OA\JsonContent(
+    *       required={"token","blog_name","age"},
+    *      @OA\Property(property="token", type="string", example="ya29.a0ARrdaM8q2Elie-PdEAJ9ned1PB-2G"),
+    *      @OA\Property(property="blog_name", type="string", example="AHmed1"),
+    *      @OA\Property(property="age", type="integer", example=22),
+    *    ),
+    * ),
+     * @OA\Response(
+     *    response=201,
+     *    description="Successfully",
+     *  @OA\JsonContent(
+     *           type="object",
+     *           @OA\Property(property="Meta", type="object",
+     *           @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="success"),
+     *           ),
+     *           @OA\Property(property="response", type="object",
+     *              @OA\Property(property="email", type="string",format="text", example="ahmed.mohamed.abdelhamed2@gmail.com"),
+     *              @OA\Property(property="blog_name", type="string", format="text", example="ahmed123"),
+     *              @OA\Property(property="age", type="integer", example=26),
+     *              @OA\Property(property="token", type="string", format="text", example="4Y9ZEJqWEABGHkzEXAqNI1F9UZKtKeZVdIChNXBapp9w7XP6mwQZeBXEebMU"),
+     *           ),
+     * ),
+     * ),
+    *       @OA\Response(
+    *              response=422,
+    *              description="Invalid Data",
+    *          ),
+    *    
+    *     )   
+    */
     /**
      * this function is used for google signup of user 
      * @param $request

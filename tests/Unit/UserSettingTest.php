@@ -60,8 +60,8 @@ class UserSettingTest extends TestCase
     public function SuccessfulConfirmPassword()
     {
         $UserSettingService = new UserSettingService();
-
-        $confirmed =  $UserSettingService->ConfirmPassword('Ahmed_123', self::$data['password']);
+        $old_password = Hash::make('Ahmed_123');
+        $confirmed =  $UserSettingService->ConfirmPassword('Ahmed_123', $old_password);
         return $this->assertTrue($confirmed);
     }
 
@@ -70,7 +70,8 @@ class UserSettingTest extends TestCase
     public function FailureConfirmPassword()
     {
         $UserSettingService = new UserSettingService();
-        $confirmed =  $UserSettingService->ConfirmPassword('wrong_pass', self::$data['password']);
+        $old_password = Hash::make('Ahmed_123');
+        $confirmed =  $UserSettingService->ConfirmPassword('wrong_pass', $old_password);
         return $this->assertFalse($confirmed);
     }
 
@@ -79,8 +80,6 @@ class UserSettingTest extends TestCase
     public function SuccessfulUpdateEmail()
     {
         $UserSettingService = new UserSettingService();
-        $user = new User();
-        $user->fill(self::$data['user']);
         $confirmed =  $UserSettingService->UpdateEmail(self::$data['id'], 'NewUniqueEmail@gmail107.com');
         return $this->assertNotNull($confirmed);
     }
@@ -104,8 +103,6 @@ class UserSettingTest extends TestCase
         ];
         // no bearer token is given
         $response = $this->json('PUT', '/api/settings/change_email', $request, ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . self::$data['token']]);
-        //dd($response);
-        // it should be a guest
         $this->assertAuthenticated();
     }
 

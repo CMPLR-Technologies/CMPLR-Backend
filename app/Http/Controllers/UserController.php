@@ -868,7 +868,7 @@ class UserController extends Controller
       /**
      * @OA\Get(
      *   path="/user_theme",
-     *   tags={"users"},
+     *   tags={"Users"},
      *   summary="Get ",
      *   operationId="get theme of user",
      *   @OA\Response(
@@ -908,7 +908,7 @@ class UserController extends Controller
       /**
      * @OA\Put(
      *   path="/user_theme",
-     *   tags={"users"},
+     *   tags={"Users"},
      *   summary="put ",
      *   operationId="update_theme_of_user",
      *   @OA\Response(
