@@ -355,7 +355,7 @@ class PostsController extends Controller
      *)
      **/
     /**
-     * this fuction responsible for edit the specified post.
+     * this function responsible for edit the specified post.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -434,9 +434,6 @@ class PostsController extends Controller
      *       ),
      *)
      **/
-
-
-
     /**
      * Update the specified resource in storage.
      *
@@ -952,83 +949,6 @@ class PostsController extends Controller
         $blogs = Blog::whereIn('id', $blogsIds)->paginate(config::API_PAGINATION_LIMIT);
         return $this->success_response(new BlogCollection($blogs));
     }
-    /**
-     * @OA\Post(
-     ** path="/posts/reblog",
-     *   tags={"Posts"},
-     *   summary="Reblog existing Post",
-     *   operationId="reblog",
-     *
-     *   @OA\Parameter(
-     *      name="id",
-     *      description="the ID of the reblogged post",
-     *      in="query",
-     *      required=true,
-     *      @OA\Schema(
-     *           type="string"
-     *      )
-     *   ),
-     *   @OA\Parameter(
-     *      name="reblog_key",
-     *      in="query",
-     *      required=true,
-     *      @OA\Schema(
-     *          type="number"
-     *      )
-     *   ),
-     *  @OA\Parameter(
-     *      name="comment",
-     *      in="query",
-     *      description="comment added to the reblogged post",
-     *      required=false,
-     *      @OA\Schema(
-     *          type="string"
-     *      )
-     *   ),
-     *   @OA\Parameter(
-     *      name="native_inline_images",
-     *      in="query",
-     *      required=true,
-     *      @OA\Schema(
-     *          type="boolean"
-     *      )
-     *   ),
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
-     *   @OA\Response(
-     *      response=400,
-     *      description="Bad Request"
-     *   ),
-     *   @OA\Response(
-     *          response=201,
-     *          description="Successfully Created",
-     *           @OA\JsonContent(
-     *           type="object",
-     *           @OA\Property(property="Meta", type="object",
-     *           @OA\Property(property="Status", type="integer", example=201),
-     *           @OA\Property(property="msg", type="string", example="Created"),
-     *           ),
-     *       ),
-     *       ),
-     * security ={{"bearer":{}}}
-     *)
-     **/
-
-    /**
-     * Reblog existing post 
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function reblog(Request $request)
-    {
-        //
-    }
-
-
-
 
     /**
      *	@OA\Get

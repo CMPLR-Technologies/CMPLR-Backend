@@ -84,41 +84,6 @@ class BlogController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Blog  $blog
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Blog $blog)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Blog  $blog
-     * @return \Illuminate\Http\Response
-     */
-
-    public function update(Request $request, Blog $blog)
-    {
-        //
-    }
-
-    /**
      * @OA\Get(
      * path="/blog/{blog-identifier}/followed_by",
      * summary="Check If Followed By Blog",
@@ -163,7 +128,7 @@ class BlogController extends Controller
      * path="/blog/{blog-identifier}/followers",
      * summary="Retrieve a Blog's Followers",
      * description="This method can be used to get the followers of a specific blog",
-     * operationId="getFollowers",
+     * operationId="GetFollowers",
      * tags={"Blogs"},
      *  @OA\Parameter(
      *         name="blog-identifier",
@@ -243,7 +208,10 @@ class BlogController extends Controller
     /**
      * Get Blog Followers
      * 
-     * @param 
+     * @param Request $request
+     * @param Blog $blog
+     * 
+     * @return Response $response
      * 
      */
     public function GetFollowers(Request $request, Blog $blog)

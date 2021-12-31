@@ -94,7 +94,6 @@ class UserBlogController extends Controller
      * @param Request $request
      * @return response
      */
-
     public function create(Request $request)
     {
 
@@ -172,7 +171,6 @@ class UserBlogController extends Controller
      * @param Request request
      * @return response
      */
-
     public function destroy($blogName, Request $request)
     {
         //validate the request parameters
