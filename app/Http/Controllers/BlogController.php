@@ -33,7 +33,9 @@ class BlogController extends Controller
      * This function is responsible for getting
      * recommended blogs (paginated)
      * 
-     * @return Blog $recommended_blogs
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Abdullah Adel
      */
     public function GetRecommendedBlogs()
     {
@@ -60,7 +62,9 @@ class BlogController extends Controller
      * This function is responsible for getting
      * trending blogs (paginated)
      * 
-     * @return Blog $trending_blogs
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Abdullah Adel
      */
     public function GetTrendingBlogs()
     {

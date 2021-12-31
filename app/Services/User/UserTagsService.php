@@ -61,11 +61,13 @@ class UserTagsService
     }
 
     /**
-     * getting the tags followed by a user 
+     * This functions gets the tags followed by a user 
      * 
      * @param int $user_id
      * 
-     * @return $tags
+     * @return Tag $tags
+     * 
+     * @author Abdullah Adel
      */
     public function GetFollowedTags(int $userId)
     {
@@ -86,9 +88,9 @@ class UserTagsService
     }
 
     /**
-     * getting random tags 
+     * This function gets random tags
      * 
-     * @return $tags
+     * @return Tag
      */
     public function GetRandomTags()
     {
@@ -96,11 +98,13 @@ class UserTagsService
     }
 
     /**
-     * getting random tags data
+     * This function gets random tags data for explore
      * 
      * @param int $user_id
      * 
-     * @return $tags
+     * @return Tag
+     * 
+     * @author Abdullah Adel
      */
     public function GetRandomTagsData(int $user_id = null)
     {
@@ -116,7 +120,7 @@ class UserTagsService
     /**
      * getting the tag's posts
      * 
-     * @return $posts
+     * @return Posts $posts
      */
     public function GetTagPosts($tag_name)
     {
@@ -130,7 +134,9 @@ class UserTagsService
      * 
      * @param $tag_posts
      * 
-     * @return $recent_posts_count
+     * @return integer $recent_posts_count
+     * 
+     * @author Abdullah Adel
      */
     public function GetTagRecentPostsCount($tag_posts)
     {
@@ -138,16 +144,17 @@ class UserTagsService
     }
 
     /**
-     * getting random tags 
+     * getting the tag's number of followers
      * 
      * @param $tag
      * 
-     * @return $tagscount
+     * @return integer $tagsCount
      */
     public function GetTotalTagsFollowers($tag)
     {
         return TagUser::where('tag_name', $tag)->count();
     }
+
     /**
      * check user follow tag
      * 

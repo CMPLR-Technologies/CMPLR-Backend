@@ -9,8 +9,21 @@ use App\Services\Search\SearchService;
 
 class SearchController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | SearchController Controller 
+    |--------------------------------------------------------------------------|
+    | This controller handles search results 
+    |
+   */
+
     private $searchService;
 
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
     public function __construct(SearchService $searchService)
     {
         $this->searchService = $searchService;
@@ -59,6 +72,18 @@ class SearchController extends Controller
      *          description="Invalid Data",
      *      )
      *     )
+     */
+    /**
+     * Search autocomplete.
+     * This controller returns the tags and blogs that
+     * contains the query string
+     *
+     * @param Request $request
+     * @param string $query
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Abdullah Adel
      */
     public function Search(Request $request, $query)
     {

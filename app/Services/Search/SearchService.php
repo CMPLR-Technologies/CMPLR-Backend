@@ -13,7 +13,9 @@ class SearchService
      * 
      * @param string $query
      * 
-     * @return array $tags
+     * @return Tag $tags
+     * 
+     * @author Abdullah Adel
      */
     public function GetSearchTags($query)
     {
@@ -25,7 +27,9 @@ class SearchService
      * 
      * @param string $query
      * 
-     * @return array $blogs
+     * @return Blog $blogs
+     * 
+     * @author Abdullah Adel
      */
     public function GetSearchBlogs($query)
     {

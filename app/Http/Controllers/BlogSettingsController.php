@@ -11,6 +11,14 @@ use Illuminate\Support\Facades\Gate;
 
 class BlogSettingsController extends Controller
 {
+  /*
+    |--------------------------------------------------------------------------
+    | BlogSettingsController Controller 
+    |--------------------------------------------------------------------------|
+    | This controller handles getting and saving blogs' settings 
+    |
+   */
+
   /**
    *	@OA\Get
    *	(
@@ -197,6 +205,16 @@ class BlogSettingsController extends Controller
    *       ),
    *  security ={{"bearer":{}}}
    * )
+   */
+  /**
+   * Get the blog settings if the blog belongs to auth user
+   *
+   * @param Request $request
+   * @param string $blog_name
+   * 
+   * @return \Illuminate\Http\Response
+   * 
+   * @author Abdullah Adel
    */
   public function GetBlogSettings(Request $request, $blog_name)
   {
@@ -421,6 +439,16 @@ class BlogSettingsController extends Controller
    *   ),
    *   security ={{"bearer":{}}},
    * )
+   */
+  /**
+   * Save blog settings if the blog belongs to auth user
+   *
+   * @param Request $request
+   * @param string $blog_name
+   * 
+   * @return \Illuminate\Http\Response
+   * 
+   * @author Abdullah Adel
    */
   public function SaveBlogSettings(Request $request, $blog_name)
   {

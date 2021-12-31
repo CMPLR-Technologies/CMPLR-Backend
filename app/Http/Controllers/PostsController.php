@@ -29,9 +29,10 @@ class PostsController extends Controller
     |--------------------------------------------------------------------------
     | Posts Controller
     |--------------------------------------------------------------------------|
-    | This controller handles the processes of Posts :
-    | Create ,edit and update Posts
+    | This controller handles the processes of Posts:
+    | Create, edit and update Posts
     | retrieve posts (dashboard , by blogname , post_id)
+    | retrieve posts (draft, by blogname)
     | retrieve posts (explore, randomly)
     |
    */
@@ -687,7 +688,14 @@ class PostsController extends Controller
     }
 
     /**
-     * This function retrieves the auth user's posts that are saved as drafts 
+     * This function retrieves the auth user's posts that are saved as drafts
+     *
+     * @param Request $request
+     * @param string $blogName
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Abdullah Adel
      */
     public function GetDraft(Request $request, string $blogName)
     {
@@ -717,6 +725,13 @@ class PostsController extends Controller
 
     /**
      * This function publishes the draft post of a blog
+     *
+     * @param Request $request
+     * @param string $blogName
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Abdullah Adel
      */
     public function PublishDraft(Request $request, string $blogName)
     {
@@ -824,7 +839,9 @@ class PostsController extends Controller
      * This function is responsible for getting
      * recommended posts (paginated)
      * 
-     * @return Post $recommended_posts
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Abdullah Adel
      */
     public function GetRecommendedPosts()
     {
@@ -851,7 +868,9 @@ class PostsController extends Controller
      * This function is responsible for getting
      * trending posts (paginated)
      * 
-     * @return Post $trending_posts
+     * @return \Illuminate\Http\Response
+     * 
+     * @author Abdullah Adel
      */
     public function GetTrendingPosts()
     {
