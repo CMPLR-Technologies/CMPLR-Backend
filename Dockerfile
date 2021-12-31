@@ -25,10 +25,11 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-COPY . .
-
+COPY ./composer.json ./composer.json
 RUN composer update
 RUN composer install
+
+COPY . .
 
 EXPOSE 8000
 
