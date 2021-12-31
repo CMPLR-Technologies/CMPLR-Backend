@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BlogSettingsFactory extends Factory
 {
+    protected $id = 1;
+
     /**
      * Define the model's default state.
      *
@@ -14,7 +16,7 @@ class BlogSettingsFactory extends Factory
     public function definition()
     {
         return [
-            'blog_id' => $this->faker->unique()->numberBetween(1, 10)
+            'blog_id' => $this->id++
         ];
     }
 }
