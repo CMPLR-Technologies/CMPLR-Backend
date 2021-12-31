@@ -31,6 +31,12 @@ RUN composer install
 
 COPY . .
 
+RUN php artisan migrate:fresh --seed --env=testing
+RUN php artisan passport:install --env=testing
+RUN php artisan test --env=testing
+
 EXPOSE 8000
+
+
 
 CMD php artisan serve --host=0.0.0.0 --port=8000
