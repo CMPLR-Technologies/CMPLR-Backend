@@ -26,6 +26,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www
 
 COPY ./composer.json ./composer.json
+COPY ./composer.lock ./composer.lock
+COPY ./artisan ./artisan
 RUN composer update
 RUN composer install
 
