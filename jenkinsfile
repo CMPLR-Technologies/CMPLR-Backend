@@ -35,7 +35,7 @@ pipeline {
                 sh """
                     docker-compose down
                     docker build -t test/backend:latest .
-                    docker-compose up -d 
+                    docker-compose up -d --build
                     sleep 5
                     docker exec testbackend php artisan migrate:fresh --seed --env=testing
                     docker exec testbackend php artisan passport:install --env=testing
