@@ -156,7 +156,7 @@ class UserTagsConroller extends Controller
 
         return $this->success_response('Success', 200);
     }
-     /**
+    /**
      * @OA\GET(
      *   path="tag/info",
      *   tags={"Users"},
@@ -238,6 +238,39 @@ class UserTagsConroller extends Controller
     }
 
     /**
+     * @OA\Get(
+     *   path="/following/tags",
+     *   summary="Retrieve the user's followed tags",
+     *   description="Retrieve the user's followed tags",
+     *   operationId="GetFollowedTags",
+     *   tags={"Explore"},
+     *   @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="meta", type="object",
+     *         @OA\Property(property="status_code", type="integer", example=200),
+     *         @OA\Property(property="msg", type="string", example="Success"),
+     *       ),
+     *       @OA\Property(property="response", type="array",
+     *           @OA\Items(type="object",
+     *              @OA\Property(property="id", type="integer", example=1),
+     *              @OA\Property(property="name", type="string", example="asperiores"),
+     *              @OA\Property(property="slug", type="string", example="asperiores"),
+     *              @OA\Property(property="posts_count", type="integer", example=7),
+     *              @OA\Property(property="cover_image", type="object",
+     *                  @OA\Property(property="link", type="string", example="https://via.placeholder.com/640x480.png/007799?text=sit"),
+     *                  @OA\Property(property="post_id", type="integer", example=6),
+     *              ),
+     *           )
+     *         ),
+     *       )
+     *   ),
+     * security ={{"bearer":{}}}
+     * )
+     */
+
+    /**
      * Get the tags that the user follows
      * 
      * @return \Illuminate\Http\Response
@@ -271,6 +304,47 @@ class UserTagsConroller extends Controller
     }
 
     /**
+     * @OA\Get(
+     *   path="/recommended/tags",
+     *   summary="Retrieve recommended tags",
+     *   description="Retrieve recommended tags for the explore",
+     *   operationId="GetRecommendedTags",
+     *   tags={"Explore"},
+     *   @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="meta", type="object",
+     *         @OA\Property(property="status_code", type="integer", example=200),
+     *         @OA\Property(property="msg", type="string", example="Success"),
+     *       ),
+     *       @OA\Property(property="response", type="object",
+     *         @OA\Property(property="tags", type="array",
+     *           @OA\Items(type="object",
+     *              @OA\Property(property="tag_id", type="integer", example=1),
+     *              @OA\Property(property="tag_name", type="string", example="asperiores"),
+     *              @OA\Property(property="tag_slug", type="string", example="asperiores"),
+     *              @OA\Property(property="posts_views", type="array",
+     *                  @OA\Items(type="object",
+     *                      @OA\Property(property="link", type="string", example="https://via.placeholder.com/640x480.png/007799?text=sit"),
+     *                      @OA\Property(property="post_id", type="integer", example=44),
+     *                  ),
+     *              ),
+     *          )
+     *         ),
+     *         @OA\Property(property="next_url", type="string", example="https://www.cmplr.tech/api/recommended/tags?page=2"),
+     *         @OA\Property(property="total", type="number", example=36),
+     *         @OA\Property(property="current_page", type="number", example=1),
+     *         @OA\Property(property="tags_per_page", type="number", example=4),
+     *         )
+     *       )
+     *     )
+     *   ),
+     * security ={{"bearer":{}}}
+     * )
+     */
+
+    /**
      * Get recommended tags for explore
      * 
      * @return \Illuminate\Http\Response
@@ -298,6 +372,47 @@ class UserTagsConroller extends Controller
 
         return $response;
     }
+
+    /**
+     * @OA\Get(
+     *   path="/trending/tags",
+     *   summary="Retrieve trending tags",
+     *   description="Retrieve trending tags for the explore",
+     *   operationId="GetTrendingTags",
+     *   tags={"Explore"},
+     *   @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="meta", type="object",
+     *         @OA\Property(property="status_code", type="integer", example=200),
+     *         @OA\Property(property="msg", type="string", example="Success"),
+     *       ),
+     *       @OA\Property(property="response", type="object",
+     *         @OA\Property(property="tags", type="array",
+     *           @OA\Items(type="object",
+     *              @OA\Property(property="tag_id", type="integer", example=1),
+     *              @OA\Property(property="tag_name", type="string", example="asperiores"),
+     *              @OA\Property(property="tag_slug", type="string", example="asperiores"),
+     *              @OA\Property(property="posts_views", type="array",
+     *                  @OA\Items(type="object",
+     *                      @OA\Property(property="link", type="string", example="https://via.placeholder.com/640x480.png/007799?text=sit"),
+     *                      @OA\Property(property="post_id", type="integer", example=44),
+     *                  ),
+     *              ),
+     *          )
+     *         ),
+     *         @OA\Property(property="next_url", type="string", example="https://www.cmplr.tech/api/trending/tags?page=2"),
+     *         @OA\Property(property="total", type="number", example=36),
+     *         @OA\Property(property="current_page", type="number", example=1),
+     *         @OA\Property(property="tags_per_page", type="number", example=4),
+     *         )
+     *       )
+     *     )
+     *   ),
+     * security ={{"bearer":{}}}
+     * )
+     */
 
     /**
      * Get trending tags for explore

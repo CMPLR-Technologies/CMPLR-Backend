@@ -30,6 +30,47 @@ class BlogController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *   path="/recommended/blogs",
+     *   summary="Retrieve recommended blogs",
+     *   description="Retrieve recommended blogs for the explore",
+     *   operationId="GetRecommendedBlogs",
+     *   tags={"Explore"},
+     *   @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="meta", type="object",
+     *         @OA\Property(property="status_code", type="integer", example=200),
+     *         @OA\Property(property="msg", type="string", example="Success"),
+     *       ),
+     *       @OA\Property(property="response", type="object",
+     *         @OA\Property(property="blogs", type="array",
+     *           @OA\Items(type="object",
+     *              @OA\Property(property="blog_id", type="integer", example=1),
+     *              @OA\Property(property="blog_name", type="string", example="abdullahadel"),
+     *              @OA\Property(property="title", type="string", example="Abdullah Adel"),
+     *              @OA\Property(property="avatar", type="string", example="https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"),
+     *              @OA\Property(property="avatar_shape", type="string", example="circle"),
+     *              @OA\Property(property="header_image", type="string", example="https://assets.tumblr.com/images/default_header/optica_pattern_02_640.png?_v=b976ee00195b1b7806c94ae285ca46a7"),
+     *              @OA\Property(property="description", type="string", example=""),
+     *              @OA\Property(property="background_color", type="string", example="white"),
+     *          )
+     *         ),
+     *         @OA\Property(property="total_following", type="number", example=36),
+     *         @OA\Property(property="next_url", type="string", example="https://www.cmplr.tech/api/recommended/blogs?page=2"),
+     *         @OA\Property(property="current_page", type="number", example=1),
+     *         @OA\Property(property="next_page", type="number", example=2),
+     *         @OA\Property(property="posts_per_page", type="number", example=4),
+     *         )
+     *       )
+     *     )
+     *   ),
+     * security ={{"bearer":{}}}
+     * )
+     */
+
+    /**
      * This function is responsible for getting
      * recommended blogs (paginated)
      * 
@@ -57,6 +98,47 @@ class BlogController extends Controller
 
         return $response;
     }
+
+    /**
+     * @OA\Get(
+     *   path="/trending/blogs",
+     *   summary="Retrieve trending blogs",
+     *   description="Retrieve trending blogs for the explore",
+     *   operationId="GetTrendingBlogs",
+     *   tags={"Explore"},
+     *   @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="meta", type="object",
+     *         @OA\Property(property="status_code", type="integer", example=200),
+     *         @OA\Property(property="msg", type="string", example="Success"),
+     *       ),
+     *       @OA\Property(property="response", type="object",
+     *         @OA\Property(property="blogs", type="array",
+     *           @OA\Items(type="object",
+     *              @OA\Property(property="blog_id", type="integer", example=1),
+     *              @OA\Property(property="blog_name", type="string", example="abdullahadel"),
+     *              @OA\Property(property="title", type="string", example="Abdullah Adel"),
+     *              @OA\Property(property="avatar", type="string", example="https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"),
+     *              @OA\Property(property="avatar_shape", type="string", example="circle"),
+     *              @OA\Property(property="header_image", type="string", example="https://assets.tumblr.com/images/default_header/optica_pattern_02_640.png?_v=b976ee00195b1b7806c94ae285ca46a7"),
+     *              @OA\Property(property="description", type="string", example=""),
+     *              @OA\Property(property="background_color", type="string", example="white"),
+     *          )
+     *         ),
+     *         @OA\Property(property="total_following", type="number", example=36),
+     *         @OA\Property(property="next_url", type="string", example="https://www.cmplr.tech/api/trending/blogs?page=2"),
+     *         @OA\Property(property="current_page", type="number", example=1),
+     *         @OA\Property(property="next_page", type="number", example=2),
+     *         @OA\Property(property="posts_per_page", type="number", example=4),
+     *         )
+     *       )
+     *     )
+     *   ),
+     * security ={{"bearer":{}}}
+     * )
+     */
 
     /**
      * This function is responsible for getting
