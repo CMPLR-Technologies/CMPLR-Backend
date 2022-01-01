@@ -20,14 +20,15 @@ class UserTagsTest extends TestCase
      */
     public function test_success_un_follow_tag()
     {
-        $tagName = Tag::take(1)->first()->value('name') ;
-        $userId =User::take(1)->first()->value('id') ;
-        TagUser::Create([
-            'tag_name' => $tagName,
-            'user_id' =>  $userId ,
-        ]);
+        // $tagName = Tag::take(1)->first()->value('name');
+        // $userId =User::take(1)->first()->value('id') ;
+        // TagUser::Create([
+        //     'tag_name' => $tagName,
+        //     'user_id' =>  $userId ,
+        // ]);
       
-        $check = (new UserTagsService)->UserUnFollowTag($tagName , $userId);
+        $userTag = TagUser::take(1)->first();
+        $check = (new UserTagsService)->UserUnFollowTag($userTag->tag_name , $userTag->user_id);
         $this->assertTrue($check);
     }
 

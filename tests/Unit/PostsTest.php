@@ -30,7 +30,7 @@ class PostsTest extends TestCase
 
     // test validations
 
-     /**
+    /**
      * check the validation of content in post
      * Enter 
      *
@@ -146,8 +146,8 @@ class PostsTest extends TestCase
         $this->assertFalse($this->validateField('source_content', 12345));
     }
 
-    
-     /**
+
+    /**
      * check the validation of tags in post
      * Enter 
      *
@@ -156,7 +156,7 @@ class PostsTest extends TestCase
     /** @test */
     public function validateTags()
     {
-        $this->assertTrue($this->validateField('tags', ['summer','winter']));
+        $this->assertTrue($this->validateField('tags', ['summer', 'winter']));
         $this->assertTrue($this->validateField('tags', ['geekforgeeks']));
         $this->assertTrue($this->validateField('tags', []));
 
@@ -169,7 +169,7 @@ class PostsTest extends TestCase
 
     // -- testing create post
 
- 
+
     // testing create post service
 
     /** @test */
@@ -268,11 +268,95 @@ class PostsTest extends TestCase
     /** @test */
     public function TestDashBoard()
     {
-        $check = (new UserService())->GetDashBoardPosts([1],[2]);
+        $check = (new UserService())->GetDashBoardPosts([1], [2]);
         $this->assertNotNull($check);
     }
-    
 
+    // Testing Explore Posts
+    /** @test */
+    public function TestGetExplorePosts()
+    {
+        $check =  (new PostsService())->GetRandomPosts();
+        $this->assertNotNull($check);
+    }
+
+    /** @test */
+    public function TestGetDraftPosts()
+    {
+        $blogId = Blog::take(1)->first()->id;
+        $check =  (new PostsService())->GetDraftPosts($blogId);
+        $this->assertNotNull($check);
+    }
+
+    /** @test */
+    public function TestGetDraftPostsFaliure()
+    {
+        $notExistBlogId = 9999;
+        $check =  (new PostsService())->GetDraftPosts($notExistBlogId);
+        $this->assertEmpty($check);
+    }
+
+
+
+    /** @test */
+    public function TestPublishDraftPosts()
+    {
+        $blog = Blog::take(1)->first();
+
+        $post = Posts::factory()->create(
+            [
+                'state' => 'draft',
+                'blog_name' => $blog->blog_name,
+                'blog_id' => $blog->id,
+            ]
+        );
+
+        $check =  (new PostsService())->PublishDraftPost($blog->id, $post->id);
+        $this->assertEquals($check, 1);
+    }
+
+    /** @test */
+    // try PublishDraftPostsFailure with invalid blog_id
+    public function TestPublishDraftPostsFailure()
+    {
+        $blog = Blog::take(1)->first();
+        $notExistBlogId = 9999;
+        $post = Posts::factory()->create(
+            [
+                'state' => 'draft',
+                'blog_name' => $blog->blog_name,
+                'blog_id' => $blog->id,
+            ]
+        );
+        $check =  (new PostsService())->PublishDraftPost($notExistBlogId, $post->id);
+        $this->assertEquals($check, 0);
+    }
+
+        /** @test */
+    // try PublishDraftPostsFailure with invalid post
+    public function TestPublishDraftPostsFailure2()
+    {
+        $blog = Blog::take(1)->first();
+        $post = Posts::factory()->create(
+            [
+                'state' => 'publish',
+                'blog_name' => $blog->blog_name,
+                'blog_id' => $blog->id,
+            ]
+        );
+        $check =  (new PostsService())->PublishDraftPost($blog->id , $post->id);
+        $this->assertEquals($check, 0);
+    }
+
+        /** @test */
+    // try PublishDraftPostsFailure with invalid post id
+    public function TestPublishDraftPostsFailure3()
+    {
+        $blog = Blog::take(1)->first();
+        $postId = 99999;
+        $check =  (new PostsService())->PublishDraftPost($blog->id , $postId);
+        $this->assertEquals($check, 0);
+    }
 
     protected function getFieldValidator($field, $value)
     {
