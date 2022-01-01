@@ -52,6 +52,8 @@ pipeline {
             post {
                 success {
                     echo "========docker build success ========"
+                discordSend description: "Jenkins Pipeline Build", thumbnail: "https://jenkins.io/images/logos/ninja/256.png",footer: "Docker built successfully, testing E2E now", result: currentBuild.currentResult, title: JOB_NAME, webhookURL: WEBHOOK_URL
+
                 }
                 failure {
                     echo "========docker build failed========"
@@ -59,33 +61,5 @@ pipeline {
                 }
            }
         }
-        
-        
-        stage('push image') {
-            steps {
-                echo "======== Pushing image to registry ========="
-                
-                withCredentials([usernamePassword(credentialsId: 'ACR', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) 
-                {
-                    sh """
-                docker login ${LOGIN_SERVER} -u ${USERNAME}  -p ${PASSWORD}
-                docker push ${LOGIN_SERVER}/backend:latest
-                """
-                }
-            }
-            post {
-                success {
-                    echo "======== Pushing image to registry was successful ========="
-                discordSend description: "Jenkins Pipeline Build", thumbnail: "https://jenkins.io/images/logos/ninja/256.png",footer: "Docker built and pushed successfully", result: currentBuild.currentResult, title: JOB_NAME, webhookURL: WEBHOOK_URL
-                }
-                failure {
-                    echo "======== Failed to Pushing image to registry ========="
-                    discordSend description: "Jenkins Pipeline Build", thumbnail: "https://jenkins.io/images/logos/ninja/256.png", footer: "Docker pushing Failed", result: currentBuild.currentResult, title: JOB_NAME, webhookURL: WEBHOOK_URL
-                }
-           }
-        }
-
-
-
     }
 }
