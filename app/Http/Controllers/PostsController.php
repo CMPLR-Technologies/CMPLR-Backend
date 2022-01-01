@@ -836,6 +836,62 @@ class PostsController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *   path="/recommended/posts",
+     *   summary="Retrieve recommended posts",
+     *   description="Retrieve recommended posts for the explore",
+     *   operationId="GetRecommendedTags",
+     *   tags={"Explore"},
+     *   @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="meta", type="object",
+     *         @OA\Property(property="status_code", type="integer", example=200),
+     *         @OA\Property(property="msg", type="string", example="Success"),
+     *       ),
+     *       @OA\Property(property="response", type="object",
+     *         @OA\Property(property="post", type="array",
+     *           @OA\Items(type="object",
+     *              @OA\Property(property="post", type="object",
+     *                  @OA\Property(property="post_id", type="integer", example=1),
+     *                  @OA\Property(property="type", type="string", example="text"),
+     *                  @OA\Property(property="state", type="string", example="publish"),
+     *                  @OA\Property(property="title", type="string", example="Happy New Year"),
+     *                  @OA\Property(property="content", type="string", example="<h1>And I declare it's too bad.</h1>"),
+     *                  @OA\Property(property="date", type="string", example="Saturday, 01-Jan-22 16:45:14 UTC"),
+     *                  @OA\Property(property="source_content", type="string", example="happynewyear"),
+     *                  @OA\Property(property="is_liked", type="boolean", example=false),
+     *                  @OA\Property(property="is_mine", type="boolean", example=false),
+     *                  @OA\Property(property="notes_count", type="boolean", example=14),
+     *                  @OA\Property(property="tags", type="array",
+     *                      @OA\Items(type="object",
+     *                          @OA\Property(property="tag_name", type="string", example="asperiores"),
+     *                      )
+     *                  )
+     *              ),
+     *              @OA\Property(property="blog", type="object",
+     *                  @OA\Property(property="blog_id", type="integer", example=1),
+     *                  @OA\Property(property="blog_name", type="string", example="abdullahadel"),
+     *                  @OA\Property(property="avatar", type="string", example="https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"),
+     *                  @OA\Property(property="avatar_shape", type="string", example="circle"),
+     *                  @OA\Property(property="replies", type="string", example="everyone"),
+     *                  @OA\Property(property="follower", type="boolean", example=false),
+     *              ),
+     *           )
+     *         ),
+     *         @OA\Property(property="next_url", type="string", example="https://www.cmplr.tech/api/recommended/posts?page=2"),
+     *         @OA\Property(property="total", type="number", example=101),
+     *         @OA\Property(property="current_page", type="number", example=1),
+     *         @OA\Property(property="posts_per_page", type="number", example=15),
+     *       )
+     *     )
+     *   ),
+     * security ={{"bearer":{}}}
+     * )
+     */
+
+    /**
      * This function is responsible for getting
      * recommended posts (paginated)
      * 
@@ -863,6 +919,62 @@ class PostsController extends Controller
 
         return $response;
     }
+
+    /**
+     * @OA\Get(
+     *   path="/trending/posts",
+     *   summary="Retrieve trending posts",
+     *   description="Retrieve trending posts for the explore",
+     *   operationId="GetTrendingTags",
+     *   tags={"Explore"},
+     *   @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="meta", type="object",
+     *         @OA\Property(property="status_code", type="integer", example=200),
+     *         @OA\Property(property="msg", type="string", example="Success"),
+     *       ),
+     *       @OA\Property(property="response", type="object",
+     *         @OA\Property(property="post", type="array",
+     *           @OA\Items(type="object",
+     *              @OA\Property(property="post", type="object",
+     *                  @OA\Property(property="post_id", type="integer", example=1),
+     *                  @OA\Property(property="type", type="string", example="text"),
+     *                  @OA\Property(property="state", type="string", example="publish"),
+     *                  @OA\Property(property="title", type="string", example="Happy New Year"),
+     *                  @OA\Property(property="content", type="string", example="<h1>And I declare it's too bad.</h1>"),
+     *                  @OA\Property(property="date", type="string", example="Saturday, 01-Jan-22 16:45:14 UTC"),
+     *                  @OA\Property(property="source_content", type="string", example="happynewyear"),
+     *                  @OA\Property(property="is_liked", type="boolean", example=false),
+     *                  @OA\Property(property="is_mine", type="boolean", example=false),
+     *                  @OA\Property(property="notes_count", type="boolean", example=14),
+     *                  @OA\Property(property="tags", type="array",
+     *                      @OA\Items(type="object",
+     *                          @OA\Property(property="tag_name", type="string", example="asperiores"),
+     *                      )
+     *                  )
+     *              ),
+     *              @OA\Property(property="blog", type="object",
+     *                  @OA\Property(property="blog_id", type="integer", example=1),
+     *                  @OA\Property(property="blog_name", type="string", example="abdullahadel"),
+     *                  @OA\Property(property="avatar", type="string", example="https://assets.tumblr.com/images/default_avatar/cone_closed_128.png"),
+     *                  @OA\Property(property="avatar_shape", type="string", example="circle"),
+     *                  @OA\Property(property="replies", type="string", example="everyone"),
+     *                  @OA\Property(property="follower", type="boolean", example=false),
+     *              ),
+     *           )
+     *         ),
+     *         @OA\Property(property="next_url", type="string", example="https://www.cmplr.tech/api/trending/posts?page=2"),
+     *         @OA\Property(property="total", type="number", example=101),
+     *         @OA\Property(property="current_page", type="number", example=1),
+     *         @OA\Property(property="posts_per_page", type="number", example=15),
+     *       )
+     *     )
+     *   ),
+     * security ={{"bearer":{}}}
+     * )
+     */
 
     /**
      * This function is responsible for getting
@@ -915,7 +1027,7 @@ class PostsController extends Controller
      *      response=401,
      *       description="Unauthenticated"
      *   ),
-      * @OA\Response(
+     * @OA\Response(
      *    response=200,
      *    description="success",
      *    @OA\JsonContent(
@@ -985,7 +1097,7 @@ class PostsController extends Controller
     }
 
 
-     /**
+    /**
      * @OA\Get(
      * path="/profile/likes/{blog_name}",
      * summary="Retrieve a profile's Likes",
@@ -1038,7 +1150,7 @@ class PostsController extends Controller
      * security ={{"bearer":{}}}
      * )
      */
-    
+
     /**
      * this function is responsible for get profile likes for blog
      * @param Request $request
