@@ -5,7 +5,12 @@ namespace App\Services\Blog;
 
 class UnfollowBlogService{
 
-
+    /**
+     * implement the logic of unfollowing a blog
+     * @param Blog $blog 
+     * @param User $user
+     * @return int
+     */
     public function UnfollowBlog($blog,$user)
     {
         //check if the blog doesn't exist

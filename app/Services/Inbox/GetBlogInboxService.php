@@ -17,9 +17,11 @@ class GetBlogInboxService{
     |
    */
 
+
     /**
-     * implements the logic of getting blog inbox
-     * 
+     * implements the logic of getting inbox of a blog
+     * @param User $user
+     * @param string $blogName
      * @return array
      */
     public function GetBlogInbox($blogName,$user)

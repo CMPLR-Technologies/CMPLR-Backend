@@ -19,10 +19,11 @@ class DeleteAskService{
    */
 
     /**
-    * implements the logic of deleting an Ask
-    * 
-    * @return int
-    */
+     * implements the logic of deleting an Ask
+     * @param int $askId 
+     * @param User $user
+     * @return int
+     */
     public function DeleteAsk($askId,$user)
     {
         //get target ask

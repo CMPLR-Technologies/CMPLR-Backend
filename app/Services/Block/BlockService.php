@@ -17,9 +17,12 @@ class BlockService{
     |
    */
 
+
     /**
      * implements the logic of blocking a blog
-     * 
+     * @param string $blockName
+     * @param string $blogName
+     * @param User $user
      * @return int
      */
     public function BlockBlog($blockName,$blogName,$user)
@@ -70,7 +73,9 @@ class BlockService{
 
     /**
      * implements the logic of unblocking a blog
-     * 
+     * @param string $unblockName
+     * @param string $blogName
+     * @param User $user
      * @return int
      */
     public function UnblockBlog($unblockName,$blogName,$user)
@@ -105,8 +110,9 @@ class BlockService{
     }
 
     /**
-     * implements the logic of getting the blocks of a blog
-     * 
+     * implements the logic of getting blocked blogs of a blog
+     * @param string $blogName
+     * @param User $user
      * @return int
      */
     public function GetBlogBlocks($blogName,$user)
@@ -137,7 +143,8 @@ class BlockService{
 
     /**
      * implements the logic of checking if two blogs are blocked
-     * 
+     * @param int $firstBlogId
+     * @param int $secondBlogId
      * @return boolean
      */
     public function isBlocked($firstBlogId,$secondBlogId)
@@ -156,9 +163,11 @@ class BlockService{
             return false;
     }
 
+
     /**
-     * implements the logic of checking if two blogs are blocked
-     * 
+     * implements the logic of deleting any blocks between two blogs 
+     * @param int $firstBlogId
+     * @param int $secondBlogId
      * @return boolean
      */
     public function noBlock($firstBlogId,$secondBlogId)

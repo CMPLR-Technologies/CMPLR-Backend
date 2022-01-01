@@ -20,7 +20,9 @@ class CreateAskService{
 
     /**
      * implements the logic of creating an Ask
-     * 
+     * @param array $request 
+     * @param string $blogName
+     * @param User $user
      * @return int
      */
     public function CreateAsk($request,$blogName,$user)

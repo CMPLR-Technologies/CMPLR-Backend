@@ -17,10 +17,12 @@ class NotificationsService{
     |
    */
 
-
     /**
      * implements the logic of creating a notification
-     * 
+     * @param int $fromBlogId
+     * @param int $toBlogId
+     * @param string $type
+     * @param int $postAskAnswerId
      * @return void
      */
     public function CreateNotification($fromBlogId,$toBlogId,$type,$postAskAnswerId)
@@ -87,7 +89,10 @@ class NotificationsService{
 
     /**
      * implements the logic of deleting a notification
-     * 
+     * @param int $fromBlogId
+     * @param int $toBlogId
+     * @param string $type
+     * @param int $postAskAnswerId
      * @return void
      */
     public function DeleteNotification($fromBlogId,$toBlogId,$type,$postAskAnswerId)
@@ -100,8 +105,9 @@ class NotificationsService{
     }
 
     /**
-     * implements the logic of getting notifications
-     * 
+     * implements the logic of getting blog notifications
+     * @param User $user
+     * @param string $blogName
      * @return array
      */
     public function GetNotifications($blogName,$user)
@@ -125,8 +131,9 @@ class NotificationsService{
     }
 
     /**
-     * implements the logic of seeing a notification
-     * 
+     * implements the logic of getting setting a notification as seen before
+     * @param int $notificationId
+     * @param User $user
      * @return int
      */
 
@@ -152,8 +159,9 @@ class NotificationsService{
     }
 
     /**
-     * implements the logic of getting the number of unseen notifications
-     * 
+     * implements the logic of getting number of unseen notifications
+     * @param int $notificationId
+     * @param User $user
      * @return int
      */
 
@@ -174,9 +182,11 @@ class NotificationsService{
         return $count;
     }
 
+
     /**
      * implements the logic of storing user's firebase token
-     * 
+     * @param User $user
+     * @param string $token
      * @return int
      */
 
@@ -189,10 +199,13 @@ class NotificationsService{
         return 200;
     }
 
+
     /**
-     * implements the logic of sending a notification to a certain blog
-     * 
-     * @return int
+     * implements the logic of sending a push notification to a certain blog
+     * @param string $title
+     * @param string $message
+     * @param string $targetTokens
+     * @return void
      */
 
     public function SendNotification($title,$message,$targetTokens)
@@ -241,9 +254,10 @@ class NotificationsService{
     }
 
     /**
-     * implements the logic of getting Last Ndays Activity
-     * 
-     * @return int
+     * implements the logic of getting last-ndays Activity of a blog
+     * @param int $lastNdays
+     * @param string $blogName
+     * @return array
      */
 
     public function GetLastNdaysActivity($lastNdays,$blogName)
