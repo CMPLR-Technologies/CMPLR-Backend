@@ -13,17 +13,16 @@ class ChatFactory extends Factory
      */
     public function definition()
     {
-        $fromBlogId = $this->faker->numberBetween(1 , 10);
-        $toBlogId = $this->faker->numberBetween(1 , 10);
-        while ($fromBlogId ==  $toBlogId)
-        {
-            $fromBlogId =$this->faker->numberBetween(1 , 10);
-            $toBlogId = $this->faker->numberBetween(1 , 10);
+        $fromBlogId = $this->faker->numberBetween(1, 50);
+        $toBlogId = $this->faker->numberBetween(1, 50);
+        while ($fromBlogId ==  $toBlogId) {
+            $fromBlogId = $this->faker->numberBetween(1, 50);
+            $toBlogId = $this->faker->numberBetween(1, 50);
         }
         return [
-            'from_blog_id' => $fromBlogId , 
-            'to_blog_id' =>$toBlogId ,
-            'content' => $this->faker->sentence(4) ,
+            'from_blog_id' => $fromBlogId,
+            'to_blog_id' => $toBlogId,
+            'content' => $this->faker->sentence(4),
         ];
     }
 }

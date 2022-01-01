@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Posts;
 use App\Models\PostTags;
 use Illuminate\Database\Seeder;
 
@@ -14,6 +15,14 @@ class PostTagsSeeder extends Seeder
      */
     public function run()
     {
-        PostTags::factory()->count(50)->create();
+        Posts::all()->each(function ($post) {
+            $tags = $post->tags;
+            foreach ($tags as $tag) {
+                PostTags::factory()->create([
+                    'post_id' => $post->id,
+                    'tag_name' => $tag
+                ]);
+            }
+        });
     }
 }
