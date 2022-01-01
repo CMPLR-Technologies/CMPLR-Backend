@@ -7,8 +7,6 @@ use App\Models\Blog;
 use App\Models\Posts;
 use App\Services\Posts\PostsService;
 use App\Services\User\UserService;
-use Faker\Factory;
-use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class PostsTest extends TestCase
@@ -276,27 +274,33 @@ class PostsTest extends TestCase
     /** @test */
     public function TestGetExplorePosts()
     {
-        $check =  (new PostsService())->GetRandomPosts();
+        $check = (new PostsService())->GetRandomPosts();
         $this->assertNotNull($check);
     }
 
+    // Testing Draft
     /** @test */
     public function TestGetDraftPosts()
     {
-        $blogId = Blog::take(1)->first()->id;
-        $check =  (new PostsService())->GetDraftPosts($blogId);
-        $this->assertNotNull($check);
+        $blog = Blog::take(1)->first();
+        Posts::factory()->create(
+            [
+                'state' => 'draft',
+                'blog_name' => $blog->blog_name,
+                'blog_id' => $blog->id,
+            ]
+        );
+        $check = (new PostsService())->GetDraftPosts($blog->id);
+        $this->assertNotEmpty($check);
     }
 
     /** @test */
-    public function TestGetDraftPostsFaliure()
+    public function TestGetDraftPostsFailure()
     {
         $notExistBlogId = 9999;
-        $check =  (new PostsService())->GetDraftPosts($notExistBlogId);
+        $check = (new PostsService())->GetDraftPosts($notExistBlogId);
         $this->assertEmpty($check);
     }
-
-
 
     /** @test */
     public function TestPublishDraftPosts()
@@ -311,13 +315,13 @@ class PostsTest extends TestCase
             ]
         );
 
-        $check =  (new PostsService())->PublishDraftPost($blog->id, $post->id);
+        $check = (new PostsService())->PublishDraftPost($blog->id, $post->id);
         $this->assertEquals($check, 1);
     }
 
     /** @test */
     // try PublishDraftPostsFailure with invalid blog_id
-    public function TestPublishDraftPostsFailure()
+    public function TestPublishDraftPostsFailureBlogId()
     {
         $blog = Blog::take(1)->first();
         $notExistBlogId = 9999;
@@ -328,13 +332,13 @@ class PostsTest extends TestCase
                 'blog_id' => $blog->id,
             ]
         );
-        $check =  (new PostsService())->PublishDraftPost($notExistBlogId, $post->id);
+        $check = (new PostsService())->PublishDraftPost($notExistBlogId, $post->id);
         $this->assertEquals($check, 0);
     }
 
-        /** @test */
+    /** @test */
     // try PublishDraftPostsFailure with invalid post
-    public function TestPublishDraftPostsFailure2()
+    public function TestPublishDraftPostsFailurePostState()
     {
         $blog = Blog::take(1)->first();
         $post = Posts::factory()->create(
@@ -344,17 +348,17 @@ class PostsTest extends TestCase
                 'blog_id' => $blog->id,
             ]
         );
-        $check =  (new PostsService())->PublishDraftPost($blog->id , $post->id);
+        $check = (new PostsService())->PublishDraftPost($blog->id, $post->id);
         $this->assertEquals($check, 0);
     }
 
-        /** @test */
+    /** @test */
     // try PublishDraftPostsFailure with invalid post id
-    public function TestPublishDraftPostsFailure3()
+    public function TestPublishDraftPostsFailurePostId()
     {
         $blog = Blog::take(1)->first();
         $postId = 99999;
-        $check =  (new PostsService())->PublishDraftPost($blog->id , $postId);
+        $check = (new PostsService())->PublishDraftPost($blog->id, $postId);
         $this->assertEquals($check, 0);
     }
 
