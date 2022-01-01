@@ -2,12 +2,11 @@
 
 namespace Tests\Unit;
 
+use App\Http\Requests\PostRequest;
 use App\Models\Blog;
 use App\Models\Posts;
 use App\Services\Posts\PostsService;
 use App\Services\User\UserService;
-use Faker\Factory;
-use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class PostsTest extends TestCase
@@ -23,138 +22,164 @@ class PostsTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->rules     = (new PostRequest())->rules();
+        $this->validator = $this->app['validator'];
+    }
 
-        if (!self::$initialized) {
+    // test validations
 
-            $faker = Factory::create(1);
-            $request = [
-                'email' => $faker->unique()->email(),
-                'age' => $faker->numberBetween(18, 80),
-                'blog_name' => 'P_' . time(),
-                'password' => 'Test_pass34',
-            ];
-            // only needs user to test user settings
-            $response = $this->json('POST', '/api/register/insert', $request, ['Accept' => 'application/json']);
-            //dd(($response->json()));
-            self::$data['token'] = ($response->json())['response']['token'];
-            self::$data['user'] = ($response->json())['response']['user'];
-            self::$data['id'] =  ($response->json())['response']['user']['id'];
-            self::$data['blog_name'] =  ($response->json())['response']['blog_name'];
-            self::$data['blog_id'] = ($response->json())['response']['user']['primary_blog_id'];
-            $this->email =  ($response->json())['response']['user']['email'];
-            self::$data['password'] =  Hash::make('Ahmed_123');
-            self::$initialized = TRUE;
-        }
+    /**
+     * check the validation of content in post
+     * Enter 
+     *
+     * @return void
+     */
+    /** @test */
+    public function validateContent()
+    {
+        $this->assertTrue($this->validateField('content', 'this is the content of the post'));
+        $this->assertTrue($this->validateField('content', '@#A$#askd1x 123 '));
+        $this->assertTrue($this->validateField('content', '123453789'));
+
+        // content  cannot be 
+        //empty
+        $this->assertFalse($this->validateField('content', ''));
+    }
+
+    /**
+     * check the validation of type in post
+     * Enter 
+     *
+     * @return void
+     */
+    /** @test */
+    public function validateType()
+    {
+        $this->assertTrue($this->validateField('type', 'text'));
+        $this->assertTrue($this->validateField('type', 'photos'));
+        $this->assertTrue($this->validateField('type', 'quotes'));
+        $this->assertTrue($this->validateField('type', 'chats'));
+        $this->assertTrue($this->validateField('type', 'audio'));
+        $this->assertTrue($this->validateField('type', 'videos'));
+
+        // type  cannot be 
+        //empty
+        $this->assertFalse($this->validateField('type', ''));
+        // integer
+        $this->assertFalse($this->validateField('type', 12345));
+        // invalid type
+        $this->assertFalse($this->validateField('type', 'ahmed'));
+        $this->assertFalse($this->validateField('type', 'wow'));
+        $this->assertFalse($this->validateField('type', 'file'));
+        $this->assertFalse($this->validateField('type', 'texts'));
+    }
+
+
+
+    /**
+     * check the validation of blog_name in post
+     * Enter 
+     *
+     * @return void
+     */
+    /** @test */
+    public function validateBlogName()
+    {
+        $this->assertTrue($this->validateField('blog_name', 'ahmed'));
+        $this->assertTrue($this->validateField('blog_name', 'Ahmed_123'));
+        $this->assertTrue($this->validateField('blog_name', 'Blog_title'));
+
+        // blog_name  cannot be 
+        //empty
+        $this->assertFalse($this->validateField('blog_name', ''));
+        // integer
+        $this->assertFalse($this->validateField('blog_name', 12345));
+        // contain invalid symbols
+        $this->assertFalse($this->validateField('blog_name', 'ahm  $#ed'));
+        $this->assertFalse($this->validateField('blog_name', '###$%^$%^#$%^'));
+        // more than 22 character
+        $this->assertFalse($this->validateField('blog_name', 'sdafjhasdjfhjasdfhkdsjafhdsakjfhjafhsdsafjahsd'));
+    }
+
+    /**
+     * check the validation of state in post
+     * Enter 
+     *
+     * @return void
+     */
+    /** @test */
+    public function validateState()
+    {
+        $this->assertTrue($this->validateField('state', 'publish'));
+        $this->assertTrue($this->validateField('state', 'private'));
+        $this->assertTrue($this->validateField('state', 'draft'));
+
+        // state  cannot be 
+        //empty
+        $this->assertFalse($this->validateField('state', ''));
+        // integer
+        $this->assertFalse($this->validateField('state', 12345));
+        // invalid type
+        $this->assertFalse($this->validateField('state', 'ahmed'));
+        $this->assertFalse($this->validateField('state', 'wow'));
+        $this->assertFalse($this->validateField('state', 'file'));
+        $this->assertFalse($this->validateField('state', 'texts'));
+    }
+
+    /**
+     * check the validation of source_content in post
+     * Enter 
+     *
+     * @return void
+     */
+    /** @test */
+    public function validateSourceContent()
+    {
+        $this->assertTrue($this->validateField('source_content', 'www.google.com'));
+        $this->assertTrue($this->validateField('source_content', 'www.geekforgeeks'));
+        $this->assertTrue($this->validateField('source_content', 'facebook'));
+
+        // state  cannot be 
+        // integer
+        $this->assertFalse($this->validateField('source_content', 12345));
+    }
+
+
+    /**
+     * check the validation of tags in post
+     * Enter 
+     *
+     * @return void
+     */
+    /** @test */
+    public function validateTags()
+    {
+        $this->assertTrue($this->validateField('tags', ['summer', 'winter']));
+        $this->assertTrue($this->validateField('tags', ['geekforgeeks']));
+        $this->assertTrue($this->validateField('tags', []));
+
+        // state  cannot be 
+        // integer
+        $this->assertFalse($this->validateField('tags', 12345));
+        // string
+        $this->assertFalse($this->validateField('tags', 'winter'));
     }
 
     // -- testing create post
 
-
-    /** --- test request rules validations
-     * to create post their are some parameters must be 
-     * sent with request 
-     * 1) content       2)blog_name
-     * 3) type of post  4)state of post
-     * and user must be authentication to do this request
-     * */
-
-    /** @test */
-    public function TestAuthenticationFailure()
-    {
-        $request = [
-            'type' => 'photos',
-            'state' => 'private',
-            'blog_name' => self::$data['blog_name'],
-        ];
-        $response = $this->json('POST', '/api/posts', $request, ['Accept' => 'application/json'])->assertStatus(401);
-    }
-
-    /** @test */
-    public function TestCreatePostWithOutContent()
-    {
-        $request = [
-            'type' => 'photos',
-            'state' => 'private',
-            'blog_name' => self::$data['blog_name'],
-        ];
-        $response = $this->json('POST', '/api/posts', $request, ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . self::$data['token']]);
-        $response->assertStatus(422);
-    }
-    /** @test */
-    public function TestCreatePostWithOutState()
-    {
-        $request = [
-            'content' => 'this is the content of the post',
-            'type' => 'photos',
-            'blog_name' => self::$data['blog_name'],
-        ];
-        $response = $this->json('POST', '/api/posts', $request, ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . self::$data['token']]);
-        $response->assertStatus(422);
-    }
-    /** @test */
-    public function TestCreatePostWithOutType()
-    {
-        $request = [
-            'content' => 'this is the content of the post',
-            'state' => 'private',
-            'blog_name' => self::$data['blog_name'],
-        ];
-        $response = $this->json('POST', '/api/posts', $request, ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . self::$data['token']]);
-        $response->assertStatus(422);
-    }
-
-    /** @test */
-    public function TestCreatePostWithOutBlogName()
-    {
-        $request = [
-            'content' => 'this is the content of the post',
-            'state' => 'private',
-            'type' => 'photos',
-        ];
-        $response = $this->json('POST', '/api/posts', $request, ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . self::$data['token']]);
-        $response->assertStatus(422);
-    }
-
-    /** @test */
-    public function TestCreatePostWithNotFoundBlogName()
-    {
-        $request = [
-            'content' => 'this is the content of the post',
-            'state' => 'private',
-            'type' => 'photos',
-            'blog_name' => 'not_authrized_blog',
-        ];
-        $response = $this->json('POST', '/api/posts', $request, ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . self::$data['token']]);
-        // dd($response->json());
-        $response->assertStatus(404);
-    }
-
-    /** @test */
-    public function TestCreatePostWithUnAuthroizedBlogName()
-    {
-        $blog = Blog::where('blog_name', '!=', self::$data['blog_name'])->first();
-        $request = [
-            'content' => 'this is the content of the post',
-            'state' => 'private',
-            'type' => 'photos',
-            'blog_name' => $blog->blog_name,
-        ];
-        $response = $this->json('POST', '/api/posts', $request, ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . self::$data['token']]);
-        // dd($response->json());
-        $response->assertStatus(401);
-    }
 
     // testing create post service
 
     /** @test */
     public function TestCreatePost()
     {
+        $blog = Blog::take(1)->first();
         $request = [
             'content' => 'this is the content of the post kljkljkljlkjkl',
             'state' => 'publish',
             'type' => 'photos',
-            'blog_id' => self::$data['blog_id'],
-            'blog_name' => self::$data['blog_name'],
+            'blog_id' => $blog->id,
+            'blog_name' => $blog->blog_name,
         ];
         $check = (new PostsService())->createPost($request);
         $this->assertNotNull($check);
@@ -171,7 +196,8 @@ class PostsTest extends TestCase
     /** @test */
     public function TestGetBlogData()
     {
-        $check = (new PostsService())->GetBlogData(self::$data['blog_name']);
+        $blogName = Blog::take(1)->first()->blog_name;
+        $check = (new PostsService())->GetBlogData($blogName);
         $this->assertNotNull($check);
     }
     /** @test */
@@ -180,35 +206,6 @@ class PostsTest extends TestCase
         $check = (new PostsService())->GetBlogData('not_exist_blogname');
         $this->assertNull($check);
     }
-
-    /** @test */
-    // not found blogname
-    public function TestNonFoundBlogNameEditPost()
-    {
-        $post = Posts::take(1)->first();
-        $response = $this->json('Get', 'edit/' . 'not_exist_blogname' . '/' . $post->id, ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . self::$data['token']]);
-        $response->assertStatus(404);
-    }
-
-    /** @test */
-    // not found postid
-    public function TestNonFoundPostIdEditPost()
-    {
-        $blog = Blog::take(1)->first();
-        $response = $this->json('Get', 'edit/' . $blog->blog_name . '/' . '99987', ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . self::$data['token']]);
-        $response->assertStatus(404);
-    }
-
-    /** @test */
-    // not found postid
-    public function TestUnAuthrizedEditPost()
-    {
-        $post = Posts::inRandomOrder()->first();
-        $blog = Blog::where('id', '!=', $post->blog_id)->first();
-        $response = $this->json('Get', 'api/edit/' . $blog->blog_name . '/' . $post->id, ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . self::$data['token']]);
-        $response->assertStatus(401);
-    }
-
 
     /** @test */
     // test update the post data
@@ -242,13 +239,6 @@ class PostsTest extends TestCase
         $this->assertNotNull($check);
     }
 
-    /** @test */
-    public function TestGetPostById()
-    {
-        // test if their this post_id not found
-        $response = $this->json('Get', 'api/posts/' . '99999', ['Accept' => 'application/json']);
-        $response->assertStatus(404);
-    }
 
     /** @test */
     public function TestGetBlogPostsWithNotExistBlogName()
@@ -260,21 +250,128 @@ class PostsTest extends TestCase
     /** @test */
     public function TestGetBlogPostsWithExistBlogName()
     {
-        $check = (new PostsService())->GetBlogByName(self::$data['blog_name']);
+        $blogName = Blog::take(1)->first()->blog_name;
+        $check = (new PostsService())->GetBlogByName($blogName);
         $this->assertNotNull($check);
     }
 
     /** @test */
     public function TestGetPostsOfBlog()
     {
-        $check = (new PostsService())->GetPostsOfBlog(self::$data['blog_id']);
+        $blogId = Blog::take(1)->first()->id;
+        $check = (new PostsService())->GetPostsOfBlog($blogId);
         $this->assertNotNull($check);
     }
 
     /** @test */
     public function TestDashBoard()
     {
-        $check = (new UserService())->GetDashBoardPosts([1],[2]);
+        $check = (new UserService())->GetDashBoardPosts([1], [2]);
         $this->assertNotNull($check);
+    }
+
+    // Testing Explore Posts
+    /** @test */
+    public function TestGetExplorePosts()
+    {
+        $check = (new PostsService())->GetRandomPosts();
+        $this->assertNotNull($check);
+    }
+
+    // Testing Draft
+    /** @test */
+    public function TestGetDraftPosts()
+    {
+        $blog = Blog::take(1)->first();
+        Posts::factory()->create(
+            [
+                'state' => 'draft',
+                'blog_name' => $blog->blog_name,
+                'blog_id' => $blog->id,
+            ]
+        );
+        $check = (new PostsService())->GetDraftPosts($blog->id);
+        $this->assertNotEmpty($check);
+    }
+
+    /** @test */
+    public function TestGetDraftPostsFailure()
+    {
+        $notExistBlogId = 9999;
+        $check = (new PostsService())->GetDraftPosts($notExistBlogId);
+        $this->assertEmpty($check);
+    }
+
+    /** @test */
+    public function TestPublishDraftPosts()
+    {
+        $blog = Blog::take(1)->first();
+
+        $post = Posts::factory()->create(
+            [
+                'state' => 'draft',
+                'blog_name' => $blog->blog_name,
+                'blog_id' => $blog->id,
+            ]
+        );
+
+        $check = (new PostsService())->PublishDraftPost($blog->id, $post->id);
+        $this->assertEquals($check, 1);
+    }
+
+    /** @test */
+    // try PublishDraftPostsFailure with invalid blog_id
+    public function TestPublishDraftPostsFailureBlogId()
+    {
+        $blog = Blog::take(1)->first();
+        $notExistBlogId = 9999;
+        $post = Posts::factory()->create(
+            [
+                'state' => 'draft',
+                'blog_name' => $blog->blog_name,
+                'blog_id' => $blog->id,
+            ]
+        );
+        $check = (new PostsService())->PublishDraftPost($notExistBlogId, $post->id);
+        $this->assertEquals($check, 0);
+    }
+
+    /** @test */
+    // try PublishDraftPostsFailure with invalid post
+    public function TestPublishDraftPostsFailurePostState()
+    {
+        $blog = Blog::take(1)->first();
+        $post = Posts::factory()->create(
+            [
+                'state' => 'publish',
+                'blog_name' => $blog->blog_name,
+                'blog_id' => $blog->id,
+            ]
+        );
+        $check = (new PostsService())->PublishDraftPost($blog->id, $post->id);
+        $this->assertEquals($check, 0);
+    }
+
+    /** @test */
+    // try PublishDraftPostsFailure with invalid post id
+    public function TestPublishDraftPostsFailurePostId()
+    {
+        $blog = Blog::take(1)->first();
+        $postId = 99999;
+        $check = (new PostsService())->PublishDraftPost($blog->id, $postId);
+        $this->assertEquals($check, 0);
+    }
+
+    protected function getFieldValidator($field, $value)
+    {
+        return $this->validator->make(
+            [$field => $value],
+            [$field => $this->rules[$field]]
+        );
+    }
+
+    protected function validateField($field, $value)
+    {
+        return $this->getFieldValidator($field, $value)->passes();
     }
 }

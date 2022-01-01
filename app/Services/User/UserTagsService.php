@@ -132,7 +132,7 @@ class UserTagsService
     /**
      * getting the tag's count of the recent posts
      * 
-     * @param $tag_posts
+     * @param Posts $tag_posts
      * 
      * @return integer $recent_posts_count
      * 

@@ -20,8 +20,8 @@ class DeleteInboxService{
    */
 
     /**
-     * implements the logic of Deleting inbox
-     * 
+     * implements the logic of deleting the inbox of a user
+     * @param User $user
      * @return array
      */
     public function DeleteInbox($user)
@@ -42,8 +42,9 @@ class DeleteInboxService{
     }
 
     /**
-     * implements the logic of Deleting a blog's inbox
-     * 
+     * implements the logic of deleting the inbox of a blog
+     * @param User $user
+     * @param string $blogName
      * @return array
      */
     public function DeleteBlogInbox($blogName,$user)

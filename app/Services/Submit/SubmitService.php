@@ -18,8 +18,10 @@ class SubmitService{
    */
 
     /**
-     * implements the logic of creating a Submit
-     * 
+     * implement the logic of creaing a submit
+     * @param array $request
+     * @param string $blogName 
+     * @param User $user
      * @return int
      */
     public function CreateSubmit($request,$blogName,$user)
@@ -50,9 +52,10 @@ class SubmitService{
     }
 
 
-     /**
-     * implements the logic of deleting a Submit
-     * 
+    /**
+     * implement the logic of deleting a submit
+     * @param int $SubmitId
+     * @param User $user
      * @return int
      */
     public function DeleteSubmit($SubmitId,$user)
@@ -82,8 +85,10 @@ class SubmitService{
     
 
     /**
-     * implements the logic of posting a Submit
-     * 
+     * implement the logic of approving a submit
+     * @param array $request
+     * @param int $submitId
+     * @param User $user
      * @return int
      */
     public function PostSubmit($request,$submitId,$user)

@@ -24,9 +24,7 @@ class PostsFactory extends Factory
         foreach ($paragraphs as $para) {
             $content .= "<p>{$para}</p>";
         }
-        if ($this->faker->boolean()) {
-            $content .= "<img src=\"" . $this->faker->imageUrl() . "\" alt=\"Post Content\" >";
-        }
+        $content .= "<img src=\"" . $this->faker->imageUrl() . "\">";
         $blog = Blog::inRandomOrder()->first();
 
         return [

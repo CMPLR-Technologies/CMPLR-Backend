@@ -7,7 +7,12 @@ use Illuminate\Support\Facades\DB;
 
 class CreateBlogService{
 
-    //implement the logic of creating a blog
+   /**
+     * implement the logic of creating a blog
+     * @param array $param 
+     * @param User $user
+     * @return int
+     */
     public function CreateBlog($param,$user)
     {
         //checking if the blogName already exists

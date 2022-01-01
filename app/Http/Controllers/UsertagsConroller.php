@@ -38,7 +38,7 @@ class UserTagsConroller extends Controller
      *   path="/user/tags/add",
      *   tags={"Users"},
      *   summary="follow new tag",
-     *   operationId="follow tag",
+     *   operationId="FollowTag",
      *  @OA\Parameter(
      *      name="tag_name",
      *      in="query",
@@ -101,7 +101,7 @@ class UserTagsConroller extends Controller
      *   path="/user/tags/remove",
      *   tags={"Users"},
      *   summary="unfollow tag",
-     *   operationId="unfollow tag",
+     *   operationId="UnFollowTag",
      *  @OA\Parameter(
      *      name="tag_name",
      *      in="query",
@@ -156,6 +156,51 @@ class UserTagsConroller extends Controller
 
         return $this->success_response('Success', 200);
     }
+     /**
+     * @OA\GET(
+     *   path="tag/info",
+     *   tags={"Users"},
+     *   summary="getting tag info",
+     *   operationId="GetTagInfo",
+     *  @OA\Parameter(
+     *      name="tag_name",
+     *      in="query",
+     *      required=true,
+     *      @OA\Schema(
+     *           type="string"
+     *      )
+     *   ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     *   @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     *  @OA\Response(
+     *      response=404,
+     *      description="Not Found"
+     *   ),
+     *   @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *           @OA\JsonContent(
+     *           type="object",
+     *           @OA\Property(property="total_followers", type="integer", example="10"),
+     *           @OA\Property(property="is_follower", type="boolean", example="true"),
+     *           @OA\Property(property="tag_avatar", type="string", example="null"),
+     *           @OA\Property(property="total_posts", type="integer", example="55"),
+     *           @OA\Property(property="tags", type="string", example="[summer , winter ,football]"),
+     * ),
+     *       ),
+     *         
+     *         
+     * 
+     *  
+     *       ),
+     *)
+     **/
 
     /**
      * getting info of specific tag

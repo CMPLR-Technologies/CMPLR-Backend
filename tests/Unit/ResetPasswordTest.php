@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Models\User;
 use App\Services\Auth\ResetPasswordService;
 use Illuminate\Support\Facades\DB;
@@ -11,6 +12,19 @@ use Tests\TestCase;
 
 class ResetPasswordTest extends TestCase
 {
+
+    // validation
+
+     /**
+     * check the validation of password
+     * Enter 
+     *
+     * @return void
+     */
+  
+
+
+
     /**
      * test if this email is corrosponding to user in our database.
      *
@@ -106,6 +120,5 @@ class ResetPasswordTest extends TestCase
         $check = (new ResetPasswordService())->SetNewPassword($user, $password);
         $this->assertTrue($check);
     }
-
-    //TODO: add success request and check token 
+ 
 }

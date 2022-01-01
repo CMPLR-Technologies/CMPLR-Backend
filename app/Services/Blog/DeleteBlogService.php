@@ -8,7 +8,13 @@ use Illuminate\Support\Facades\Hash;
 
 class DeleteBlogService{
 
-
+    /**
+     * implement the logic of deleting a blog
+     * @param Blog $blog 
+     * @param User $user
+     * @param array $param
+     * @return int
+     */
     public function DeleteBlog($blog,$user,$param)
     {
         //confirming the user's email and password before deleting 

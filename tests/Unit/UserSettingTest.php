@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Http\Requests\Auth\ChangePasswordRequest;
 use App\Http\Requests\SettingsRequest;
 use App\Models\Blog;
 use App\Models\User;
@@ -18,50 +19,20 @@ class UserSettingTest extends TestCase
     | user settings
     */
 
-    // use DatabaseTransactions;
 
-
-
-    protected static $initialized = FALSE;
-    protected static $data;
-    /**
-     * test user settings
-     *
-     * @return void
-     */
     public function setUp(): void
     {
         parent::setUp();
-
-        if (!self::$initialized) {
-
-            $faker = Factory::create(1);
-            $request = [
-                'email' => $faker->unique()->email(),
-                'age' => $faker->numberBetween(18, 80),
-                'blog_name' => 'A_' . time(),
-                'password' => 'Test_pass34',
-            ];
-            // only needs user to test user settings
-            $response = $this->json('POST', '/api/register/insert', $request, ['Accept' => 'application/json']);
-            //dd(($response->json()));
-            self::$data['token'] = ($response->json())['response']['token'];
-            self::$data['user'] = ($response->json())['response']['user'];
-            self::$data['id'] =  ($response->json())['response']['user']['id'];
-            $this->email =  ($response->json())['response']['user']['email'];
-            self::$data['password'] =  Hash::make('Ahmed_123');
-            self::$initialized = TRUE;
-        }
+        $this->rules     = (new ChangePasswordRequest())->rules();
+        $this->validator = $this->app['validator'];
     }
-
-
-
+  
     /** @test */
     public function SuccessfulConfirmPassword()
     {
         $UserSettingService = new UserSettingService();
-        $old_password = Hash::make('Ahmed_123');
-        $confirmed =  $UserSettingService->ConfirmPassword('Ahmed_123', $old_password);
+        $old_password = Hash::make('HardPass_123');
+        $confirmed =  $UserSettingService->ConfirmPassword('HardPass_123', $old_password);
         return $this->assertTrue($confirmed);
     }
 
@@ -70,7 +41,7 @@ class UserSettingTest extends TestCase
     public function FailureConfirmPassword()
     {
         $UserSettingService = new UserSettingService();
-        $old_password = Hash::make('Ahmed_123');
+        $old_password = Hash::make('HardPass_123');
         $confirmed =  $UserSettingService->ConfirmPassword('wrong_pass', $old_password);
         return $this->assertFalse($confirmed);
     }
@@ -96,33 +67,6 @@ class UserSettingTest extends TestCase
     }
 
     /** @test */
-    public function CheckAuthenticationSuccess()
-    {
-        $faker = Factory::create(1);
-        $request = [
-            'email' => $faker->email(),
-            'password' => 'Ahmed_123',
-        ];
-        // no bearer token is given
-        $response = $this->json('PUT', '/api/settings/change_email', $request, ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . self::$data['token']]);
-        $this->assertAuthenticated();
-    }
-
-    /** @test */
-    public function CheckAuthenticationFailure()
-    {
-        $faker = Factory::create(1);
-        $request = [
-            'email' => $faker->email(),
-            'password' => $faker->text(8),
-        ];
-        // no bearer token is given
-        $response = $this->json('PUT', '/api/settings/change_email', $request, ['Accept' => 'application/json']);
-        // it should be a guest
-        $this->assertGuest();
-    }
-
-    /** @test */
     public function UpdateSettings()
     {
         $user = User::take(1)->first();
@@ -136,17 +80,44 @@ class UserSettingTest extends TestCase
         $this->assertTrue($check);
     }
 
-    //   /** @test */
-    // public function CheckGetSettings()
-    // {
-    //     $user = User::find(self::$data['id']);
-    //     $response = $this->actingAs($user, 'api')->json('Get', '/api/user/settings')->assertStatus(200);       
-    // }
-
-    
-
-    public static function tearDownAfterClass(): void
+    // validation 
+     /**
+     * check the validation of password
+     * Enter 
+     *
+     * @return void
+     */
+    /** @test */
+    public function validatePassword()
     {
-        self::$initialized = null;
+        $this->assertTrue($this->validateField('new_password', 'HardPass_123'));
+        $this->assertTrue($this->validateField('new_password', '@#A$#askd1x'));
+
+        // Password  cannot be 
+        //empty
+        $this->assertFalse($this->validateField('new_password', ''));
+        //only lower case
+        $this->assertFalse($this->validateField('new_password', 'ahmedsss'));
+        // only numbers
+        $this->assertFalse($this->validateField('new_password', '123455'));
+        // only upper case
+        $this->assertFalse($this->validateField('new_password', 'AHMED'));
+        // less than 8 characters
+        $this->assertFalse($this->validateField('new_password', 'Aa@123'));
+    }
+
+
+
+    protected function getFieldValidator($field, $value)
+    {
+        return $this->validator->make(
+            [$field => $value],
+            [$field => $this->rules[$field]]
+        );
+    }
+
+    protected function validateField($field, $value)
+    {
+        return $this->getFieldValidator($field, $value)->passes();
     }
 }
