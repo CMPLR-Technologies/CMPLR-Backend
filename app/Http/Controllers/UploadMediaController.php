@@ -27,6 +27,46 @@ class UploadMediaController extends Controller
     }
 
     /**
+     * @OA\Post(
+     * path="image_upload",
+     * summary="Upload image on aws s3 bucket",
+     * description="This method can be used to  upload image",
+     * operationId="uploadImage",
+     * tags={"Upload"},
+     * @OA\RequestBody(
+     *      required=true,
+     *      description="Pass user credentials",
+     *      @OA\JsonContent(
+     *           @OA\Property(property="image", type="string",example="image.png"),
+     *      ),
+     *    ),
+     * @OA\Response(
+     *    response=404,
+     *    description="Not Found",
+     * ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     * @OA\Response(
+     *    response=200,
+     *    description="success",
+     *    @OA\JsonContent(
+     *       type="object",
+     *       @OA\Property(property="Meta", type="object",
+     *          @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="OK"),
+     *        ),
+     *       @OA\Property(property="response", type="object",
+     *             @OA\Property(property="url", type="string", example="https://cmplrserver.s3.eu-west-2.amazonaws.com/images/1640892214_35_DhAcqQcW0AAL8CG.jpg"),
+     *                  ),                                         
+     *            
+     *           ),
+     *     ),
+     * security ={{"bearer":{}}},
+     * )
+     */
+    /**
      * This Function Used to upload images to s3 Bucket
      * @param request $request
      * @return response
@@ -62,6 +102,47 @@ class UploadMediaController extends Controller
         return $this->success_response($response, 200);
     }
 
+
+    /**
+     * @OA\Post(
+     * path="video_upload",
+     * summary="Upload video on aws s3 bucket",
+     * description="This method can be used to  upload video",
+     * operationId="uploadVideo",
+     * tags={"Upload"},
+     * @OA\RequestBody(
+     *      required=true,
+     *      description="Pass user credentials",
+     *      @OA\JsonContent(
+     *           @OA\Property(property="video", type="string",example="video.png"),
+     *      ),
+     *    ),
+     * @OA\Response(
+     *    response=404,
+     *    description="Not Found",
+     * ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     * @OA\Response(
+     *    response=200,
+     *    description="success",
+     *    @OA\JsonContent(
+     *       type="object",
+     *       @OA\Property(property="Meta", type="object",
+     *          @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="OK"),
+     *        ),
+     *       @OA\Property(property="response", type="object",
+     *             @OA\Property(property="url", type="string", example="https://cmplrserver.s3.eu-west-2.amazonaws.com/images/1640892214_35_DhAcqQcW0AAL8CG.jpg"),
+     *                  ),                                         
+     *            
+     *           ),
+     *     ),
+     * security ={{"bearer":{}}},
+     * )
+     */
     /**
      * This Function Used to upload Videos to s3 Bucket
      * @param request $request
@@ -93,6 +174,47 @@ class UploadMediaController extends Controller
         return $this->success_response($response, 200);
     }
 
+
+    /**
+     * @OA\Post(
+     * path="base64image_upload",
+     * summary="Upload base64image_upload on aws s3 bucket",
+     * description="This method can be used to  upload base64image_upload",
+     * operationId="uploadbase64image_upload",
+     * tags={"Upload"},
+     * @OA\RequestBody(
+     *      required=true,
+     *      description="Pass user credentials",
+     *      @OA\JsonContent(
+     *           @OA\Property(property="image", type="string",example="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABA"),
+     *      ),
+     *    ),
+     * @OA\Response(
+     *    response=404,
+     *    description="Not Found",
+     * ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     * @OA\Response(
+     *    response=200,
+     *    description="success",
+     *    @OA\JsonContent(
+     *       type="object",
+     *       @OA\Property(property="Meta", type="object",
+     *          @OA\Property(property="Status", type="integer", example=200),
+     *           @OA\Property(property="msg", type="string", example="OK"),
+     *        ),
+     *       @OA\Property(property="response", type="object",
+     *             @OA\Property(property="url", type="string", example="https://cmplrserver.s3.eu-west-2.amazonaws.com/images/1640892214_35_DhAcqQcW0AAL8CG.jpg"),
+     *                  ),                                         
+     *            
+     *           ),
+     *     ),
+     * security ={{"bearer":{}}},
+     * )
+     */
     /**
      * This Function is Responisble for upload images in 
      * base64 form
