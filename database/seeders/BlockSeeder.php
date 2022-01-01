@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Blog;
 use App\Models\Block;
 use Illuminate\Database\Seeder;
 
@@ -14,6 +15,12 @@ class BlockSeeder extends Seeder
      */
     public function run()
     {
-        Block::factory()->count(10)->create();
+        Blog::inRandomOrder()->limit(10)->get()->each(function ($blog) {
+            $blockedBlog = Blog::where('id', '!=', $blog->id)->inRandomOrder()->first();
+            Block::factory()->create([
+                'blog_id' => $blog->id,
+                'blocked_blog_id' => $blockedBlog->id
+            ]);
+        });
     }
 }

@@ -955,6 +955,7 @@ class PostsController extends Controller
      * security ={{"bearer":{}}},
      * )
      */
+
     /**
      * This Function Responisble for 
      * get miniview of certain blog by show 3 of its blogs
@@ -1037,6 +1038,7 @@ class PostsController extends Controller
      * security ={{"bearer":{}}}
      * )
      */
+    
     /**
      * this function is responsible for get profile likes for blog
      * @param Request $request

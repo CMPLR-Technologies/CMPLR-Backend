@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use App\Models\PostNotes;
+use App\Models\Posts;
 use Illuminate\Database\Seeder;
 
 class PostNotesSeeder extends Seeder
@@ -14,6 +16,14 @@ class PostNotesSeeder extends Seeder
      */
     public function run()
     {
-        PostNotes::factory()->count(1000)->create();
+        User::inRandomOrder()->limit(rand(10, 30))->get()->each(function ($user) {
+            $posts = Posts::all();
+            $posts->each(function ($post) use ($user) {
+                PostNotes::factory()->create([
+                    'user_id' => $user->id,
+                    'post_id' => $post->id
+                ]);
+            });
+        });
     }
 }
