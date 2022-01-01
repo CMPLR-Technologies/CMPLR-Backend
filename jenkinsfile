@@ -43,6 +43,7 @@ pipeline {
                     sleep 5
                     docker exec testbackend php artisan passport:install --env=testing
                     sleep 5
+                    docker exec testbackend php artisan test --env=testing
                     sleep 5
                     docker-compose down
                     docker tag test/backend:latest $LOGIN_SERVER/backend:latest
