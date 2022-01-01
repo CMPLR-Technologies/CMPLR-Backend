@@ -11,7 +11,12 @@ use Illuminate\Support\Facades\DB;
 
 class FollowBlogService{
 
-
+    /**
+     * implement the logic of following a blog
+     * @param Blog $blog 
+     * @param User $user
+     * @return int
+     */
     public function FollowBlog($blog,$user)
     {
         //check if the blog doesn't exist

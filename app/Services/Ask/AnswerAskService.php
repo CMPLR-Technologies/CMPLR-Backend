@@ -19,8 +19,10 @@ class AnswerAskService{
    */
 
     /**
-     * implements the logic of creating an Ask
-     * 
+     * implements the logic of answering an Ask
+     * @param array $request 
+     * @param int $askId 
+     * @param User $user
      * @return int
      */
     public function AnswerAsk($request,$askId,$user)

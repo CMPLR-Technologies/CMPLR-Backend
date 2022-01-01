@@ -19,9 +19,10 @@ class GetInboxService{
     |
    */
 
+
     /**
-     * implements the logic of getting inbox
-     * 
+     * implements the logic of getting inbox of a user
+     * @param User $user
      * @return array
      */
     public function GetInbox($user)
