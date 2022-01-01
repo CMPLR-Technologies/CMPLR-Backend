@@ -14,8 +14,8 @@ class TagUserFactory extends Factory
     public function definition()
     {
         return [
-            'tag_id' => rand(1, 100),
-            'user_id' => rand(1, 11),
+            'tag_name' => rand(1, 100),
+            'user_id' => rand(1, 50),
         ];
     }
 }

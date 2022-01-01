@@ -13,14 +13,14 @@ class PostNotesFactory extends Factory
      */
     public function definition()
     {
-        $type = $this->faker->randomElement(array('like', 'reply', 'reblog'));
-        $content = ($type =='reply')?$this->faker->sentence(4) :null ;  
-        
+        $type = $this->faker->randomElement(array('like', 'reply'));
+        $content = ($type == 'reply') ? $this->faker->sentence(4) : null;
+
         return [
-            'user_id' => $this->faker->numberBetween(1 , 10),
-            'post_id' => $this->faker->numberBetween(1 , 50),
+            'user_id' => $this->faker->numberBetween(1, 50),
+            'post_id' => $this->faker->numberBetween(1, 100),
             'type' => $type,
-            'content'=>  $content ,
+            'content' =>  $content
         ];
     }
 }

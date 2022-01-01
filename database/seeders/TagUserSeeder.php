@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Tag;
+use App\Models\User;
 use App\Models\TagUser;
 use Illuminate\Database\Seeder;
 
@@ -14,6 +16,14 @@ class TagUserSeeder extends Seeder
      */
     public function run()
     {
-        TagUser::factory()->count(200)->create();
+        User::all()->each(function ($user) {
+            $tags = Tag::inRandomOrder()->limit(20)->get();
+            $tags->each(function ($tag) use ($user) {
+                TagUser::factory()->create([
+                    'user_id' => $user->id,
+                    'tag_name' => $tag->name
+                ]);
+            });
+        });
     }
 }

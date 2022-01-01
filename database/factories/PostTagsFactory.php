@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Tag;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PostTagsFactory extends Factory
@@ -14,11 +13,6 @@ class PostTagsFactory extends Factory
      */
     public function definition()
     {
-        $tag = Tag::inRandomOrder()->first();
-
-        return [
-            'post_id' => $this->faker->unique()->numberBetween(1, 50),
-            'tag_name' => $tag['name']
-        ];
+        return [];
     }
 }
