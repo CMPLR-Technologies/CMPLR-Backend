@@ -105,7 +105,7 @@ class UserTagsTest extends TestCase
     /** @test */
     public function TestGetTagRecentPostsCount()
     {
-        $tag = Tag::factory()->create();
+        $tag = Tag::factory()->create(['name' => 'Happy New Year']);
         $posts = Posts::factory()->count(10)->create([
             'tags' => [$tag->name],
             'type' => 'post'
