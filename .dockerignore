@@ -1,0 +1,7 @@
+.git
+node_modules/
+vendor/
+README.md
+.env.example
+jenkinsfile
+README.md
